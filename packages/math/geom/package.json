@@ -1,0 +1,8 @@
+{
+  "name": "@ideditor/geom",
+  "version": "3.0.0-pre.0",
+  "description": "Geometric math library used by the iD editor",
+  "author": "Bryan Housel <bryan@mapbox.com>",
+  "license": "ISC",
+  "main": "lib/geom.js"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@ideditor/geo",
+  "version": "3.0.0-pre.0",
+  "description": "Geographic math library used by the iD editor",
+  "author": "Bryan Housel <bryan@mapbox.com>",
+  "license": "ISC",
+  "main": "lib/geo.js"
+}

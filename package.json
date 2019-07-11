@@ -1,8 +1,8 @@
 {
-  "name": "iD",
-  "version": "3.0.0",
+  "name": "ideditor",
+  "version": "3.0.0-pre.0",
   "description": "Map editing made easy",
-  "repository": "ideditor/iD",
+  "repository": "ideditor/ideditor",
   "keywords": [
     "map",
     "editor"
