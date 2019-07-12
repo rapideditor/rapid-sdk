@@ -11,8 +11,10 @@
   "devDependencies": {
     "@types/geojson": "^7946.0.7",
     "@types/node": "^12.6.0",
+    "husky": "^3.0.0",
     "jest": "^24.8.0",
     "lerna": "^3.15.0",
+    "lint-staged": "^9.2.0",
     "prettier": "^1.18.2",
     "typescript": "^3.5.2"
   },
@@ -23,5 +25,16 @@
   "engines": {
     "node": ">=8.0.0",
     "npm": ">=5.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --config .prettier.config.js --write",
+      "git add"
+    ]
   }
 }
