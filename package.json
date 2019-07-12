@@ -11,10 +11,13 @@
   "devDependencies": {
     "@types/geojson": "^7946.0.7",
     "@types/node": "^12.6.0",
+    "jest": "^24.8.0",
     "lerna": "^3.15.0",
     "typescript": "^3.5.2"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "jest"
+  },
   "engines": {
     "node": ">=8.0.0",
     "npm": ">=5.0.0"
