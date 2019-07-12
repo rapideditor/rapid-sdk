@@ -1,4 +1,4 @@
-import { geoMetersToLat, geoMetersToLon } from './geo';
+import { geoMetersToLat, geoMetersToLon } from '@ideditor/geo';
 
 export function Extent(min, max) {
   if (!(this instanceof Extent)) {

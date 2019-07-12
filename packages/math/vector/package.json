@@ -5,5 +5,8 @@
   "author": "Bryan Housel <bryan@mapbox.com>",
   "repository": "ideditor/ideditor",
   "license": "ISC",
-  "main": "lib/vector.js"
+  "main": "lib/vector.js",
+  "dependencies": {
+    "@ideditor/extent": "^3.0.0-pre.0"
+  }
 }

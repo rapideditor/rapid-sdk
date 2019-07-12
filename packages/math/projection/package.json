@@ -7,6 +7,7 @@
   "license": "ISC",
   "main": "lib/raw_mercator.js",
   "dependencies": {
+    "@ideditor/extent": "^3.0.0-pre.0",
     "d3-geo": "^1.11.6",
     "d3-zoom": "^1.7.3"
   }

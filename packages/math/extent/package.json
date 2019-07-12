@@ -5,5 +5,8 @@
   "author": "Bryan Housel <bryan@mapbox.com>",
   "repository": "ideditor/ideditor",
   "license": "ISC",
-  "main": "lib/extent.js"
+  "main": "lib/extent.js",
+  "dependencies": {
+    "@ideditor/geo": "^3.0.0-pre.0"
+  }
 }

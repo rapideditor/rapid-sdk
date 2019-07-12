@@ -1,7 +1,7 @@
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
 
-import { Extent } from './extent.js';
-import { vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from './vector.js';
+import { Extent } from '@ideditor/extent';
+import { vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from '@ideditor/vector';
 
 export function geomEdgeEqual(a, b) {
   return (a[0] === b[0] && a[1] === b[1]) || (a[0] === b[1] && a[1] === b[0]);

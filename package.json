@@ -8,6 +8,7 @@
     "editor"
   ],
   "license": "ISC",
+  "private": true,
   "devDependencies": {
     "@types/geojson": "^7946.0.7",
     "@types/node": "^12.6.0",

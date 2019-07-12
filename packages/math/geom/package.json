@@ -7,6 +7,8 @@
   "license": "ISC",
   "main": "lib/geom.js",
   "dependencies": {
+    "@ideditor/extent": "^3.0.0-pre.0",
+    "@ideditor/vector": "^3.0.0-pre.0",
     "d3-polygon": "^1.0.5"
   }
 }
