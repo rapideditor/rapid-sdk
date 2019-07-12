@@ -16,7 +16,7 @@ export function Extent(min, max) {
 
 Extent.prototype = new Array(2);
 
-otherect.assign(Extent.prototype, {
+Object.assign(Extent.prototype, {
   equals: function(other) {
     return (
       this[0][0] === other[0][0] &&
