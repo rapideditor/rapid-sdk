@@ -1,9 +1,9 @@
 import { geoMetersToLat, geoMetersToLon } from './geo';
 
-export function geoExtent(min, max) {
-  if (!(this instanceof geoExtent)) {
-    return new geoExtent(min, max);
-  } else if (min instanceof geoExtent) {
+export function Extent(min, max) {
+  if (!(this instanceof Extent)) {
+    return new Extent(min, max);
+  } else if (min instanceof Extent) {
     return min;
   } else if (min && min.length === 2 && min[0].length === 2 && min[1].length === 2) {
     this[0] = min[0];
@@ -14,31 +14,31 @@ export function geoExtent(min, max) {
   }
 }
 
-geoExtent.prototype = new Array(2);
+Extent.prototype = new Array(2);
 
-Object.assign(geoExtent.prototype, {
-  equals: function(obj) {
+otherect.assign(Extent.prototype, {
+  equals: function(other) {
     return (
-      this[0][0] === obj[0][0] &&
-      this[0][1] === obj[0][1] &&
-      this[1][0] === obj[1][0] &&
-      this[1][1] === obj[1][1]
+      this[0][0] === other[0][0] &&
+      this[0][1] === other[0][1] &&
+      this[1][0] === other[1][0] &&
+      this[1][1] === other[1][1]
     );
   },
 
-  extend: function(obj) {
-    if (!(obj instanceof geoExtent)) obj = new geoExtent(obj);
-    return geoExtent(
-      [Math.min(obj[0][0], this[0][0]), Math.min(obj[0][1], this[0][1])],
-      [Math.max(obj[1][0], this[1][0]), Math.max(obj[1][1], this[1][1])]
+  extend: function(other) {
+    if (!(other instanceof Extent)) other = new Extent(other);
+    return Extent(
+      [Math.min(other[0][0], this[0][0]), Math.min(other[0][1], this[0][1])],
+      [Math.max(other[1][0], this[1][0]), Math.max(other[1][1], this[1][1])]
     );
   },
 
-  _extend: function(extent) {
-    this[0][0] = Math.min(extent[0][0], this[0][0]);
-    this[0][1] = Math.min(extent[0][1], this[0][1]);
-    this[1][0] = Math.max(extent[1][0], this[1][0]);
-    this[1][1] = Math.max(extent[1][1], this[1][1]);
+  _extend: function(other) {
+    this[0][0] = Math.min(other[0][0], this[0][0]);
+    this[0][1] = Math.min(other[0][1], this[0][1]);
+    this[1][0] = Math.max(other[1][0], this[1][0]);
+    this[1][1] = Math.max(other[1][1], this[1][1]);
   },
 
   area: function() {
@@ -67,37 +67,37 @@ Object.assign(geoExtent.prototype, {
     ];
   },
 
-  contains: function(obj) {
-    if (!(obj instanceof geoExtent)) obj = new geoExtent(obj);
+  contains: function(other) {
+    if (!(other instanceof Extent)) other = new Extent(other);
     return (
-      obj[0][0] >= this[0][0] &&
-      obj[0][1] >= this[0][1] &&
-      obj[1][0] <= this[1][0] &&
-      obj[1][1] <= this[1][1]
+      other[0][0] >= this[0][0] &&
+      other[0][1] >= this[0][1] &&
+      other[1][0] <= this[1][0] &&
+      other[1][1] <= this[1][1]
     );
   },
 
-  intersects: function(obj) {
-    if (!(obj instanceof geoExtent)) obj = new geoExtent(obj);
+  intersects: function(other) {
+    if (!(other instanceof Extent)) other = new Extent(other);
     return (
-      obj[0][0] <= this[1][0] &&
-      obj[0][1] <= this[1][1] &&
-      obj[1][0] >= this[0][0] &&
-      obj[1][1] >= this[0][1]
+      other[0][0] <= this[1][0] &&
+      other[0][1] <= this[1][1] &&
+      other[1][0] >= this[0][0] &&
+      other[1][1] >= this[0][1]
     );
   },
 
-  intersection: function(obj) {
-    if (!this.intersects(obj)) return new geoExtent();
-    return new geoExtent(
-      [Math.max(obj[0][0], this[0][0]), Math.max(obj[0][1], this[0][1])],
-      [Math.min(obj[1][0], this[1][0]), Math.min(obj[1][1], this[1][1])]
+  intersection: function(other) {
+    if (!this.intersects(other)) return new Extent();
+    return new Extent(
+      [Math.max(other[0][0], this[0][0]), Math.max(other[0][1], this[0][1])],
+      [Math.min(other[1][0], this[1][0]), Math.min(other[1][1], this[1][1])]
     );
   },
 
-  percentContainedIn: function(obj) {
-    if (!(obj instanceof geoExtent)) obj = new geoExtent(obj);
-    var a1 = this.intersection(obj).area();
+  percentContainedIn: function(other) {
+    if (!(other instanceof Extent)) other = new Extent(other);
+    var a1 = this.intersection(other).area();
     var a2 = this.area();
 
     if (a1 === Infinity || a2 === Infinity || a1 === 0 || a2 === 0) {
@@ -110,10 +110,7 @@ Object.assign(geoExtent.prototype, {
   padByMeters: function(meters) {
     var dLat = geoMetersToLat(meters);
     var dLon = geoMetersToLon(meters, this.center()[1]);
-    return geoExtent(
-      [this[0][0] - dLon, this[0][1] - dLat],
-      [this[1][0] + dLon, this[1][1] + dLat]
-    );
+    return Extent([this[0][0] - dLon, this[0][1] - dLat], [this[1][0] + dLon, this[1][1] + dLat]);
   },
 
   toParam: function() {
