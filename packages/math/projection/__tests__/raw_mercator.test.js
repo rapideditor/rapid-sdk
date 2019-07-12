@@ -3,5 +3,5 @@
 const math = require('..');
 
 describe('math', () => {
-    it('needs tests');
+  it('needs tests');
 });
