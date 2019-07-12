@@ -2,7 +2,8 @@
 .esm-cache
 .vscode
 .coverage
-/node_modules/
+
+node_modules
 
 npm-debug.log
 lerna-debug.log

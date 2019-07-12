@@ -3,6 +3,7 @@
   "version": "3.0.0-pre.0",
   "description": "Extent (bounding box) library used by the iD editor",
   "author": "Bryan Housel <bryan@mapbox.com>",
+  "repository": "ideditor/ideditor",
   "license": "ISC",
   "main": "lib/extent.js"
 }

@@ -3,6 +3,10 @@
   "version": "3.0.0-pre.0",
   "description": "Geometric math library used by the iD editor",
   "author": "Bryan Housel <bryan@mapbox.com>",
+  "repository": "ideditor/ideditor",
   "license": "ISC",
-  "main": "lib/geom.js"
+  "main": "lib/geom.js",
+  "dependencies": {
+    "d3-polygon": "^1.0.5"
+  }
 }

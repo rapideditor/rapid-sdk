@@ -3,6 +3,11 @@
   "version": "3.0.0-pre.0",
   "description": "Projection math library used by the iD editor",
   "author": "Bryan Housel <bryan@mapbox.com>",
+  "repository": "ideditor/ideditor",
   "license": "ISC",
-  "main": "lib/raw_mercator.js"
+  "main": "lib/raw_mercator.js",
+  "dependencies": {
+    "d3-geo": "^1.11.6",
+    "d3-zoom": "^1.7.3"
+  }
 }
