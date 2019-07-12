@@ -1,7 +1,7 @@
 .DS_Store
 .esm-cache
 .vscode
-/coverage/
+.coverage
 /node_modules/
 
 npm-debug.log

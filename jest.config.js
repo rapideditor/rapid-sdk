@@ -4,6 +4,7 @@ module.exports = {
     'packages/**/*.{js}',
     '!**/node_modules/**'
   ],
+  coverageDirectory: '.coverage',
   roots: [
     'packages/'
   ],
