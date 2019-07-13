@@ -85,10 +85,10 @@ export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
 
 
 interface Edge {
-    index: number;
-    distance: number;
-    target: Vec2;
-};
+  index: number;
+  distance: number;
+  target: Vec2;
+}
 // find closest orthogonal projection of point onto points array
 export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
   let min: number = Infinity;

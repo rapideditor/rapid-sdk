@@ -7,9 +7,9 @@
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "lib/geo.js",
+  "main": "built/geo.js",
   "scripts": {
-    "build": "",
+    "build": "tsc",
     "test": "jest --config .jest.config.js"
   }
 }
