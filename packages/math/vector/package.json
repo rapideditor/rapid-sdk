@@ -7,12 +7,12 @@
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "lib/vector.js",
+  "main": "built/vector.js",
   "dependencies": {
     "@ideditor/extent": "^3.0.0-pre.0"
   },
   "scripts": {
-    "build": "",
+    "build": "tsc",
     "test": "jest --config .jest.config.js"
   }
 }
