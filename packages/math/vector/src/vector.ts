@@ -37,14 +37,14 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
 // http://jsperf.com/id-dist-optimization
 export function vecLength(a: Vec2, b?: Vec2): number {
   b = b || [0, 0];
-  let x: number = a[0] - b[0];
-  let y: number = a[1] - b[1];
+  const x: number = a[0] - b[0];
+  const y: number = a[1] - b[1];
   return Math.sqrt(x * x + y * y);
 }
 
 // get a unit vector
 export function vecNormalize(a: Vec2): Vec2 {
-  let length: number = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+  const length: number = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
   if (length !== 0) {
     return vecScale(a, 1 / length);
   }
@@ -60,16 +60,16 @@ export function vecAngle(a: Vec2, b: Vec2): number {
 // dot product
 export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
-  let p: Vec2 = vecSubtract(a, origin);
-  let q: Vec2 = vecSubtract(b, origin);
+  const p: Vec2 = vecSubtract(a, origin);
+  const q: Vec2 = vecSubtract(b, origin);
   return p[0] * q[0] + p[1] * q[1];
 }
 
 // normalized dot product
 export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
-  let p: Vec2 = vecNormalize(vecSubtract(a, origin));
-  let q: Vec2 = vecNormalize(vecSubtract(b, origin));
+  const p: Vec2 = vecNormalize(vecSubtract(a, origin));
+  const q: Vec2 = vecNormalize(vecSubtract(b, origin));
   return vecDot(p, q);
 }
 
@@ -78,8 +78,8 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
 // negative for clockwise turn, and zero if the points are collinear.
 export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
-  let p: Vec2 = vecSubtract(a, origin);
-  let q: Vec2 = vecSubtract(b, origin);
+  const p: Vec2 = vecSubtract(a, origin);
+  const q: Vec2 = vecSubtract(b, origin);
   return p[0] * q[1] - p[1] * q[0];
 }
 
@@ -96,10 +96,10 @@ export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
   let target: Vec2;
 
   for (let i: number = 0; i < points.length - 1; i++) {
-    let o: Vec2 = points[i];
-    let s: Vec2 = vecSubtract(points[i + 1], o);
-    let v: Vec2 = vecSubtract(a, o);
-    let proj: number = vecDot(v, s) / vecDot(s, s);
+    const o: Vec2 = points[i];
+    const s: Vec2 = vecSubtract(points[i + 1], o);
+    const v: Vec2 = vecSubtract(a, o);
+    const proj: number = vecDot(v, s) / vecDot(s, s);
     let p: Vec2;
 
     if (proj < 0) {
