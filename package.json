@@ -3,11 +3,14 @@
   "version": "3.0.0-pre.0",
   "description": "Map editing made easy",
   "repository": "ideditor/ideditor",
+  "license": "ISC",
+  "contributors": [
+    "Bryan Housel <bryan@mapbox.com>"
+  ],
   "keywords": [
     "map",
     "editor"
   ],
-  "license": "ISC",
   "private": true,
   "devDependencies": {
     "@types/geojson": "^7946.0.7",

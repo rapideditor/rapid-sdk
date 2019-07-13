@@ -2,8 +2,14 @@
   "name": "@ideditor/geo",
   "version": "3.0.0-pre.0",
   "description": "Geographic math library used by the iD editor",
-  "author": "Bryan Housel <bryan@mapbox.com>",
   "repository": "ideditor/ideditor",
   "license": "ISC",
-  "main": "lib/geo.js"
+  "contributors": [
+    "Bryan Housel <bryan@mapbox.com>"
+  ],
+  "main": "lib/geo.js",
+  "scripts": {
+    "build": "",
+    "test": "jest --config .jest.config.js"
+  }
 }
