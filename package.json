@@ -13,8 +13,11 @@
   ],
   "private": true,
   "devDependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
     "@types/geojson": "^7946.0.7",
     "@types/node": "^12.6.0",
+    "babel-jest": "^24.8.0",
     "husky": "^3.0.0",
     "jest": "^24.8.0",
     "lerna": "^3.15.0",
@@ -23,8 +26,8 @@
     "typescript": "^3.5.2"
   },
   "scripts": {
-    "prettier": "prettier --config .prettier.config.js --write \"packages/**/*.js\"",
-    "test": "jest --config .jest.config.js"
+    "prettier": "prettier --write \"packages/**/*.js\"",
+    "test": "jest"
   },
   "engines": {
     "node": ">=8.0.0",
@@ -37,7 +40,7 @@
   },
   "lint-staged": {
     "*.{js,css,json,md}": [
-      "prettier --config .prettier.config.js --write",
+      "prettier --write",
       "git add"
     ]
   }

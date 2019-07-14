@@ -15,6 +15,6 @@
   },
   "scripts": {
     "build": "",
-    "test": "jest --config .jest.config.js"
+    "test": "jest"
   }
 }
