@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "declaration": true,
+    "declarationMap": true,
+    "target": "es5",
+    "module": "es6",
+    "moduleResolution": "node",
+    "listEmittedFiles": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true
+  },
+  "include": ["./src/**/*"]
+}

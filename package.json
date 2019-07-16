@@ -15,6 +15,7 @@
   "devDependencies": {
     "@babel/core": "^7.5.4",
     "@babel/preset-env": "^7.5.4",
+    "@types/d3-polygon": "^1.0.7",
     "@types/geojson": "^7946.0.7",
     "@types/node": "^12.6.0",
     "babel-jest": "^24.8.0",

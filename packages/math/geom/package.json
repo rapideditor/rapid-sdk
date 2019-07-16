@@ -7,14 +7,14 @@
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "lib/geom.js",
+  "main": "built/geom.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
   "dependencies": {
     "@ideditor/extent": "^3.0.0-pre.0",
     "@ideditor/vector": "^3.0.0-pre.0",
     "d3-polygon": "^1.0.5"
-  },
-  "scripts": {
-    "build": "",
-    "test": "jest"
   }
 }

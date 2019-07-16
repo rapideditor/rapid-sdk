@@ -7,12 +7,12 @@
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "lib/extent.js",
+  "main": "built/extent.js",
   "dependencies": {
     "@ideditor/geo": "^3.0.0-pre.0"
   },
   "scripts": {
-    "build": "",
+    "build": "tsc",
     "test": "jest"
   }
 }
