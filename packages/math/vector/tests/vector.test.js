@@ -1,7 +1,7 @@
 import * as test from '..';
 const CLOSE = 6; // digits
 
-describe('vector', () => {
+describe('math/vector', () => {
   describe('vecEqual', () => {
     it('tests vectors for exact equality', () => {
       expect(test.vecEqual([1, 2], [1, 2])).toBeTruthy();
