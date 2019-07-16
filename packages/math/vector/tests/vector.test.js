@@ -1,4 +1,4 @@
-const test = require('..');
+import * as test from '..';
 const CLOSE = 6; // digits
 
 describe('vector', () => {
