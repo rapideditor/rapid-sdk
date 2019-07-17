@@ -8,9 +8,9 @@ interface BBox {
 export declare class Extent {
     min: Vec2;
     max: Vec2;
-    constructor(min?: Vec2, max?: Vec2);
+    constructor(otherOrMin?: Extent | Vec2, max?: Vec2);
     equals(other: any): boolean;
-    extend(other: any): void;
+    extend(other: any): Extent;
     area(): number;
     center(): Vec2;
     rectangle(): number[];

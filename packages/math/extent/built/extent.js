@@ -1,11 +1,19 @@
 import { geoMetersToLat, geoMetersToLon } from '@ideditor/geo';
 var Extent = /** @class */ (function() {
-  function Extent(min, max) {
+  function Extent(otherOrMin, max) {
     this.min = [Infinity, Infinity];
-    this.max = [Infinity, Infinity];
+    this.max = [-Infinity, -Infinity];
+    var min;
+    if (otherOrMin instanceof Extent) {
+      min = otherOrMin.min;
+      max = otherOrMin.max;
+    } else {
+      min = otherOrMin;
+    }
     if (min && min.length === 2) {
       this.min[0] = min[0];
       this.min[1] = min[1];
+      if (!max) max = min;
     }
     if (max && max.length === 2) {
       this.max[0] = max[0];
@@ -23,10 +31,10 @@ var Extent = /** @class */ (function() {
   };
   Extent.prototype.extend = function(other) {
     if (!(other instanceof Extent)) other = new Extent(other);
-    this.min[0] = Math.min(other.min[0], this.min[0]);
-    this.min[1] = Math.min(other.min[1], this.min[1]);
-    this.max[0] = Math.max(other.max[0], this.max[0]);
-    this.max[1] = Math.max(other.max[1], this.max[1]);
+    return new Extent(
+      [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
+      [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
+    );
   };
   Extent.prototype.area = function() {
     return Math.abs((this.max[0] - this.min[0]) * (this.max[1] - this.min[1]));
@@ -68,7 +76,7 @@ var Extent = /** @class */ (function() {
     );
   };
   Extent.prototype.intersection = function(other) {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!this.intersects(other)) return new Extent();
     return new Extent(
       [Math.max(other.min[0], this.min[0]), Math.max(other.min[1], this.min[1])],
       [Math.min(other.max[0], this.max[0]), Math.min(other.max[1], this.max[1])]

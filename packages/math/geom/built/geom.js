@@ -105,16 +105,21 @@ export function geomGetSmallestSurroundingRectangle(points) {
   var hull = d3_polygonHull(points);
   var centroid = d3_polygonCentroid(hull);
   var minArea = Infinity;
-  var ssrExtent = [];
+  var ssrExtent = new Extent();
   var ssrAngle = 0;
   var c1 = hull[0];
   for (var i = 0; i <= hull.length - 1; i++) {
     var c2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
     var angle = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
     var poly = geomRotatePoints(hull, -angle, centroid);
-    var extent = poly.reduce(function(extent, point) {
-      return extent.extend(Extent(point));
-    }, Extent());
+    var extent = poly.reduce(function(acc, point) {
+      // update min/max in-place for speed
+      acc.min[0] = Math.min(acc.min[0], point[0]);
+      acc.min[1] = Math.min(acc.min[1], point[1]);
+      acc.max[0] = Math.max(acc.max[0], point[0]);
+      acc.max[1] = Math.max(acc.max[1], point[1]);
+      return acc;
+    }, new Extent());
     var area = extent.area();
     if (area < minArea) {
       minArea = area;

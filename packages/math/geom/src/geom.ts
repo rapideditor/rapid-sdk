@@ -11,7 +11,7 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
 
 // Rotate all points counterclockwise around a pivot point by given angle
 export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): Vec2[] {
-  return points.map(function(point) {
+  return points.map((point: Vec2) => {
     const radial: Vec2 = vecSubtract(point, around);
     return [
       radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
@@ -104,14 +104,14 @@ export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
 }
 
 export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolean {
-  return inner.every(function(point) {
+  return inner.every((point: Vec2) => {
     return geomPointInPolygon(point, outer);
   });
 }
 
 export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], checkSegments: boolean): boolean {
   function testPoints(outer: Vec2[], inner: Vec2[]): boolean {
-    return inner.some(function(point) {
+    return inner.some((point: Vec2) => {
       return geomPointInPolygon(point, outer);
     });
   }
@@ -137,8 +137,13 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR {
     const c2: Vec2 = (i === hull.length - 1) ? hull[0] : hull[i + 1];
     const angle: number = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
     const poly: Vec2[] = geomRotatePoints(hull, -angle, centroid);
-    const extent: Extent = poly.reduce(function(extent, point) {
-      return extent.extend(Extent(point));
+    const extent: Extent = poly.reduce((acc: Extent, point: Vec2) => {
+      // update min/max in-place for speed
+      acc.min[0] = Math.min(acc.min[0], point[0]);
+      acc.min[1] = Math.min(acc.min[1], point[1]);
+      acc.max[0] = Math.max(acc.max[0], point[0]);
+      acc.max[1] = Math.max(acc.max[1], point[1]);
+      return acc;
     }, new Extent());
 
     const area: number = extent.area();

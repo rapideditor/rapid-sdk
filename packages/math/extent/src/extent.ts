@@ -11,12 +11,21 @@ interface BBox {
 
 export class Extent {
   public min: Vec2 = [Infinity, Infinity];
-  public max: Vec2 = [Infinity, Infinity];
+  public max: Vec2 = [-Infinity, -Infinity];
 
-  constructor(min?: Vec2, max?: Vec2) {
+  constructor(otherOrMin?: Extent | Vec2, max?: Vec2) {
+    let min;
+    if (otherOrMin instanceof Extent) {
+      min = otherOrMin.min;
+      max = otherOrMin.max;
+    } else {
+      min = otherOrMin;
+    }
+
     if (min && min.length === 2) {
       this.min[0] = min[0];
       this.min[1] = min[1];
+      if (!max) max = min;
     }
     if (max && max.length === 2) {
       this.max[0] = max[0];
@@ -36,10 +45,10 @@ export class Extent {
 
   extend(other: any) {
     if (!(other instanceof Extent)) other = new Extent(other);
-    this.min[0] = Math.min(other.min[0], this.min[0]);
-    this.min[1] = Math.min(other.min[1], this.min[1]);
-    this.max[0] = Math.max(other.max[0], this.max[0]);
-    this.max[1] = Math.max(other.max[1], this.max[1]);
+    return new Extent(
+      [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
+      [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
+    );
   }
 
   area(): number {
@@ -89,7 +98,7 @@ export class Extent {
   }
 
   intersection(other: any): Extent {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!this.intersects(other)) return new Extent();
     return new Extent(
       [Math.max(other.min[0], this.min[0]), Math.max(other.min[1], this.min[1])],
       [Math.min(other.max[0], this.max[0]), Math.min(other.max[1], this.max[1])]
