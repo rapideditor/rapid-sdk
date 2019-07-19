@@ -1,7 +1,10 @@
 module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['packages/**/*.{js}', '!**/node_modules/**'],
-  coverageDirectory: '.coverage',
-  roots: ['packages/'],
-  setupFilesAfterEnv: ['jest-extended']
+  coverageDirectory: '<rootDir>/.coverage',
+  transform: {
+    '^.+\\.jsx?$': '<rootDir>/babel-jest-wrapper.js'
+  },
+  setupFilesAfterEnv: ['jest-extended'],
+  verbose: true
 };

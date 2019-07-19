@@ -12,7 +12,7 @@
     "@ideditor/geo": "^3.0.0-pre.0"
   },
   "scripts": {
-    "build": "tsc --outDir \"./built\" src/*.ts",
-    "test": "jest"
+    "build": "tsc --outDir ./built src/*.ts",
+    "test": "jest --config ../../../jest.config.js tests/*.js"
   }
 }

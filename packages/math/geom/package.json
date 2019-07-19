@@ -9,8 +9,8 @@
   ],
   "main": "built/geom.js",
   "scripts": {
-    "build": "tsc --outDir \"./built\" src/*.ts",
-    "test": "jest"
+    "build": "tsc --outDir ./built src/*.ts",
+    "test": "jest --config ../../../jest.config.js tests/*.js"
   },
   "dependencies": {
     "@ideditor/extent": "^3.0.0-pre.0",
