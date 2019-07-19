@@ -1,76 +1,90 @@
+'use strict';
+exports.__esModule = true;
 // vector equals
-export function vecEqual(a, b, epsilon) {
+function vecEqual(a, b, epsilon) {
   if (epsilon) {
     return Math.abs(a[0] - b[0]) <= epsilon && Math.abs(a[1] - b[1]) <= epsilon;
   } else {
     return a[0] === b[0] && a[1] === b[1];
   }
 }
+exports.vecEqual = vecEqual;
 // vector addition
-export function vecAdd(a, b) {
+function vecAdd(a, b) {
   return [a[0] + b[0], a[1] + b[1]];
 }
+exports.vecAdd = vecAdd;
 // vector subtraction
-export function vecSubtract(a, b) {
+function vecSubtract(a, b) {
   return [a[0] - b[0], a[1] - b[1]];
 }
+exports.vecSubtract = vecSubtract;
 // vector scaling
-export function vecScale(a, mag) {
+function vecScale(a, mag) {
   return [a[0] * mag, a[1] * mag];
 }
+exports.vecScale = vecScale;
 // vector rounding
-export function vecFloor(a) {
+function vecFloor(a) {
   return [Math.floor(a[0]), Math.floor(a[1])];
 }
+exports.vecFloor = vecFloor;
 // linear interpolation
-export function vecInterp(a, b, t) {
+function vecInterp(a, b, t) {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 }
+exports.vecInterp = vecInterp;
 // http://jsperf.com/id-dist-optimization
-export function vecLength(a, b) {
+function vecLength(a, b) {
   b = b || [0, 0];
   var x = a[0] - b[0];
   var y = a[1] - b[1];
   return Math.sqrt(x * x + y * y);
 }
+exports.vecLength = vecLength;
 // get a unit vector
-export function vecNormalize(a) {
+function vecNormalize(a) {
   var length = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
   if (length !== 0) {
     return vecScale(a, 1 / length);
   }
   return [0, 0];
 }
+exports.vecNormalize = vecNormalize;
 // Return the counterclockwise angle in the range (-pi, pi)
 // between the positive X axis and the line intersecting a and b.
-export function vecAngle(a, b) {
+function vecAngle(a, b) {
   return Math.atan2(b[1] - a[1], b[0] - a[0]);
 }
+exports.vecAngle = vecAngle;
 // dot product
-export function vecDot(a, b, origin) {
+function vecDot(a, b, origin) {
   origin = origin || [0, 0];
   var p = vecSubtract(a, origin);
   var q = vecSubtract(b, origin);
   return p[0] * q[0] + p[1] * q[1];
 }
+exports.vecDot = vecDot;
 // normalized dot product
-export function vecNormalizedDot(a, b, origin) {
+function vecNormalizedDot(a, b, origin) {
   origin = origin || [0, 0];
   var p = vecNormalize(vecSubtract(a, origin));
   var q = vecNormalize(vecSubtract(b, origin));
   return vecDot(p, q);
 }
+exports.vecNormalizedDot = vecNormalizedDot;
 // 2D cross product of OA and OB vectors, returns magnitude of Z vector
 // Returns a positive value, if OAB makes a counter-clockwise turn,
 // negative for clockwise turn, and zero if the points are collinear.
-export function vecCross(a, b, origin) {
+function vecCross(a, b, origin) {
   origin = origin || [0, 0];
   var p = vecSubtract(a, origin);
   var q = vecSubtract(b, origin);
   return p[0] * q[1] - p[1] * q[0];
 }
+exports.vecCross = vecCross;
 // find closest orthogonal projection of point onto points array
-export function vecProject(a, points) {
+function vecProject(a, points) {
   var min = Infinity;
   var idx;
   var target;
@@ -100,3 +114,4 @@ export function vecProject(a, points) {
     return null;
   }
 }
+exports.vecProject = vecProject;

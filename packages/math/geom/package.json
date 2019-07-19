@@ -9,7 +9,7 @@
   ],
   "main": "built/geom.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --outDir \"./built\" src/*.ts",
     "test": "jest"
   },
   "dependencies": {

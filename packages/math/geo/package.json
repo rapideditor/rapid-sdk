@@ -9,7 +9,7 @@
   ],
   "main": "built/geo.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --outDir \"./built\" src/*.ts",
     "test": "jest"
   }
 }

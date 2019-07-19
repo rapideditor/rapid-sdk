@@ -1,4 +1,6 @@
-import { geoMetersToLat, geoMetersToLon } from '@ideditor/geo';
+'use strict';
+exports.__esModule = true;
+var geo_1 = require('@ideditor/geo');
 var Extent = /** @class */ (function() {
   function Extent(otherOrMin, max) {
     this.min = [Infinity, Infinity];
@@ -93,8 +95,8 @@ var Extent = /** @class */ (function() {
     }
   };
   Extent.prototype.padByMeters = function(meters) {
-    var dLat = geoMetersToLat(meters);
-    var dLon = geoMetersToLon(meters, this.center()[1]);
+    var dLat = geo_1.geoMetersToLat(meters);
+    var dLon = geo_1.geoMetersToLon(meters, this.center()[1]);
     return new Extent(
       [this.min[0] - dLon, this.min[1] - dLat],
       [this.max[0] + dLon, this.max[1] + dLat]
@@ -105,4 +107,4 @@ var Extent = /** @class */ (function() {
   };
   return Extent;
 })();
-export { Extent };
+exports.Extent = Extent;

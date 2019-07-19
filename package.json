@@ -28,8 +28,9 @@
     "typescript": "^3.5.2"
   },
   "scripts": {
-    "prettier": "prettier --write \"packages/**/*.js\"",
-    "test": "jest"
+    "build": "lerna run build --parallel",
+    "test": "jest",
+    "prettier": "prettier --write \"packages/**/*.js\""
   },
   "engines": {
     "node": ">=8.0.0",
