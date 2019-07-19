@@ -6,10 +6,14 @@ export declare function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec
 export declare function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean;
 export declare function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean;
 export declare function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolean;
-export declare function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], checkSegments: boolean): boolean;
+export declare function geomPolygonIntersectsPolygon(
+  outer: Vec2[],
+  inner: Vec2[],
+  checkSegments: boolean
+): boolean;
 interface SSR {
-    poly: Vec2[];
-    angle: number;
+  poly: Vec2[];
+  angle: number;
 }
 export declare function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR;
 export declare function geomPathLength(path: Vec2[]): number;

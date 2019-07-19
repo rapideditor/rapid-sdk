@@ -20,7 +20,6 @@ export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): V
   });
 }
 
-
 // Return the intersection point of 2 line segments.
 // From https://github.com/pgkelley4/line-segments-intersect
 // This uses the vector cross product approach described below:
@@ -109,7 +108,11 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
   });
 }
 
-export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], checkSegments: boolean): boolean {
+export function geomPolygonIntersectsPolygon(
+  outer: Vec2[],
+  inner: Vec2[],
+  checkSegments: boolean
+): boolean {
   function testPoints(outer: Vec2[], inner: Vec2[]): boolean {
     return inner.some((point: Vec2) => {
       return geomPointInPolygon(point, outer);
@@ -134,7 +137,7 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR {
   let c1: Vec2 = hull[0];
 
   for (let i: number = 0; i <= hull.length - 1; i++) {
-    const c2: Vec2 = (i === hull.length - 1) ? hull[0] : hull[i + 1];
+    const c2: Vec2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
     const angle: number = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
     const poly: Vec2[] = geomRotatePoints(hull, -angle, centroid);
     const extent: Extent = poly.reduce((acc: Extent, point: Vec2) => {

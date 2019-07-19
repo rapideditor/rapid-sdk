@@ -30,7 +30,7 @@
   "scripts": {
     "build": "lerna run build --parallel",
     "test": "jest",
-    "prettier": "prettier --write \"packages/**/*.js\""
+    "prettier": "prettier --write \"./**/*.{ts,js}\""
   },
   "engines": {
     "node": ">=8.0.0",
@@ -42,7 +42,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,json,md}": [
+    "*.{ts,js}": [
       "prettier --write",
       "git add"
     ]

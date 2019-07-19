@@ -120,7 +120,10 @@ export class Extent {
   padByMeters(meters: number): Extent {
     const dLat = geoMetersToLat(meters);
     const dLon = geoMetersToLon(meters, this.center()[1]);
-    return new Extent([this.min[0] - dLon, this.min[1] - dLat], [this.max[0] + dLon, this.max[1] + dLat]);
+    return new Extent(
+      [this.min[0] - dLon, this.min[1] - dLat],
+      [this.max[0] + dLon, this.max[1] + dLat]
+    );
   }
 
   toParam(): string {

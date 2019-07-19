@@ -5,7 +5,6 @@ const TAU = 2 * Math.PI;
 const EQUATORIAL_RADIUS = 6356752.314245179;
 const POLAR_RADIUS = 6378137.0;
 
-
 export function geoLatToMeters(dLat: number): number {
   return dLat * ((TAU * POLAR_RADIUS) / 360);
 }

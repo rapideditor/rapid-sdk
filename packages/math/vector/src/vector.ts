@@ -83,7 +83,6 @@ export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   return p[0] * q[1] - p[1] * q[0];
 }
 
-
 interface Edge {
   index: number;
   distance: number;

@@ -12,9 +12,9 @@ export declare function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number;
 export declare function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number;
 export declare function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number;
 interface Edge {
-    index: number;
-    distance: number;
-    target: Vec2;
+  index: number;
+  distance: number;
+  target: Vec2;
 }
 export declare function vecProject(a: Vec2, points: Vec2[]): Edge | null;
 export {};
