@@ -22,6 +22,7 @@
     "husky": "^3.0.0",
     "jest": "^24.8.0",
     "jest-extended": "^0.11.2",
+    "jsdoc": "^3.6.0",
     "lerna": "^3.15.0",
     "lint-staged": "^9.2.0",
     "prettier": "^1.18.2",
@@ -29,11 +30,12 @@
   },
   "scripts": {
     "build": "lerna run build --parallel",
+    "docs": "jsdoc -c ./jsdoc.config.js packages",
     "test": "jest",
     "prettier": "prettier --write \"./**/*.{ts,js}\""
   },
   "engines": {
-    "node": ">=8.0.0",
+    "node": ">=8.15.0",
     "npm": ">=5.0.0"
   },
   "husky": {
