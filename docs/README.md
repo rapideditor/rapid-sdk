@@ -16,5 +16,5 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 * @ideditor/extent - an Extent class for representing bounding boxes
 * @ideditor/geo - geographic (spherical) math functions
 * @ideditor/geom - geometrical (planar) math functions
-* [@ideditor/vector](/docs/module-@ideditor_vector.html) - vector math functions
+* [@ideditor/vector](/ideditor/docs/module-@ideditor_vector.html) - vector math functions
 
