@@ -3,6 +3,7 @@ const pkg = require('./package.json');
 module.exports = {
   opts: {
     destination: './docs/',
+    readme: './docs/README.md',
     recurse: true,
     template: 'node_modules/docdash'
   },
