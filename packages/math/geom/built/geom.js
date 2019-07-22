@@ -1,4 +1,9 @@
 'use strict';
+/**
+ * Geometric (planar) math module
+ * @module @ideditor/geom
+ * @see module:@ideditor/geom
+ */
 exports.__esModule = true;
 var d3_polygon_1 = require('d3-polygon');
 var extent_1 = require('@ideditor/extent');

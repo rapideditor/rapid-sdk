@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>extent/built/extent.js - iD Editor Documentation</title>
+
+    <meta name="description" content="Map editing made easy" />
+
+    <meta name="keywords" content="map,editor" />
+    <meta name="keyword" content="map,editor" />
+
+    <meta property="og:title" content="ideditor" />
+    <meta property="og:type" content="Map editing made easy" />
+    <meta property="og:image" content="" />
+
+    <meta property="og:url" content="https://github.com/undefined" />
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css" />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css" />
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger" class="navicon-button x">
+      <div class="navicon"></div>
+    </label>
+
+    <label for="nav-trigger" class="overlay"></label>
+
+    <nav>
+      <input type="text" id="nav-search" placeholder="Search" />
+
+      <h2><a href="index.html">Home</a></h2>
+      <h2>
+        <a href="https://github.com/ideditor/ideditor" target="_blank" class="menu-item" id="GitHub"
+          >GitHub</a
+        >
+      </h2>
+      <h3>Modules</h3>
+      <ul>
+        <li><a href="module-@ideditor_extent.html">@ideditor/extent</a></li>
+        <li><a href="module-@ideditor_geo.html">@ideditor/geo</a></li>
+        <li><a href="module-@ideditor_geom.html">@ideditor/geom</a></li>
+        <li>
+          <a href="module-@ideditor_vector.html">@ideditor/vector</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecAdd">vecAdd</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecAngle">vecAngle</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecCross">vecCross</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecDot">vecDot</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecEqual">vecEqual</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecFloor">vecFloor</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecInterp">vecInterp</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecLength">vecLength</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecNormalize">vecNormalize</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecNormalizedDot">vecNormalizedDot</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecProject">vecProject</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecScale">vecScale</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecSubtract">vecSubtract</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="main">
+      <h1 class="page-title">extent/built/extent.js</h1>
+
+      <section>
+        <article>
+          <pre class="prettyprint source linenums"><code>"use strict";
+/**
+ * An Extent class for representing bounding boxes
+ * @module @ideditor/extent
+ * @see module:@ideditor/extent
+ */
+exports.__esModule = true;
+var geo_1 = require("@ideditor/geo");
+var Extent = /** @class */ (function () {
+    /** Constructs a new Extent
+     *  @param {Extent|Vec2} otherOrMin
+     *  @param {Vec2} [max]
+     *  @returns {Extent} new Extent
+     */
+    function Extent(otherOrMin, max) {
+        this.min = [Infinity, Infinity];
+        this.max = [-Infinity, -Infinity];
+        var min;
+        if (otherOrMin instanceof Extent) {
+            min = otherOrMin.min;
+            max = otherOrMin.max;
+        }
+        else {
+            min = otherOrMin;
+        }
+        if (min &amp;&amp; min.length === 2) {
+            this.min[0] = min[0];
+            this.min[1] = min[1];
+            if (!max)
+                max = min;
+        }
+        if (max &amp;&amp; max.length === 2) {
+            this.max[0] = max[0];
+            this.max[1] = max[1];
+        }
+    }
+    /** Test whether extent equals another extent
+     *  @param {any} other
+     *  @returns {boolean} True if equal, false if unequal
+     */
+    Extent.prototype.equals = function (other) {
+        if (!(other instanceof Extent))
+            other = new Extent(other);
+        return (this.min[0] === other.min[0] &amp;&amp;
+            this.min[1] === other.min[1] &amp;&amp;
+            this.max[0] === other.max[0] &amp;&amp;
+            this.max[1] === other.max[1]);
+    };
+    /** Extend the bounds of an extent
+     *  @param {any} other
+     *  @returns {Extent} True if equal, false if unequal
+     */
+    Extent.prototype.extend = function (other) {
+        if (!(other instanceof Extent))
+            other = new Extent(other);
+        return new Extent([Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])], [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]);
+    };
+    /** Returns the area of an extent
+     *  @returns {number} area
+     */
+    Extent.prototype.area = function () {
+        return Math.abs((this.max[0] - this.min[0]) * (this.max[1] - this.min[1]));
+    };
+    /** Returns the center point of an extent
+     *  @returns {Vec2} Center point of the extent
+     */
+    Extent.prototype.center = function () {
+        return [(this.min[0] + this.max[0]) / 2, (this.min[1] + this.max[1]) / 2];
+    };
+    /** Returns an array rectangle as `[minX, minY, maxX, maxY]`
+     *  @returns {number[]} rectangle
+     */
+    Extent.prototype.rectangle = function () {
+        return [this.min[0], this.min[1], this.max[0], this.max[1]];
+    };
+    /** Returns an Object with `minX`, `minY`, `maxX`, `maxY` properties.
+     *  @returns {Object} Object
+     */
+    Extent.prototype.bbox = function () {
+        return { minX: this.min[0], minY: this.min[1], maxX: this.max[0], maxY: this.max[1] };
+    };
+    /** Returns an polygon representing the extent wound clockwise.
+     *  @returns {Vec2[]} Polygon array
+     */
+    Extent.prototype.polygon = function () {
+        return [
+            [this.min[0], this.min[1]],
+            [this.min[0], this.max[1]],
+            [this.max[0], this.max[1]],
+            [this.max[0], this.min[1]],
+            [this.min[0], this.min[1]]
+        ];
+    };
+    /** Test whether this extent contains another extent
+     *  @param {any} other
+     *  @returns {boolean} True if this extent contains other, false if not
+     */
+    Extent.prototype.contains = function (other) {
+        if (!(other instanceof Extent))
+            other = new Extent(other);
+        return (other.min[0] >= this.min[0] &amp;&amp;
+            other.min[1] >= this.min[1] &amp;&amp;
+            other.max[0] &lt;= this.max[0] &amp;&amp;
+            other.max[1] &lt;= this.max[1]);
+    };
+    /** Test whether this extent intersects another extent
+     *  @param {any} other
+     *  @returns {boolean} True if this extent intersects other, false if not
+     */
+    Extent.prototype.intersects = function (other) {
+        if (!(other instanceof Extent))
+            other = new Extent(other);
+        return (other.min[0] &lt;= this.max[0] &amp;&amp;
+            other.min[1] &lt;= this.max[1] &amp;&amp;
+            other.max[0] >= this.min[0] &amp;&amp;
+            other.max[1] >= this.min[1]);
+    };
+    /** Returns a new Extent representing the intersection of this and other extents
+     *  @param {any} other
+     *  @returns {Extent} Intersection of this and other extents
+     */
+    Extent.prototype.intersection = function (other) {
+        if (!this.intersects(other))
+            return new Extent();
+        return new Extent([Math.max(other.min[0], this.min[0]), Math.max(other.min[1], this.min[1])], [Math.min(other.max[0], this.max[0]), Math.min(other.max[1], this.max[1])]);
+    };
+    /** Returns the percentage of other extent contained within this extent, by area
+     *  @param {any} other
+     *  @returns {number} percentage of other extent contained within this extent
+     */
+    Extent.prototype.percentContainedIn = function (other) {
+        if (!(other instanceof Extent))
+            other = new Extent(other);
+        var a1 = this.intersection(other).area();
+        var a2 = this.area();
+        if (a1 === Infinity || a2 === Infinity || a1 === 0 || a2 === 0) {
+            return 0;
+        }
+        else {
+            return a1 / a2;
+        }
+    };
+    /** Returns a new extent representing the current extent padded by given meters
+     *  (this extent is assumed to be defined in geographic coordinates)
+     *  @param {number} meters
+     *  @returns {Extent} new Extent for current extent padded by given meters
+     */
+    Extent.prototype.padByMeters = function (meters) {
+        var dLat = geo_1.geoMetersToLat(meters);
+        var dLon = geo_1.geoMetersToLon(meters, this.center()[1]);
+        return new Extent([this.min[0] - dLon, this.min[1] - dLat], [this.max[0] + dLon, this.max[1] + dLat]);
+    };
+    /** Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`
+     *  @returns {string} rectangle
+     */
+    Extent.prototype.toParam = function () {
+        return this.rectangle().join(',');
+    };
+    return Extent;
+}());
+exports.Extent = Extent;
+</code></pre>
+        </article>
+      </section>
+    </div>
+
+    <br class="clear" />
+
+    <footer>
+      Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon
+      Jul 22 2019 18:08:16 GMT-0400 (EDT) using the
+      <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    </footer>
+
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/polyfill.js"></script>
+    <script src="scripts/linenumber.js"></script>
+
+    <script src="scripts/search.js" defer></script>
+
+    <script src="scripts/collapse.js" defer></script>
+  </body>
+</html>

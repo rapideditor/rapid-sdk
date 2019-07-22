@@ -1,3 +1,9 @@
+/**
+ * Geometric (planar) math module
+ * @module @ideditor/geom
+ * @see module:@ideditor/geom
+ */
+
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
 
 import { Extent } from '@ideditor/extent';

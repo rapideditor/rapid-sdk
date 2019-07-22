@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>geom/built/geom.js - iD Editor Documentation</title>
+
+    <meta name="description" content="Map editing made easy" />
+
+    <meta name="keywords" content="map,editor" />
+    <meta name="keyword" content="map,editor" />
+
+    <meta property="og:title" content="ideditor" />
+    <meta property="og:type" content="Map editing made easy" />
+    <meta property="og:image" content="" />
+
+    <meta property="og:url" content="https://github.com/undefined" />
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css" />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css" />
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger" class="navicon-button x">
+      <div class="navicon"></div>
+    </label>
+
+    <label for="nav-trigger" class="overlay"></label>
+
+    <nav>
+      <input type="text" id="nav-search" placeholder="Search" />
+
+      <h2><a href="index.html">Home</a></h2>
+      <h2>
+        <a href="https://github.com/ideditor/ideditor" target="_blank" class="menu-item" id="GitHub"
+          >GitHub</a
+        >
+      </h2>
+      <h3>Modules</h3>
+      <ul>
+        <li><a href="module-@ideditor_extent.html">@ideditor/extent</a></li>
+        <li><a href="module-@ideditor_geo.html">@ideditor/geo</a></li>
+        <li><a href="module-@ideditor_geom.html">@ideditor/geom</a></li>
+        <li>
+          <a href="module-@ideditor_vector.html">@ideditor/vector</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecAdd">vecAdd</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecAngle">vecAngle</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecCross">vecCross</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecDot">vecDot</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecEqual">vecEqual</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecFloor">vecFloor</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecInterp">vecInterp</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecLength">vecLength</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecNormalize">vecNormalize</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecNormalizedDot">vecNormalizedDot</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecProject">vecProject</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecScale">vecScale</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_vector.html#~vecSubtract">vecSubtract</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div id="main">
+      <h1 class="page-title">geom/built/geom.js</h1>
+
+      <section>
+        <article>
+          <pre class="prettyprint source linenums"><code>"use strict";
+/**
+ * Geometric (planar) math module
+ * @module @ideditor/geom
+ * @see module:@ideditor/geom
+ */
+exports.__esModule = true;
+var d3_polygon_1 = require("d3-polygon");
+var extent_1 = require("@ideditor/extent");
+var vector_1 = require("@ideditor/vector");
+function geomEdgeEqual(a, b) {
+    return (a[0] === b[0] &amp;&amp; a[1] === b[1]) || (a[0] === b[1] &amp;&amp; a[1] === b[0]);
+}
+exports.geomEdgeEqual = geomEdgeEqual;
+// Rotate all points counterclockwise around a pivot point by given angle
+function geomRotatePoints(points, angle, around) {
+    return points.map(function (point) {
+        var radial = vector_1.vecSubtract(point, around);
+        return [
+            radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
+            radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
+        ];
+    });
+}
+exports.geomRotatePoints = geomRotatePoints;
+// Return the intersection point of 2 line segments.
+// From https://github.com/pgkelley4/line-segments-intersect
+// This uses the vector cross product approach described below:
+//  http://stackoverflow.com/a/565282/786339
+function geomLineIntersection(a, b) {
+    var p = [a[0][0], a[0][1]];
+    var p2 = [a[1][0], a[1][1]];
+    var q = [b[0][0], b[0][1]];
+    var q2 = [b[1][0], b[1][1]];
+    var r = vector_1.vecSubtract(p2, p);
+    var s = vector_1.vecSubtract(q2, q);
+    var uNumerator = vector_1.vecCross(vector_1.vecSubtract(q, p), r);
+    var denominator = vector_1.vecCross(r, s);
+    if (uNumerator &amp;&amp; denominator) {
+        var u = uNumerator / denominator;
+        var t = vector_1.vecCross(vector_1.vecSubtract(q, p), s) / denominator;
+        if (t >= 0 &amp;&amp; t &lt;= 1 &amp;&amp; u >= 0 &amp;&amp; u &lt;= 1) {
+            return vector_1.vecInterp(p, p2, t);
+        }
+    }
+    return null;
+}
+exports.geomLineIntersection = geomLineIntersection;
+function geomPathIntersections(path1, path2) {
+    var intersections = [];
+    for (var i = 0; i &lt; path1.length - 1; i++) {
+        for (var j = 0; j &lt; path2.length - 1; j++) {
+            var a = [path1[i], path1[i + 1]];
+            var b = [path2[j], path2[j + 1]];
+            var hit = geomLineIntersection(a, b);
+            if (hit) {
+                intersections.push(hit);
+            }
+        }
+    }
+    return intersections;
+}
+exports.geomPathIntersections = geomPathIntersections;
+function geomPathHasIntersections(path1, path2) {
+    for (var i = 0; i &lt; path1.length - 1; i++) {
+        for (var j = 0; j &lt; path2.length - 1; j++) {
+            var a = [path1[i], path1[i + 1]];
+            var b = [path2[j], path2[j + 1]];
+            var hit = geomLineIntersection(a, b);
+            if (hit) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+exports.geomPathHasIntersections = geomPathHasIntersections;
+// Return whether point is contained in polygon.
+//
+// `point` should be a 2-item array of coordinates.
+// `polygon` should be an array of 2-item arrays of coordinates.
+//
+// From https://github.com/substack/point-in-polygon.
+// ray-casting algorithm based on
+// http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+//
+function geomPointInPolygon(point, polygon) {
+    var x = point[0];
+    var y = point[1];
+    var inside = false;
+    for (var i = 0, j = polygon.length - 1; i &lt; polygon.length; j = i++) {
+        var xi = polygon[i][0];
+        var yi = polygon[i][1];
+        var xj = polygon[j][0];
+        var yj = polygon[j][1];
+        var intersect = yi > y !== yj > y &amp;&amp; x &lt; ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+        if (intersect)
+            inside = !inside;
+    }
+    return inside;
+}
+exports.geomPointInPolygon = geomPointInPolygon;
+function geomPolygonContainsPolygon(outer, inner) {
+    return inner.every(function (point) {
+        return geomPointInPolygon(point, outer);
+    });
+}
+exports.geomPolygonContainsPolygon = geomPolygonContainsPolygon;
+function geomPolygonIntersectsPolygon(outer, inner, checkSegments) {
+    function testPoints(outer, inner) {
+        return inner.some(function (point) {
+            return geomPointInPolygon(point, outer);
+        });
+    }
+    return testPoints(outer, inner) || (!!checkSegments &amp;&amp; geomPathHasIntersections(outer, inner));
+}
+exports.geomPolygonIntersectsPolygon = geomPolygonIntersectsPolygon;
+// http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
+// http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
+function geomGetSmallestSurroundingRectangle(points) {
+    var hull = d3_polygon_1.polygonHull(points);
+    var centroid = d3_polygon_1.polygonCentroid(hull);
+    var minArea = Infinity;
+    var ssrExtent = new extent_1.Extent();
+    var ssrAngle = 0;
+    var c1 = hull[0];
+    for (var i = 0; i &lt;= hull.length - 1; i++) {
+        var c2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
+        var angle = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
+        var poly = geomRotatePoints(hull, -angle, centroid);
+        var extent = poly.reduce(function (acc, point) {
+            // update min/max in-place for speed
+            acc.min[0] = Math.min(acc.min[0], point[0]);
+            acc.min[1] = Math.min(acc.min[1], point[1]);
+            acc.max[0] = Math.max(acc.max[0], point[0]);
+            acc.max[1] = Math.max(acc.max[1], point[1]);
+            return acc;
+        }, new extent_1.Extent());
+        var area = extent.area();
+        if (area &lt; minArea) {
+            minArea = area;
+            ssrExtent = extent;
+            ssrAngle = angle;
+        }
+        c1 = c2;
+    }
+    return {
+        poly: geomRotatePoints(ssrExtent.polygon(), ssrAngle, centroid),
+        angle: ssrAngle
+    };
+}
+exports.geomGetSmallestSurroundingRectangle = geomGetSmallestSurroundingRectangle;
+function geomPathLength(path) {
+    var length = 0;
+    for (var i = 0; i &lt; path.length - 1; i++) {
+        length += vector_1.vecLength(path[i], path[i + 1]);
+    }
+    return length;
+}
+exports.geomPathLength = geomPathLength;
+// If the given point is at the edge of the padded viewport,
+// return a vector that will nudge the viewport in that direction
+function geomViewportNudge(point, dimensions) {
+    var pad = [80, 20, 50, 20]; // top, right, bottom, left
+    var x = 0;
+    var y = 0;
+    if (point[0] > dimensions[0] - pad[1])
+        x = -10;
+    if (point[0] &lt; pad[3])
+        x = 10;
+    if (point[1] > dimensions[1] - pad[2])
+        y = -10;
+    if (point[1] &lt; pad[0])
+        y = 10;
+    if (x || y) {
+        return [x, y];
+    }
+    else {
+        return null;
+    }
+}
+exports.geomViewportNudge = geomViewportNudge;
+</code></pre>
+        </article>
+      </section>
+    </div>
+
+    <br class="clear" />
+
+    <footer>
+      Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Mon
+      Jul 22 2019 18:08:16 GMT-0400 (EDT) using the
+      <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    </footer>
+
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/polyfill.js"></script>
+    <script src="scripts/linenumber.js"></script>
+
+    <script src="scripts/search.js" defer></script>
+
+    <script src="scripts/collapse.js" defer></script>
+  </body>
+</html>

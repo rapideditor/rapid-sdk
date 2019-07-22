@@ -1,3 +1,9 @@
+/**
+ * Geographic (spherical) math module
+ * @module @ideditor/geo
+ * @see module:@ideditor/geo
+ */
+
 type Vec2 = [number, number];
 
 // constants

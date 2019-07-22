@@ -1,4 +1,9 @@
 'use strict';
+/**
+ * Geographic (spherical) math module
+ * @module @ideditor/geo
+ * @see module:@ideditor/geo
+ */
 exports.__esModule = true;
 // constants
 var TAU = 2 * Math.PI;
