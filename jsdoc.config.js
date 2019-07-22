@@ -1,3 +1,5 @@
+const pkg = require('./package.json');
+
 module.exports = {
   opts: {
     destination: './docs/',
@@ -11,22 +13,25 @@ module.exports = {
     allowUnknownTags: false,
     dictionaries: ['jsdoc']
   },
-
   docdash: {
     sort: true,
     openGraph: {
-      title: 'ideditor',
-      type: 'Map editing made easy',
-      url: 'https://github.com/ideditor/ideditor'
+      title: pkg.name,
+      type: pkg.description,
+      url: 'https://github.com/' + pkg.repostiory
     },
     meta: {
-      title: 'iD Editor Documentation'
+      title: 'iD Editor Documentation',
+      description: pkg.description,
+      keyword: pkg.keywords.join(',')
     },
     search: true,
+    collapse: true,
+    typedefs: true,
     private: false,
     menu: {
       GitHub: {
-        href: 'https://github.com/ideditor/ideditor',
+        href: 'https://github.com/' + pkg.repository,
         target: '_blank',
         class: 'menu-item',
         id: 'GitHub'

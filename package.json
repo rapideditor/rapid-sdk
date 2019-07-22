@@ -31,7 +31,7 @@
   },
   "scripts": {
     "build": "lerna run build --parallel",
-    "docs": "jsdoc -c ./jsdoc.config.js packages",
+    "docs": "jsdoc -c ./jsdoc.config.js packages && prettier --write \"./docs/**/*.{html,css,ts,js}\"",
     "test": "jest",
     "prettier": "prettier --write \"./**/*.{html,css,ts,js}\""
   },

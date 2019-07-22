@@ -4,6 +4,10 @@
  * @see module:@ideditor/vector
  */
 
+/**
+ * @typedef Vec2
+ * @type {number[2]}
+ */
 type Vec2 = [number, number];
 
 /** Test whether two given vectors are equal
@@ -11,6 +15,9 @@ type Vec2 = [number, number];
  *  @param {Vec2} b - Second vector
  *  @param {number} [epsilon] - Threshold for equality
  *  @returns {boolean} True if equal, false if unequal
+ *  @example
+ *  vecEqual([1, 2], [1, 2]);   // returns true
+ *  vecEqual([1, 2], [1.0000001, 2.0000001], 1e-5);   // returns true
  */
 export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
   if (epsilon) {
@@ -24,6 +31,8 @@ export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
  *  @param {Vec2} a - First vector
  *  @param {Vec2} b - Second vector
  *  @returns {Vec2} Sum of a + b
+ *  @example
+ *  vecAdd([1, 2], [3, 4]);   // returns [4, 6]
  */
 export function vecAdd(a: Vec2, b: Vec2): Vec2 {
   return [a[0] + b[0], a[1] + b[1]];
@@ -33,6 +42,8 @@ export function vecAdd(a: Vec2, b: Vec2): Vec2 {
  *  @param {Vec2} a - First vector
  *  @param {Vec2} b - Second vector
  *  @returns {Vec2} Difference of a - b
+ *  @example
+ *  vecSubtract([1, 2], [3, 4]);   // returns [-2, -2]
  */
 export function vecSubtract(a: Vec2, b: Vec2): Vec2 {
   return [a[0] - b[0], a[1] - b[1]];
@@ -42,6 +53,8 @@ export function vecSubtract(a: Vec2, b: Vec2): Vec2 {
  *  @param {Vec2} a - Input vector
  *  @param {number} n - Scale factor
  *  @returns {Vec2} Scaled vector
+ *  @example
+ *  vecScale([1, 2], 2);   // returns [2, 4]
  */
 export function vecScale(a: Vec2, n: number): Vec2 {
   return [a[0] * n, a[1] * n];
@@ -50,6 +63,8 @@ export function vecScale(a: Vec2, n: number): Vec2 {
 /** Floor the coordinates of a vector
  *  @param {Vec2} a - Input vector
  *  @returns {Vec2} Floored vector
+ *  @example
+ *  vecFloor([0, 1.01]);   // returns [0, 1]
  */
 export function vecFloor(a: Vec2): Vec2 {
   return [Math.floor(a[0]), Math.floor(a[1])];
@@ -60,6 +75,8 @@ export function vecFloor(a: Vec2): Vec2 {
  *  @param {Vec2} b - End coordinate
  *  @param {number} t - Scaled distance between ab
  *  @returns {Vec2} Point along ab
+ *  @example
+ *  vecInterp([0, 0], [10, 10], 0.5);   // returns [5, 5]
  */
 export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
@@ -69,6 +86,8 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
  *  @param {Vec2} a - Start coordinate
  *  @param {Vec2} [b=[0,0]] - End coordinate
  *  @returns {Vec2} Length of ab
+ *  @example
+ *  vecLength([0, 0], [4, 3]);   // returns 5
  */
 // http://jsperf.com/id-dist-optimization
 export function vecLength(a: Vec2, b?: Vec2): number {
@@ -81,6 +100,8 @@ export function vecLength(a: Vec2, b?: Vec2): number {
 /** Normalize a vector (return a unit vector)
  *  @param {Vec2} a - Input vector
  *  @returns {Vec2} Unit vector
+ *  @example
+ *  vecNormalize([5, 0]);   // returns [1, 0]
  */
 export function vecNormalize(a: Vec2): Vec2 {
   const length: number = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
@@ -95,6 +116,8 @@ export function vecNormalize(a: Vec2): Vec2 {
  *  @param {Vec2} a - First vector
  *  @param {Vec2} b - Second vector
  *  @returns {number} Angle between a and b
+ *  @example
+ *  vecAngle([0, 0], [-1, 0]);   // returns π
  */
 export function vecAngle(a: Vec2, b: Vec2): number {
   return Math.atan2(b[1] - a[1], b[0] - a[0]);
@@ -105,6 +128,8 @@ export function vecAngle(a: Vec2, b: Vec2): number {
  *  @param {Vec2} b - Second vector
  *  @param {Vec2} [origin=[0,0]] - Origin
  *  @returns {number} a · b
+ *  @example
+ *  vecDot([2, 0], [2, 0]);   // returns 4
  */
 export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
@@ -113,11 +138,13 @@ export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   return p[0] * q[0] + p[1] * q[1];
 }
 
-/** Normalized Dot Product
+/** Normalized Dot Product - normalizes input vectors before returning dot product
  *  @param {Vec2} a - First vector
  *  @param {Vec2} b - Second vector
  *  @param {Vec2} [origin=[0,0]] - Origin
  *  @returns {number} a · b
+ *  @example
+ *  vecNormalizedDot([2, 0], [2, 0]);   // returns 1
  */
 export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
@@ -133,6 +160,8 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
  *  @param {Vec2} b - Second vector
  *  @param {Vec2} [origin=[0,0]] - Origin
  *  @returns {number} a ⅹ b
+ *  @example
+ *  vecCross([2, 0], [0, 2]);   // returns 4
  */
 export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
@@ -141,6 +170,13 @@ export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   return p[0] * q[1] - p[1] * q[0];
 }
 
+/**
+ * @typedef Edge
+ * @type {object}
+ * @property {number} index - index of segment along path
+ * @property {number} distance - distance from point to path
+ * @property {Vec2} target - point along path
+ */
 interface Edge {
   index: number;
   distance: number;
@@ -151,6 +187,18 @@ interface Edge {
  *  @param {Vec2} a - Point to project
  *  @param {Vec2[]} points - Path to project point onto
  *  @returns {Edge} Edge and target point along edge
+ *  @example
+ *  //
+ *  //     c
+ *  //     |
+ *  // a --*--- b
+ *  //
+ *  // * = [2, 0]
+ *  //
+ *  const a = [0, 0];
+ *  const b = [5, 0];
+ *  const c = [2, 1];
+ *  test.vecProject(c, [a, b]);   // returns {index: 1, distance: 1, target: [2, 0] }
  */
 export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
   let min: number = Infinity;
