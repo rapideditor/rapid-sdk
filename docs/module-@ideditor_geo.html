@@ -94,7 +94,43 @@
       <h3>Modules</h3>
       <ul>
         <li><a href="module-@ideditor_extent.html">@ideditor/extent</a></li>
-        <li><a href="module-@ideditor_geo.html">@ideditor/geo</a></li>
+        <li>
+          <a href="module-@ideditor_geo.html">@ideditor/geo</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoLatToMeters">geoLatToMeters</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoLonToMeters">geoLonToMeters</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoMetersToLat">geoMetersToLat</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoMetersToLon">geoMetersToLon</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoMetersToOffset">geoMetersToOffset</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoOffsetToMeters">geoOffsetToMeters</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoScaleToZoom">geoScaleToZoom</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoSphericalClosestPoint"
+                >geoSphericalClosestPoint</a
+              >
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoSphericalDistance">geoSphericalDistance</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geo.html#~geoZoomToScale">geoZoomToScale</a>
+            </li>
+          </ul>
+        </li>
         <li><a href="module-@ideditor_geom.html">@ideditor/geom</a></li>
         <li>
           <a href="module-@ideditor_vector.html">@ideditor/vector</a>
@@ -167,6 +203,821 @@
               </dd>
             </dl>
           </div>
+
+          <h3 class="subsection-title">Methods</h3>
+
+          <h4 class="name" id="~geoLatToMeters">
+            <span class="type-signature">(inner) </span>geoLatToMeters<span class="signature"
+              >(dLat)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line17">line 17</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Convert degrees latitude to meters
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>geoLatToMeters(1);  // returns ≈111319</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>dLat</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">degrees latitude</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            meters
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoLonToMeters">
+            <span class="type-signature">(inner) </span>geoLonToMeters<span class="signature"
+              >(dLon, atLat)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line28">line 28</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Convert degrees longitude to meters at a given latitude
+          </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>geoLonToMeters(1, 0);  // returns ≈110946 at equator</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>dLon</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">degrees longitude</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>atLat</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">at latitude</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            meters
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoMetersToLat">
+            <span class="type-signature">(inner) </span>geoMetersToLat<span class="signature"
+              >(m)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line40">line 40</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Convert meters to degrees latitude
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>geoMetersToLat(111319);  // returns ≈1°</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>m</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">meters</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            degrees latitude
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoMetersToLon">
+            <span class="type-signature">(inner) </span>geoMetersToLon<span class="signature"
+              >(m, atLat)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line51">line 51</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Convert meters to degrees longitude at a given latitude
+          </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>geoMetersToLon(110946, 0);  // returns ≈1° at equator</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>m</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">meters</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>atLat</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">at latitude</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            degrees longitude
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoMetersToOffset">
+            <span class="type-signature">(inner) </span>geoMetersToOffset<span class="signature"
+              >(m, tileSize<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {Vec2}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line64">line 64</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Convert imagery offset in meters to offset in tile pixels
+          </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>geoMetersToOffset([100, 100]);  // returns ≈[0.00064, -0.00064] pixels</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th>Default</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>m</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="attributes"></td>
+
+                <td class="default"></td>
+
+                <td class="description last">Offset in meters</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>tileSize</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="default">
+                  <code>256</code>
+                </td>
+
+                <td class="description last">Tile size in pixels</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Offset in pixels
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Vec2</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoOffsetToMeters">
+            <span class="type-signature">(inner) </span>geoOffsetToMeters<span class="signature"
+              >(offset, tileSize<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {Vec2}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line79">line 79</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Convert imagery offset in tile pixels to offset in meters
+          </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>geoOffsetToMeters([0.00064, -0.00064]);  // returns ≈[100, 100] meters</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th>Default</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>offset</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="attributes"></td>
+
+                <td class="default"></td>
+
+                <td class="description last">Offset in pixels</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>tileSize</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="default">
+                  <code>256</code>
+                </td>
+
+                <td class="description last">Tile size in pixels</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Offset in meters
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Vec2</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoScaleToZoom">
+            <span class="type-signature">(inner) </span>geoScaleToZoom<span class="signature"
+              >(k, tileSize<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line107">line 107</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Projection scale factor to tile zoom level
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>geoScaleToZoom(5340353.7154);  // returns ≈17</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th>Default</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>k</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes"></td>
+
+                <td class="default"></td>
+
+                <td class="description last">Scale factor</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>tileSize</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="default">
+                  <code>256</code>
+                </td>
+
+                <td class="description last">Tile size in pixels</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Tile zoom level
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoSphericalClosestPoint">
+            <span class="type-signature">(inner) </span>geoSphericalClosestPoint<span
+              class="signature"
+              >(a, points)</span
+            ><span class="type-signature"> &rarr; {Closest}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line130">line 130</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Returns info about the point from `points` closest to the given `a`
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>a</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">Point to test</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>points</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">Path to test against</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Info about closest point along path
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Closest</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoSphericalDistance">
+            <span class="type-signature">(inner) </span>geoSphericalDistance<span class="signature"
+              >(a, b)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line94">line 94</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Equirectangular approximation of spherical distances on Earth
+          </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>geoSphericalDistance([0, 0], [1, 0]);  // returns ≈110946 meters</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>a</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">Start coordinate</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>b</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">End coordinate</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Approximate distance in meters
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geoZoomToScale">
+            <span class="type-signature">(inner) </span>geoZoomToScale<span class="signature"
+              >(z, tileSize<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geo_built_geo.js.html">geo/built/geo.js</a>,
+                  <a href="geo_built_geo.js.html#line120">line 120</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Tile zoom to projection scale factor
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>geoZoomToScale(17);  // returns ≈5340353.7154</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th>Default</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>z</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes"></td>
+
+                <td class="default"></td>
+
+                <td class="description last">Tile zoom level</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>tileSize</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="default">
+                  <code>256</code>
+                </td>
+
+                <td class="description last">Tile size in pixels</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Scale factor
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
         </article>
       </section>
     </div>
@@ -175,7 +1026,7 @@
 
     <footer>
       Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue
-      Jul 23 2019 00:25:54 GMT-0400 (EDT) using the
+      Jul 23 2019 11:24:19 GMT-0400 (EDT) using the
       <a href="https://github.com/clenemt/docdash">docdash</a> theme.
     </footer>
 
