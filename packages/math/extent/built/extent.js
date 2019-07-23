@@ -11,9 +11,9 @@ var geo_1 = require('@ideditor/geo');
  */
 var Extent = /** @class */ (function() {
   /** Constructs a new Extent
-   *  @param {Extent|Vec2} otherOrMin
-   *  @param {Vec2} [max]
-   *  @returns {Extent} new Extent
+   * @param {Extent|Vec2} otherOrMin
+   * @param {Vec2} [max]
+   * @returns {Extent} new Extent
    */
   function Extent(otherOrMin, max) {
     /** Minimum corner coordinate for the extent
@@ -44,8 +44,8 @@ var Extent = /** @class */ (function() {
     }
   }
   /** Test whether extent equals another extent
-   *  @param {any} other
-   *  @returns {boolean} True if equal, false if unequal
+   * @param {any} other
+   * @returns {boolean} True if equal, false if unequal
    */
   Extent.prototype.equals = function(other) {
     if (!(other instanceof Extent)) other = new Extent(other);
@@ -57,8 +57,8 @@ var Extent = /** @class */ (function() {
     );
   };
   /** Extend the bounds of an extent
-   *  @param {any} other
-   *  @returns {Extent} True if equal, false if unequal
+   * @param {any} other
+   * @returns {Extent} True if equal, false if unequal
    */
   Extent.prototype.extend = function(other) {
     if (!(other instanceof Extent)) other = new Extent(other);
@@ -68,31 +68,31 @@ var Extent = /** @class */ (function() {
     );
   };
   /** Returns the area of an extent
-   *  @returns {number} area
+   * @returns {number} area
    */
   Extent.prototype.area = function() {
     return Math.abs((this.max[0] - this.min[0]) * (this.max[1] - this.min[1]));
   };
   /** Returns the center point of an extent
-   *  @returns {Vec2} Center point of the extent
+   * @returns {Vec2} Center point of the extent
    */
   Extent.prototype.center = function() {
     return [(this.min[0] + this.max[0]) / 2, (this.min[1] + this.max[1]) / 2];
   };
   /** Returns an array rectangle as `[minX, minY, maxX, maxY]`
-   *  @returns {number[]} rectangle
+   * @returns {number[]} rectangle
    */
   Extent.prototype.rectangle = function() {
     return [this.min[0], this.min[1], this.max[0], this.max[1]];
   };
   /** Returns an Object with `minX`, `minY`, `maxX`, `maxY` properties.
-   *  @returns {Object} Object
+   * @returns {Object} Object
    */
   Extent.prototype.bbox = function() {
     return { minX: this.min[0], minY: this.min[1], maxX: this.max[0], maxY: this.max[1] };
   };
   /** Returns an polygon representing the extent wound clockwise.
-   *  @returns {Vec2[]} Polygon array
+   * @returns {Vec2[]} Polygon array
    */
   Extent.prototype.polygon = function() {
     return [
@@ -104,8 +104,8 @@ var Extent = /** @class */ (function() {
     ];
   };
   /** Test whether this extent contains another extent
-   *  @param {any} other
-   *  @returns {boolean} True if this extent contains other, false if not
+   * @param {any} other
+   * @returns {boolean} True if this extent contains other, false if not
    */
   Extent.prototype.contains = function(other) {
     if (!(other instanceof Extent)) other = new Extent(other);
@@ -117,8 +117,8 @@ var Extent = /** @class */ (function() {
     );
   };
   /** Test whether this extent intersects another extent
-   *  @param {any} other
-   *  @returns {boolean} True if this extent intersects other, false if not
+   * @param {any} other
+   * @returns {boolean} True if this extent intersects other, false if not
    */
   Extent.prototype.intersects = function(other) {
     if (!(other instanceof Extent)) other = new Extent(other);
@@ -130,8 +130,8 @@ var Extent = /** @class */ (function() {
     );
   };
   /** Returns a new Extent representing the intersection of this and other extents
-   *  @param {any} other
-   *  @returns {Extent} Intersection of this and other extents
+   * @param {any} other
+   * @returns {Extent} Intersection of this and other extents
    */
   Extent.prototype.intersection = function(other) {
     if (!this.intersects(other)) return new Extent();
@@ -141,8 +141,8 @@ var Extent = /** @class */ (function() {
     );
   };
   /** Returns the percentage of other extent contained within this extent, by area
-   *  @param {any} other
-   *  @returns {number} percentage of other extent contained within this extent
+   * @param {any} other
+   * @returns {number} percentage of other extent contained within this extent
    */
   Extent.prototype.percentContainedIn = function(other) {
     if (!(other instanceof Extent)) other = new Extent(other);
@@ -155,9 +155,9 @@ var Extent = /** @class */ (function() {
     }
   };
   /** Returns a new extent representing the current extent padded by given meters
-   *  (this extent is assumed to be defined in geographic coordinates)
-   *  @param {number} meters
-   *  @returns {Extent} new Extent for current extent padded by given meters
+   * (this extent is assumed to be defined in geographic coordinates)
+   * @param {number} meters
+   * @returns {Extent} new Extent for current extent padded by given meters
    */
   Extent.prototype.padByMeters = function(meters) {
     var dLat = geo_1.geoMetersToLat(meters);
@@ -168,7 +168,7 @@ var Extent = /** @class */ (function() {
     );
   };
   /** Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`
-   *  @returns {string} rectangle
+   * @returns {string} rectangle
    */
   Extent.prototype.toParam = function() {
     return this.rectangle().join(',');

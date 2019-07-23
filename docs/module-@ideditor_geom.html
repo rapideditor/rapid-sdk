@@ -131,7 +131,49 @@
             </li>
           </ul>
         </li>
-        <li><a href="module-@ideditor_geom.html">@ideditor/geom</a></li>
+        <li>
+          <a href="module-@ideditor_geom.html">@ideditor/geom</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomEdgeEqual">geomEdgeEqual</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomGetSmallestSurroundingRectangle"
+                >geomGetSmallestSurroundingRectangle</a
+              >
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomLineIntersection">geomLineIntersection</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomPathHasIntersections"
+                >geomPathHasIntersections</a
+              >
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomPathIntersections">geomPathIntersections</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomPathLength">geomPathLength</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomPointInPolygon">geomPointInPolygon</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomPolygonContainsPolygon"
+                >geomPolygonContainsPolygon</a
+              >
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomPolygonIntersectsPolygon"
+                >geomPolygonIntersectsPolygon</a
+              >
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@ideditor_geom.html#~geomRotatePoints">geomRotatePoints</a>
+            </li>
+          </ul>
+        </li>
         <li>
           <a href="module-@ideditor_vector.html">@ideditor/vector</a>
           <ul class="methods">
@@ -201,6 +243,879 @@
               </dd>
             </dl>
           </div>
+
+          <h3 class="subsection-title">Methods</h3>
+
+          <h4 class="name" id="~geomEdgeEqual">
+            <span class="type-signature">(inner) </span>geomEdgeEqual<span class="signature"
+              >(a, b)</span
+            ><span class="type-signature"> &rarr; {boolean}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line18">line 18</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Test whether two given coordinates describe the same edge
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>geomEdgeEqual([1, 2], [1, 2]);   // returns true
+geomEdgeEqual([1, 2], [2, 1]);   // returns true</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>a</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">Start coordinate</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>b</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">End coordinate</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            True if equal, false if unequal
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">boolean</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomGetSmallestSurroundingRectangle">
+            <span class="type-signature">(inner) </span>geomGetSmallestSurroundingRectangle<span
+              class="signature"
+              >(points)</span
+            ><span class="type-signature"> &rarr; {SSR}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line235">line 235</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return the Smallest Surrounding Rectangle for a given set of points
+            http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
+            http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//  +-- p1 ------ p3
+//  |              |
+//  p0 ------ p2 --+
+//
+const points = [[0, -1], [5, 1], [10, -1], [15, 1]];
+const ssr = geomGetSmallestSurroundingRectangle(points);
+// ssr.poly == [[0, -1], [0, 1], [15, 1], [15, -1], [0, -1]]
+// ssr.angle == 0</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>points</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">
+                  The points to find the smallest surrounding rectangle
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Object containg the SSR polygon and angle
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">SSR</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomLineIntersection">
+            <span class="type-signature">(inner) </span>geomLineIntersection<span class="signature"
+              >(a, b)</span
+            ><span class="type-signature"> &rarr; {Vec2|null}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line60">line 60</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return the intersection point of 2 line segments. From
+            https://github.com/pgkelley4/line-segments-intersect This uses the vector cross product
+            approach described below: http://stackoverflow.com/a/565282/786339
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//         b0
+//         |
+//   a0 ---*--- a1
+//         |
+//         b1
+//
+const a = [[0, 0], [10, 0]];
+const b = [[5, 5], [5, -5]];
+geomLineIntersection(a, b);   // returns [5, 0]</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>a</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">First line</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>b</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">Second line</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Intersection point found, or null if no intersection
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Vec2</span>
+              |
+
+              <span class="param-type">null</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomPathHasIntersections">
+            <span class="type-signature">(inner) </span>geomPathHasIntersections<span
+              class="signature"
+              >(path1, path2)</span
+            ><span class="type-signature"> &rarr; {boolean}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line124">line 124</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return true if paths intersect, false if not
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//         b0
+//         | \
+//   a0 ---*--*--- a1
+//         |   \
+//        b1 -- b2
+//
+const a = [[0, 0], [10, 0]];
+const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
+geomPathHasIntersections(a, b);   // returns true</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>path1</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">First path</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>path2</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">Second path</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            True if paths intersect, false if not
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">boolean</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomPathIntersections">
+            <span class="type-signature">(inner) </span>geomPathIntersections<span class="signature"
+              >(path1, path2)</span
+            ><span class="type-signature"> &rarr; {Array.&lt;Vec2>|null}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line94">line 94</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return all intersection points of 2 paths
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//         b0
+//         | \
+//   a0 ---*--*--- a1
+//         |   \
+//        b1 -- b2
+//
+const a = [[0, 0], [10, 0]];
+const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
+geomPathIntersections(a, b);   // returns [[5, 0], [7.5, 0]]</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>path1</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">First path</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>path2</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">Second path</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Array of intersection points found, or null if no intersections
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Array.&lt;Vec2></span>
+              |
+
+              <span class="param-type">null</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomPathLength">
+            <span class="type-signature">(inner) </span>geomPathLength<span class="signature"
+              >(path)</span
+            ><span class="type-signature"> &rarr; {number}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line279">line 279</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return the length of the given path
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//           p2
+//          /
+//  p0 -- p1
+//
+const path = [[0, 0], [1, 0], [5, 3]];
+geomPathLength(path);  // returns 6</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>path</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">The path to find the length of</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            length of the path
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomPointInPolygon">
+            <span class="type-signature">(inner) </span>geomPointInPolygon<span class="signature"
+              >(point, polygon)</span
+            ><span class="type-signature"> &rarr; {boolean}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line154">line 154</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return true if point is contained in polygon From
+            https://github.com/substack/point-in-polygon. ray-casting algorithm based on
+            http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//   p1 --- p2
+//   |   *   |
+//   p0 --- p3
+//
+const poly = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
+const point = [0.5, 0.5];
+geomPointInPolygon(point, poly);   // returns true</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>point</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">The point to test</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>polygon</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">Polygon represented as closed array of points</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            True if point is within polygon, false if not
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">boolean</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomPolygonContainsPolygon">
+            <span class="type-signature">(inner) </span>geomPolygonContainsPolygon<span
+              class="signature"
+              >(outer, inner)</span
+            ><span class="type-signature"> &rarr; {boolean}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line187">line 187</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return true if every point of inner polygon is contained within outer polygon From
+            https://github.com/substack/point-in-polygon. ray-casting algorithm based on
+            http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//   o1 -------- o2
+//   |  i1 -- i2  |
+//   |  |      |  |
+//   |  i0 -- i3  |
+//   o0 -------- o3
+//
+const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
+const inner = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
+geomPolygonContainsPolygon(outer, inner);   // returns true</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>outer</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">
+                  Outer polygon represented as closed array of points
+                </td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>inner</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">
+                  Inner polygon represented as closed array of points
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            True if all inner points lie within outer polygon, false if not
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">boolean</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomPolygonIntersectsPolygon">
+            <span class="type-signature">(inner) </span>geomPolygonIntersectsPolygon<span
+              class="signature"
+              >(outer, inner, checkSegments<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {boolean}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line211">line 211</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Return true if any part of inner polygon intersects outer polygon
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>//       i1 -- i2
+//   o1 -+------+-- o2
+//   |   |      |   |
+//   |   |      |   |
+//   o0 -+------+-- o3
+//       i0 -- i3
+//
+const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
+const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
+geomPolygonIntersectsPolygon(outer, inner, false);   // returns false (lax test - points only)
+geomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict test - points and segments)</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>outer</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="attributes"></td>
+
+                <td class="description last">
+                  Outer polygon represented as closed array of points
+                </td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>inner</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="attributes"></td>
+
+                <td class="description last">
+                  Inner polygon represented as closed array of points
+                </td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>checkSegments</code></td>
+
+                <td class="type">
+                  <span class="param-type">boolean</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="description last">
+                  Pass true to test each segment (stricter but slower)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            True if any part of inner polygon intersects outer polygon
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">boolean</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="~geomRotatePoints">
+            <span class="type-signature">(inner) </span>geomRotatePoints<span class="signature"
+              >(points, angle, around)</span
+            ><span class="type-signature"> &rarr; {Array.&lt;Vec2>}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="geom_built_geom.js.html">geom/built/geom.js</a>,
+                  <a href="geom_built_geom.js.html#line32">line 32</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Rotate all points counterclockwise around a pivot point by given angle
+          </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const points = [[1, 0], [1, 1]];
+const around = [0, 0];
+geomRotatePoints(points, Math.Pi, around);   // returns [[-1, 0], [-1, -1]]</code></pre>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>points</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="description last">points</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>angle</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="description last">Rotation angle</td>
+              </tr>
+
+              <tr>
+                <td class="name"><code>around</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">Point to rotate around</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Rotated points
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Array.&lt;Vec2></span>
+            </dd>
+          </dl>
         </article>
       </section>
     </div>
@@ -209,7 +1124,7 @@
 
     <footer>
       Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue
-      Jul 23 2019 11:24:19 GMT-0400 (EDT) using the
+      Jul 23 2019 13:45:44 GMT-0400 (EDT) using the
       <a href="https://github.com/clenemt/docdash">docdash</a> theme.
     </footer>
 
