@@ -14,6 +14,11 @@ module.exports = {
     allowUnknownTags: false,
     dictionaries: ['jsdoc']
   },
+  templates: {
+    default: {
+      includeDate: false
+    }
+  },
   docdash: {
     sort: true,
     openGraph: {
