@@ -1,13 +1,9 @@
 /**
- * Vector math module
  * @module @ideditor/vector
- * @see module:@ideditor/vector
+ * @description  📐 Module containing Vector (coordinate) math functions
  */
 
-/**
- * @typedef Vec2
- * @type {number[2]}
- */
+/** @typedef {number[2]} Vec2 */
 type Vec2 = [number, number];
 
 /** Test whether two given vectors are equal

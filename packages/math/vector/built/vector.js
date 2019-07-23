@@ -1,8 +1,7 @@
 'use strict';
 /**
- * Vector math module
  * @module @ideditor/vector
- * @see module:@ideditor/vector
+ * @description  📐 Module containing Vector (coordinate) math functions
  */
 exports.__esModule = true;
 /** Test whether two given vectors are equal

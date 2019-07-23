@@ -1,7 +1,6 @@
 /**
- * Geographic (spherical) math module
  * @module @ideditor/geo
- * @see module:@ideditor/geo
+ * @description 🌐 Module containing Geographic (spherical) math functions
  */
 
 type Vec2 = [number, number];

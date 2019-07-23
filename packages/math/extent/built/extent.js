@@ -1,11 +1,14 @@
 'use strict';
 /**
- * An Extent class for representing bounding boxes
  * @module @ideditor/extent
- * @see module:@ideditor/extent
+ * @description 📦 Module containing the Extent class (bounding boxes)
  */
 exports.__esModule = true;
 var geo_1 = require('@ideditor/geo');
+/**
+ * @class
+ * @description 📦 An Extent class for representing bounding boxes
+ */
 var Extent = /** @class */ (function() {
   /** Constructs a new Extent
    *  @param {Extent|Vec2} otherOrMin
@@ -13,7 +16,15 @@ var Extent = /** @class */ (function() {
    *  @returns {Extent} new Extent
    */
   function Extent(otherOrMin, max) {
+    /** Minimum corner coordinate for the extent
+     * @type {Vec2}
+     * @public
+     */
     this.min = [Infinity, Infinity];
+    /** Maximum corner coordinate for the extent
+     * @type {Vec2}
+     * @public
+     */
     this.max = [-Infinity, -Infinity];
     var min;
     if (otherOrMin instanceof Extent) {

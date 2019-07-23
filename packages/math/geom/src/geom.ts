@@ -1,7 +1,6 @@
 /**
- * Geometric (planar) math module
  * @module @ideditor/geom
- * @see module:@ideditor/geom
+ * @description 📈 Module containing Geometric (planar) math functions
  */
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';

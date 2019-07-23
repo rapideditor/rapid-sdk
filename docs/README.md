@@ -13,8 +13,7 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 ### Modules
 
 #### math
-* [@ideditor/extent](/ideditor/docs/module-@ideditor_extent.html) - An Extent class for representing bounding boxes
-* [@ideditor/geo](/ideditor/docs/module-@ideditor_geo.html) - Geographic (spherical) math module
-* [@ideditor/geom](/ideditor/docs/module-@ideditor_geom.html) - Geometric (planar) math module
-* [@ideditor/vector](/ideditor/docs/module-@ideditor_vector.html) - Vector math module
-
+* [@ideditor/extent](/ideditor/docs/module-@ideditor_extent.html) - An Extent class (bounding boxes)
+* [@ideditor/geo](/ideditor/docs/module-@ideditor_geo.html) - Geographic (spherical) math functions
+* [@ideditor/geom](/ideditor/docs/module-@ideditor_geom.html) - Geometric (planar) math functions
+* [@ideditor/vector](/ideditor/docs/module-@ideditor_vector.html) - Vector (coordinate) math functions

@@ -1,7 +1,6 @@
 /**
- * An Extent class for representing bounding boxes
  * @module @ideditor/extent
- * @see module:@ideditor/extent
+ * @description 📦 Module containing the Extent class (bounding boxes)
  */
 
 import { geoMetersToLat, geoMetersToLon } from '@ideditor/geo';
@@ -15,8 +14,21 @@ interface BBox {
   maxY: number;
 }
 
+/**
+ * @class
+ * @description 📦 An Extent class for representing bounding boxes
+ */
 export class Extent {
+  /** Minimum corner coordinate for the extent
+   * @type {Vec2}
+   * @public
+   */
   public min: Vec2 = [Infinity, Infinity];
+
+  /** Maximum corner coordinate for the extent
+   * @type {Vec2}
+   * @public
+   */
   public max: Vec2 = [-Infinity, -Infinity];
 
   /** Constructs a new Extent

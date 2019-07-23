@@ -1,8 +1,7 @@
 'use strict';
 /**
- * Geographic (spherical) math module
  * @module @ideditor/geo
- * @see module:@ideditor/geo
+ * @description 🌐 Module containing Geographic (spherical) math functions
  */
 exports.__esModule = true;
 // constants
