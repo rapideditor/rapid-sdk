@@ -1,12 +1,12 @@
 /**
- * @module @ideditor/geom
+ * @module @id-sdk/geom
  * @description 📈 Module containing Geometric (planar) math functions
  */
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
 
-import { Extent } from '@ideditor/extent';
-import { vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from '@ideditor/vector';
+import { Extent } from '@id-sdk/extent';
+import { vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from '@id-sdk/vector';
 
 type Vec2 = [number, number];
 

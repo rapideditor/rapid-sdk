@@ -16,15 +16,15 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 
 Module              | Description
 ------------------- | -------------
-[@ideditor/extent]  | 📦 An Extent class (bounding boxes)
-[@ideditor/geo]     | 🌐 Geographic (spherical) math functions
-[@ideditor/geom]    | 📈 Geometric (planar) math functions
-[@ideditor/vector]  | 📐 Vector (coordinate) math functions
+[@id-sdk/extent]  | 📦 An Extent class (bounding boxes)
+[@id-sdk/geo]     | 🌐 Geographic (spherical) math functions
+[@id-sdk/geom]    | 📈 Geometric (planar) math functions
+[@id-sdk/vector]  | 📐 Vector (coordinate) math functions
 
-[@ideditor/extent]: https://ideditor.github.io/ideditor/docs/module-@ideditor_extent.html
-[@ideditor/geo]: https://ideditor.github.io/ideditor/docs/module-@ideditor_geo.html
-[@ideditor/geom]: https://ideditor.github.io/ideditor/docs/module-@ideditor_geom.html
-[@ideditor/vector]: https://ideditor.github.io/ideditor/docs/module-@ideditor_vector.html
+[@id-sdk/extent]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_extent.html
+[@id-sdk/geo]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_geo.html
+[@id-sdk/geom]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_geom.html
+[@id-sdk/vector]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_vector.html
 
 
 ## Contributing

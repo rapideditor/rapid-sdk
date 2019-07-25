@@ -1,12 +1,12 @@
 'use strict';
 /**
- * @module @ideditor/geom
+ * @module @id-sdk/geom
  * @description 📈 Module containing Geometric (planar) math functions
  */
 exports.__esModule = true;
 var d3_polygon_1 = require('d3-polygon');
-var extent_1 = require('@ideditor/extent');
-var vector_1 = require('@ideditor/vector');
+var extent_1 = require('@id-sdk/extent');
+var vector_1 = require('@id-sdk/vector');
 /** Test whether two given coordinates describe the same edge
  * @param {Vec2} a - Start coordinate
  * @param {Vec2} b - End coordinate

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * @module @ideditor/vector
+ * @module @id-sdk/vector
  * @description  📐 Module containing Vector (coordinate) math functions
  */
 exports.__esModule = true;

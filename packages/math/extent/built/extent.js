@@ -1,10 +1,10 @@
 'use strict';
 /**
- * @module @ideditor/extent
+ * @module @id-sdk/extent
  * @description 📦 Module containing the Extent class (bounding boxes)
  */
 exports.__esModule = true;
-var geo_1 = require('@ideditor/geo');
+var geo_1 = require('@id-sdk/geo');
 /**
  * @class
  * @description 📦 An Extent class for representing bounding boxes

@@ -1,5 +1,5 @@
 {
-  "name": "@ideditor/extent",
+  "name": "@id-sdk/extent",
   "version": "3.0.0-pre.0",
   "description": "Extent (bounding box) library used by the iD editor",
   "repository": "ideditor/id-sdk",
@@ -9,7 +9,7 @@
   ],
   "main": "built/extent.js",
   "dependencies": {
-    "@ideditor/geo": "^3.0.0-pre.0"
+    "@id-sdk/geo": "^3.0.0-pre.0"
   },
   "scripts": {
     "build": "tsc --outDir ./built src/*.ts",

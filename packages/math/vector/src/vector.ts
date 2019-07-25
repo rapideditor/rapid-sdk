@@ -1,5 +1,5 @@
 /**
- * @module @ideditor/vector
+ * @module @id-sdk/vector
  * @description  📐 Module containing Vector (coordinate) math functions
  */
 

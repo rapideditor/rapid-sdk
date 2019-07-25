@@ -1,6 +1,6 @@
 'use strict';
 /**
- * @module @ideditor/geo
+ * @module @id-sdk/geo
  * @description 🌐 Module containing Geographic (spherical) math functions
  */
 exports.__esModule = true;

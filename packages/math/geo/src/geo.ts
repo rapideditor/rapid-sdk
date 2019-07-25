@@ -1,5 +1,5 @@
 /**
- * @module @ideditor/geo
+ * @module @id-sdk/geo
  * @description 🌐 Module containing Geographic (spherical) math functions
  */
 

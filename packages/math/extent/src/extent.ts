@@ -1,9 +1,9 @@
 /**
- * @module @ideditor/extent
+ * @module @id-sdk/extent
  * @description 📦 Module containing the Extent class (bounding boxes)
  */
 
-import { geoMetersToLat, geoMetersToLon } from '@ideditor/geo';
+import { geoMetersToLat, geoMetersToLon } from '@id-sdk/geo';
 
 type Vec2 = [number, number];
 

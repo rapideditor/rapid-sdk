@@ -1,5 +1,5 @@
 {
-  "name": "@ideditor/geo",
+  "name": "@id-sdk/geo",
   "version": "3.0.0-pre.0",
   "description": "Geographic math library used by the iD editor",
   "repository": "ideditor/id-sdk",
