@@ -27,7 +27,7 @@ module.exports = {
       url: 'https://github.com/' + pkg.repostiory
     },
     meta: {
-      title: 'iD Editor Documentation',
+      title: 'iD SDK Documentation',
       description: pkg.description,
       keyword: pkg.keywords.join(',')
     },
