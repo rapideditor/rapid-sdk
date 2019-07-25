@@ -21,10 +21,10 @@ Module              | Description
 [@id-sdk/geom]    | 📈 Geometric (planar) math functions
 [@id-sdk/vector]  | 📐 Vector (coordinate) math functions
 
-[@id-sdk/extent]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_extent.html
-[@id-sdk/geo]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_geo.html
-[@id-sdk/geom]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_geom.html
-[@id-sdk/vector]: https://ideditor.github.io/ideditor/docs/module-@id-sdk_vector.html
+[@id-sdk/extent]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_extent.html
+[@id-sdk/geo]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_geo.html
+[@id-sdk/geom]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_geom.html
+[@id-sdk/vector]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_vector.html
 
 
 ## Contributing
@@ -35,4 +35,4 @@ We're not able to support external contributors at this time.
 ## Documentation
 
 Documentation can be found here:
-https://ideditor.github.io/ideditor/docs/
+https://ideditor.github.io/id-sdk/docs/
