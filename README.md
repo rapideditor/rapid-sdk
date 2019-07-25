@@ -1,4 +1,4 @@
-# ideditor
+# id-sdk
 
 🆔 Map editing made easy
 

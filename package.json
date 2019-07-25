@@ -1,8 +1,8 @@
 {
-  "name": "ideditor",
+  "name": "id-sdk",
   "version": "3.0.0-pre.0",
   "description": "Map editing made easy",
-  "repository": "ideditor/ideditor",
+  "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": ["Bryan Housel <bryan@mapbox.com>"],
   "keywords": ["map", "editor"],

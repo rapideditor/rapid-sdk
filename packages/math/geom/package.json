@@ -2,7 +2,7 @@
   "name": "@ideditor/geom",
   "version": "3.0.0-pre.0",
   "description": "Geometric math library used by the iD editor",
-  "repository": "ideditor/ideditor",
+  "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"

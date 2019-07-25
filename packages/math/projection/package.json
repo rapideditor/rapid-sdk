@@ -2,7 +2,7 @@
   "name": "@ideditor/projection",
   "version": "3.0.0-pre.0",
   "description": "Projection math library used by the iD editor",
-  "repository": "ideditor/ideditor",
+  "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
