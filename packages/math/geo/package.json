@@ -1,7 +1,7 @@
 {
   "name": "@id-sdk/geo",
   "version": "3.0.0-pre.0",
-  "description": "Geographic math library used by the iD editor",
+  "description": "Geographic (spherical) math functions",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [

@@ -1,6 +1,6 @@
 /**
  * @module @id-sdk/vector
- * @description  📐 Module containing Vector (coordinate) math functions
+ * @description 📐 Module containing Vector (coordinate) math functions
  */
 
 /** @typedef {number[2]} Vec2 */

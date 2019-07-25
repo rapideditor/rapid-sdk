@@ -1,7 +1,7 @@
 {
   "name": "@id-sdk/extent",
   "version": "3.0.0-pre.0",
-  "description": "Extent (bounding box) library used by the iD editor",
+  "description": "An Extent class (bounding boxes)",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [

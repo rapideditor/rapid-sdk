@@ -1,3 +1,3 @@
 # `@id-sdk/geo`
 
-Geographic math library used by the iD editor
+🌐 Geographic (spherical) math functions

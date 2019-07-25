@@ -1,7 +1,7 @@
 {
   "name": "@id-sdk/geom",
   "version": "3.0.0-pre.0",
-  "description": "Geometric math library used by the iD editor",
+  "description": "Geometric (planar) math functions",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [

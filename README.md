@@ -14,8 +14,8 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 
 ### math
 
-Module              | Description
-------------------- | -------------
+Module            | Description
+----------------- | -------------
 [@id-sdk/extent]  | 📦 An Extent class (bounding boxes)
 [@id-sdk/geo]     | 🌐 Geographic (spherical) math functions
 [@id-sdk/geom]    | 📈 Geometric (planar) math functions

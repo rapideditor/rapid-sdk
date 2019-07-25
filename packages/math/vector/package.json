@@ -1,7 +1,7 @@
 {
   "name": "@id-sdk/vector",
   "version": "3.0.0-pre.0",
-  "description": "Vector math library used by the iD editor",
+  "description": "Vector (coordinate) math functions",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
