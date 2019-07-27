@@ -47,7 +47,11 @@ export class Tiler {
    */
   constructor() {}
 
-  getTiles(dimensions: Vec2[], translate: Vec2, scale: number): TileResult {
+  getTiles(projection: any): TileResult {
+    const dimensions = projection.clipExtent();
+    const translate = projection.translate();
+    const scale = projection.scale() * TAU;
+
     const zFrac: number = geoScaleToZoom(scale / TAU, this._tileSize);
     const z: number = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
     const tileMin: number = 0;
@@ -102,31 +106,31 @@ export class Tiler {
     };
   }
 
-  /**
-   */
-  getTilesForProjection(projection: any): TileResult {
-    // let origin = [
-    //   projection.scale() * Math.PI - projection.translate()[0],
-    //   projection.scale() * Math.PI - projection.translate()[1]
-    // ];
+  // /**
+  //  */
+  // getTilesForProjection(projection: any): TileResult {
+  //   let origin = [
+  //     projection.scale() * Math.PI - projection.translate()[0],
+  //     projection.scale() * Math.PI - projection.translate()[1]
+  //   ];
 
-    return this.getTiles(projection.clipExtent(), projection.translate(), projection.scale() * TAU);
+  //   return this.getTiles();
 
-    // let ts: number = result.scale;
-    // let tiles = result.tiles;
+  //   let ts: number = result.scale;
+  //   let tiles = result.tiles;
 
-    // return tiles
-    //   .map(function(tile) {
-    //     let x = tile[0] * ts - origin[0];
-    //     let y = tile[1] * ts - origin[1];
-    //     return {
-    //       id: tile.toString(),
-    //       xyz: tile,
-    //       extent: geoExtent(projection.invert([x, y + ts]), projection.invert([x + ts, y]))
-    //     };
-    //   })
-    //   .filter(Boolean);
-  }
+  //   return tiles
+  //     .map(function(tile) {
+  //       let x = tile[0] * ts - origin[0];
+  //       let y = tile[1] * ts - origin[1];
+  //       return {
+  //         id: tile.toString(),
+  //         xyz: tile,
+  //         extent: geoExtent(projection.invert([x, y + ts]), projection.invert([x + ts, y]))
+  //       };
+  //     })
+  //     .filter(Boolean);
+  // }
 
   /**
    * returns a FeatureCollection useful for displaying a tile debug view
