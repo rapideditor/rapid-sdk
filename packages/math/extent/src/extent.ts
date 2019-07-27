@@ -16,7 +16,7 @@ interface BBox {
 
 /**
  * @class
- * @description 📦 An Extent class for representing bounding boxes
+ * @description 📦 Extent class for creating bounding boxes
  */
 export class Extent {
   /** Minimum corner coordinate for the extent

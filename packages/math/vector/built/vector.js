@@ -1,7 +1,7 @@
 'use strict';
 /**
  * @module @id-sdk/vector
- * @description  📐 Module containing Vector (coordinate) math functions
+ * @description 📐 Module containing Vector (coordinate) math functions
  */
 exports.__esModule = true;
 /** Test whether two given vectors are equal

@@ -1,3 +1,3 @@
 # `@id-sdk/extent`
 
-📦 An Extent class (bounding boxes)
+📦 Extent class for creating bounding boxes

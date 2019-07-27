@@ -1,18 +1,19 @@
 {
-  "name": "@id-sdk/extent",
+  "name": "@id-sdk/tiler",
   "version": "3.0.0-pre.0",
-  "description": "Extent class for creating bounding boxes",
+  "description": "Tiler class for splitting the world into rectangular tiles",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "built/extent.js",
-  "dependencies": {
-    "@id-sdk/geo": "^3.0.0-pre.0"
-  },
+  "main": "built/tiler.js",
   "scripts": {
     "build": "tsc --outDir ./built src/*.ts",
     "test": "jest --config ../../../jest.config.js tests/*.js"
+  },
+  "dependencies": {
+    "@id-sdk/extent": "^3.0.0-pre.0",
+    "@id-sdk/geo": "^3.0.0-pre.0"
   }
 }

@@ -7,7 +7,7 @@ exports.__esModule = true;
 var geo_1 = require('@id-sdk/geo');
 /**
  * @class
- * @description 📦 An Extent class for representing bounding boxes
+ * @description 📦 Extent class for creating bounding boxes
  */
 var Extent = /** @class */ (function() {
   /** Constructs a new Extent

@@ -16,14 +16,16 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 
 Module            | Description
 ----------------- | -------------
-[@id-sdk/extent]  | 📦 An Extent class (bounding boxes)
+[@id-sdk/extent]  | 📦 Extent class for creating bounding boxes
 [@id-sdk/geo]     | 🌐 Geographic (spherical) math functions
 [@id-sdk/geom]    | 📈 Geometric (planar) math functions
+[@id-sdk/tiler]   | 🀄️ Tiler class for splitting the world into rectangular tiles
 [@id-sdk/vector]  | 📐 Vector (coordinate) math functions
 
 [@id-sdk/extent]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_extent.html
 [@id-sdk/geo]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_geo.html
 [@id-sdk/geom]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_geom.html
+[@id-sdk/tiler]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_tiler.html
 [@id-sdk/vector]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_vector.html
 
 
