@@ -41,6 +41,11 @@ describe('math/extent', () => {
       expect(e1.equals(e2)).toBeTruthy();
       expect(e1.equals(e3)).toBeFalsy();
     });
+
+    it('accepts non-Extent argument', () => {
+      const e1 = new Extent([0, 0], [10, 10]);
+      expect(e1.equals([0, 0], [10, 10])).toBeTruthy();
+    });
   });
 
   describe('#center', () => {
@@ -50,8 +55,24 @@ describe('math/extent', () => {
   });
 
   describe('#rectangle', () => {
-    it('returns the extent as a rectangle', () => {
+    it('returns the extent as a rectangle Array', () => {
       expect(new Extent([0, 0], [5, 10]).rectangle()).toStrictEqual([0, 0, 5, 10]);
+    });
+  });
+
+  describe('#bbox', () => {
+    it('returns the extent as a bbox Object', () => {
+      const bbox = new Extent([0, 0], [5, 10]).bbox();
+      expect(bbox).toHaveProperty('minX', 0);
+      expect(bbox).toHaveProperty('minY', 0);
+      expect(bbox).toHaveProperty('maxX', 5);
+      expect(bbox).toHaveProperty('maxY', 10);
+    });
+  });
+
+  describe('#toParam', () => {
+    it('returns the extent as a paramater string', () => {
+      expect(new Extent([0, 0], [5, 10]).toParam()).toStrictEqual('0,0,5,10');
     });
   });
 
@@ -148,6 +169,11 @@ describe('math/extent', () => {
       expect(e1.contains(e2)).toBeFalse();
       expect(e2.contains(e1)).toBeFalse();
     });
+
+    it('accepts non-Extent argument', () => {
+      const e1 = new Extent([0, 0], [5, 5]);
+      expect(e1.contains([1, 1], [2, 2])).toBeTrue();
+    });
   });
 
   describe('#intersects', () => {
@@ -182,6 +208,11 @@ describe('math/extent', () => {
       const e2 = new Extent([6, 7], [7, 7]);
       expect(e1.intersects(e2)).toBeFalse();
       expect(e2.intersects(e1)).toBeFalse();
+    });
+
+    it('accepts non-Extent argument', () => {
+      const e1 = new Extent([0, 0], [5, 5]);
+      expect(e1.intersects([1, 1], [2, 2])).toBeTrue();
     });
   });
 
@@ -254,6 +285,11 @@ describe('math/extent', () => {
       const b = new Extent([3, 0], [4, 2]);
       expect(a.percentContainedIn(b)).toBe(0.25);
       expect(b.percentContainedIn(a)).toBe(0.5);
+    });
+
+    it('accepts non-Extent argument', () => {
+      const e1 = new Extent([0, 0], [2, 1]);
+      expect(e1.percentContainedIn([1, 0], [3, 1])).toBe(0.5);
     });
   });
 });

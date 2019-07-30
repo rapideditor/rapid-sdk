@@ -5,6 +5,13 @@
  */
 exports.__esModule = true;
 var geo_1 = require('@id-sdk/geo');
+// function construct(constructor, args): Extent {
+//   function F(): void {
+//     constructor.apply(this, args);
+//   }
+//   F.prototype = constructor.prototype;
+//   return new F();
+// }
 /**
  * @class
  * @description 📦 Extent class for creating bounding boxes
@@ -48,7 +55,7 @@ var Extent = /** @class */ (function() {
    * @returns {boolean} True if equal, false if unequal
    */
   Extent.prototype.equals = function(other) {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return (
       this.min[0] === other.min[0] &&
       this.min[1] === other.min[1] &&
@@ -61,7 +68,7 @@ var Extent = /** @class */ (function() {
    * @returns {Extent} True if equal, false if unequal
    */
   Extent.prototype.extend = function(other) {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return new Extent(
       [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
       [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
@@ -108,7 +115,7 @@ var Extent = /** @class */ (function() {
    * @returns {boolean} True if this extent contains other, false if not
    */
   Extent.prototype.contains = function(other) {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return (
       other.min[0] >= this.min[0] &&
       other.min[1] >= this.min[1] &&
@@ -121,7 +128,7 @@ var Extent = /** @class */ (function() {
    * @returns {boolean} True if this extent intersects other, false if not
    */
   Extent.prototype.intersects = function(other) {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return (
       other.min[0] <= this.max[0] &&
       other.min[1] <= this.max[1] &&
@@ -145,7 +152,7 @@ var Extent = /** @class */ (function() {
    * @returns {number} percentage of other extent contained within this extent
    */
   Extent.prototype.percentContainedIn = function(other) {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     var a1 = this.intersection(other).area();
     var a2 = this.area();
     if (a1 === Infinity || a2 === Infinity || a1 === 0 || a2 === 0) {

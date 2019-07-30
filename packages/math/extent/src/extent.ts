@@ -14,6 +14,14 @@ interface BBox {
   maxY: number;
 }
 
+// function construct(constructor, args): Extent {
+//   function F(): void {
+//     constructor.apply(this, args);
+//   }
+//   F.prototype = constructor.prototype;
+//   return new F();
+// }
+
 /**
  * @class
  * @description 📦 Extent class for creating bounding boxes
@@ -61,7 +69,7 @@ export class Extent {
    * @returns {boolean} True if equal, false if unequal
    */
   equals(other: any): boolean {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return (
       this.min[0] === other.min[0] &&
       this.min[1] === other.min[1] &&
@@ -75,7 +83,7 @@ export class Extent {
    * @returns {Extent} True if equal, false if unequal
    */
   extend(other: any): Extent {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return new Extent(
       [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
       [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
@@ -128,7 +136,7 @@ export class Extent {
    * @returns {boolean} True if this extent contains other, false if not
    */
   contains(other: any): boolean {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return (
       other.min[0] >= this.min[0] &&
       other.min[1] >= this.min[1] &&
@@ -142,7 +150,7 @@ export class Extent {
    * @returns {boolean} True if this extent intersects other, false if not
    */
   intersects(other: any): boolean {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     return (
       other.min[0] <= this.max[0] &&
       other.min[1] <= this.max[1] &&
@@ -168,7 +176,7 @@ export class Extent {
    * @returns {number} percentage of other extent contained within this extent
    */
   percentContainedIn(other: any): number {
-    if (!(other instanceof Extent)) other = new Extent(other);
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
     const a1 = this.intersection(other).area();
     const a2 = this.area();
 
