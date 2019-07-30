@@ -14,19 +14,21 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 
 ### math
 
-Module            | Description
------------------ | -------------
-[@id-sdk/extent]  | 📦 Extent class for creating bounding boxes
-[@id-sdk/geo]     | 🌐 Geographic (spherical) math functions
-[@id-sdk/geom]    | 📈 Geometric (planar) math functions
-[@id-sdk/tiler]   | 🀄️ Tiler class for splitting the world into rectangular tiles
-[@id-sdk/vector]  | 📐 Vector (coordinate) math functions
+Module                | Description
+--------------------- | -------------
+[@id-sdk/extent]      | 📦 Extent class for creating bounding boxes
+[@id-sdk/geo]         | 🌐 Geographic (spherical) math functions
+[@id-sdk/geom]        | 📈 Geometric (planar) math functions
+[@id-sdk/projection]  | 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
+[@id-sdk/tiler]       | 🀄️ Tiler class for splitting the world into rectangular tiles
+[@id-sdk/vector]      | 📐 Vector (coordinate) math functions
 
-[@id-sdk/extent]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_extent.html
-[@id-sdk/geo]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_geo.html
-[@id-sdk/geom]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_geom.html
-[@id-sdk/tiler]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_tiler.html
-[@id-sdk/vector]: https://ideditor.github.io/id-sdk/docs/module-@id-sdk_vector.html
+[@id-sdk/extent]: /packages/math/extent/README.md
+[@id-sdk/geo]: /packages/math/geo/README.md
+[@id-sdk/geom]: /packages/math/geom/README.md
+[@id-sdk/projection]: /packages/math/projection/README.md
+[@id-sdk/tiler]: /packages/math/tiler/README.md
+[@id-sdk/vector]: /packages/math/vector/README.md
 
 
 ## Contributing
