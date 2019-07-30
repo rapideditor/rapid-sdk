@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>@id-sdk/extent - iD SDK Documentation</title>
+    <title>Projection - iD SDK Documentation</title>
 
     <meta name="description" content="Map editing made easy" />
 
@@ -234,34 +234,44 @@
     </nav>
 
     <div id="main">
-      <h1 class="page-title">@id-sdk/extent</h1>
+      <h1 class="page-title">Projection</h1>
 
       <section>
-        <header></header>
+        <header>
+          <h2>
+            <span class="ancestors"
+              ><a href="module-@id-sdk_projection.html">@id-sdk/projection</a>~</span
+            >
+
+            Projection
+          </h2>
+        </header>
 
         <article>
           <div class="container-overview">
-            <div class="description">📦 Module containing the Extent class (bounding boxes)</div>
+            <h4 class="name" id="Projection">
+              <span class="type-signature"></span>new Projection<span class="signature">()</span
+              ><span class="type-signature"></span>
+            </h4>
 
             <dl class="details">
               <dt class="tag-source">Source:</dt>
               <dd class="tag-source">
                 <ul class="dummy">
                   <li>
-                    <a href="extent_built_extent.js.html">extent/built/extent.js</a>,
-                    <a href="extent_built_extent.js.html#line2">line 2</a>
+                    <a href="projection_built_projection.js.html">projection/built/projection.js</a
+                    >, <a href="projection_built_projection.js.html#line17">line 17</a>
                   </li>
                 </ul>
               </dd>
             </dl>
+
+            <div class="description">
+              📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y)
+              coordinates The default projection wraps the d3.geo.MercatorRaw projection, but skips
+              several features: Antimeridian clipping Spherical rotation Resampling
+            </div>
           </div>
-
-          <h3 class="subsection-title">Classes</h3>
-
-          <dl>
-            <dt><a href="module-@id-sdk_extent-Extent.html">Extent</a></dt>
-            <dd></dd>
-          </dl>
         </article>
       </section>
     </div>

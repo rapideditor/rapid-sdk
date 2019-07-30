@@ -1,6 +1,5 @@
 import { Tiler } from '..';
 
 describe('math/tiler', () => {
-  describe('constructor', () => {
-  });
+  describe('constructor', () => {});
 });

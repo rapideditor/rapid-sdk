@@ -1,6 +1,6 @@
 'use strict';
 /**
- * @module @id-sdk/extent
+ * @module @id-sdk/tiler
  * @description 🀄️ Module containing the Tiler class
  */
 exports.__esModule = true;
@@ -29,7 +29,10 @@ var Tiler = /** @class */ (function() {
     this._margin = 0;
     this._skipNullIsland = false;
   }
-  Tiler.prototype.getTiles = function(dimensions, translate, scale) {
+  Tiler.prototype.getTiles = function(projection) {
+    var dimensions = projection.clipExtent();
+    var translate = projection.translate();
+    var scale = projection.scale() * TAU;
     var zFrac = geo_1.geoScaleToZoom(scale / TAU, this._tileSize);
     var z = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
     var tileMin = 0;
@@ -76,28 +79,28 @@ var Tiler = /** @class */ (function() {
       scale: k
     };
   };
-  /**
-   */
-  Tiler.prototype.getTilesForProjection = function(projection) {
-    // let origin = [
-    //   projection.scale() * Math.PI - projection.translate()[0],
-    //   projection.scale() * Math.PI - projection.translate()[1]
-    // ];
-    return this.getTiles(projection.clipExtent(), projection.translate(), projection.scale() * TAU);
-    // let ts: number = result.scale;
-    // let tiles = result.tiles;
-    // return tiles
-    //   .map(function(tile) {
-    //     let x = tile[0] * ts - origin[0];
-    //     let y = tile[1] * ts - origin[1];
-    //     return {
-    //       id: tile.toString(),
-    //       xyz: tile,
-    //       extent: geoExtent(projection.invert([x, y + ts]), projection.invert([x + ts, y]))
-    //     };
-    //   })
-    //   .filter(Boolean);
-  };
+  // /**
+  //  */
+  // getTilesForProjection(projection: any): TileResult {
+  //   let origin = [
+  //     projection.scale() * Math.PI - projection.translate()[0],
+  //     projection.scale() * Math.PI - projection.translate()[1]
+  //   ];
+  //   return this.getTiles();
+  //   let ts: number = result.scale;
+  //   let tiles = result.tiles;
+  //   return tiles
+  //     .map(function(tile) {
+  //       let x = tile[0] * ts - origin[0];
+  //       let y = tile[1] * ts - origin[1];
+  //       return {
+  //         id: tile.toString(),
+  //         xyz: tile,
+  //         extent: geoExtent(projection.invert([x, y + ts]), projection.invert([x + ts, y]))
+  //       };
+  //     })
+  //     .filter(Boolean);
+  // }
   /**
    * returns a FeatureCollection useful for displaying a tile debug view
    */

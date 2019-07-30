@@ -1,5 +1,5 @@
 /**
- * @module @id-sdk/extent
+ * @module @id-sdk/tiler
  * @description 🀄️ Module containing the Tiler class
  */
 

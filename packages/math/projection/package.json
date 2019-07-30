@@ -1,20 +1,18 @@
 {
   "name": "@id-sdk/projection",
   "version": "3.0.0-pre.0",
-  "description": "Projection math library used by the iD editor",
+  "description": "Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "lib/raw_mercator.js",
-  "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.0",
-    "d3-geo": "^1.11.6",
-    "d3-zoom": "^1.7.3"
-  },
+  "main": "built/projection.js",
   "scripts": {
-    "build": "",
-    "test": ""
+    "build": "tsc --outDir ./built src/*.ts",
+    "test": "jest --config ../../../jest.config.js tests/*.js"
+  },
+  "dependencies": {
+    "d3-geo": "^1.11.0"
   }
 }

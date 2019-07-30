@@ -1,3 +1,3 @@
 # `@id-sdk/projection`
 
-Projection math library used by the iD editor
+📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
