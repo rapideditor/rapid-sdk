@@ -76,6 +76,9 @@ describe('math/vector', () => {
       const b = [4, 3];
       expect(test.vecLength(a, b)).toEqual(5);
     });
+    it('defaults second argument to [0,0]', () => {
+      expect(test.vecLength([4, 3])).toEqual(5);
+    });
   });
 
   describe('vecNormalize', () => {
