@@ -61,6 +61,8 @@ export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): V
  * geomLineIntersection(a, b);   // returns [5, 0]
  */
 export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
+  if (a.length !== 2 || b.length !== 2) return null;
+
   const p: Vec2 = [a[0][0], a[0][1]];
   const p2: Vec2 = [a[1][0], a[1][1]];
   const q: Vec2 = [b[0][0], b[0][1]];

@@ -58,6 +58,7 @@ exports.geomRotatePoints = geomRotatePoints;
  * geomLineIntersection(a, b);   // returns [5, 0]
  */
 function geomLineIntersection(a, b) {
+  if (a.length !== 2 || b.length !== 2) return null;
   var p = [a[0][0], a[0][1]];
   var p2 = [a[1][0], a[1][1]];
   var q = [b[0][0], b[0][1]];

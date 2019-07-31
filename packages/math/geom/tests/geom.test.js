@@ -42,6 +42,14 @@ describe('math/geom', () => {
   });
 
   describe('geomLineIntersection', () => {
+    it('returns null if either line is not a proper line segment', () => {
+      const a = [[0, 0], [10, 0]];
+      const b = [[-5, 0], [5, 0]];
+      expect(test.geomLineIntersection([], b)).toBeNull();
+      expect(test.geomLineIntersection([[0, 0]], b)).toBeNull();
+      expect(test.geomLineIntersection(a, [])).toBeNull();
+      expect(test.geomLineIntersection(a, [[0, 0]])).toBeNull();
+    });
     it('returns null if lines are colinear with overlap', () => {
       const a = [[0, 0], [10, 0]];
       const b = [[-5, 0], [5, 0]];
@@ -66,6 +74,38 @@ describe('math/geom', () => {
       const a = [[0, 0], [10, 0]];
       const b = [[-5, 10], [-5, -10]];
       expect(test.geomLineIntersection(a, b)).toBeNull();
+    });
+  });
+
+  describe('geomPathIntersections', () => {
+    it('returns empty array if either path is not at least a proper line segment', () => {
+      const a = [[0, 0], [10, 0]];
+      const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      expect(test.geomPathIntersections([], b)).toHaveLength(0);
+      expect(test.geomPathIntersections([[0, 0]], b)).toHaveLength(0);
+      expect(test.geomPathIntersections(a, [])).toHaveLength(0);
+      expect(test.geomPathIntersections(a, [[0, 0]])).toHaveLength(0);
+    });
+    it('returns the intersection points between 2 paths', () => {
+      const a = [[0, 0], [10, 0]];
+      const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      expect(test.geomPathIntersections(a, b)).toStrictEqual([[5, 0], [7.5, 0]]);
+    });
+  });
+
+  describe('geomPathHasIntersections', () => {
+    it('returns false if either path is not at least a proper line segment', () => {
+      const a = [[0, 0], [10, 0]];
+      const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      expect(test.geomPathHasIntersections([], b)).toBeFalse();
+      expect(test.geomPathHasIntersections([[0, 0]], b)).toBeFalse();
+      expect(test.geomPathHasIntersections(a, [])).toBeFalse();
+      expect(test.geomPathHasIntersections(a, [[0, 0]])).toBeFalse();
+    });
+    it('returns true if the paths intersect', () => {
+      const a = [[0, 0], [10, 0]];
+      const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      expect(test.geomPathHasIntersections(a, b)).toBeTrue();
     });
   });
 

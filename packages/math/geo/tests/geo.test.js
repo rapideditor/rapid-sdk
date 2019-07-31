@@ -69,6 +69,7 @@ describe('math/geo', () => {
       expect(test.geoMetersToLon(55473, 60)).toBeCloseTo(1, CLOSE);
       expect(test.geoMetersToLon(28715, 75)).toBeCloseTo(1, CLOSE);
       expect(test.geoMetersToLon(1, 90)).toBe(0);
+      expect(test.geoMetersToLon(1, 91)).toBe(0);
     });
     it('distance of -1 degree longitude varies with latitude', () => {
       expect(test.geoMetersToLon(-110946, -0)).toBeCloseTo(-1, CLOSE);
@@ -78,6 +79,7 @@ describe('math/geo', () => {
       expect(test.geoMetersToLon(-55473, -60)).toBeCloseTo(-1, CLOSE);
       expect(test.geoMetersToLon(-28715, -75)).toBeCloseTo(-1, CLOSE);
       expect(test.geoMetersToLon(-1, -90)).toBe(0);
+      expect(test.geoMetersToLon(-1, -91)).toBe(0);
     });
   });
 
@@ -156,6 +158,22 @@ describe('math/geo', () => {
     });
     it('converts from projection scale to zoom (tileSize = 512)', () => {
       expect(test.geoScaleToZoom(10680707.430881744, 512)).toBeCloseTo(17, CLOSE);
+    });
+  });
+
+  describe('geoSphericalClosestPoint', () => {
+    it('returns null if no points', () => {
+      expect(test.geoSphericalClosestPoint([], [1, 1])).toBeNull();
+    });
+
+    it('returns closest point', () => {
+      const CLOSE = 0; // digits
+      const points = [[0, 0], [1, 0], [2, 0]];
+      const result = test.geoSphericalClosestPoint(points, [1, 1]);
+      expect(result).toHaveProperty('index', 1);
+      expect(result).toHaveProperty('point', [1, 0]);
+      expect(result).toHaveProperty('distance');
+      expect(result.distance).toBeCloseTo(111319, CLOSE);
     });
   });
 });
