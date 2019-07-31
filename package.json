@@ -23,7 +23,8 @@
     "typescript": "^3.5.2"
   },
   "scripts": {
-    "build": "lerna run build --parallel && prettier --write \"./packages/**/*.{html,css,ts,js}\"",
+    "build": "lerna run build --parallel",
+    "buildpretty": "npm run build && prettier --write \"./packages/**/*.{html,css,ts,js}\"",
     "docs": "rm -f docs/*.html && jsdoc -c ./jsdoc.config.js packages && prettier --write \"./docs/**/*.{html,css,ts,js}\"",
     "test": "jest",
     "prettier": "prettier --write \"./**/*.{html,css,ts,js}\""
