@@ -50,22 +50,40 @@ describe('math/geom', () => {
       expect(test.geomLineIntersection(a, [])).toBeNull();
       expect(test.geomLineIntersection(a, [[0, 0]])).toBeNull();
     });
+
     it('returns null if lines are colinear with overlap', () => {
+      //
+      //   b0 --- a0 === b1 --- a1
+      //
       const a = [[0, 0], [10, 0]];
       const b = [[-5, 0], [5, 0]];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
+
     it('returns null if lines are colinear but disjoint', () => {
+      //
+      //   b0 --- b1     a0 --- a1
+      //
       const a = [[5, 0], [10, 0]];
       const b = [[-10, 0], [-5, 0]];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
+
     it('returns null if lines are parallel', () => {
+      //   b0 ------- b1
+      //
+      //   a0 ------- a1
       const a = [[0, 0], [10, 0]];
       const b = [[0, 5], [10, 5]];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
+
     it('returns the intersection point between 2 lines', () => {
+      //         b0
+      //         |
+      //   a0 ---*--- a1
+      //         |
+      //         b1
       const a = [[0, 0], [10, 0]];
       const b = [[5, 10], [5, -10]];
       expect(test.geomLineIntersection(a, b)).toStrictEqual([5, 0]);
@@ -86,7 +104,13 @@ describe('math/geom', () => {
       expect(test.geomPathIntersections(a, [])).toHaveLength(0);
       expect(test.geomPathIntersections(a, [[0, 0]])).toHaveLength(0);
     });
+
     it('returns the intersection points between 2 paths', () => {
+      //         b0
+      //         | \
+      //   a0 ---*--*--- a1
+      //         |   \
+      //        b1 -- b2
       const a = [[0, 0], [10, 0]];
       const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
       expect(test.geomPathIntersections(a, b)).toStrictEqual([[5, 0], [7.5, 0]]);
@@ -102,7 +126,13 @@ describe('math/geom', () => {
       expect(test.geomPathHasIntersections(a, [])).toBeFalse();
       expect(test.geomPathHasIntersections(a, [[0, 0]])).toBeFalse();
     });
+
     it('returns true if the paths intersect', () => {
+      //         b0
+      //         | \
+      //   a0 ---*--*--- a1
+      //         |   \
+      //        b1 -- b2
       const a = [[0, 0], [10, 0]];
       const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
       expect(test.geomPathHasIntersections(a, b)).toBeTrue();
@@ -111,11 +141,18 @@ describe('math/geom', () => {
 
   describe('geomPointInPolygon', () => {
     it('says a point in a polygon is on a polygon', () => {
+      //   p1 --- p2
+      //   |   *   |
+      //   p0 --- p3
       const poly = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
       const point = [0.5, 0.5];
       expect(test.geomPointInPolygon(point, poly)).toBeTrue();
     });
     it('says a point outside of a polygon is outside', () => {
+      //       *
+      //   p1 --- p2
+      //   |       |
+      //   p0 --- p3
       const poly = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
       const point = [0.5, 1.5];
       expect(test.geomPointInPolygon(point, poly)).toBeFalse();
@@ -124,11 +161,23 @@ describe('math/geom', () => {
 
   describe('geomPolygonContainsPolygon', () => {
     it('says a polygon in a polygon is in', () => {
+      //   o1 -------- o2
+      //   |  i1 -- i2  |
+      //   |  |      |  |
+      //   |  i0 -- i3  |
+      //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
       expect(test.geomPolygonContainsPolygon(outer, inner)).toBeTrue();
     });
     it('says a polygon outside of a polygon is out', () => {
+      //      i1
+      //      |  \
+      //   o1 -----\-- o2
+      //   |  |     i2  |
+      //   |  |      |  |
+      //   |  i0 -- i3  |
+      //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 9], [2, 2], [2, 1], [1, 1]];
       expect(test.geomPolygonContainsPolygon(outer, inner)).toBeFalse();
@@ -137,47 +186,80 @@ describe('math/geom', () => {
 
   describe('geomPolygonIntersectsPolygon', () => {
     it('returns true when outer polygon fully contains inner', () => {
+      //   o1 -------- o2
+      //   |  i1 -- i2  |
+      //   |  |      |  |
+      //   |  i0 -- i3  |
+      //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeTrue();
     });
 
     it('returns false when inner polygon fully contains outer', () => {
+      //   i1 -------- i2
+      //   |  o1 -- o2  |
+      //   |  |      |  |
+      //   |  o0 -- o3  |
+      //   i0 -------- i3
       const inner = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const outer = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeFalse();
     });
 
     it('returns true when outer polygon partially contains inner (some vertices contained)', () => {
+      //      i1
+      //      |  \
+      //   o1 -----\-- o2
+      //   |  |     i2  |
+      //   |  |      |  |
+      //   |  i0 -- i3  |
+      //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner = [[-1, -1], [1, 2], [2, 2], [2, 1], [1, 1]];
+      const inner = [[1, 1], [1, 9], [2, 2], [2, 1], [1, 1]];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeTrue();
     });
 
     it('returns false when outer polygon partially contains inner (no vertices contained - lax test)', () => {
+      //       i1 -- i2
+      //   o1 -+------+-- o2
+      //   |   |      |   |
+      //   |   |      |   |
+      //   o0 -+------+-- o3
+      //       i0 -- i3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeFalse();
     });
 
     it('returns true when outer polygon partially contains inner (no vertices contained - strict test)', () => {
+      //       i1 -- i2
+      //   o1 -+------+-- o2
+      //   |   |      |   |
+      //   |   |      |   |
+      //   o0 -+------+-- o3
+      //       i0 -- i3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
       expect(test.geomPolygonIntersectsPolygon(outer, inner, true)).toBeTrue();
     });
 
     it('returns false when outer and inner are fully disjoint', () => {
+      //   o1 ---- o2    i1 ---- i2
+      //   |        |    |        |
+      //   |        |    |        |
+      //   o0 ---- o3    i0 ---- i3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner = [[-1, -1], [-1, -2], [-2, -2], [-2, -1], [-1, -1]];
+      const inner = [[5, 0], [5, 3], [8, 3], [8, 0], [5, 0]];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeFalse();
     });
   });
 
   describe('geomGetSmallestSurroundingRectangle', () => {
     it('calculates a smallest surrounding rectangle', () => {
-      //  +----b---------d
+      //  +-- p1 ------ p3
       //  |              |
-      //  a---------c----+
+      //  p0 ------ p2 --+
       const points = [[0, -1], [5, 1], [10, -1], [15, 1]];
       const ssr = test.geomGetSmallestSurroundingRectangle(points);
       expect(ssr.poly).toStrictEqual([[0, -1], [0, 1], [15, 1], [15, -1], [0, -1]]);
