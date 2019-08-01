@@ -105,10 +105,13 @@ export class Projection {
     return this;
   }
 
-  stream = d3_geoTransform({
-    point: function(x: number, y: number): any {
-      var vec = this._proj([x, y]);
-      this.stream.point(vec[0], vec[1]);
-    }
-  }).stream;
+  getStream(): any {
+    const thiz = this;
+    return d3_geoTransform({
+      point: function(x: number, y: number): void {
+        const p: Vec2 = thiz.project([x, y]);
+        this.stream.point(p[0], p[1]);
+      }
+    }).stream();
+  }
 }

@@ -25,12 +25,6 @@ var Projection = /** @class */ (function() {
   function Projection(x, y, k) {
     this._proj = d3_geo_1.geoMercatorRaw; // note: D3 projections work in radians
     this._dimensions = [[0, 0], [0, 0]];
-    this.stream = d3_geo_1.geoTransform({
-      point: function(x, y) {
-        var vec = this._proj([x, y]);
-        this.stream.point(vec[0], vec[1]);
-      }
-    }).stream;
     this._x = x || 0;
     this._y = y || 0;
     this._k = k || 256 / Math.PI; // z1
@@ -89,6 +83,17 @@ var Projection = /** @class */ (function() {
     this._y = +obj.y;
     this._k = +obj.k;
     return this;
+  };
+  Projection.prototype.getStream = function() {
+    var thiz = this;
+    return d3_geo_1
+      .geoTransform({
+        point: function(x, y) {
+          var p = thiz.project([x, y]);
+          this.stream.point(p[0], p[1]);
+        }
+      })
+      .stream();
   };
   return Projection;
 })();
