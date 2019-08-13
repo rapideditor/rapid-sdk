@@ -4,6 +4,7 @@
  */
 
 import { Extent } from '@id-sdk/extent';
+import { Projection } from '@id-sdk/projection';
 import { geoScaleToZoom } from '@id-sdk/geo';
 
 type Vec2 = [number, number];
@@ -18,8 +19,8 @@ interface Tile {
 
 interface TileResult {
   tiles: Tile[];
-  translate: Vec2;
-  scale: number;
+  // translate: Vec2;
+  // scale: number;
 }
 
 const TAU = 2 * Math.PI;
@@ -35,10 +36,11 @@ function range(start: number, end: number): number[] {
 /**
  * @class
  * @description 🀄️ Tiler class for splitting the world into rectangular tiles
+ * https://developers.google.com/maps/documentation/javascript/coordinates
  */
 export class Tiler {
   private _tileSize: number = 256;
-  private _zoomRange: Vec2 = [0, 20];
+  private _zoomRange: Vec2 = [0, 24];
   private _margin: number = 0;
   private _skipNullIsland: boolean = false;
 
@@ -47,26 +49,27 @@ export class Tiler {
    */
   constructor() {}
 
-  getTiles(projection: any): TileResult {
-    const dimensions = projection.clipExtent();
-    const translate = projection.translate();
-    const scale = projection.scale() * TAU;
+  getTiles(projection: Projection): TileResult {
+    const dimensions: Vec2[] = projection.dimensions();
+    const translate: Vec2 = projection.translate();
+    const scale: number = projection.scale();
+    const origin: Vec2 = [scale * Math.PI - translate[0], scale * Math.PI - translate[1]];
 
-    const zFrac: number = geoScaleToZoom(scale / TAU, this._tileSize);
+    const zFrac: number = geoScaleToZoom(scale, this._tileSize);
     const z: number = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
-    const tileMin: number = 0;
-    const tileMax: number = Math.pow(2, z) - 1;
+    const minTile: number = 0;
+    const maxTile: number = Math.pow(2, z) - 1;
+
     const log2ts: number = Math.log(this._tileSize) * Math.LOG2E;
     const k: number = Math.pow(2, zFrac - z + log2ts);
-    const origin: Vec2 = [(translate[0] - scale / 2) / k, (translate[1] - scale / 2) / k];
 
     const cols: number[] = range(
-      clamp(Math.floor(dimensions[0][0] / k - origin[0]) - this._margin, tileMin, tileMax + 1),
-      clamp(Math.ceil(dimensions[1][0] / k - origin[0]) + this._margin, tileMin, tileMax + 1)
+      clamp(Math.floor(dimensions[0][0] / k - origin[0]) - this._margin, minTile, maxTile),
+      clamp(Math.ceil(dimensions[1][0] / k - origin[0]) + this._margin, minTile, maxTile)
     );
     const rows: number[] = range(
-      clamp(Math.floor(dimensions[0][1] / k - origin[1]) - this._margin, tileMin, tileMax + 1),
-      clamp(Math.ceil(dimensions[1][1] / k - origin[1]) + this._margin, tileMin, tileMax + 1)
+      clamp(Math.floor(dimensions[0][1] / k - origin[1]) - this._margin, minTile, maxTile),
+      clamp(Math.ceil(dimensions[1][1] / k - origin[1]) + this._margin, minTile, maxTile)
     );
 
     let tiles: Tile[] = [];
@@ -76,7 +79,7 @@ export class Tiler {
         const x: number = cols[j];
 
         const xyz: TileCoord = [x, y, z];
-        if (this._skipNullIsland && Tiler.nearNullIsland(x, y, z)) continue;
+        if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
 
         const isVisible: boolean =
           i >= this._margin &&
@@ -84,10 +87,15 @@ export class Tiler {
           j >= this._margin &&
           j <= cols.length - this._margin;
 
+        const minX = x * this._tileSize;
+        const minY = y * this._tileSize;
+        const maxX = (x + 1) * this._tileSize;
+        const maxY = (y + 1) * this._tileSize;
+
         const tile: Tile = {
           id: xyz.toString(),
           xyz: xyz,
-          extent: new Extent(),
+          extent: new Extent(projection.invert([minX, minY]), projection.invert([maxX, maxY])),
           isVisible: isVisible
         };
 
@@ -100,37 +108,11 @@ export class Tiler {
     }
 
     return {
-      tiles: tiles,
-      translate: origin,
-      scale: k
+      tiles: tiles
+      // translate: origin,
+      // scale: k
     };
   }
-
-  // /**
-  //  */
-  // getTilesForProjection(projection: any): TileResult {
-  //   let origin = [
-  //     projection.scale() * Math.PI - projection.translate()[0],
-  //     projection.scale() * Math.PI - projection.translate()[1]
-  //   ];
-
-  //   return this.getTiles();
-
-  //   let ts: number = result.scale;
-  //   let tiles = result.tiles;
-
-  //   return tiles
-  //     .map(function(tile) {
-  //       let x = tile[0] * ts - origin[0];
-  //       let y = tile[1] * ts - origin[1];
-  //       return {
-  //         id: tile.toString(),
-  //         xyz: tile,
-  //         extent: geoExtent(projection.invert([x, y + ts]), projection.invert([x + ts, y]))
-  //       };
-  //     })
-  //     .filter(Boolean);
-  // }
 
   /**
    * returns a FeatureCollection useful for displaying a tile debug view
@@ -157,9 +139,20 @@ export class Tiler {
   }
 
   /**
-   * Tests whether the given tile coordinate is near 0,0 (Null Island)
+   * Tests whether the given tile coordinate is near [0,0] (Null Island)
+   * It is considered "near" if it >= z7 and around the center of the map
+   * within these or descendent tiles (roughly within about 2.8° of 0,0)
+   * +---------+---------+
+   * |         |         |
+   * | 63,63,7 | 63,64,7 |
+   * |         |         |
+   * +-------[0,0]-------+
+   * |         |         |
+   * | 64,63,7 | 64,64,7 |
+   * |         |         |
+   * +---------+---------+
    */
-  static nearNullIsland(x: number, y: number, z: number): boolean {
+  static isNearNullIsland(x: number, y: number, z: number): boolean {
     if (z >= 7) {
       const center: number = Math.pow(2, z - 1);
       const width: number = Math.pow(2, z - 6);
