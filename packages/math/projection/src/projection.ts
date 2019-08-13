@@ -33,8 +33,8 @@ export class Projection {
   private _dimensions: Vec2[] = [[0, 0], [0, 0]];
 
   /** Constructs a new Projection
-   * @param {number} [x] - x translation (left of screen in Mercator coords)
-   * @param {number} [y] - y translation (top of screen in Mercator coords)
+   * @param {number} [x] - x translation
+   * @param {number} [y] - y translation
    * @param {number} [k] - k scale
    * @returns {Projection} new Projection
    */

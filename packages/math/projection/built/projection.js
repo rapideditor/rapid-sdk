@@ -17,8 +17,8 @@ var d3_zoom_1 = require('d3-zoom');
  */
 var Projection = /** @class */ (function() {
   /** Constructs a new Projection
-   * @param {number} [x] - x translation (left of screen in Mercator coords)
-   * @param {number} [y] - y translation (top of screen in Mercator coords)
+   * @param {number} [x] - x translation
+   * @param {number} [y] - y translation
    * @param {number} [k] - k scale
    * @returns {Projection} new Projection
    */
