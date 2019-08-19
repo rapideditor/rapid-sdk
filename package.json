@@ -4,8 +4,13 @@
   "description": "Map editing made easy",
   "repository": "ideditor/id-sdk",
   "license": "ISC",
-  "contributors": ["Bryan Housel <bryan@mapbox.com>"],
-  "keywords": ["map", "editor"],
+  "contributors": [
+    "Bryan Housel <bryan@mapbox.com>"
+  ],
+  "keywords": [
+    "map",
+    "editor"
+  ],
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -20,9 +25,11 @@
     "jsdoc": "^3.6.0",
     "lerna": "^3.15.0",
     "prettier": "^1.18.2",
+    "shx": "^0.3.0",
     "typescript": "^3.5.2"
   },
   "scripts": {
+    "clean": "lerna run clean --parallel",
     "build": "lerna run build --parallel",
     "buildpretty": "npm run build && prettier --write \"./packages/**/*.{html,css,ts,js}\"",
     "docs": "rm -f docs/*.html && jsdoc -c ./jsdoc.config.js packages && prettier --write \"./docs/**/*.{html,css,ts,js}\"",

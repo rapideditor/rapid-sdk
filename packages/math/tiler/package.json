@@ -9,6 +9,7 @@
   ],
   "main": "built/tiler.js",
   "scripts": {
+    "clean": "shx rm -f ./built/*",
     "build": "tsc --outDir ./built src/*.ts",
     "test": "jest --config ../../../jest.config.js tests/*.js"
   },

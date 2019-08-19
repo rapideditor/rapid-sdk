@@ -9,6 +9,7 @@
   ],
   "main": "built/geo.js",
   "scripts": {
+    "clean": "shx rm -f ./built/*",
     "build": "tsc --outDir ./built src/*.ts",
     "test": "jest --config ../../../jest.config.js tests/*.js"
   }

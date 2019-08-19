@@ -3,7 +3,8 @@
 .vscode
 .coverage
 
-node_modules
+node_modules/
+built/
 
 npm-debug.log
 lerna-debug.log

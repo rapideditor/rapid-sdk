@@ -8,11 +8,12 @@
     "Bryan Housel <bryan@mapbox.com>"
   ],
   "main": "built/extent.js",
-  "dependencies": {
-    "@id-sdk/geo": "^3.0.0-pre.0"
-  },
   "scripts": {
+    "clean": "shx rm -f ./built/*",
     "build": "tsc --outDir ./built src/*.ts",
     "test": "jest --config ../../../jest.config.js tests/*.js"
+  },
+  "dependencies": {
+    "@id-sdk/geo": "^3.0.0-pre.0"
   }
 }
