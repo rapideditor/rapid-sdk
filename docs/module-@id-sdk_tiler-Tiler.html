@@ -88,12 +88,34 @@
             </li>
           </ul>
         </li>
-        <li><a href="module-@id-sdk_projection-Projection.html">Projection</a></li>
+        <li>
+          <a href="module-@id-sdk_projection-Projection.html">Projection</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#dimensions">dimensions</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#invert">invert</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#project">project</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#scale">scale</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#transform">transform</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#translate">translate</a>
+            </li>
+          </ul>
+        </li>
         <li>
           <a href="module-@id-sdk_tiler-Tiler.html">Tiler</a>
           <ul class="methods">
             <li data-type="method" style="display: none;">
-              <a href="module-@id-sdk_tiler-Tiler.html#.nearNullIsland">nearNullIsland</a>
+              <a href="module-@id-sdk_tiler-Tiler.html#.isNearNullIsland">isNearNullIsland</a>
             </li>
             <li data-type="method" style="display: none;">
               <a href="module-@id-sdk_tiler-Tiler.html#getGeoJSON">getGeoJSON</a>
@@ -258,7 +280,7 @@
                 <ul class="dummy">
                   <li>
                     <a href="tiler_built_tiler.js.html">tiler/built/tiler.js</a>,
-                    <a href="tiler_built_tiler.js.html#line22">line 22</a>
+                    <a href="tiler_built_tiler.js.html#line21">line 21</a>
                   </li>
                 </ul>
               </dd>
@@ -266,13 +288,14 @@
 
             <div class="description">
               🀄️ Tiler class for splitting the world into rectangular tiles
+              https://developers.google.com/maps/documentation/javascript/coordinates
             </div>
           </div>
 
           <h3 class="subsection-title">Methods</h3>
 
-          <h4 class="name" id=".nearNullIsland">
-            <span class="type-signature">(static) </span>nearNullIsland<span class="signature"
+          <h4 class="name" id=".isNearNullIsland">
+            <span class="type-signature">(static) </span>isNearNullIsland<span class="signature"
               >()</span
             ><span class="type-signature"></span>
           </h4>
@@ -283,14 +306,17 @@
               <ul class="dummy">
                 <li>
                   <a href="tiler_built_tiler.js.html">tiler/built/tiler.js</a>,
-                  <a href="tiler_built_tiler.js.html#line129">line 129</a>
+                  <a href="tiler_built_tiler.js.html#line116">line 116</a>
                 </li>
               </ul>
             </dd>
           </dl>
 
           <div class="description">
-            Tests whether the given tile coordinate is near 0,0 (Null Island)
+            Tests whether the given tile coordinate is near [0,0] (Null Island) It is considered
+            "near" if it >= z7 and around the center of the map within these or descendent tiles
+            (roughly within about 2.8° of 0,0) +---------+---------+ | | | | 63,63,7 | 63,64,7 | | |
+            | +-------[0,0]-------+ | | | | 64,63,7 | 64,64,7 | | | | +---------+---------+
           </div>
 
           <h4 class="name" id="getGeoJSON">
@@ -304,7 +330,7 @@
               <ul class="dummy">
                 <li>
                   <a href="tiler_built_tiler.js.html">tiler/built/tiler.js</a>,
-                  <a href="tiler_built_tiler.js.html#line107">line 107</a>
+                  <a href="tiler_built_tiler.js.html#line83">line 83</a>
                 </li>
               </ul>
             </dd>

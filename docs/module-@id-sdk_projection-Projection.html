@@ -88,12 +88,34 @@
             </li>
           </ul>
         </li>
-        <li><a href="module-@id-sdk_projection-Projection.html">Projection</a></li>
+        <li>
+          <a href="module-@id-sdk_projection-Projection.html">Projection</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#dimensions">dimensions</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#invert">invert</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#project">project</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#scale">scale</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#transform">transform</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#translate">translate</a>
+            </li>
+          </ul>
+        </li>
         <li>
           <a href="module-@id-sdk_tiler-Tiler.html">Tiler</a>
           <ul class="methods">
             <li data-type="method" style="display: none;">
-              <a href="module-@id-sdk_tiler-Tiler.html#.nearNullIsland">nearNullIsland</a>
+              <a href="module-@id-sdk_tiler-Tiler.html#.isNearNullIsland">isNearNullIsland</a>
             </li>
             <li data-type="method" style="display: none;">
               <a href="module-@id-sdk_tiler-Tiler.html#getGeoJSON">getGeoJSON</a>
@@ -260,7 +282,7 @@
                 <ul class="dummy">
                   <li>
                     <a href="projection_built_projection.js.html">projection/built/projection.js</a
-                    >, <a href="projection_built_projection.js.html#line17">line 17</a>
+                    >, <a href="projection_built_projection.js.html#line18">line 18</a>
                   </li>
                 </ul>
               </dd>
@@ -268,10 +290,417 @@
 
             <div class="description">
               📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y)
-              coordinates The default projection wraps the d3.geo.MercatorRaw projection, but skips
-              several features: Antimeridian clipping Spherical rotation Resampling
+              coordinates The default projection wraps the d3.geo.MercatorRaw projection, but works
+              in degrees instead of radians, and skips several features: - Antimeridian clipping -
+              Spherical rotation - Resampling
             </div>
           </div>
+
+          <h3 class="subsection-title">Methods</h3>
+
+          <h4 class="name" id="dimensions">
+            <span class="type-signature"></span>dimensions<span class="signature"
+              >(val<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {Array.&lt;Vec2>|Projection}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="projection_built_projection.js.html">projection/built/projection.js</a>,
+                  <a href="projection_built_projection.js.html#line73">line 73</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Sets/Gets the current viewport dimensions
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>val</code></td>
+
+                <td class="type">
+                  <span class="param-type">Array.&lt;Vec2></span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="description last">viewport dimensions</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            The current viewport dimensions or the current projection for method chaining
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Array.&lt;Vec2></span>
+              |
+
+              <span class="param-type">Projection</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="invert">
+            <span class="type-signature"></span>invert<span class="signature">(p)</span
+            ><span class="type-signature"> &rarr; {Vec2}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="projection_built_projection.js.html">projection/built/projection.js</a>,
+                  <a href="projection_built_projection.js.html#line44">line 44</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Inverse projects from given Cartesian (x,y) to Lon/Lat (λ,φ)
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>p</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">Point in Cartesian (x,y)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Point in Lon/Lat (λ,φ) (degrees)
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Vec2</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="project">
+            <span class="type-signature"></span>project<span class="signature">(p)</span
+            ><span class="type-signature"> &rarr; {Vec2}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="projection_built_projection.js.html">projection/built/projection.js</a>,
+                  <a href="projection_built_projection.js.html#line36">line 36</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Projects from given Lon/Lat (λ,φ) to Cartesian (x,y)
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>p</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="description last">Point in Lon/Lat (λ,φ) (degrees)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            Point in Cartesian (x,y)
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Vec2</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="scale">
+            <span class="type-signature"></span>scale<span class="signature"
+              >(val<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {number|Projection}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="projection_built_projection.js.html">projection/built/projection.js</a>,
+                  <a href="projection_built_projection.js.html#line52">line 52</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Sets/Gets the scale factor
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>val</code></td>
+
+                <td class="type">
+                  <span class="param-type">number</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="description last">Projection scale</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            The current scale or the current projection for method chaining
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">number</span>
+              |
+
+              <span class="param-type">Projection</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="transform">
+            <span class="type-signature"></span>transform<span class="signature"
+              >(obj<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {Transform|Projection}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="projection_built_projection.js.html">projection/built/projection.js</a>,
+                  <a href="projection_built_projection.js.html#line83">line 83</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Sets/Gets an object representing the current translation and scale
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>obj</code></td>
+
+                <td class="type">
+                  <span class="param-type">Transform</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="description last">Transform object with x,y,k properties</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            The current transform or the current projection for method chaining
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Transform</span>
+              |
+
+              <span class="param-type">Projection</span>
+            </dd>
+          </dl>
+
+          <h4 class="name" id="translate">
+            <span class="type-signature"></span>translate<span class="signature"
+              >(val<span class="signature-attributes">opt</span>)</span
+            ><span class="type-signature"> &rarr; {Vec2|Projection}</span>
+          </h4>
+
+          <dl class="details">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source">
+              <ul class="dummy">
+                <li>
+                  <a href="projection_built_projection.js.html">projection/built/projection.js</a>,
+                  <a href="projection_built_projection.js.html#line62">line 62</a>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+
+          <div class="description">
+            Sets/Gets the translation factor
+          </div>
+
+          <h5>Parameters:</h5>
+
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+
+                <th>Type</th>
+
+                <th>Attributes</th>
+
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td class="name"><code>val</code></td>
+
+                <td class="type">
+                  <span class="param-type">Vec2</span>
+                </td>
+
+                <td class="attributes">&lt;optional><br /></td>
+
+                <td class="description last">Projection translation</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Returns:</h5>
+
+          <div class="param-desc">
+            The current translation or the current projection for method chaining
+          </div>
+
+          <dl class="param-type">
+            <dt>
+              Type
+            </dt>
+            <dd>
+              <span class="param-type">Vec2</span>
+              |
+
+              <span class="param-type">Projection</span>
+            </dd>
+          </dl>
         </article>
       </section>
     </div>

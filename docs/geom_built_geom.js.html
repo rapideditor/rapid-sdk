@@ -88,12 +88,34 @@
             </li>
           </ul>
         </li>
-        <li><a href="module-@id-sdk_projection-Projection.html">Projection</a></li>
+        <li>
+          <a href="module-@id-sdk_projection-Projection.html">Projection</a>
+          <ul class="methods">
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#dimensions">dimensions</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#invert">invert</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#project">project</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#scale">scale</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#transform">transform</a>
+            </li>
+            <li data-type="method" style="display: none;">
+              <a href="module-@id-sdk_projection-Projection.html#translate">translate</a>
+            </li>
+          </ul>
+        </li>
         <li>
           <a href="module-@id-sdk_tiler-Tiler.html">Tiler</a>
           <ul class="methods">
             <li data-type="method" style="display: none;">
-              <a href="module-@id-sdk_tiler-Tiler.html#.nearNullIsland">nearNullIsland</a>
+              <a href="module-@id-sdk_tiler-Tiler.html#.isNearNullIsland">isNearNullIsland</a>
             </li>
             <li data-type="method" style="display: none;">
               <a href="module-@id-sdk_tiler-Tiler.html#getGeoJSON">getGeoJSON</a>
@@ -238,15 +260,15 @@
 
       <section>
         <article>
-          <pre class="prettyprint source linenums"><code>'use strict';
+          <pre class="prettyprint source linenums"><code>"use strict";
 /**
  * @module @id-sdk/geom
  * @description 📈 Module containing Geometric (planar) math functions
  */
 exports.__esModule = true;
-var d3_polygon_1 = require('d3-polygon');
-var extent_1 = require('@id-sdk/extent');
-var vector_1 = require('@id-sdk/vector');
+var d3_polygon_1 = require("d3-polygon");
+var extent_1 = require("@id-sdk/extent");
+var vector_1 = require("@id-sdk/vector");
 /** Test whether two given coordinates describe the same edge
  * @param {Vec2} a - Start coordinate
  * @param {Vec2} b - End coordinate
@@ -256,7 +278,7 @@ var vector_1 = require('@id-sdk/vector');
  * geomEdgeEqual([1, 2], [2, 1]);   // returns true
  */
 function geomEdgeEqual(a, b) {
-  return (a[0] === b[0] &amp;&amp; a[1] === b[1]) || (a[0] === b[1] &amp;&amp; a[1] === b[0]);
+    return (a[0] === b[0] &amp;&amp; a[1] === b[1]) || (a[0] === b[1] &amp;&amp; a[1] === b[0]);
 }
 exports.geomEdgeEqual = geomEdgeEqual;
 /** Rotate all points counterclockwise around a pivot point by given angle
@@ -270,13 +292,13 @@ exports.geomEdgeEqual = geomEdgeEqual;
  * geomRotatePoints(points, Math.Pi, around);   // returns [[-1, 0], [-1, -1]]
  */
 function geomRotatePoints(points, angle, around) {
-  return points.map(function(point) {
-    var radial = vector_1.vecSubtract(point, around);
-    return [
-      radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
-      radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
-    ];
-  });
+    return points.map(function (point) {
+        var radial = vector_1.vecSubtract(point, around);
+        return [
+            radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
+            radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
+        ];
+    });
 }
 exports.geomRotatePoints = geomRotatePoints;
 /** Return the intersection point of 2 line segments.
@@ -298,22 +320,24 @@ exports.geomRotatePoints = geomRotatePoints;
  * geomLineIntersection(a, b);   // returns [5, 0]
  */
 function geomLineIntersection(a, b) {
-  var p = [a[0][0], a[0][1]];
-  var p2 = [a[1][0], a[1][1]];
-  var q = [b[0][0], b[0][1]];
-  var q2 = [b[1][0], b[1][1]];
-  var r = vector_1.vecSubtract(p2, p);
-  var s = vector_1.vecSubtract(q2, q);
-  var uNumerator = vector_1.vecCross(vector_1.vecSubtract(q, p), r);
-  var denominator = vector_1.vecCross(r, s);
-  if (uNumerator &amp;&amp; denominator) {
-    var u = uNumerator / denominator;
-    var t = vector_1.vecCross(vector_1.vecSubtract(q, p), s) / denominator;
-    if (t >= 0 &amp;&amp; t &lt;= 1 &amp;&amp; u >= 0 &amp;&amp; u &lt;= 1) {
-      return vector_1.vecInterp(p, p2, t);
+    if (a.length !== 2 || b.length !== 2)
+        return null;
+    var p = [a[0][0], a[0][1]];
+    var p2 = [a[1][0], a[1][1]];
+    var q = [b[0][0], b[0][1]];
+    var q2 = [b[1][0], b[1][1]];
+    var r = vector_1.vecSubtract(p2, p);
+    var s = vector_1.vecSubtract(q2, q);
+    var uNumerator = vector_1.vecCross(vector_1.vecSubtract(q, p), r);
+    var denominator = vector_1.vecCross(r, s);
+    if (uNumerator &amp;&amp; denominator) {
+        var u = uNumerator / denominator;
+        var t = vector_1.vecCross(vector_1.vecSubtract(q, p), s) / denominator;
+        if (t >= 0 &amp;&amp; t &lt;= 1 &amp;&amp; u >= 0 &amp;&amp; u &lt;= 1) {
+            return vector_1.vecInterp(p, p2, t);
+        }
     }
-  }
-  return null;
+    return null;
 }
 exports.geomLineIntersection = geomLineIntersection;
 /** Return all intersection points of 2 paths
@@ -332,18 +356,18 @@ exports.geomLineIntersection = geomLineIntersection;
  * geomPathIntersections(a, b);   // returns [[5, 0], [7.5, 0]]
  */
 function geomPathIntersections(path1, path2) {
-  var intersections = [];
-  for (var i = 0; i &lt; path1.length - 1; i++) {
-    for (var j = 0; j &lt; path2.length - 1; j++) {
-      var a = [path1[i], path1[i + 1]];
-      var b = [path2[j], path2[j + 1]];
-      var hit = geomLineIntersection(a, b);
-      if (hit) {
-        intersections.push(hit);
-      }
+    var intersections = [];
+    for (var i = 0; i &lt; path1.length - 1; i++) {
+        for (var j = 0; j &lt; path2.length - 1; j++) {
+            var a = [path1[i], path1[i + 1]];
+            var b = [path2[j], path2[j + 1]];
+            var hit = geomLineIntersection(a, b);
+            if (hit) {
+                intersections.push(hit);
+            }
+        }
     }
-  }
-  return intersections;
+    return intersections;
 }
 exports.geomPathIntersections = geomPathIntersections;
 /** Return true if paths intersect, false if not
@@ -362,17 +386,17 @@ exports.geomPathIntersections = geomPathIntersections;
  * geomPathHasIntersections(a, b);   // returns true
  */
 function geomPathHasIntersections(path1, path2) {
-  for (var i = 0; i &lt; path1.length - 1; i++) {
-    for (var j = 0; j &lt; path2.length - 1; j++) {
-      var a = [path1[i], path1[i + 1]];
-      var b = [path2[j], path2[j + 1]];
-      var hit = geomLineIntersection(a, b);
-      if (hit) {
-        return true;
-      }
+    for (var i = 0; i &lt; path1.length - 1; i++) {
+        for (var j = 0; j &lt; path2.length - 1; j++) {
+            var a = [path1[i], path1[i + 1]];
+            var b = [path2[j], path2[j + 1]];
+            var hit = geomLineIntersection(a, b);
+            if (hit) {
+                return true;
+            }
+        }
     }
-  }
-  return false;
+    return false;
 }
 exports.geomPathHasIntersections = geomPathHasIntersections;
 /** Return true if point is contained in polygon
@@ -392,18 +416,19 @@ exports.geomPathHasIntersections = geomPathHasIntersections;
  * geomPointInPolygon(point, poly);   // returns true
  */
 function geomPointInPolygon(point, polygon) {
-  var x = point[0];
-  var y = point[1];
-  var inside = false;
-  for (var i = 0, j = polygon.length - 1; i &lt; polygon.length; j = i++) {
-    var xi = polygon[i][0];
-    var yi = polygon[i][1];
-    var xj = polygon[j][0];
-    var yj = polygon[j][1];
-    var intersect = yi > y !== yj > y &amp;&amp; x &lt; ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-    if (intersect) inside = !inside;
-  }
-  return inside;
+    var x = point[0];
+    var y = point[1];
+    var inside = false;
+    for (var i = 0, j = polygon.length - 1; i &lt; polygon.length; j = i++) {
+        var xi = polygon[i][0];
+        var yi = polygon[i][1];
+        var xj = polygon[j][0];
+        var yj = polygon[j][1];
+        var intersect = yi > y !== yj > y &amp;&amp; x &lt; ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+        if (intersect)
+            inside = !inside;
+    }
+    return inside;
 }
 exports.geomPointInPolygon = geomPointInPolygon;
 /** Return true if every point of inner polygon is contained within outer polygon
@@ -425,9 +450,9 @@ exports.geomPointInPolygon = geomPointInPolygon;
  * geomPolygonContainsPolygon(outer, inner);   // returns true
  */
 function geomPolygonContainsPolygon(outer, inner) {
-  return inner.every(function(point) {
-    return geomPointInPolygon(point, outer);
-  });
+    return inner.every(function (point) {
+        return geomPointInPolygon(point, outer);
+    });
 }
 exports.geomPolygonContainsPolygon = geomPolygonContainsPolygon;
 /** Return true if any part of inner polygon intersects outer polygon
@@ -449,12 +474,12 @@ exports.geomPolygonContainsPolygon = geomPolygonContainsPolygon;
  * geomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict test - points and segments)
  */
 function geomPolygonIntersectsPolygon(outer, inner, checkSegments) {
-  function testPoints(outer, inner) {
-    return inner.some(function(point) {
-      return geomPointInPolygon(point, outer);
-    });
-  }
-  return testPoints(outer, inner) || (!!checkSegments &amp;&amp; geomPathHasIntersections(outer, inner));
+    function testPoints(outer, inner) {
+        return inner.some(function (point) {
+            return geomPointInPolygon(point, outer);
+        });
+    }
+    return testPoints(outer, inner) || (!!checkSegments &amp;&amp; geomPathHasIntersections(outer, inner));
 }
 exports.geomPolygonIntersectsPolygon = geomPolygonIntersectsPolygon;
 /** Return the Smallest Surrounding Rectangle for a given set of points
@@ -473,36 +498,36 @@ exports.geomPolygonIntersectsPolygon = geomPolygonIntersectsPolygon;
  * // ssr.angle == 0
  */
 function geomGetSmallestSurroundingRectangle(points) {
-  var hull = d3_polygon_1.polygonHull(points);
-  var centroid = d3_polygon_1.polygonCentroid(hull);
-  var minArea = Infinity;
-  var ssrExtent = new extent_1.Extent();
-  var ssrAngle = 0;
-  var c1 = hull[0];
-  for (var i = 0; i &lt;= hull.length - 1; i++) {
-    var c2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
-    var angle = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
-    var poly = geomRotatePoints(hull, -angle, centroid);
-    var extent = poly.reduce(function(acc, point) {
-      // update Extent min/max in-place for speed
-      acc.min[0] = Math.min(acc.min[0], point[0]);
-      acc.min[1] = Math.min(acc.min[1], point[1]);
-      acc.max[0] = Math.max(acc.max[0], point[0]);
-      acc.max[1] = Math.max(acc.max[1], point[1]);
-      return acc;
-    }, new extent_1.Extent());
-    var area = extent.area();
-    if (area &lt; minArea) {
-      minArea = area;
-      ssrExtent = extent;
-      ssrAngle = angle;
+    var hull = d3_polygon_1.polygonHull(points);
+    var centroid = d3_polygon_1.polygonCentroid(hull);
+    var minArea = Infinity;
+    var ssrExtent = new extent_1.Extent();
+    var ssrAngle = 0;
+    var c1 = hull[0];
+    for (var i = 0; i &lt;= hull.length - 1; i++) {
+        var c2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
+        var angle = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
+        var poly = geomRotatePoints(hull, -angle, centroid);
+        var extent = poly.reduce(function (acc, point) {
+            // update Extent min/max in-place for speed
+            acc.min[0] = Math.min(acc.min[0], point[0]);
+            acc.min[1] = Math.min(acc.min[1], point[1]);
+            acc.max[0] = Math.max(acc.max[0], point[0]);
+            acc.max[1] = Math.max(acc.max[1], point[1]);
+            return acc;
+        }, new extent_1.Extent());
+        var area = extent.area();
+        if (area &lt; minArea) {
+            minArea = area;
+            ssrExtent = extent;
+            ssrAngle = angle;
+        }
+        c1 = c2;
     }
-    c1 = c2;
-  }
-  return {
-    poly: geomRotatePoints(ssrExtent.polygon(), ssrAngle, centroid),
-    angle: ssrAngle
-  };
+    return {
+        poly: geomRotatePoints(ssrExtent.polygon(), ssrAngle, centroid),
+        angle: ssrAngle
+    };
 }
 exports.geomGetSmallestSurroundingRectangle = geomGetSmallestSurroundingRectangle;
 /** Return the length of the given path
@@ -517,28 +542,33 @@ exports.geomGetSmallestSurroundingRectangle = geomGetSmallestSurroundingRectangl
  * geomPathLength(path);  // returns 6
  */
 function geomPathLength(path) {
-  var length = 0;
-  for (var i = 0; i &lt; path.length - 1; i++) {
-    length += vector_1.vecLength(path[i], path[i + 1]);
-  }
-  return length;
+    var length = 0;
+    for (var i = 0; i &lt; path.length - 1; i++) {
+        length += vector_1.vecLength(path[i], path[i + 1]);
+    }
+    return length;
 }
 exports.geomPathLength = geomPathLength;
 // If the given point is at the edge of the padded viewport,
 // return a vector that will nudge the viewport in that direction
 function geomViewportNudge(point, dimensions) {
-  var pad = [80, 20, 50, 20]; // top, right, bottom, left
-  var x = 0;
-  var y = 0;
-  if (point[0] > dimensions[0] - pad[1]) x = -10;
-  if (point[0] &lt; pad[3]) x = 10;
-  if (point[1] > dimensions[1] - pad[2]) y = -10;
-  if (point[1] &lt; pad[0]) y = 10;
-  if (x || y) {
-    return [x, y];
-  } else {
-    return null;
-  }
+    var pad = [80, 20, 50, 20]; // top, right, bottom, left
+    var x = 0;
+    var y = 0;
+    if (point[0] > dimensions[0] - pad[1])
+        x = -10;
+    if (point[0] &lt; pad[3])
+        x = 10;
+    if (point[1] > dimensions[1] - pad[2])
+        y = -10;
+    if (point[1] &lt; pad[0])
+        y = 10;
+    if (x || y) {
+        return [x, y];
+    }
+    else {
+        return null;
+    }
 }
 exports.geomViewportNudge = geomViewportNudge;
 </code></pre>
