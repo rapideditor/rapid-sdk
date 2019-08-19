@@ -24,17 +24,18 @@
     "jest-extended": "^0.11.2",
     "jsdoc": "^3.6.0",
     "lerna": "^3.15.0",
+    "npm-run-all": "^4.0.0",
     "prettier": "^1.18.2",
     "shx": "^0.3.0",
     "typescript": "^3.5.2"
   },
   "scripts": {
+    "all": "npm-run-all -s clean build docs pretty",
+    "build": "lerna run build",
     "clean": "lerna run clean --parallel",
-    "build": "lerna run build --parallel",
-    "buildpretty": "npm run build && prettier --write \"./packages/**/*.{html,css,ts,js}\"",
-    "docs": "rm -f docs/*.html && jsdoc -c ./jsdoc.config.js packages && prettier --write \"./docs/**/*.{html,css,ts,js}\"",
+    "docs": "rm -f docs/*.html && jsdoc -c ./jsdoc.config.js packages",
     "test": "jest",
-    "prettier": "prettier --write \"./**/*.{html,css,ts,js}\""
+    "pretty": "prettier --write \"./**/*.{html,css,ts,js}\""
   },
   "engines": {
     "node": ">=8.15.0",
