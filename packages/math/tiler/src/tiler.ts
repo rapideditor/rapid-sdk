@@ -13,7 +13,8 @@ type TileCoord = [number, number, number];
 interface Tile {
   id: string;
   xyz: TileCoord;
-  extent: Extent;
+  pxExtent: Extent;
+  wgs84Extent: Extent;
   isVisible: boolean;
 }
 
@@ -53,7 +54,6 @@ export class Tiler {
     const dimensions: Vec2[] = projection.dimensions();
     const translate: Vec2 = projection.translate();
     const scale: number = projection.scale();
-    const origin: Vec2 = [scale * Math.PI - translate[0], scale * Math.PI - translate[1]];
 
     const zFrac: number = geoScaleToZoom(scale, this._tileSize);
     const z: number = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
@@ -63,13 +63,19 @@ export class Tiler {
     const log2ts: number = Math.log(this._tileSize) * Math.LOG2E;
     const k: number = Math.pow(2, zFrac - z + log2ts);
 
+    // perform calculations in "world" pixel coordinates, where origin is top left viewport pixel
+    const origin: Vec2 = [scale * Math.PI - translate[0], scale * Math.PI - translate[1]];
+    const viewMin: Vec2 = [origin[0] + dimensions[0][0], origin[1] + dimensions[0][1]];
+    const viewMax: Vec2 = [origin[0] + dimensions[1][0], origin[1] + dimensions[1][1]];
+    const viewExtent: Extent = new Extent(viewMin, viewMax);
+
     const cols: number[] = range(
-      clamp(Math.floor(dimensions[0][0] / k - origin[0]) - this._margin, minTile, maxTile),
-      clamp(Math.ceil(dimensions[1][0] / k - origin[0]) + this._margin, minTile, maxTile)
+      clamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
+      clamp(Math.floor(viewMax[0] / k) + this._margin, minTile, maxTile)
     );
     const rows: number[] = range(
-      clamp(Math.floor(dimensions[0][1] / k - origin[1]) - this._margin, minTile, maxTile),
-      clamp(Math.ceil(dimensions[1][1] / k - origin[1]) + this._margin, minTile, maxTile)
+      clamp(Math.floor(viewMin[1] / k) - this._margin, minTile, maxTile),
+      clamp(Math.floor(viewMax[1] / k) + this._margin, minTile, maxTile)
     );
 
     let tiles: Tile[] = [];
@@ -81,21 +87,21 @@ export class Tiler {
         const xyz: TileCoord = [x, y, z];
         if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
 
-        const isVisible: boolean =
-          i >= this._margin &&
-          i <= rows.length - this._margin &&
-          j >= this._margin &&
-          j <= cols.length - this._margin;
+        // still world pixel coordinates
+        const tileMin: Vec2 = [x * this._tileSize, y * this._tileSize];
+        const tileMax: Vec2 = [(x + 1) * this._tileSize, (y + 1) * this._tileSize];
+        const tileExtent: Extent = new Extent(tileMin, tileMax);
+        const isVisible: boolean = viewExtent.intersects(tileExtent);
 
-        const minX = x * this._tileSize;
-        const minY = y * this._tileSize;
-        const maxX = (x + 1) * this._tileSize;
-        const maxY = (y + 1) * this._tileSize;
+        // back to lon/lat
+        const wgs84Min: Vec2 = projection.invert([tileMin[0], tileMax[1]]);
+        const wgs84Max: Vec2 = projection.invert([tileMax[0], tileMin[1]]);
 
         const tile: Tile = {
           id: xyz.toString(),
           xyz: xyz,
-          extent: new Extent(projection.invert([minX, minY]), projection.invert([maxX, maxY])),
+          pxExtent: new Extent(tileMin, tileMax),
+          wgs84Extent: new Extent(wgs84Min, wgs84Max),
           isVisible: isVisible
         };
 
@@ -127,7 +133,7 @@ export class Tiler {
         },
         geometry: {
           type: 'Polygon',
-          coordinates: [tile.extent.polygon()]
+          coordinates: [tile.wgs84Extent.polygon()]
         }
       };
     });
@@ -163,28 +169,28 @@ export class Tiler {
     return false;
   }
 
-  // tileSize(val: number) {
-  //   if (!arguments.length) return _tileSize;
-  //   _tileSize = val;
-  //   return tiler;
-  // }
+  tileSize(val: number) {
+    if (!arguments.length) return this._tileSize;
+    this._tileSize = val;
+    return this;
+  }
 
-  // zoomRange(val: Vec2) {
-  //   if (!arguments.length) return _zoomRange;
-  //   _zoomRange = val;
-  //   return tiler;
-  // }
+  zoomRange(val: Vec2) {
+    if (!arguments.length) return this._zoomRange;
+    this._zoomRange = val;
+    return this;
+  }
 
-  // // number to extend the rows/columns beyond those covering the viewport
-  // margin(val: number) {
-  //   if (!arguments.length) return _margin;
-  //   _margin = +val;
-  //   return tiler;
-  // }
+  // number to extend the rows/columns beyond those covering the viewport
+  margin(val: number) {
+    if (!arguments.length) return this._margin;
+    this._margin = +val;
+    return this;
+  }
 
-  // skipNullIsland(val: number) {
-  //   if (!arguments.length) return _skipNullIsland;
-  //   _skipNullIsland = val;
-  //   return tiler;
-  // }
+  skipNullIsland(val: boolean) {
+    if (!arguments.length) return this._skipNullIsland;
+    this._skipNullIsland = val;
+    return this;
+  }
 }
