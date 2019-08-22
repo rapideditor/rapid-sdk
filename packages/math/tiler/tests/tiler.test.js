@@ -14,6 +14,7 @@ describe('math/tiler', () => {
 
     [256, 512, 1024].forEach((TS) => {
       describe('tileSize ' + TS, () => {
+        const TAU = 2 * Math.PI;
         const HALFTS = TS / 2;
         const TWOTS = TS * 2;
         const FOURTS = TS * 4;
@@ -27,9 +28,10 @@ describe('math/tiler', () => {
           //  +-------+  -85.0511
           //-180    +180
           //
+          const k = TS * Math.pow(2, 0) / TAU;  // z0
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(HALFTS, HALFTS, HALFTS / Math.PI) // z0, entire world visible
-            .dimensions([[0, 0], [TS, TS]]);
+          const p = new Projection(HALFTS, HALFTS, k)
+            .dimensions([[0, 0], [TS, TS]]);  // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -80,9 +82,10 @@ describe('math/tiler', () => {
           //  +-------+-------+  -85.0511
           //-180      0     +180
           //
+          const k = TS * Math.pow(2, 1) / TAU;  // z1
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(TS, TS, TS / Math.PI) // z1, entire world visible
-            .dimensions([[0, 0], [TWOTS, TWOTS]]);
+          const p = new Projection(TS, TS, k)
+            .dimensions([[0, 0], [TWOTS, TWOTS]]);  // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -163,9 +166,10 @@ describe('math/tiler', () => {
           //  +-------+-------+-------+-------+  -85.0511
           //-180     -90      0      +90    +180
           //
+          const k = TS * Math.pow(2, 2) / TAU;  // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(TWOTS, TWOTS, TWOTS / Math.PI) // z2, entire world visible
-            .dimensions([[0, 0], [FOURTS, FOURTS]]);
+          const p = new Projection(TWOTS, TWOTS, k)
+            .dimensions([[0, 0], [FOURTS, FOURTS]]);  // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -245,8 +249,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
+          const k = TS * Math.pow(2, 2) / TAU;  // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(HALFTS, HALFTS, TWOTS / Math.PI) // z2
+          const p = new Projection(HALFTS, HALFTS, k)
             .dimensions([[1, 1], [TS-1, TS-1]]);
 
           const result = t.getTiles(p);
@@ -284,8 +289,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
+          const k = TS * Math.pow(2, 2) / TAU;  // z2
           const t = new Tiler().tileSize(TS).margin(1);
-          const p = new Projection(HALFTS, HALFTS, TWOTS / Math.PI) // z2
+          const p = new Projection(HALFTS, HALFTS, k)
             .dimensions([[1, 1], [TS-1, TS-1]]);
 
           const result = t.getTiles(p);
@@ -328,7 +334,7 @@ describe('math/tiler', () => {
           // |       |       | 2,1,2 |       |
           // | 0,1,2 | 1,1,2 +=======+ 3,1,2 |
           // |       |       ‖       ‖       |
-          // +-------+-------‖---+---‖-------+
+          // +-------+-------‖-------‖-------+
           // |       |       ‖       ‖       |
           // | 0,2,2 | 1,2,2 +=======+ 3,2,2 |
           // |       |       | 2,2,2 |       |
@@ -337,8 +343,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
+          const k = TS * Math.pow(2, 2) / TAU;  // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(0, HALFTS, TWOTS / Math.PI) // z2
+          const p = new Projection(0, HALFTS, k)
             .dimensions([[1, 1], [TS-1, TS-1]]);
 
           const result = t.getTiles(p);
@@ -367,7 +374,7 @@ describe('math/tiler', () => {
           // |       |       | 2,1,2 |       |
           // | 0,1,2 | 1,1,2 +=======+ 3,1,2 |
           // |       |       ‖       ‖       |
-          // +-------+-------‖---+---‖-------+
+          // +-------+-------‖-------‖-------+
           // |       |       ‖       ‖       |
           // | 0,2,2 | 1,2,2 +=======+ 3,2,2 |
           // |       |       | 2,2,2 |       |
@@ -376,8 +383,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
+          const k = TS * Math.pow(2, 2) / TAU;  // z2
           const t = new Tiler().tileSize(TS).margin(1);
-          const p = new Projection(0, HALFTS, TWOTS / Math.PI) // z2
+          const p = new Projection(0, HALFTS, k)
             .dimensions([[1, 1], [TS-1, TS-1]]);
 
           const result = t.getTiles(p);
@@ -411,10 +419,66 @@ describe('math/tiler', () => {
           });
         });
 
+        it('skips tiles around null island if skipNullIsland is true', () => {
+          // +---------+---------+---------+---------+
+          // |         |         |         |         |
+          // | 63,62,7 | 64,62,7 | 65,62,7 | 66,62,7 |
+          // |         |         |         |         |
+          // +---------+---------+---------+---------+
+          // |         | 64,63,7 | 65,63,7 |         |
+          // | 63,63,7 |     +=======+     | 66,63,7 |
+          // |         |     ‖   |   ‖     |         |
+          // +-------[0,0]---‖---+---‖-----+---------+
+          // |         |     ‖   |   ‖     |         |
+          // | 63,64,7 |     +=======+     | 66,64,7 |
+          // |         | 64,64,7 | 65,64,7 |         |
+          // +---------+---------+---------+---------+
+          // |         |         |         |         |
+          // | 63,65,7 | 64,65,7 | 65,65,7 | 66,65,7 |
+          // |         |         |         |         |
+          // +---------+---------+---------+---------+
+          const k = TS * Math.pow(2, 7) / TAU;  // z7
+          const t = new Tiler().tileSize(TS).margin(1).skipNullIsland(true);
+          const p = new Projection(-HALFTS, HALFTS, k)
+            .dimensions([[1, 1], [TS-1, TS-1]]);
+
+          const result = t.getTiles(p);
+          const tiles = result.tiles;
+          expect(tiles).toBeArrayOfSize(12);
+
+          // note: tiles in view are returned before tiles in margin
+          // prettier-ignore
+          const expectedVisible = [
+            [65,63,7],
+            [65,64,7]
+          ].reverse();
+
+          // prettier-ignore
+          const expectedMargin = [
+            [63,62,7], [64,62,7], [65,62,7], [66,62,7],
+                                             [66,63,7],
+                                             [66,64,7],
+            [63,65,7], [64,65,7], [65,65,7], [66,65,7]
+          ];
+
+          expectedVisible.forEach((xyz, i) => {
+            expect(tiles[i].id).toBe(xyz.join(','));
+            expect(tiles[i].xyz).toStrictEqual(xyz);
+            expect(tiles[i].isVisible).toBeTrue();
+          });
+          expectedMargin.forEach((xyz, i) => {
+            expect(tiles[i+2].id).toBe(xyz.join(','));
+            expect(tiles[i+2].xyz).toStrictEqual(xyz);
+            expect(tiles[i+2].isVisible).toBeFalse();
+          });
+        });
+
+
         describe('getGeoJSON', () => {
           it('gets GeoJSON', () => {
+            const k = TS * Math.pow(2, 0) / TAU;  // z0
             const t = new Tiler().tileSize(TS);
-            const p = new Projection(HALFTS, HALFTS, HALFTS / Math.PI) // z0
+            const p = new Projection(HALFTS, HALFTS, k)
               .dimensions([[0, 0], [TS, TS]]);
 
             const result = t.getTiles(p);
@@ -451,11 +515,11 @@ describe('math/tiler', () => {
     it('is not near if z < 7', () => {
       // +---------+---------+
       // |         |         |
-      // | 31,31,6 | 31,32,6 |
+      // | 31,31,6 | 32,31,6 |
       // |         |         |
       // +-------[0,0]-------+
       // |         |         |
-      // | 32,31,6 | 32,32,6 |
+      // | 31,32,6 | 32,32,6 |
       // |         |         |
       // +---------+---------+
       expect(Tiler.isNearNullIsland(31, 31, 6)).toBeFalse();
@@ -464,11 +528,11 @@ describe('math/tiler', () => {
     it('is not near if z >= 7 and outside region', () => {
       // +---------+---------+
       // |         |         |
-      // | 63,63,7 | 63,64,7 |
+      // | 63,63,7 | 64,63,7 |
       // |         |         |
       // +-------[0,0]-------+
       // |         |         |
-      // | 64,63,7 | 64,64,7 |
+      // | 63,64,7 | 64,64,7 |
       // |         |         |
       // +---------+---------+
       expect(Tiler.isNearNullIsland(63, 65, 7)).toBeFalse();
@@ -481,11 +545,11 @@ describe('math/tiler', () => {
     it('is near if z >= 7 and inside region', () => {
       // +---------+---------+
       // |         |         |
-      // | 63,63,7 | 63,64,7 |
+      // | 63,63,7 | 64,63,7 |
       // |         |         |
       // +-------[0,0]-------+
       // |         |         |
-      // | 64,63,7 | 64,64,7 |
+      // | 63,64,7 | 64,64,7 |
       // |         |         |
       // +---------+---------+
       expect(Tiler.isNearNullIsland(63, 63, 7)).toBeTrue();
