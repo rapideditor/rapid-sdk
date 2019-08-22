@@ -24,7 +24,6 @@ interface TileResult {
   // scale: number;
 }
 
-const TAU = 2 * Math.PI;
 
 function clamp(num: number, min: number, max: number): number {
   return Math.max(min, Math.min(num, max));
