@@ -35,6 +35,11 @@ export class Extent {
    * @param {Extent|Vec2} otherOrMin
    * @param {Vec2} [max]
    * @returns {Extent} new Extent
+   * @example
+   * const e1 = new Extent();                // construct an initially empty extent
+   * const e2 = new Extent([0, 0]);          // construct as a point (min and max both [0, 0])
+   * const e3 = new Extent([0, 0], [5, 5]);  // construct as a point with given min and max
+   * const e4 = new Extent(e3);              // copy an Extent to a new Extent
    */
   constructor(otherOrMin?: Extent | Vec2, max?: Vec2) {
     let min;
@@ -59,6 +64,12 @@ export class Extent {
   /** Test whether extent equals another extent
    * @param {any} other
    * @returns {boolean} True if equal, false if unequal
+   * @example
+   * const a = new Extent([0, 0], [10, 10]);
+   * const b = new Extent([0, 0], [10, 10]);
+   * const c = new Extent([0, 0], [12, 12]);
+   * a.equals(b);   // returns true
+   * a.equals(c);   // returns false
    */
   equals(other: any): boolean {
     if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
@@ -70,20 +81,10 @@ export class Extent {
     );
   }
 
-  /** Extend the bounds of an extent
-   * @param {any} other
-   * @returns {Extent} True if equal, false if unequal
-   */
-  extend(other: any): Extent {
-    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
-    return new Extent(
-      [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
-      [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
-    );
-  }
-
   /** Returns the area of an extent
    * @returns {number} area
+   * @example
+   * new Extent([0, 0], [5, 10]).area();  // returns 50
    */
   area(): number {
     return Math.abs((this.max[0] - this.min[0]) * (this.max[1] - this.min[1]));
@@ -91,6 +92,8 @@ export class Extent {
 
   /** Returns the center point of an extent
    * @returns {Vec2} Center point of the extent
+   * @example
+   * new Extent([0, 0], [5, 10]).center();  // returns [2.5, 5]
    */
   center(): Vec2 {
     return [(this.min[0] + this.max[0]) / 2, (this.min[1] + this.max[1]) / 2];
@@ -98,13 +101,26 @@ export class Extent {
 
   /** Returns an array rectangle as `[minX, minY, maxX, maxY]`
    * @returns {number[]} rectangle
+   * @example
+   * new Extent([0, 0], [5, 10]).rectangle();  // returns [0, 0, 5, 10]
    */
   rectangle(): number[] {
     return [this.min[0], this.min[1], this.max[0], this.max[1]];
   }
 
+  /** Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`
+   * @returns {string} rectangle
+   * @example
+   * new Extent([0, 0], [5, 10]).toParam();  // returns '0,0,5,10'
+   */
+  toParam(): string {
+    return this.rectangle().join(',');
+  }
+
   /** Returns an Object with `minX`, `minY`, `maxX`, `maxY` properties.
-   * @returns {Object} Object
+   * @returns {BBox} BBox
+   * @example
+   * new Extent([0, 0], [5, 10]).bbox();  // returns { minX: 0, minY: 0, maxX: 5, maxY: 10 };
    */
   bbox(): BBox {
     return { minX: this.min[0], minY: this.min[1], maxX: this.max[0], maxY: this.max[1] };
@@ -112,6 +128,8 @@ export class Extent {
 
   /** Returns an polygon representing the extent wound clockwise.
    * @returns {Vec2[]} Polygon array
+   * @example
+   * new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [0, 10], [5, 10], [5, 0], [0, 0]]
    */
   polygon(): Vec2[] {
     return [
@@ -126,6 +144,11 @@ export class Extent {
   /** Test whether this extent contains another extent
    * @param {any} other
    * @returns {boolean} True if this extent contains other, false if not
+   * @example
+   * const a = new Extent([0, 0], [5, 5]);
+   * const b = new Extent([1, 1], [2, 2]);
+   * a.contains(b);   // returns true
+   * b.contains(a);   // returns false
    */
   contains(other: any): boolean {
     if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
@@ -140,6 +163,11 @@ export class Extent {
   /** Test whether this extent intersects another extent
    * @param {any} other
    * @returns {boolean} True if this extent intersects other, false if not
+   * @example
+   * const a = new Extent([0, 0], [5, 5]);
+   * const b = new Extent([1, 1], [6, 6]);
+   * a.intersects(b);   // returns true
+   * b.intersects(a);   // returns true
    */
   intersects(other: any): boolean {
     if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
@@ -153,7 +181,12 @@ export class Extent {
 
   /** Returns a new Extent representing the intersection of this and other extents
    * @param {any} other
-   * @returns {Extent} Intersection of this and other extents
+   * @returns {Extent} new Extent containing the intersection of this and other
+   * @example
+   * const a = new Extent([0, 0], [5, 5]);
+   * const b = new Extent([1, 1], [6, 6]);
+   * a.intersection(b);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
+   * b.intersection(a);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
    */
   intersection(other: any): Extent {
     if (!this.intersects(other)) return new Extent();
@@ -163,9 +196,14 @@ export class Extent {
     );
   }
 
-  /** Returns the percentage of other extent contained within this extent, by area
+  /** Returns the percent of other extent contained within this extent, by area
    * @param {any} other
-   * @returns {number} percentage of other extent contained within this extent
+   * @returns {number} percent of other extent contained within this extent
+   * @example
+   * const a = new Extent([0, 0], [4, 1]);
+   * const b = new Extent([3, 0], [4, 2]);
+   * a.percentContainedIn(b);   // returns 0.25
+   * b.percentContainedIn(a);   // returns 0.5
    */
   percentContainedIn(other: any): number {
     if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
@@ -179,10 +217,26 @@ export class Extent {
     }
   }
 
+  /** Extend the bounds of an extent, returning a new Extent
+   * @param {any} other
+   * @returns {Extent} A new extent
+   * @example
+   * const a = new Extent([0, 0], [5, 10]);
+   * const b = new Extent([4, -1], [5, 10]);
+   * const c = a.extend(b);   // returns new Extent { min: [ 0, -1 ], max: [ 5, 10 ] }
+   */
+  extend(other: any): Extent {
+    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
+    return new Extent(
+      [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
+      [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
+    );
+  }
+
   /** Returns a new extent representing the current extent padded by given meters
    * (this extent is assumed to be defined in geographic coordinates)
    * @param {number} meters
-   * @returns {Extent} new Extent for current extent padded by given meters
+   * @returns {Extent} new Extent containing this padded by given meters
    */
   padByMeters(meters: number): Extent {
     const dLat = geoMetersToLat(meters);
@@ -191,12 +245,5 @@ export class Extent {
       [this.min[0] - dLon, this.min[1] - dLat],
       [this.max[0] + dLon, this.max[1] + dLat]
     );
-  }
-
-  /** Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`
-   * @returns {string} rectangle
-   */
-  toParam(): string {
-    return this.rectangle().join(',');
   }
 }

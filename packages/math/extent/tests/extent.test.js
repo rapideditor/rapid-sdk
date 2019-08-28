@@ -48,6 +48,12 @@ describe('math/extent', () => {
     });
   });
 
+  describe('#area', () => {
+    it('returns the area', () => {
+      expect(new Extent([0, 0], [5, 10]).area()).toBe(50);
+    });
+  });
+
   describe('#center', () => {
     it('returns the center point', () => {
       expect(new Extent([0, 0], [5, 10]).center()).toStrictEqual([2.5, 5]);
@@ -85,12 +91,6 @@ describe('math/extent', () => {
         [5, 0],
         [0, 0]
       ]);
-    });
-  });
-
-  describe('#area', () => {
-    it('returns the area', () => {
-      expect(new Extent([0, 0], [5, 10]).area()).toBe(50);
     });
   });
 

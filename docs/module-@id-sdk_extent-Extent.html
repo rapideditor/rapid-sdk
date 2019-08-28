@@ -280,7 +280,7 @@
                 <ul class="dummy">
                   <li>
                     <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                    <a href="extent_built_cjs_extent.js.html#line19">line 19</a>
+                    <a href="extent_built_cjs_extent.js.html#line12">line 12</a>
                   </li>
                 </ul>
               </dd>
@@ -304,7 +304,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line79">line 79</a>
+                  <a href="extent_built_cjs_extent.js.html#line76">line 76</a>
                 </li>
               </ul>
             </dd>
@@ -313,6 +313,12 @@
           <div class="description">
             Returns the area of an extent
           </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>new Extent([0, 0], [5, 10]).area();  // returns 50</code></pre>
 
           <h5>Returns:</h5>
 
@@ -331,7 +337,7 @@
 
           <h4 class="name" id="bbox">
             <span class="type-signature"></span>bbox<span class="signature">()</span
-            ><span class="type-signature"> &rarr; {Object}</span>
+            ><span class="type-signature"> &rarr; {BBox}</span>
           </h4>
 
           <dl class="details">
@@ -340,7 +346,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line97">line 97</a>
+                  <a href="extent_built_cjs_extent.js.html#line108">line 108</a>
                 </li>
               </ul>
             </dd>
@@ -350,10 +356,16 @@
             Returns an Object with `minX`, `minY`, `maxX`, `maxY` properties.
           </div>
 
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>new Extent([0, 0], [5, 10]).bbox();  // returns { minX: 0, minY: 0, maxX: 5, maxY: 10 };</code></pre>
+
           <h5>Returns:</h5>
 
           <div class="param-desc">
-            Object
+            BBox
           </div>
 
           <dl class="param-type">
@@ -361,7 +373,7 @@
               Type
             </dt>
             <dd>
-              <span class="param-type">Object</span>
+              <span class="param-type">BBox</span>
             </dd>
           </dl>
 
@@ -376,7 +388,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line85">line 85</a>
+                  <a href="extent_built_cjs_extent.js.html#line84">line 84</a>
                 </li>
               </ul>
             </dd>
@@ -385,6 +397,12 @@
           <div class="description">
             Returns the center point of an extent
           </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>new Extent([0, 0], [5, 10]).center();  // returns [2.5, 5]</code></pre>
 
           <h5>Returns:</h5>
 
@@ -412,7 +430,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line116">line 116</a>
+                  <a href="extent_built_cjs_extent.js.html#line134">line 134</a>
                 </li>
               </ul>
             </dd>
@@ -421,6 +439,13 @@
           <div class="description">
             Test whether this extent contains another extent
           </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const a = new Extent([0, 0], [5, 5]);
+const b = new Extent([1, 1], [2, 2]);
+a.contains(b);   // returns true
+b.contains(a);   // returns false</code></pre>
 
           <h5>Parameters:</h5>
 
@@ -474,7 +499,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line59">line 59</a>
+                  <a href="extent_built_cjs_extent.js.html#line63">line 63</a>
                 </li>
               </ul>
             </dd>
@@ -483,6 +508,14 @@
           <div class="description">
             Test whether extent equals another extent
           </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const a = new Extent([0, 0], [10, 10]);
+const b = new Extent([0, 0], [10, 10]);
+const c = new Extent([0, 0], [12, 12]);
+a.equals(b);   // returns true
+a.equals(c);   // returns false</code></pre>
 
           <h5>Parameters:</h5>
 
@@ -536,15 +569,21 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line71">line 71</a>
+                  <a href="extent_built_cjs_extent.js.html#line202">line 202</a>
                 </li>
               </ul>
             </dd>
           </dl>
 
           <div class="description">
-            Extend the bounds of an extent
+            Extend the bounds of an extent, returning a new Extent
           </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const a = new Extent([0, 0], [5, 10]);
+const b = new Extent([4, -1], [5, 10]);
+const c = a.extend(b);   // returns new Extent { min: [ 0, -1 ], max: [ 5, 10 ] }</code></pre>
 
           <h5>Parameters:</h5>
 
@@ -575,7 +614,7 @@
           <h5>Returns:</h5>
 
           <div class="param-desc">
-            True if equal, false if unequal
+            A new extent
           </div>
 
           <dl class="param-type">
@@ -598,7 +637,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line140">line 140</a>
+                  <a href="extent_built_cjs_extent.js.html#line168">line 168</a>
                 </li>
               </ul>
             </dd>
@@ -607,6 +646,13 @@
           <div class="description">
             Returns a new Extent representing the intersection of this and other extents
           </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const a = new Extent([0, 0], [5, 5]);
+const b = new Extent([1, 1], [6, 6]);
+a.intersection(b);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
+b.intersection(a);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }</code></pre>
 
           <h5>Parameters:</h5>
 
@@ -637,7 +683,7 @@
           <h5>Returns:</h5>
 
           <div class="param-desc">
-            Intersection of this and other extents
+            new Extent containing the intersection of this and other
           </div>
 
           <dl class="param-type">
@@ -660,7 +706,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line128">line 128</a>
+                  <a href="extent_built_cjs_extent.js.html#line151">line 151</a>
                 </li>
               </ul>
             </dd>
@@ -669,6 +715,13 @@
           <div class="description">
             Test whether this extent intersects another extent
           </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const a = new Extent([0, 0], [5, 5]);
+const b = new Extent([1, 1], [6, 6]);
+a.intersects(b);   // returns true
+b.intersects(a);   // returns true</code></pre>
 
           <h5>Parameters:</h5>
 
@@ -722,7 +775,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line166">line 166</a>
+                  <a href="extent_built_cjs_extent.js.html#line212">line 212</a>
                 </li>
               </ul>
             </dd>
@@ -762,7 +815,7 @@
           <h5>Returns:</h5>
 
           <div class="param-desc">
-            new Extent for current extent padded by given meters
+            new Extent containing this padded by given meters
           </div>
 
           <dl class="param-type">
@@ -786,15 +839,22 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line149">line 149</a>
+                  <a href="extent_built_cjs_extent.js.html#line182">line 182</a>
                 </li>
               </ul>
             </dd>
           </dl>
 
           <div class="description">
-            Returns the percentage of other extent contained within this extent, by area
+            Returns the percent of other extent contained within this extent, by area
           </div>
+
+          <h5>Example</h5>
+
+          <pre class="prettyprint"><code>const a = new Extent([0, 0], [4, 1]);
+const b = new Extent([3, 0], [4, 2]);
+a.percentContainedIn(b);   // returns 0.25
+b.percentContainedIn(a);   // returns 0.5</code></pre>
 
           <h5>Parameters:</h5>
 
@@ -825,7 +885,7 @@
           <h5>Returns:</h5>
 
           <div class="param-desc">
-            percentage of other extent contained within this extent
+            percent of other extent contained within this extent
           </div>
 
           <dl class="param-type">
@@ -848,7 +908,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line103">line 103</a>
+                  <a href="extent_built_cjs_extent.js.html#line116">line 116</a>
                 </li>
               </ul>
             </dd>
@@ -857,6 +917,12 @@
           <div class="description">
             Returns an polygon representing the extent wound clockwise.
           </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [0, 10], [5, 10], [5, 0], [0, 0]]</code></pre>
 
           <h5>Returns:</h5>
 
@@ -884,7 +950,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line91">line 91</a>
+                  <a href="extent_built_cjs_extent.js.html#line92">line 92</a>
                 </li>
               </ul>
             </dd>
@@ -893,6 +959,12 @@
           <div class="description">
             Returns an array rectangle as `[minX, minY, maxX, maxY]`
           </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>new Extent([0, 0], [5, 10]).rectangle();  // returns [0, 0, 5, 10]</code></pre>
 
           <h5>Returns:</h5>
 
@@ -920,7 +992,7 @@
               <ul class="dummy">
                 <li>
                   <a href="extent_built_cjs_extent.js.html">extent/built/cjs/extent.js</a>,
-                  <a href="extent_built_cjs_extent.js.html#line174">line 174</a>
+                  <a href="extent_built_cjs_extent.js.html#line100">line 100</a>
                 </li>
               </ul>
             </dd>
@@ -930,6 +1002,12 @@
             Returns a string representation of this extent's rectangle formatted as
             `"minX,minY,maxX,maxY"`
           </div>
+
+          <h5>Example</h5>
+
+          <pre
+            class="prettyprint"
+          ><code>new Extent([0, 0], [5, 10]).toParam();  // returns '0,0,5,10'</code></pre>
 
           <h5>Returns:</h5>
 
