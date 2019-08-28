@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>projection/built/projection.js - iD SDK Documentation</title>
+    <title>extent/built/cjs/extent.js - iD SDK Documentation</title>
 
     <meta name="description" content="Map editing made easy" />
 
@@ -256,112 +256,189 @@
     </nav>
 
     <div id="main">
-      <h1 class="page-title">projection/built/projection.js</h1>
+      <h1 class="page-title">extent/built/cjs/extent.js</h1>
 
       <section>
         <article>
           <pre class="prettyprint source linenums"><code>"use strict";
 /**
- * @module @id-sdk/projection
- * @description 📽 Module containing the Projection class
+ * @module @id-sdk/extent
+ * @description 📦 Module containing the Extent class (bounding boxes)
  */
-exports.__esModule = true;
-var d3_geo_1 = require("d3-geo");
-var d3_zoom_1 = require("d3-zoom");
+Object.defineProperty(exports, "__esModule", { value: true });
+var geo_1 = require("@id-sdk/geo");
+// function construct(constructor, args): Extent {
+//   function F(): void {
+//     constructor.apply(this, args);
+//   }
+//   F.prototype = constructor.prototype;
+//   return new F();
+// }
 /**
  * @class
- * @description 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
- * The default projection wraps the d3.geo.MercatorRaw projection, but works in degrees instead of radians,
- * and skips several features:
- *   - Antimeridian clipping
- *   - Spherical rotation
- *   - Resampling
+ * @description 📦 Extent class for creating bounding boxes
  */
-var Projection = /** @class */ (function () {
-    /** Constructs a new Projection
-     * @param {number} [x] - x translation
-     * @param {number} [y] - y translation
-     * @param {number} [k] - k scale
-     * @returns {Projection} new Projection
+var Extent = /** @class */ (function () {
+    /** Constructs a new Extent
+     * @param {Extent|Vec2} otherOrMin
+     * @param {Vec2} [max]
+     * @returns {Extent} new Extent
      */
-    function Projection(x, y, k) {
-        this._proj = d3_geo_1.geoMercatorRaw; // note: D3 projections work in radians
-        this._dimensions = [[0, 0], [0, 0]];
-        this._x = x || 0;
-        this._y = y || 0;
-        this._k = k || 256 / Math.PI; // z1
+    function Extent(otherOrMin, max) {
+        /** Minimum corner coordinate for the extent
+         * @type {Vec2}
+         * @public
+         */
+        this.min = [Infinity, Infinity];
+        /** Maximum corner coordinate for the extent
+         * @type {Vec2}
+         * @public
+         */
+        this.max = [-Infinity, -Infinity];
+        var min;
+        if (otherOrMin instanceof Extent) {
+            min = otherOrMin.min;
+            max = otherOrMin.max;
+        }
+        else {
+            min = otherOrMin;
+        }
+        if (min &amp;&amp; min.length === 2) {
+            this.min[0] = min[0];
+            this.min[1] = min[1];
+            if (!max)
+                max = min;
+        }
+        if (max &amp;&amp; max.length === 2) {
+            this.max[0] = max[0];
+            this.max[1] = max[1];
+        }
     }
-    /** Projects from given Lon/Lat (λ,φ) to Cartesian (x,y)
-     * @param {Vec2} p - Point in Lon/Lat (λ,φ) (degrees)
-     * @returns {Vec2} Point in Cartesian (x,y)
+    /** Test whether extent equals another extent
+     * @param {any} other
+     * @returns {boolean} True if equal, false if unequal
      */
-    Projection.prototype.project = function (p) {
-        p = this._proj((p[0] * Math.PI) / 180, (p[1] * Math.PI) / 180); // deg2rad
-        return [p[0] * this._k + this._x, this._y - p[1] * this._k];
+    Extent.prototype.equals = function (other) {
+        if (!(other instanceof Extent))
+            other = Reflect.construct(Extent, arguments);
+        return (this.min[0] === other.min[0] &amp;&amp;
+            this.min[1] === other.min[1] &amp;&amp;
+            this.max[0] === other.max[0] &amp;&amp;
+            this.max[1] === other.max[1]);
     };
-    /** Inverse projects from given Cartesian (x,y) to Lon/Lat (λ,φ)
-     * @param {Vec2} p - Point in Cartesian (x,y)
-     * @returns {Vec2} Point in Lon/Lat (λ,φ) (degrees)
+    /** Extend the bounds of an extent
+     * @param {any} other
+     * @returns {Extent} True if equal, false if unequal
      */
-    Projection.prototype.invert = function (p) {
-        p = this._proj.invert((p[0] - this._x) / this._k, (this._y - p[1]) / this._k);
-        return [(p[0] * 180) / Math.PI, (p[1] * 180) / Math.PI]; // rad2deg
+    Extent.prototype.extend = function (other) {
+        if (!(other instanceof Extent))
+            other = Reflect.construct(Extent, arguments);
+        return new Extent([Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])], [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]);
     };
-    /** Sets/Gets the scale factor
-     * @param {number} [val] - Projection scale
-     * @returns {number|Projection} The current scale or the current projection for method chaining
+    /** Returns the area of an extent
+     * @returns {number} area
      */
-    Projection.prototype.scale = function (val) {
-        if (!arguments.length)
-            return this._k;
-        this._k = +val;
-        return this;
+    Extent.prototype.area = function () {
+        return Math.abs((this.max[0] - this.min[0]) * (this.max[1] - this.min[1]));
     };
-    /** Sets/Gets the translation factor
-     * @param {Vec2} [val] - Projection translation
-     * @returns {Vec2|Projection} The current translation or the current projection for method chaining
+    /** Returns the center point of an extent
+     * @returns {Vec2} Center point of the extent
      */
-    Projection.prototype.translate = function (val) {
-        if (!arguments.length)
-            return [this._x, this._y];
-        this._x = +val[0];
-        this._y = +val[1];
-        return this;
+    Extent.prototype.center = function () {
+        return [(this.min[0] + this.max[0]) / 2, (this.min[1] + this.max[1]) / 2];
     };
-    /** Sets/Gets the current viewport dimensions
-     * @param {Vec2[]} [val] - viewport dimensions
-     * @returns {Vec2[]|Projection} The current viewport dimensions or the current projection for method chaining
+    /** Returns an array rectangle as `[minX, minY, maxX, maxY]`
+     * @returns {number[]} rectangle
      */
-    Projection.prototype.dimensions = function (val) {
-        if (!arguments.length)
-            return this._dimensions;
-        this._dimensions = val;
-        return this;
+    Extent.prototype.rectangle = function () {
+        return [this.min[0], this.min[1], this.max[0], this.max[1]];
     };
-    /** Sets/Gets an object representing the current translation and scale
-     * @param {Transform} [obj] - Transform object with x,y,k properties
-     * @returns {Transform|Projection} The current transform or the current projection for method chaining
+    /** Returns an Object with `minX`, `minY`, `maxX`, `maxY` properties.
+     * @returns {Object} Object
      */
-    Projection.prototype.transform = function (obj) {
-        if (!arguments.length)
-            return d3_zoom_1.zoomIdentity.translate(this._x, this._y).scale(this._k);
-        this._x = +obj.x;
-        this._y = +obj.y;
-        this._k = +obj.k;
-        return this;
+    Extent.prototype.bbox = function () {
+        return { minX: this.min[0], minY: this.min[1], maxX: this.max[0], maxY: this.max[1] };
     };
-    Projection.prototype.getStream = function () {
-        var thiz = this;
-        return d3_geo_1.geoTransform({
-            point: function (x, y) {
-                var p = thiz.project([x, y]);
-                this.stream.point(p[0], p[1]);
-            }
-        }).stream();
+    /** Returns an polygon representing the extent wound clockwise.
+     * @returns {Vec2[]} Polygon array
+     */
+    Extent.prototype.polygon = function () {
+        return [
+            [this.min[0], this.min[1]],
+            [this.min[0], this.max[1]],
+            [this.max[0], this.max[1]],
+            [this.max[0], this.min[1]],
+            [this.min[0], this.min[1]]
+        ];
     };
-    return Projection;
+    /** Test whether this extent contains another extent
+     * @param {any} other
+     * @returns {boolean} True if this extent contains other, false if not
+     */
+    Extent.prototype.contains = function (other) {
+        if (!(other instanceof Extent))
+            other = Reflect.construct(Extent, arguments);
+        return (other.min[0] >= this.min[0] &amp;&amp;
+            other.min[1] >= this.min[1] &amp;&amp;
+            other.max[0] &lt;= this.max[0] &amp;&amp;
+            other.max[1] &lt;= this.max[1]);
+    };
+    /** Test whether this extent intersects another extent
+     * @param {any} other
+     * @returns {boolean} True if this extent intersects other, false if not
+     */
+    Extent.prototype.intersects = function (other) {
+        if (!(other instanceof Extent))
+            other = Reflect.construct(Extent, arguments);
+        return (other.min[0] &lt;= this.max[0] &amp;&amp;
+            other.min[1] &lt;= this.max[1] &amp;&amp;
+            other.max[0] >= this.min[0] &amp;&amp;
+            other.max[1] >= this.min[1]);
+    };
+    /** Returns a new Extent representing the intersection of this and other extents
+     * @param {any} other
+     * @returns {Extent} Intersection of this and other extents
+     */
+    Extent.prototype.intersection = function (other) {
+        if (!this.intersects(other))
+            return new Extent();
+        return new Extent([Math.max(other.min[0], this.min[0]), Math.max(other.min[1], this.min[1])], [Math.min(other.max[0], this.max[0]), Math.min(other.max[1], this.max[1])]);
+    };
+    /** Returns the percentage of other extent contained within this extent, by area
+     * @param {any} other
+     * @returns {number} percentage of other extent contained within this extent
+     */
+    Extent.prototype.percentContainedIn = function (other) {
+        if (!(other instanceof Extent))
+            other = Reflect.construct(Extent, arguments);
+        var a1 = this.intersection(other).area();
+        var a2 = this.area();
+        if (a1 === Infinity || a2 === Infinity || a1 === 0 || a2 === 0) {
+            return 0;
+        }
+        else {
+            return a1 / a2;
+        }
+    };
+    /** Returns a new extent representing the current extent padded by given meters
+     * (this extent is assumed to be defined in geographic coordinates)
+     * @param {number} meters
+     * @returns {Extent} new Extent for current extent padded by given meters
+     */
+    Extent.prototype.padByMeters = function (meters) {
+        var dLat = geo_1.geoMetersToLat(meters);
+        var dLon = geo_1.geoMetersToLon(meters, this.center()[1]);
+        return new Extent([this.min[0] - dLon, this.min[1] - dLat], [this.max[0] + dLon, this.max[1] + dLat]);
+    };
+    /** Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`
+     * @returns {string} rectangle
+     */
+    Extent.prototype.toParam = function () {
+        return this.rectangle().join(',');
+    };
+    return Extent;
 }());
-exports.Projection = Projection;
+exports.Extent = Extent;
 </code></pre>
         </article>
       </section>

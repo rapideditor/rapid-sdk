@@ -28,10 +28,9 @@ describe('math/tiler', () => {
           //  +-------+  -85.0511
           //-180    +180
           //
-          const k = TS * Math.pow(2, 0) / TAU;  // z0
+          const k = (TS * Math.pow(2, 0)) / TAU; // z0
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(HALFTS, HALFTS, k)
-            .dimensions([[0, 0], [TS, TS]]);  // entire world visible
+          const p = new Projection(HALFTS, HALFTS, k).dimensions([[0, 0], [TS, TS]]); // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -82,10 +81,9 @@ describe('math/tiler', () => {
           //  +-------+-------+  -85.0511
           //-180      0     +180
           //
-          const k = TS * Math.pow(2, 1) / TAU;  // z1
+          const k = (TS * Math.pow(2, 1)) / TAU; // z1
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(TS, TS, k)
-            .dimensions([[0, 0], [TWOTS, TWOTS]]);  // entire world visible
+          const p = new Projection(TS, TS, k).dimensions([[0, 0], [TWOTS, TWOTS]]); // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -166,10 +164,9 @@ describe('math/tiler', () => {
           //  +-------+-------+-------+-------+  -85.0511
           //-180     -90      0      +90    +180
           //
-          const k = TS * Math.pow(2, 2) / TAU;  // z2
+          const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(TWOTS, TWOTS, k)
-            .dimensions([[0, 0], [FOURTS, FOURTS]]);  // entire world visible
+          const p = new Projection(TWOTS, TWOTS, k).dimensions([[0, 0], [FOURTS, FOURTS]]); // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -249,10 +246,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
-          const k = TS * Math.pow(2, 2) / TAU;  // z2
+          const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(HALFTS, HALFTS, k)
-            .dimensions([[1, 1], [TS-1, TS-1]]);
+          const p = new Projection(HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -289,10 +285,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
-          const k = TS * Math.pow(2, 2) / TAU;  // z2
+          const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS).margin(1);
-          const p = new Projection(HALFTS, HALFTS, k)
-            .dimensions([[1, 1], [TS-1, TS-1]]);
+          const p = new Projection(HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -319,9 +314,9 @@ describe('math/tiler', () => {
             expect(tiles[i].isVisible).toBeTrue();
           });
           expectedMargin.forEach((xyz, i) => {
-            expect(tiles[i+4].id).toBe(xyz.join(','));
-            expect(tiles[i+4].xyz).toStrictEqual(xyz);
-            expect(tiles[i+4].isVisible).toBeFalse();
+            expect(tiles[i + 4].id).toBe(xyz.join(','));
+            expect(tiles[i + 4].xyz).toStrictEqual(xyz);
+            expect(tiles[i + 4].isVisible).toBeFalse();
           });
         });
 
@@ -343,10 +338,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
-          const k = TS * Math.pow(2, 2) / TAU;  // z2
+          const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Projection(0, HALFTS, k)
-            .dimensions([[1, 1], [TS-1, TS-1]]);
+          const p = new Projection(0, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -383,10 +377,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
-          const k = TS * Math.pow(2, 2) / TAU;  // z2
+          const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS).margin(1);
-          const p = new Projection(0, HALFTS, k)
-            .dimensions([[1, 1], [TS-1, TS-1]]);
+          const p = new Projection(0, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -413,9 +406,9 @@ describe('math/tiler', () => {
             expect(tiles[i].isVisible).toBeTrue();
           });
           expectedMargin.forEach((xyz, i) => {
-            expect(tiles[i+2].id).toBe(xyz.join(','));
-            expect(tiles[i+2].xyz).toStrictEqual(xyz);
-            expect(tiles[i+2].isVisible).toBeFalse();
+            expect(tiles[i + 2].id).toBe(xyz.join(','));
+            expect(tiles[i + 2].xyz).toStrictEqual(xyz);
+            expect(tiles[i + 2].isVisible).toBeFalse();
           });
         });
 
@@ -437,10 +430,12 @@ describe('math/tiler', () => {
           // | 63,65,7 | 64,65,7 | 65,65,7 | 66,65,7 |
           // |         |         |         |         |
           // +---------+---------+---------+---------+
-          const k = TS * Math.pow(2, 7) / TAU;  // z7
-          const t = new Tiler().tileSize(TS).margin(1).skipNullIsland(true);
-          const p = new Projection(-HALFTS, HALFTS, k)
-            .dimensions([[1, 1], [TS-1, TS-1]]);
+          const k = (TS * Math.pow(2, 7)) / TAU; // z7
+          const t = new Tiler()
+            .tileSize(TS)
+            .margin(1)
+            .skipNullIsland(true);
+          const p = new Projection(-HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -467,19 +462,17 @@ describe('math/tiler', () => {
             expect(tiles[i].isVisible).toBeTrue();
           });
           expectedMargin.forEach((xyz, i) => {
-            expect(tiles[i+2].id).toBe(xyz.join(','));
-            expect(tiles[i+2].xyz).toStrictEqual(xyz);
-            expect(tiles[i+2].isVisible).toBeFalse();
+            expect(tiles[i + 2].id).toBe(xyz.join(','));
+            expect(tiles[i + 2].xyz).toStrictEqual(xyz);
+            expect(tiles[i + 2].isVisible).toBeFalse();
           });
         });
 
-
         describe('getGeoJSON', () => {
           it('gets GeoJSON', () => {
-            const k = TS * Math.pow(2, 0) / TAU;  // z0
+            const k = (TS * Math.pow(2, 0)) / TAU; // z0
             const t = new Tiler().tileSize(TS);
-            const p = new Projection(HALFTS, HALFTS, k)
-              .dimensions([[0, 0], [TS, TS]]);
+            const p = new Projection(HALFTS, HALFTS, k).dimensions([[0, 0], [TS, TS]]);
 
             const result = t.getTiles(p);
             const gj = t.getGeoJSON(result);
@@ -505,11 +498,9 @@ describe('math/tiler', () => {
             expect(gj).toMatchObject(expected);
           });
         });
-
       });
     });
   });
-
 
   describe('isNearNullIsland', () => {
     it('is not near if z < 7', () => {
@@ -591,5 +582,4 @@ describe('math/tiler', () => {
       expect(t.skipNullIsland()).toBeTrue();
     });
   });
-
 });

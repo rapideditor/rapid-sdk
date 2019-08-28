@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>tiler/built/tiler.js - iD SDK Documentation</title>
+    <title>vector/built/cjs/vector.js - iD SDK Documentation</title>
 
     <meta name="description" content="Map editing made easy" />
 
@@ -256,138 +256,228 @@
     </nav>
 
     <div id="main">
-      <h1 class="page-title">tiler/built/tiler.js</h1>
+      <h1 class="page-title">vector/built/cjs/vector.js</h1>
 
       <section>
         <article>
           <pre class="prettyprint source linenums"><code>"use strict";
 /**
- * @module @id-sdk/tiler
- * @description 🀄️ Module containing the Tiler class
+ * @module @id-sdk/vector
+ * @description 📐 Module containing Vector (coordinate) math functions
  */
-exports.__esModule = true;
-var extent_1 = require("@id-sdk/extent");
-var geo_1 = require("@id-sdk/geo");
-var TAU = 2 * Math.PI;
-function clamp(num, min, max) {
-    return Math.max(min, Math.min(num, max));
-}
-function range(start, end) {
-    return Array.from(Array(1 + end - start).keys()).map(function (v) { return start + v; });
-}
-/**
- * @class
- * @description 🀄️ Tiler class for splitting the world into rectangular tiles
- * https://developers.google.com/maps/documentation/javascript/coordinates
+Object.defineProperty(exports, "__esModule", { value: true });
+/** Test whether two given vectors are equal
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @param {number} [epsilon] - Threshold for equality
+ * @returns {boolean} True if equal, false if unequal
+ * @example
+ * vecEqual([1, 2], [1, 2]);   // returns true
+ * vecEqual([1, 2], [1.0000001, 2.0000001], 1e-5);   // returns true
  */
-var Tiler = /** @class */ (function () {
-    /** Constructs a new Tiler
-     * @returns {Tiler} new Tiler
-     */
-    function Tiler() {
-        this._tileSize = 256;
-        this._zoomRange = [0, 24];
-        this._margin = 0;
-        this._skipNullIsland = false;
+function vecEqual(a, b, epsilon) {
+    if (epsilon) {
+        return Math.abs(a[0] - b[0]) &lt;= epsilon &amp;&amp; Math.abs(a[1] - b[1]) &lt;= epsilon;
     }
-    Tiler.prototype.getTiles = function (projection) {
-        var dimensions = projection.dimensions();
-        var translate = projection.translate();
-        var scale = projection.scale();
-        var origin = [scale * Math.PI - translate[0], scale * Math.PI - translate[1]];
-        var zFrac = geo_1.geoScaleToZoom(scale, this._tileSize);
-        var z = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
-        var minTile = 0;
-        var maxTile = Math.pow(2, z) - 1;
-        var log2ts = Math.log(this._tileSize) * Math.LOG2E;
-        var k = Math.pow(2, zFrac - z + log2ts);
-        var cols = range(clamp(Math.floor(dimensions[0][0] / k - origin[0]) - this._margin, minTile, maxTile), clamp(Math.ceil(dimensions[1][0] / k - origin[0]) + this._margin, minTile, maxTile));
-        var rows = range(clamp(Math.floor(dimensions[0][1] / k - origin[1]) - this._margin, minTile, maxTile), clamp(Math.ceil(dimensions[1][1] / k - origin[1]) + this._margin, minTile, maxTile));
-        var tiles = [];
-        for (var i = 0; i &lt; rows.length; i++) {
-            var y = rows[i];
-            for (var j = 0; j &lt; cols.length; j++) {
-                var x = cols[j];
-                var xyz = [x, y, z];
-                if (this._skipNullIsland &amp;&amp; Tiler.isNearNullIsland(x, y, z))
-                    continue;
-                var isVisible = i >= this._margin &amp;&amp;
-                    i &lt;= rows.length - this._margin &amp;&amp;
-                    j >= this._margin &amp;&amp;
-                    j &lt;= cols.length - this._margin;
-                var minX = x * this._tileSize;
-                var minY = y * this._tileSize;
-                var maxX = (x + 1) * this._tileSize;
-                var maxY = (y + 1) * this._tileSize;
-                var tile = {
-                    id: xyz.toString(),
-                    xyz: xyz,
-                    extent: new extent_1.Extent(projection.invert([minX, minY]), projection.invert([maxX, maxY])),
-                    isVisible: isVisible
-                };
-                if (isVisible) {
-                    tiles.unshift(tile); // tiles in view at beginning
-                }
-                else {
-                    tiles.push(tile); // tiles in margin at the end
-                }
-            }
+    else {
+        return a[0] === b[0] &amp;&amp; a[1] === b[1];
+    }
+}
+exports.vecEqual = vecEqual;
+/** Add two vectors
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @returns {Vec2} Sum of a + b
+ * @example
+ * vecAdd([1, 2], [3, 4]);   // returns [4, 6]
+ */
+function vecAdd(a, b) {
+    return [a[0] + b[0], a[1] + b[1]];
+}
+exports.vecAdd = vecAdd;
+/** Subtract two vectors
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @returns {Vec2} Difference of a - b
+ * @example
+ * vecSubtract([1, 2], [3, 4]);   // returns [-2, -2]
+ */
+function vecSubtract(a, b) {
+    return [a[0] - b[0], a[1] - b[1]];
+}
+exports.vecSubtract = vecSubtract;
+/** Scale a vector uniformly by factor
+ * @param {Vec2} a - Input vector
+ * @param {number} n - Scale factor
+ * @returns {Vec2} Scaled vector
+ * @example
+ * vecScale([1, 2], 2);   // returns [2, 4]
+ */
+function vecScale(a, n) {
+    return [a[0] * n, a[1] * n];
+}
+exports.vecScale = vecScale;
+/** Floor the coordinates of a vector
+ * @param {Vec2} a - Input vector
+ * @returns {Vec2} Floored vector
+ * @example
+ * vecFloor([0, 1.01]);   // returns [0, 1]
+ */
+function vecFloor(a) {
+    return [Math.floor(a[0]), Math.floor(a[1])];
+}
+exports.vecFloor = vecFloor;
+/** Linear interpolate a point along a vector
+ * @param {Vec2} a - Start coordinate
+ * @param {Vec2} b - End coordinate
+ * @param {number} t - Scaled distance between ab
+ * @returns {Vec2} Point along ab
+ * @example
+ * vecInterp([0, 0], [10, 10], 0.5);   // returns [5, 5]
+ */
+function vecInterp(a, b, t) {
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+exports.vecInterp = vecInterp;
+/** Length of a vector
+ * @param {Vec2} a - Start coordinate
+ * @param {Vec2} [b=[0,0]] - End coordinate
+ * @returns {Vec2} Length of ab
+ * @example
+ * vecLength([0, 0], [4, 3]);   // returns 5
+ */
+// http://jsperf.com/id-dist-optimization
+function vecLength(a, b) {
+    b = b || [0, 0];
+    var x = a[0] - b[0];
+    var y = a[1] - b[1];
+    return Math.sqrt(x * x + y * y);
+}
+exports.vecLength = vecLength;
+/** Normalize a vector (return a unit vector)
+ * @param {Vec2} a - Input vector
+ * @returns {Vec2} Unit vector
+ * @example
+ * vecNormalize([5, 0]);   // returns [1, 0]
+ */
+function vecNormalize(a) {
+    var length = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+    if (length !== 0) {
+        return vecScale(a, 1 / length);
+    }
+    return [0, 0];
+}
+exports.vecNormalize = vecNormalize;
+/** Return the counterclockwise angle in the range (-pi, pi)
+ * between the positive X axis and the line intersecting a and b.
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @returns {number} Angle between a and b
+ * @example
+ * vecAngle([0, 0], [-1, 0]);   // returns π
+ */
+function vecAngle(a, b) {
+    return Math.atan2(b[1] - a[1], b[0] - a[0]);
+}
+exports.vecAngle = vecAngle;
+/** Dot Product
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @param {Vec2} [origin=[0,0]] - Origin
+ * @returns {number} a · b
+ * @example
+ * vecDot([2, 0], [2, 0]);   // returns 4
+ */
+function vecDot(a, b, origin) {
+    origin = origin || [0, 0];
+    var p = vecSubtract(a, origin);
+    var q = vecSubtract(b, origin);
+    return p[0] * q[0] + p[1] * q[1];
+}
+exports.vecDot = vecDot;
+/** Normalized Dot Product - normalizes input vectors before returning dot product
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @param {Vec2} [origin=[0,0]] - Origin
+ * @returns {number} a · b
+ * @example
+ * vecNormalizedDot([2, 0], [2, 0]);   // returns 1
+ */
+function vecNormalizedDot(a, b, origin) {
+    origin = origin || [0, 0];
+    var p = vecNormalize(vecSubtract(a, origin));
+    var q = vecNormalize(vecSubtract(b, origin));
+    return vecDot(p, q);
+}
+exports.vecNormalizedDot = vecNormalizedDot;
+/** 2D cross product of OA and OB vectors, returns magnitude of Z vector
+ * Returns a positive value, if OAB makes a counter-clockwise turn,
+ * negative for clockwise turn, and zero if the points are collinear.
+ * @param {Vec2} a - First vector
+ * @param {Vec2} b - Second vector
+ * @param {Vec2} [origin=[0,0]] - Origin
+ * @returns {number} a ⅹ b
+ * @example
+ * vecCross([2, 0], [0, 2]);   // returns 4
+ */
+function vecCross(a, b, origin) {
+    origin = origin || [0, 0];
+    var p = vecSubtract(a, origin);
+    var q = vecSubtract(b, origin);
+    return p[0] * q[1] - p[1] * q[0];
+}
+exports.vecCross = vecCross;
+/** Find closest orthogonal projection of point onto points array
+ * @param {Vec2} a - Point to project
+ * @param {Vec2[]} points - Path to project point onto
+ * @returns {Edge} Edge and target point along edge
+ * @example
+ * //
+ * //     c
+ * //     |
+ * // a --*--- b
+ * //
+ * // * = [2, 0]
+ * //
+ * const a = [0, 0];
+ * const b = [5, 0];
+ * const c = [2, 1];
+ * test.vecProject(c, [a, b]);   // returns {index: 1, distance: 1, target: [2, 0] }
+ */
+function vecProject(a, points) {
+    var min = Infinity;
+    var idx;
+    var target;
+    for (var i = 0; i &lt; points.length - 1; i++) {
+        var o = points[i];
+        var s = vecSubtract(points[i + 1], o);
+        var v = vecSubtract(a, o);
+        var proj = vecDot(v, s) / vecDot(s, s);
+        var p = void 0;
+        if (proj &lt; 0) {
+            p = o;
         }
-        return {
-            tiles: tiles
-            // translate: origin,
-            // scale: k
-        };
-    };
-    /**
-     * returns a FeatureCollection useful for displaying a tile debug view
-     */
-    Tiler.prototype.getGeoJSON = function (tileResult) {
-        var features = tileResult.tiles.map(function (tile) {
-            return {
-                type: 'Feature',
-                properties: {
-                    id: tile.id,
-                    name: tile.id
-                },
-                geometry: {
-                    type: 'Polygon',
-                    coordinates: [tile.extent.polygon()]
-                }
-            };
-        });
-        return {
-            type: 'FeatureCollection',
-            features: features
-        };
-    };
-    /**
-     * Tests whether the given tile coordinate is near [0,0] (Null Island)
-     * It is considered "near" if it >= z7 and around the center of the map
-     * within these or descendent tiles (roughly within about 2.8° of 0,0)
-     * +---------+---------+
-     * |         |         |
-     * | 63,63,7 | 63,64,7 |
-     * |         |         |
-     * +-------[0,0]-------+
-     * |         |         |
-     * | 64,63,7 | 64,64,7 |
-     * |         |         |
-     * +---------+---------+
-     */
-    Tiler.isNearNullIsland = function (x, y, z) {
-        if (z >= 7) {
-            var center = Math.pow(2, z - 1);
-            var width = Math.pow(2, z - 6);
-            var min = center - width / 2;
-            var max = center + width / 2 - 1;
-            return x >= min &amp;&amp; x &lt;= max &amp;&amp; y >= min &amp;&amp; y &lt;= max;
+        else if (proj > 1) {
+            p = points[i + 1];
         }
-        return false;
-    };
-    return Tiler;
-}());
-exports.Tiler = Tiler;
+        else {
+            p = [o[0] + proj * s[0], o[1] + proj * s[1]];
+        }
+        var dist = vecLength(p, a);
+        if (dist &lt; min) {
+            min = dist;
+            idx = i + 1;
+            target = p;
+        }
+    }
+    if (idx !== undefined) {
+        return { index: idx, distance: min, target: target };
+    }
+    else {
+        return null;
+    }
+}
+exports.vecProject = vecProject;
 </code></pre>
         </article>
       </section>
