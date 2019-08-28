@@ -7,13 +7,20 @@
   "contributors": [
     "Bryan Housel <bryan@mapbox.com>"
   ],
-  "main": "built/extent.js",
+  "main": "built/cjs/extent.js",
+  "module": "built/es6/extent.js",
   "scripts": {
-    "clean": "shx rm -f ./built/*",
-    "build": "tsc --outDir ./built src/*.ts",
+    "clean": "shx rm -rf ./built/*",
+    "build": "npm-run-all -s build:**",
+    "build:es6": "tsc --module es6 --target es6 --moduleResolution node --removeComments --outDir ./built/es6 src/*.ts",
+    "build:cjs": "tsc --module commonjs --target es5 --moduleResolution node --outDir ./built/cjs src/*.ts",
     "test": "jest --config ../../../jest.config.js tests/*.js"
   },
   "dependencies": {
     "@id-sdk/geo": "^3.0.0-pre.0"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.0.0",
+    "shx": "^0.3.0"
   }
 }

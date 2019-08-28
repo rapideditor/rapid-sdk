@@ -3,7 +3,6 @@
     "declaration": true,
     "declarationMap": true,
     "listEmittedFiles": true,
-    "module": "umd",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -11,7 +10,6 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "strictNullChecks": true,
-    "target": "es5"
+    "strictNullChecks": true
   }
 }

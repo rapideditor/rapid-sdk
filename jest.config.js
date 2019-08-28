@@ -1,6 +1,6 @@
 module.exports = {
   collectCoverage: true,
-  collectCoverageFrom: ['**/built/*.js', '!**/node_modules/**'],
+  collectCoverageFrom: ['**/built/cjs/*.js', '!**/node_modules/**'],
   coverageDirectory: '<rootDir>/.coverage',
   transform: {
     '^.+\\.jsx?$': '<rootDir>/babel-jest-wrapper.js'
