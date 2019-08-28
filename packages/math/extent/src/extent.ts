@@ -14,14 +14,6 @@ interface BBox {
   maxY: number;
 }
 
-// function construct(constructor, args): Extent {
-//   function F(): void {
-//     constructor.apply(this, args);
-//   }
-//   F.prototype = constructor.prototype;
-//   return new F();
-// }
-
 /**
  * @class
  * @description 📦 Extent class for creating bounding boxes
