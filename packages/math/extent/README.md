@@ -7,33 +7,43 @@
 
 `npm install @id-sdk/extent`
 
-This library is available in both ES5/CommonJS module format and ES6 Module.
+This library is available in both ES5/CommonJS and ES6 module formats.
+
+```js
+const Extent = require('@id-sdk/extent').Extent;   // CommonJS
+// or
+import { Extent } from '@id-sdk/extent';   // ES6
+```
 
 
 ## API Reference
 
-* Types
-  * Vec2: [number, number]
-  * BBox: { minX: number, minY: number, maxX: number, maxY: number }
-* Properties
-  * `min` - Vec2 minimum corner of the Extent
-  * `max` - Vec2 maximum corner of the Extent
-* Methods
-  * [constructor](#constructor)
-  * [equals](#equals)(other: any): boolean
-  * [area](#area)(): number
-  * [center](#center)(): Vec2
-  * [rectangle](#rectangle)(): number[4]
-  * [toParam](#toParam)(): string
-  * [bbox](#bbox)(): BBox
-  * [polygon](#polygon)(): Vec2[5]
-  * [contains](#contains)(other: any): boolean
-  * [intersects](#intersects)(other: any): boolean
-  * [intersection](#intersection)(other: any): Extent
-  * [percentContainedIn](#percentContainedIn)(other: any): number
-  * [extend](#extend)(other: any): Extent
-  * [padByMeters](#padByMeters)(meters: number): Extent
+##### Methods
+* [new Extent](#constructor)(otherOrMin?: Extent | Vec2, max?: Vec2) _constructor_
+* [equals](#equals)(other: any): boolean
+* [area](#area)(): number
+* [center](#center)(): Vec2
+* [rectangle](#rectangle)(): number[4]
+* [toParam](#toParam)(): string
+* [bbox](#bbox)(): BBox
+* [polygon](#polygon)(): Vec2[5]
+* [contains](#contains)(other: any): boolean
+* [intersects](#intersects)(other: any): boolean
+* [intersection](#intersection)(other: any): Extent
+* [percentContainedIn](#percentContainedIn)(other: any): number
+* [extend](#extend)(other: any): Extent
+* [padByMeters](#padByMeters)(meters: number): Extent
 
+##### Properties
+* [min](#min): Vec2 - minimum corner of the Extent
+* [max](#max): Vec2 - maximum corner of the Extent
+
+##### Types
+* [Vec2](#Vec2): [number, number]
+* [BBox](#BBox): { minX: number, minY: number, maxX: number, maxY: number }
+
+
+## Methods
 
 <a name="constructor" href="#constructor">#</a> <b>new Extent</b>(otherOrMin?: Extent | Vec2, max?: Vec2) [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L44 "Source")
 
@@ -178,3 +188,33 @@ const c = a.extend(b);   // returns new Extent { min: [ 0, -1 ], max: [ 5, 10 ] 
 Returns a new Extent representing the current extent (assumed to be defined in WGS84 geographic coordinates) padded by given meters.  This method does not modify the original extent.
 
 
+## Properties
+
+<a name="min" href="#min">#</a> <b>min</b>: Vec2
+<a name="max" href="#max">#</a> <b>max</b>: Vec2
+
+All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
+
+```js
+const e1 = new Extent();                 // construct an initially empty extent
+const e2 = e1.extend([[0, 0], [5, 5]]);  // `extend` returns a new Extent, does not modify e1
+```
+
+However we make the `min` and `max` properties publicly mutable, in case you need to modify an extent bounds directly for performance reasons.
+
+```js
+const e1 = new Extent();    // construct an initially empty extent
+e1.min = [0, 0];            // adjust its min/max later
+e1.max = [5, 5];
+```
+
+
+## Types
+
+<a name="Vec2" href="#Vec2">#</a> <b>Vec2</b>
+An array of two numbers.
+`[number, number]`
+
+<a name="BBox" href="#BBox">#</a> <b>BBox</b>
+An Object containing `minX`, `minY`, `maxX`, `maxY` numbers.
+`{ minX: number, minY: number, maxX: number, maxY: number }`
