@@ -190,7 +190,7 @@ Returns a new Extent representing the current extent (assumed to be defined in W
 
 ## Properties
 
-<a name="min" href="#min">#</a> <b>min</b>: Vec2
+<a name="min" href="#min">#</a> <b>min</b>: Vec2<br/>
 <a name="max" href="#max">#</a> <b>max</b>: Vec2
 
 All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
@@ -212,9 +212,13 @@ e1.max = [5, 5];
 ## Types
 
 <a name="Vec2" href="#Vec2">#</a> <b>Vec2</b>
+
 An array of two numbers.
+
 `[number, number]`
 
 <a name="BBox" href="#BBox">#</a> <b>BBox</b>
+
 An Object containing `minX`, `minY`, `maxX`, `maxY` numbers.
+
 `{ minX: number, minY: number, maxX: number, maxY: number }`
