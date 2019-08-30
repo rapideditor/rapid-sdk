@@ -66,7 +66,7 @@ export class Projection {
    * @param {number} [val] - Projection scale
    * @returns {number|Projection} The current scale or the current projection for method chaining
    */
-  scale(val: number): number | Projection {
+  scale(val?: number): number | Projection {
     if (!arguments.length) return this._k;
     this._k = +val;
     return this;
@@ -76,7 +76,7 @@ export class Projection {
    * @param {Vec2} [val] - Projection translation
    * @returns {Vec2|Projection} The current translation or the current projection for method chaining
    */
-  translate(val: Vec2): Vec2 | Projection {
+  translate(val?: Vec2): Vec2 | Projection {
     if (!arguments.length) return [this._x, this._y];
     this._x = +val[0];
     this._y = +val[1];
@@ -87,7 +87,7 @@ export class Projection {
    * @param {Vec2[]} [val] - viewport dimensions
    * @returns {Vec2[]|Projection} The current viewport dimensions or the current projection for method chaining
    */
-  dimensions(val: Vec2[]): Vec2[] | Projection {
+  dimensions(val?: Vec2[]): Vec2[] | Projection {
     if (!arguments.length) return this._dimensions;
     this._dimensions = val;
     return this;
@@ -97,7 +97,7 @@ export class Projection {
    * @param {Transform} [obj] - Transform object with x,y,k properties
    * @returns {Transform|Projection} The current transform or the current projection for method chaining
    */
-  transform(obj: Transform): Transform | Projection {
+  transform(obj?: Transform): Transform | Projection {
     if (!arguments.length) return d3_zoomIdentity.translate(this._x, this._y).scale(this._k);
     this._x = +obj.x;
     this._y = +obj.y;
