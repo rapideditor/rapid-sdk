@@ -134,9 +134,10 @@ An array of two numbers.
 
 `[number, number]`
 
+
 <a name="Closest" href="#Closest">#</a> <b>Closest</b>
 
-An Object containing `index`, `distance`, and `point` properties.  Used as the return value for `geoSphericalClosestPoint`.
+An Object containing `index`, `distance`, and `point` properties.  Used as the return value for [geoSphericalClosestPoint()](#geoSphericalClosestPoint).
 
 `{ index: number, distance: number, point: Vec2 }`
 

@@ -216,7 +216,7 @@ An array of two numbers.
 <a name="SSR" href="#SSR">#</a> <b>SSR</b>
 
 Smallest Surrounding Rectangle.
-An Object containing `poly` and `angle` properties.  Used as the return value for `geomGetSmallestSurroundingRectangle`.
+An Object containing `poly` and `angle` properties.  Used as the return value for [geomGetSmallestSurroundingRectangle()](#geomGetSmallestSurroundingRectangle).
 
 `{ poly: Vec2, angle: number }`
 
