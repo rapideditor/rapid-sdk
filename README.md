@@ -30,15 +30,9 @@ Module                | Description
 [@id-sdk/tiler]       | 🀄️ Tiler class for splitting the world into rectangular tiles
 [@id-sdk/vector]      | 📐 Vector (coordinate) math functions
 
-[@id-sdk/extent]: /packages/math/extent/README.md
-[@id-sdk/geo]: /packages/math/geo/README.md
-[@id-sdk/geom]: /packages/math/geom/README.md
-[@id-sdk/projection]: /packages/math/projection/README.md
-[@id-sdk/tiler]: /packages/math/tiler/README.md
-[@id-sdk/vector]: /packages/math/vector/README.md
-
-
-## Documentation
-
-Documentation can be found here:
-https://ideditor.github.io/id-sdk/docs/
+[@id-sdk/extent]: /packages/math/extent
+[@id-sdk/geo]: /packages/math/geo
+[@id-sdk/geom]: /packages/math/geom
+[@id-sdk/projection]: /packages/math/projection
+[@id-sdk/tiler]: /packages/math/tiler
+[@id-sdk/vector]: /packages/math/vector

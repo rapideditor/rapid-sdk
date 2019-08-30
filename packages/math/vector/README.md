@@ -49,7 +49,8 @@ We're not able to support external contributors at this time, but check back in 
 
 ## Functions
 
-<a name="vecEqual" href="#vecEqual">#</a> <b>vecEqual</b>(a: Vec2, b: Vec2, epsilon?: number): boolean [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L18 "Source")
+<a name="vecEqual" href="#vecEqual">#</a> <b>vecEqual</b>(a: Vec2, b: Vec2, epsilon?: number): boolean
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L4 "Source")
 
 Test whether two given vectors are equal (optionally, to within epsilon).
 
@@ -59,7 +60,8 @@ vecEqual([1, 2], [1.0000001, 2.0000001], 1e-5);   // returns true
 ```
 
 
-<a name="vecAdd" href="#vecAdd">#</a> <b>vecAdd</b>(a: Vec2, b: Vec2): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L33 "Source")
+<a name="vecAdd" href="#vecAdd">#</a> <b>vecAdd</b>(a: Vec2, b: Vec2): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L13 "Source")
 
 Adds two vectors, returns the vector sum of `a + b`.
 
@@ -68,7 +70,8 @@ vecAdd([1, 2], [3, 4]);   // returns [4, 6]
 ```
 
 
-<a name="vecSubtract" href="#vecSubtract">#</a> <b>vecSubtract</b>(a: Vec2, b: Vec2): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L44 "Source")
+<a name="vecSubtract" href="#vecSubtract">#</a> <b>vecSubtract</b>(a: Vec2, b: Vec2): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L18 "Source")
 
 Subtracts two vectors, returns the vector difference of `a - b`.
 
@@ -77,7 +80,8 @@ vecSubtract([1, 2], [3, 4]);   // returns [-2, -2]
 ```
 
 
-<a name="vecScale" href="#vecScale">#</a> <b>vecScale</b>(a: Vec2, n: number): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L55 "Source")
+<a name="vecScale" href="#vecScale">#</a> <b>vecScale</b>(a: Vec2, n: number): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L23 "Source")
 
 Scale a vector uniformly by factor, returns the scaled vector.
 
@@ -86,7 +90,8 @@ vecScale([1, 2], 2);   // returns [2, 4]
 ```
 
 
-<a name="vecFloor" href="#vecFloor">#</a> <b>vecFloor</b>(a: Vec2): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L65 "Source")
+<a name="vecFloor" href="#vecFloor">#</a> <b>vecFloor</b>(a: Vec2): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L28 "Source")
 
 Round down the coordinates of a vector.
 
@@ -95,7 +100,8 @@ vecFloor([0, 1.01]);   // returns [0, 1]
 ```
 
 
-<a name="vecInterp" href="#vecInterp">#</a> <b>vecInterp</b>(a: Vec2, b: Vec2, t: number): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L77 "Source")
+<a name="vecInterp" href="#vecInterp">#</a> <b>vecInterp</b>(a: Vec2, b: Vec2, t: number): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L33 "Source")
 
 Linear interpolate a point along a vector.
 
@@ -104,7 +110,8 @@ vecInterp([0, 0], [10, 10], 0.5);   // returns [5, 5]
 ```
 
 
-<a name="vecLength" href="#vecLength">#</a> <b>vecLength</b>(a: Vec2, b?: Vec2): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L89 "Source")
+<a name="vecLength" href="#vecLength">#</a> <b>vecLength</b>(a: Vec2, b?: Vec2): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L39 "Source")
 
 Returns the length of a vector.  If `b` is not passed in, it defaults to [0,0].
 
@@ -114,7 +121,8 @@ vecLength([4, 3]);           // returns 5
 ```
 
 
-<a name="vecNormalize" href="#vecNormalize">#</a> <b>vecNormalize</b>(a: Vec2): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L102 "Source")
+<a name="vecNormalize" href="#vecNormalize">#</a> <b>vecNormalize</b>(a: Vec2): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L47 "Source")
 
 Normalize a vector (i.e. returns a unit vector).
 
@@ -123,7 +131,8 @@ vecNormalize([5, 0]);   // returns [1, 0]
 ```
 
 
-<a name="vecAngle" href="#vecAngle">#</a> <b>vecAngle</b>(a: Vec2, b: Vec2): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L118 "Source")
+<a name="vecAngle" href="#vecAngle">#</a> <b>vecAngle</b>(a: Vec2, b: Vec2): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L57 "Source")
 
 Returns the counterclockwise angle in the range (-pi, pi) between the positive X axis and the line intersecting a and b.
 
@@ -132,7 +141,8 @@ vecAngle([0, 0], [-1, 0]);   // returns π
 ```
 
 
-<a name="vecDot" href="#vecDot">#</a> <b>vecDot</b>(a: Vec2, b: Vec2, origin?: Vec2): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L130 "Source")
+<a name="vecDot" href="#vecDot">#</a> <b>vecDot</b>(a: Vec2, b: Vec2, origin?: Vec2): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L62 "Source")
 
 Returns the dot product of two vectors.  If `origin` is not passed in, it defaults to [0,0].
 
@@ -141,7 +151,8 @@ vecDot([2, 0], [2, 0]);   // returns 4
 ```
 
 
-<a name="vecNormalizedDot" href="#vecNormalizedDot">#</a> <b>vecNormalizedDot</b>(a: Vec2, b: Vec2, origin?: Vec2): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L145 "Source")
+<a name="vecNormalizedDot" href="#vecNormalizedDot">#</a> <b>vecNormalizedDot</b>(a: Vec2, b: Vec2, origin?: Vec2): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L70 "Source")
 
 Normalized Dot Product - normalizes input vectors before returning dot product.  If `origin` is not passed in, it defaults to [0,0].
 
@@ -150,7 +161,8 @@ vecNormalizedDot([2, 0], [2, 0]);   // returns 1
 ```
 
 
-<a name="vecCross" href="#vecCross">#</a> <b>vecCross</b>(a: Vec2, b: Vec2, origin?: Vec2): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L162 "Source")
+<a name="vecCross" href="#vecCross">#</a> <b>vecCross</b>(a: Vec2, b: Vec2, origin?: Vec2): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L80 "Source")
 
 Returns the 2D cross product of OA and OB vectors, returns magnitude of Z vector. If `origin` is not passed in, it defaults to [0,0].
 
@@ -161,7 +173,8 @@ vecCross([2, 0], [0, 2]);   // returns 4
 ```
 
 
-<a name="vecProject" href="#vecProject">#</a> <b>vecProject</b>(a: Vec2, points: Vec2[]): Edge | null [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L199 "Source")
+<a name="vecProject" href="#vecProject">#</a> <b>vecProject</b>(a: Vec2, points: Vec2[]): Edge | null
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/vector/src/vector.ts#L94 "Source")
 
 Find closest orthogonal projection of point onto points array.  Returns an Edge object containing info about the projected point, or `null` if `points` is a degenerate path (0- or 1- point).
 

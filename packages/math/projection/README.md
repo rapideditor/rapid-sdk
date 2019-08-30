@@ -46,7 +46,8 @@ We're not able to support external contributors at this time, but check back in 
 
 ## Methods
 
-<a name="constructor" href="#constructor">#</a> <b>new Projection</b>(x?: number, y?: number, k?: number) [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L41 "Source")
+<a name="constructor" href="#constructor">#</a> <b>new Projection</b>(x?: number, y?: number, k?: number)
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L26 "Source")
 
 Constructs a new Projection.  The default values are:
 `x = 0`, `y = 0`, `k = 256 / Math.PI`
@@ -58,7 +59,8 @@ const p2 = new Projection(20, 30, 512 / Math.PI);
 ```
 
 
-<a name="project" href="#project">#</a> <b>project</b>(p: Vec2): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L51 "Source")
+<a name="project" href="#project">#</a> <b>project</b>(p: Vec2): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L33 "Source")
 
 Projects from given Lon/Lat (λ,φ) to Cartesian (x,y) coordinates.
 
@@ -70,7 +72,8 @@ p.project([-180, 85.0511287798]);   // returns [-256, -256]
 ```
 
 
-<a name="invert" href="#invert">#</a> <b>invert</b>(p: Vec2): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L60 "Source")
+<a name="invert" href="#invert">#</a> <b>invert</b>(p: Vec2): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L39 "Source")
 
 Inverse projects from given Cartesian (x,y) to Lon/Lat (λ,φ) coordinates.
 
@@ -82,7 +85,8 @@ p.invert([-256, -256]);   // returns [-180, 85.0511287798]
 ```
 
 
-<a name="scale" href="#scale">#</a> <b>scale</b>(val?: number): number | Projection [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L69 "Source")
+<a name="scale" href="#scale">#</a> <b>scale</b>(val?: number): number | Projection
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L45 "Source")
 
 When passed a numeric argument, sets the scale factor and returns `this` for method chaining.
 
@@ -94,7 +98,8 @@ p.scale();   // gets scale - returns 512 / Math.PI;
 ```
 
 
-<a name="translate" href="#translate">#</a> <b>translate</b>(val?: Vec2): Vec2 | Projection [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L79 "Source")
+<a name="translate" href="#translate">#</a> <b>translate</b>(val?: Vec2): Vec2 | Projection
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L52 "Source")
 
 When passed a Vec2 argument, sets the `x`,`y` translation values and returns `this` for method chaining.
 
@@ -106,7 +111,8 @@ p.translate();   // gets translation - returns [20, 30]
 ```
 
 
-<a name="dimensions" href="#dimensions">#</a> <b>dimensions</b>(val?: Vec2[]): Vec2[] | Projection [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L90 "Source")
+<a name="dimensions" href="#dimensions">#</a> <b>dimensions</b>(val?: Vec2[]): Vec2[] | Projection
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L60 "Source")
 
 When passed a Vec2[2] argument, sets the viewport min/max dimensions and returns `this` for method chaining.
 
@@ -118,7 +124,8 @@ p.dimensions();   // gets viewport dimensions - returns [[0, 0], [800, 600]]
 ```
 
 
-<a name="transform" href="#transform">#</a> <b>transform</b>(obj?: Transform): Transform | Projection [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L100 "Source")
+<a name="transform" href="#transform">#</a> <b>transform</b>(obj?: Transform): Transform | Projection
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L67 "Source")
 
 When passed a Transform argument, sets `x`,`y`,`k` from the Transform and returns `this` for method chaining.
 
@@ -131,7 +138,8 @@ p.transform();   // gets transform - returns { x: 20, y: 30, k: 512 / Math.PI }
 ```
 
 
-<a name="getStream" href="#getStream">#</a> <b>getStream</b>(): any [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L108 "Source")
+<a name="getStream" href="#getStream">#</a> <b>getStream</b>(): any
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/projection/src/projection.ts#L76 "Source")
 
 Returns a [d3.geoTransform](https://github.com/d3/d3-geo#transforms) stream that uses this Projection to project geometry points.
 
@@ -147,7 +155,6 @@ s.stream = {
 };
 s.point(-180, 85.0511287798);  // returns [256, 256]
 ```
-
 
 
 ## Types

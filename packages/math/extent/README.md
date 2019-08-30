@@ -52,7 +52,8 @@ We're not able to support external contributors at this time, but check back in 
 
 ## Methods
 
-<a name="constructor" href="#constructor">#</a> <b>new Extent</b>(otherOrMin?: Extent | Vec2, max?: Vec2) [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L44 "Source")
+<a name="constructor" href="#constructor">#</a> <b>new Extent</b>(otherOrMin?: Extent | Vec2, max?: Vec2)
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L17 "Source")
 
 Constructs a new Extent.
 
@@ -64,7 +65,8 @@ const e4 = new Extent(e3);              // copy an Extent to a new Extent
 ```
 
 
-<a name="equals" href="#equals">#</a> <b>equals</b>(other: any): boolean [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L74 "Source")
+<a name="equals" href="#equals">#</a> <b>equals</b>(other: any): boolean
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L38 "Source")
 
 Test whether extent equals another extent.  Returns `true` if they are equal, `false` if not.
 
@@ -77,7 +79,8 @@ a.equals(c);   // returns false
 ```
 
 
-<a name="area" href="#area">#</a> <b>area</b>(): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L89 "Source")
+<a name="area" href="#area">#</a> <b>area</b>(): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L49 "Source")
 
 Returns the area of an extent.
 
@@ -86,7 +89,8 @@ new Extent([0, 0], [5, 10]).area();  // returns 50
 ```
 
 
-<a name="center" href="#center">#</a> <b>center</b>(): Vec2 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L98 "Source")
+<a name="center" href="#center">#</a> <b>center</b>(): Vec2
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L54 "Source")
 
 Returns the center point of an extent.
 
@@ -95,7 +99,8 @@ new Extent([0, 0], [5, 10]).center();  // returns [2.5, 5]
 ```
 
 
-<a name="rectangle" href="#rectangle">#</a> <b>rectangle</b>(): number[4] [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L107 "Source")
+<a name="rectangle" href="#rectangle">#</a> <b>rectangle</b>(): number[4]
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L59 "Source")
 
 Returns an array rectangle as `[minX, minY, maxX, maxY]`.
 
@@ -104,7 +109,8 @@ new Extent([0, 0], [5, 10]).rectangle();  // returns [0, 0, 5, 10]
 ```
 
 
-<a name="toParam" href="#toParam">#</a> <b>toParam</b>(): string [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L116 "Source")
+<a name="toParam" href="#toParam">#</a> <b>toParam</b>(): string
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L64 "Source")
 
 Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`.  This is often used to request a bounding box from a REST API.
 
@@ -113,7 +119,8 @@ new Extent([0, 0], [5, 10]).toParam();  // returns '0,0,5,10'
 ```
 
 
-<a name="bbox" href="#bbox">#</a> <b>bbox</b>(): BBox [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L125 "Source")
+<a name="bbox" href="#bbox">#</a> <b>bbox</b>(): BBox
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L69 "Source")
 
 Returns a BBox Object with `minX`, `minY`, `maxX`, `maxY` properties.
 
@@ -122,7 +129,8 @@ new Extent([0, 0], [5, 10]).bbox();  // returns { minX: 0, minY: 0, maxX: 5, max
 ```
 
 
-<a name="polygon" href="#polygon">#</a> <b>polygon</b>(): Vec2[5] [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L125 "Source")
+<a name="polygon" href="#polygon">#</a> <b>polygon</b>(): Vec2[5]
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L74 "Source")
 
 Returns an array of coordinates as a polygon representing the extent wound clockwise.
 
@@ -131,7 +139,8 @@ new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [0, 10], [5, 10], [5
 ```
 
 
-<a name="contains" href="#contains">#</a> <b>contains</b>(other: any): boolean [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L153 "Source")
+<a name="contains" href="#contains">#</a> <b>contains</b>(other: any): boolean
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L85 "Source")
 
 Test whether this extent fully contains another extent.  Returns `true` if it does, `false` if not.
 
@@ -143,7 +152,8 @@ b.contains(a);   // returns false
 ```
 
 
-<a name="intersects" href="#intersects">#</a> <b>intersects</b>(other: any): boolean [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L172 "Source")
+<a name="intersects" href="#intersects">#</a> <b>intersects</b>(other: any): boolean
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L96 "Source")
 
 Test whether this extent intersects another extent.  Returns `true` if it does, `false` if not.
 
@@ -155,7 +165,8 @@ b.intersects(a);   // returns true
 ```
 
 
-<a name="intersection" href="#intersection">#</a> <b>intersection</b>(other: any): Extent [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L191 "Source")
+<a name="intersection" href="#intersection">#</a> <b>intersection</b>(other: any): Extent
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L107 "Source")
 
 Returns a new Extent representing the intersection of this and other extent.
 
@@ -167,7 +178,8 @@ b.intersection(a);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
 ```
 
 
-<a name="percentContainedIn" href="#percentContainedIn">#</a> <b>percentContainedIn</b>(other: any): number [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L208 "Source")
+<a name="percentContainedIn" href="#percentContainedIn">#</a> <b>percentContainedIn</b>(other: any): number
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L116 "Source")
 
 Returns the percent of other extent contained within this extent, by area.
 
@@ -179,7 +191,8 @@ b.percentContainedIn(a);   // returns 0.5
 ```
 
 
-<a name="extend" href="#extend">#</a> <b>extend</b>(other: any): Extent [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L228 "Source")
+<a name="extend" href="#extend">#</a> <b>extend</b>(other: any): Extent
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L129 "Source")
 
 Extend the bounds of an extent, returning a new Extent.  This method does not modify the original or other extents.
 
@@ -190,7 +203,8 @@ const c = a.extend(b);   // returns new Extent { min: [ 0, -1 ], max: [ 5, 10 ] 
 ```
 
 
-<a name="padByMeters" href="#padByMeters">#</a> <b>padByMeters</b>(meters: number): Extent [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L241 "Source")
+<a name="padByMeters" href="#padByMeters">#</a> <b>padByMeters</b>(meters: number): Extent
+[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/extent/src/extent.ts#L138 "Source")
 
 Returns a new Extent representing the current extent (assumed to be defined in WGS84 geographic coordinates) padded by given meters.  This method does not modify the original extent.
 
