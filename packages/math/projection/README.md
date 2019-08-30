@@ -20,6 +20,13 @@ import { Projection } from '@id-sdk/projection';   // ES6
 ```
 
 
+## Contributing
+
+This project is just getting started! 🌱
+
+We're not able to support external contributors at this time, but check back in a bit when things have matured.
+
+
 ## API Reference
 
 ##### Methods

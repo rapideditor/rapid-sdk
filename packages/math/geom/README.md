@@ -18,6 +18,13 @@ import { geomEdgeEqual } from '@id-sdk/geom';     // ES6 import named
 ```
 
 
+## Contributing
+
+This project is just getting started! 🌱
+
+We're not able to support external contributors at this time, but check back in a bit when things have matured.
+
+
 ## API Reference
 
 ##### Functions

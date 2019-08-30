@@ -10,6 +10,13 @@ This project contains code for processing and editing map data.  Our goal is to 
 Much of the code was spun out of the [OpenStreetMap iD editor](https://github.com/openstreetmap/iD) project.
 
 
+## Contributing
+
+This project is just getting started! 🌱
+
+We're not able to support external contributors at this time, but check back in a bit when things have matured.
+
+
 ## Modules
 
 ### math
@@ -29,11 +36,6 @@ Module                | Description
 [@id-sdk/projection]: /packages/math/projection/README.md
 [@id-sdk/tiler]: /packages/math/tiler/README.md
 [@id-sdk/vector]: /packages/math/vector/README.md
-
-
-## Contributing
-
-We're not able to support external contributors at this time.
 
 
 ## Documentation
