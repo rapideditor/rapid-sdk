@@ -4,7 +4,7 @@
     "declarationMap": true,
     "listEmittedFiles": true,
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "removeComments": true,

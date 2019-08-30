@@ -5,7 +5,6 @@ const TAU = 2 * Math.PI;
 const EQUATORIAL_RADIUS = 6356752.314245179;
 const POLAR_RADIUS = 6378137.0;
 
-
 // Convert degrees latitude to meters
 export function geoLatToMeters(dLat: number): number {
   return dLat * ((TAU * POLAR_RADIUS) / 360);
@@ -66,15 +65,15 @@ export function geoZoomToScale(z: number, tileSize?: number): number {
 }
 
 interface Closest {
-  index: number;      // index of segment along path
-  distance: number;   // distance from point to path
-  point: Vec2;        // point along path
+  index: number; // index of segment along path
+  distance: number; // distance from point to path
+  point: Vec2; // point along path
 }
 
 // Returns info about the point from `points` closest to the given `a`
 export function geoSphericalClosestPoint(points: Vec2[], a: Vec2): Closest | null {
   let minDistance: number = Infinity;
-  let idx: number;
+  let idx: number | undefined;
 
   for (let i: number = 0; i < points.length; i++) {
     let distance: number = geoSphericalDistance(points[i], a);

@@ -12,8 +12,8 @@
   "scripts": {
     "clean": "shx rm -rf ./built/*",
     "build": "npm-run-all -s build:**",
-    "build:es6": "tsc --module es6 --target es6 --moduleResolution node --outDir ./built/es6 src/*.ts",
-    "build:cjs": "tsc --module commonjs --target es5 --moduleResolution node --outDir ./built/cjs src/*.ts",
+    "build:es6": "tsc --project ./tsconfig.es6.json",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json",
     "test": "jest --config ../../../jest.config.js tests/*.js"
   },
   "dependencies": {

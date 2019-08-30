@@ -85,16 +85,16 @@ export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
 }
 
 interface Edge {
-  index: number;      // index of segment along path
-  distance: number;   // distance from point to path
-  target: Vec2;       // point along path
+  index: number; // index of segment along path
+  distance: number; // distance from point to path
+  target: Vec2; // point along path
 }
 
 // Find closest orthogonal projection of point onto points array
 export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
   let min: number = Infinity;
-  let idx: number;
-  let target: Vec2;
+  let idx: number | undefined;
+  let target: Vec2 | undefined;
 
   for (let i: number = 0; i < points.length - 1; i++) {
     const o: Vec2 = points[i];
@@ -119,7 +119,7 @@ export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
     }
   }
 
-  if (idx !== undefined) {
+  if (idx !== undefined && target !== undefined) {
     return { index: idx, distance: min, target: target };
   } else {
     return null;

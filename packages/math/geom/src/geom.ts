@@ -55,7 +55,7 @@ export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
     for (let j: number = 0; j < path2.length - 1; j++) {
       const a: Vec2[] = [path1[i], path1[i + 1]];
       const b: Vec2[] = [path2[j], path2[j + 1]];
-      const hit: Vec2 = geomLineIntersection(a, b);
+      const hit: Vec2 | null = geomLineIntersection(a, b);
       if (hit) {
         intersections.push(hit);
       }
@@ -127,15 +127,17 @@ export function geomPolygonIntersectsPolygon(
 }
 
 interface SSR {
-  poly: Vec2[];    // the smallest surrounding rectangle polygon
-  angle: number;   // angle offset from x axis
+  poly: Vec2[]; // the smallest surrounding rectangle polygon
+  angle: number; // angle offset from x axis
 }
 
 // Return the Smallest Surrounding Rectangle for a given set of points
 // http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
 // http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
-export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR {
-  const hull: Vec2[] = d3_polygonHull(points);
+export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR | null {
+  const hull: Vec2[] | null = d3_polygonHull(points);
+  if (!hull) return null;
+
   const centroid: Vec2 = d3_polygonCentroid(hull);
   let minArea: number = Infinity;
   let ssrExtent: Extent = new Extent();

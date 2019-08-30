@@ -256,6 +256,10 @@ describe('math/geom', () => {
   });
 
   describe('geomGetSmallestSurroundingRectangle', () => {
+    it('returns null for empty points array', () => {
+      expect(test.geomGetSmallestSurroundingRectangle([])).toBeNull();
+    });
+
     it('calculates a smallest surrounding rectangle', () => {
       //  +-- p1 ------ p3
       //  |              |

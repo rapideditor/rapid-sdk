@@ -43,14 +43,14 @@ export class Projection {
 
   // Sets/Gets the scale factor
   scale(val?: number): number | Projection {
-    if (!arguments.length) return this._k;
+    if (val === undefined) return this._k;
     this._k = +val;
     return this;
   }
 
   // Sets/Gets the translation factor
   translate(val?: Vec2): Vec2 | Projection {
-    if (!arguments.length) return [this._x, this._y];
+    if (val === undefined) return [this._x, this._y];
     this._x = +val[0];
     this._y = +val[1];
     return this;
@@ -58,14 +58,14 @@ export class Projection {
 
   // Sets/Gets the current viewport dimensions
   dimensions(val?: Vec2[]): Vec2[] | Projection {
-    if (!arguments.length) return this._dimensions;
+    if (val === undefined) return this._dimensions;
     this._dimensions = val;
     return this;
   }
 
   // Sets/Gets an object representing the current translation and scale
   transform(obj?: Transform): Transform | Projection {
-    if (!arguments.length) return d3_zoomIdentity.translate(this._x, this._y).scale(this._k);
+    if (obj === undefined) return d3_zoomIdentity.translate(this._x, this._y).scale(this._k);
     this._x = +obj.x;
     this._y = +obj.y;
     this._k = +obj.k;

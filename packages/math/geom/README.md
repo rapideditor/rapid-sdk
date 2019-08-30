@@ -182,10 +182,10 @@ geomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict tes
 ```
 
 
-<a name="geomGetSmallestSurroundingRectangle" href="#geomGetSmallestSurroundingRectangle">#</a> <b>geomGetSmallestSurroundingRectangle</b>(points: Vec2[]): SSR
+<a name="geomGetSmallestSurroundingRectangle" href="#geomGetSmallestSurroundingRectangle">#</a> <b>geomGetSmallestSurroundingRectangle</b>(points: Vec2[]): SSR | null
 [<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L137 "Source")
 
-Return the Smallest Surrounding Rectangle for a given set of points.
+Return the Smallest Surrounding Rectangle for a given set of points, or `null` for a denerate point set.
 See:
  * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
  * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756

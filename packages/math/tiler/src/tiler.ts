@@ -6,11 +6,11 @@ type Vec2 = [number, number];
 type TileCoord = [number, number, number];
 
 interface Tile {
-  id: string;           // tile identifier string ex. '0,0,0'
-  xyz: TileCoord;       // tile coordinate array ex. [0,0,0]
-  pxExtent: Extent;     // pixel x/y coordinate extent
-  wgs84Extent: Extent;  // wgs84 lon/lat coordinate extent
-  isVisible: boolean;   // true if the tile is visible, false if not
+  id: string; // tile identifier string ex. '0,0,0'
+  xyz: TileCoord; // tile coordinate array ex. [0,0,0]
+  pxExtent: Extent; // pixel x/y coordinate extent
+  wgs84Extent: Extent; // wgs84 lon/lat coordinate extent
+  isVisible: boolean; // true if the tile is visible, false if not
 }
 
 interface TileResult {
@@ -27,7 +27,6 @@ function range(start: number, end: number): number[] {
   return Array.from(Array(1 + end - start).keys()).map((v) => start + v);
 }
 
-
 export class Tiler {
   private _tileSize: number = 256;
   private _zoomRange: Vec2 = [0, 24];
@@ -39,9 +38,9 @@ export class Tiler {
   // Returns a TileResult object which contains details about
   // all the tiles covering the given projection and viewport.
   getTiles(projection: Projection): TileResult {
-    const dimensions: Vec2[] = projection.dimensions();
-    const translate: Vec2 = projection.translate();
-    const scale: number = projection.scale();
+    const dimensions: Vec2[] = projection.dimensions() as Vec2[];
+    const translate: Vec2 = projection.translate() as Vec2;
+    const scale: number = projection.scale() as number;
 
     const zFrac: number = geoScaleToZoom(scale, this._tileSize);
     const z: number = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
@@ -108,7 +107,6 @@ export class Tiler {
     };
   }
 
-
   // Returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile.
   // Useful for displaying a tile grid for debugging.
   getGeoJSON(tileResult: TileResult): Object {
@@ -134,14 +132,14 @@ export class Tiler {
 
   // Sets/Gets the current tileSize
   tileSize(val?: number): number | Tiler {
-    if (!arguments.length) return this._tileSize;
+    if (val === undefined) return this._tileSize;
     this._tileSize = val;
     return this;
   }
 
   // Sets/Gets the current zoomRange
   zoomRange(val?: Vec2): Vec2 | Tiler {
-    if (!arguments.length) return this._zoomRange;
+    if (val === undefined) return this._zoomRange;
     this._zoomRange = val;
     return this;
   }
@@ -149,14 +147,14 @@ export class Tiler {
   // Sets/Gets the current tile margin
   // (number to extend the rows/columns beyond those covering the viewport)
   margin(val?: number): number | Tiler {
-    if (!arguments.length) return this._margin;
+    if (val === undefined) return this._margin;
     this._margin = +val;
     return this;
   }
 
   // Sets/Gets the current skipNullIsland value
   skipNullIsland(val?: boolean): boolean | Tiler {
-    if (!arguments.length) return this._skipNullIsland;
+    if (val === undefined) return this._skipNullIsland;
     this._skipNullIsland = val;
     return this;
   }
