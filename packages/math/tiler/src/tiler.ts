@@ -142,6 +142,31 @@ export class Tiler {
     };
   }
 
+  tileSize(val?: number): number | Tiler {
+    if (!arguments.length) return this._tileSize;
+    this._tileSize = val;
+    return this;
+  }
+
+  zoomRange(val?: Vec2): Vec2 | Tiler {
+    if (!arguments.length) return this._zoomRange;
+    this._zoomRange = val;
+    return this;
+  }
+
+  // number to extend the rows/columns beyond those covering the viewport
+  margin(val?: number): number | Tiler {
+    if (!arguments.length) return this._margin;
+    this._margin = +val;
+    return this;
+  }
+
+  skipNullIsland(val?: boolean): boolean | Tiler {
+    if (!arguments.length) return this._skipNullIsland;
+    this._skipNullIsland = val;
+    return this;
+  }
+
   /**
    * Tests whether the given tile coordinate is near [0,0] (Null Island)
    * It is considered "near" if it >= z7 and around the center of the map
@@ -167,28 +192,5 @@ export class Tiler {
     return false;
   }
 
-  tileSize(val: number) {
-    if (!arguments.length) return this._tileSize;
-    this._tileSize = val;
-    return this;
-  }
 
-  zoomRange(val: Vec2) {
-    if (!arguments.length) return this._zoomRange;
-    this._zoomRange = val;
-    return this;
-  }
-
-  // number to extend the rows/columns beyond those covering the viewport
-  margin(val: number) {
-    if (!arguments.length) return this._margin;
-    this._margin = +val;
-    return this;
-  }
-
-  skipNullIsland(val: boolean) {
-    if (!arguments.length) return this._skipNullIsland;
-    this._skipNullIsland = val;
-    return this;
-  }
 }
