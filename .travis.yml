@@ -3,8 +3,10 @@ node_js:
   - "8"
   - "10"
   - "12"
-sudo: required
+install:
+  - npm install
 before_script:
+  - lerna bootstrap
   - npm run all
-after_success:
-  - ./scripts/txpush.sh
+script:
+  - npm test
