@@ -1,5 +1,7 @@
 # id-sdk
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ideditor/id-sdk.svg)](https://greenkeeper.io/)
+
 🆔 Map editing made easy
 
 
