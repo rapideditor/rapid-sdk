@@ -1,4 +1,4 @@
-[![Greenkeeper badge](https://badges.greenkeeper.io/ideditor/id-sdk.svg)](https://greenkeeper.io/)
+
 
 # id-sdk
 
