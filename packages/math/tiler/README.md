@@ -48,7 +48,7 @@ We're not able to support external contributors at this time, but check back in 
 ## Methods
 
 <a name="constructor" href="#constructor">#</a> <b>new Tiler</b>()
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L37 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L37 "Source")
 
 Constructs a new Tiler.  By default, the tiler uses a 256px tilesize, a zoomRange of 0-24, fetches no margin tiles beyond the viewport, and includes data around "Null Island". (These defaults can be changed at any time by using accessor methods.)
 
@@ -58,7 +58,7 @@ const t = new Tiler();
 
 
 <a name="getTiles" href="#getTiles">#</a> <b>getTiles</b>(projection: Projection): TileResult
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L41 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L41 "Source")
 
 Returns a TileResult object which contains details about all the tiles covering the given projection and viewport.
 
@@ -133,7 +133,7 @@ let result = t2.getTiles(p2);
 
 
 <a name="getGeoJSON" href="#getGeoJSON">#</a> <b>getGeoJSON</b>(tileResult: TileResult): Object
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L114 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L114 "Source")
 
 Accepts a TileResult object and returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile.  Useful for displaying a tile grid for debugging.
 
@@ -148,7 +148,7 @@ let gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
 
 
 <a name="tileSize" href="#tileSize">#</a> <b>tileSize</b>(val?: number): number | Tiler
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L136 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L136 "Source")
 
 When passed a numeric argument, sets the tile size and returns `this` for method chaining.
 
@@ -161,7 +161,7 @@ t.tileSize();   // gets tile size - returns 512
 
 
 <a name="zoomRange" href="#zoomRange">#</a> <b>zoomRange</b>(val?: Vec2): Vec2 | Tiler
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L143 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L143 "Source")
 
 When passed a Vec2 argument, sets the min/max zoom range and returns `this` for method chaining.
 
@@ -174,7 +174,7 @@ t.zoomRange();   // gets min/max zoom range - returns [10, 20]
 
 
 <a name="margin" href="#margin">#</a> <b>margin</b>(val?: number): number | Tiler
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L151 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L151 "Source")
 
 Sometimes it can be useful to fetch additional tiles that extend beyond the viewport, for example to preload data that may soon be visible, or to complete connections and merge geometries with nearby tiles.
 
@@ -189,7 +189,7 @@ t.margin();   // gets tile margin - returns 1
 
 
 <a name="skipNullIsland" href="#skipNullIsland">#</a> <b>skipNullIsland</b>(val?: boolean): boolean | Tiler
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L158 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L158 "Source")
 
 When loading data from a tiled service, it is common for invalid data to be located around "Null Island", therefore it can be useful to skip loading these tiles.
 
@@ -206,7 +206,7 @@ t.skipNullIsland();   // gets skipNullIsland value - returns true
 ## Static Methods
 
 <a name="Tiler.isNearNullIsland" href="#Tiler.isNearNullIsland">#</a> <b>Tiler.isNearNullIsland</b>(x: number, y: number, z: number): boolean
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/tiler/src/tiler.ts#L178 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L178 "Source")
 
 Tests whether the given `x`,`y`,`z` tile coordinate is near "Null Island" [0,0].
 

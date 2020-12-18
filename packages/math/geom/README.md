@@ -48,7 +48,7 @@ We're not able to support external contributors at this time, but check back in 
 ## Functions
 
 <a name="geomEdgeEqual" href="#geomEdgeEqual">#</a> <b>geomEdgeEqual</b>(a: Vec2, b: Vec2): boolean
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L8 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L8 "Source")
 
 Test whether two given coordinates describe the same edge.  Returns `true` if equal, `false` if unequal.
 
@@ -59,7 +59,7 @@ geomEdgeEqual([1, 2], [2, 1]);   // returns true
 
 
 <a name="geomRotatePoints" href="#geomRotatePoints">#</a> <b>geomRotatePoints</b>(points: Vec2[], angle: number, around: Vec2): Vec2[]
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L13 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L13 "Source")
 
 Rotate all points counterclockwise around a pivot point by given angle (in radians), without modifying the input points array. Returns an array containing the rotated points.
 
@@ -71,7 +71,7 @@ geomRotatePoints(points, Math.Pi, around);   // returns [[-1, 0], [-1, -1]]
 
 
 <a name="geomLineIntersection" href="#geomLineIntersection">#</a> <b>geomLineIntersection</b>(a: Vec2[], b: Vec2[]): Vec2 | null
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L27 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L27 "Source")
 
 Return the intersection point of 2 line segments.  From https://github.com/pgkelley4/line-segments-intersect
 This uses the vector cross product approach described here:  http://stackoverflow.com/a/565282/786339
@@ -90,7 +90,7 @@ geomLineIntersection(a, b);   // returns [5, 0]
 
 
 <a name="geomPathIntersections" href="#geomPathIntersections">#</a> <b>geomPathIntersections</b>(path1: Vec2[], path2: Vec2[]): Vec2[]
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L52 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L52 "Source")
 
 Return all intersection points of 2 paths.
 
@@ -108,7 +108,7 @@ geomPathIntersections(a, b);   // returns [[5, 0], [7.5, 0]]
 
 
 <a name="geomPathHasIntersections" href="#geomPathHasIntersections">#</a> <b>geomPathHasIntersections</b>(path1: Vec2[], path2: Vec2[]): boolean
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L68 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L68 "Source")
 
 Returns `true` if paths intersect, `false` if not.
 
@@ -126,7 +126,7 @@ geomPathHasIntersections(a, b);   // returns true
 
 
 <a name="geomPointInPolygon" href="#geomPointInPolygon">#</a> <b>geomPointInPolygon</b>(point: Vec2, polygon: Vec2[]): boolean
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L86 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L86 "Source")
 
 Returns `true` if point is contained in polygon, `false` if not.
 From https://github.com/substack/point-in-polygon .
@@ -144,7 +144,7 @@ geomPointInPolygon(point, poly);   // returns true
 
 
 <a name="geomPolygonContainsPolygon" href="#geomPolygonContainsPolygon">#</a> <b>geomPolygonContainsPolygon</b>(outer: Vec2[], inner: Vec2[]): boolean
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L108 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L108 "Source")
 
 Returns `true` if every point of inner polygon is contained within outer polygon, `false` if not.
 
@@ -162,7 +162,7 @@ geomPolygonContainsPolygon(outer, inner);   // returns true
 
 
 <a name="geomPolygonIntersectsPolygon" href="#geomPolygonIntersectsPolygon">#</a> <b>geomPolygonIntersectsPolygon</b>(outer: Vec2[], inner: Vec2[], checkSegments?: boolean): boolean
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L115 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L115 "Source")
 
 Returns `true` if any part of inner polygon intersects outer polygon, `false` if not.
 Optionally, pass true to `checkSegments` option to test each segment (stricter but slower).
@@ -183,7 +183,7 @@ geomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict tes
 
 
 <a name="geomGetSmallestSurroundingRectangle" href="#geomGetSmallestSurroundingRectangle">#</a> <b>geomGetSmallestSurroundingRectangle</b>(points: Vec2[]): SSR | null
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L137 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L137 "Source")
 
 Return the Smallest Surrounding Rectangle for a given set of points, or `null` for a denerate point set.
 See:
@@ -203,7 +203,7 @@ const ssr = geomGetSmallestSurroundingRectangle(points);
 
 
 <a name="geomPathLength" href="#geomPathLength">#</a> <b>geomPathLength</b>(path: Vec2[]): number
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L174 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L174 "Source")
 
 Return the length of the given path.
 
@@ -218,7 +218,7 @@ geomPathLength(path);  // returns 6
 
 
 <a name="geomViewportNudge" href="#geomViewportNudge">#</a> <b>geomViewportNudge</b>(point: Vec2, dimensions: Vec2): Vec2 | null
-[<>](https://github.com/ideditor/id-sdk/blob/master/packages/math/geom/src/geom.ts#L184 "Source")
+[<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/geom/src/geom.ts#L184 "Source")
 
 If the given point is at the edge of the padded viewport, return a vector that will nudge the viewport in that direction
 
