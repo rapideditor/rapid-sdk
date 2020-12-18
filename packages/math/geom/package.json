@@ -19,7 +19,7 @@
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.0",
     "@id-sdk/vector": "^3.0.0-pre.0",
-    "d3-polygon": "^1.0.5"
+    "d3-polygon": "^2.0.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",
