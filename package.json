@@ -5,7 +5,7 @@
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
-    "Bryan Housel <bryan@mapbox.com>"
+    "Bryan Housel <bhousel@gmail.com>"
   ],
   "keywords": [
     "map",
@@ -35,7 +35,6 @@
     "pretty": "prettier --write \"./**/*.ts\""
   },
   "engines": {
-    "node": ">=8.15.0",
-    "npm": ">=5.0.0"
+    "node": ">=10"
   }
 }
