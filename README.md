@@ -1,3 +1,4 @@
+[![build](https://github.com/ideditor/id-sdk/workflows/build/badge.svg)](https://github.com/ideditor/id-sdk/actions?query=workflow%3A%22build%22)
 
 
 # id-sdk
