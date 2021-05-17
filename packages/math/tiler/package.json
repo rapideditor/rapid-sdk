@@ -5,7 +5,7 @@
   "repository": "ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
-    "Bryan Housel <bryan@mapbox.com>"
+    "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
   "main": "built/cjs/tiler.js",
   "module": "built/es6/tiler.js",
