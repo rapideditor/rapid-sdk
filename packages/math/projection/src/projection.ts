@@ -20,7 +20,10 @@ export class Projection {
   private _k: number;
   private _x: number;
   private _y: number;
-  private _dimensions: Vec2[] = [[0, 0], [0, 0]];
+  private _dimensions: Vec2[] = [
+    [0, 0],
+    [0, 0]
+  ];
 
   // Constructs a new Projection
   constructor(x?: number, y?: number, k?: number) {
@@ -76,7 +79,7 @@ export class Projection {
   getStream(): any {
     const thiz = this;
     return d3_geoTransform({
-      point: function(x: number, y: number): void {
+      point: function (x: number, y: number): void {
         const p: Vec2 = thiz.project([x, y]);
         this.stream.point(p[0], p[1]);
       }

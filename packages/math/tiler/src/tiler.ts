@@ -110,7 +110,7 @@ export class Tiler {
   // Returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile.
   // Useful for displaying a tile grid for debugging.
   getGeoJSON(tileResult: TileResult): Object {
-    let features = tileResult.tiles.map(function(tile) {
+    let features = tileResult.tiles.map(function (tile) {
       return {
         type: 'Feature',
         properties: {
