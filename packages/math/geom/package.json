@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/geom",
-  "version": "3.0.0-pre.0",
+  "version": "3.0.0-pre.1",
   "description": "Geometric (planar) math functions",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/geom#readme",
   "repository": "github:ideditor/id-sdk",
@@ -18,8 +18,8 @@
     "test": "jest --config ../../../jest.config.js tests/*.js"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.0",
-    "@id-sdk/vector": "^3.0.0-pre.0",
+    "@id-sdk/extent": "^3.0.0-pre.1",
+    "@id-sdk/vector": "^3.0.0-pre.1",
     "d3-polygon": "^2.0.0"
   },
   "devDependencies": {

@@ -1,7 +1,11 @@
 {
-  "version": "3.0.0-pre.0",
-  "packages": ["packages/**"],
+  "version": "3.0.0-pre.1",
+  "packages": [
+    "packages/**"
+  ],
   "bootstrap": {
-    "npmClientArgs": ["--no-package-lock"]
+    "npmClientArgs": [
+      "--no-package-lock"
+    ]
   }
 }

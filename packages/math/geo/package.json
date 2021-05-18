@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/geo",
-  "version": "3.0.0-pre.0",
+  "version": "3.0.0-pre.1",
   "description": "Geographic (spherical) math functions",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/geo#readme",
   "repository": "github:ideditor/id-sdk",

@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/tiler",
-  "version": "3.0.0-pre.0",
+  "version": "3.0.0-pre.1",
   "description": "Tiler class for splitting the world into rectangular tiles",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/tiler#readme",
   "repository": "github:ideditor/id-sdk",
@@ -18,9 +18,9 @@
     "test": "jest --config ../../../jest.config.js tests/*.js"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.0",
-    "@id-sdk/projection": "^3.0.0-pre.0",
-    "@id-sdk/geo": "^3.0.0-pre.0"
+    "@id-sdk/extent": "^3.0.0-pre.1",
+    "@id-sdk/geo": "^3.0.0-pre.1",
+    "@id-sdk/projection": "^3.0.0-pre.1"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",
