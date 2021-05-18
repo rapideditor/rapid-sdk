@@ -2,7 +2,8 @@
   "name": "id-sdk",
   "version": "3.0.0-pre.0",
   "description": "Map editing made easy",
-  "repository": "ideditor/id-sdk",
+  "homepage": "https://github.com/ideditor/id-sdk#readme",
+  "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"

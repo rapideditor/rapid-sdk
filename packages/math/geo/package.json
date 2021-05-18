@@ -2,7 +2,8 @@
   "name": "@id-sdk/geo",
   "version": "3.0.0-pre.0",
   "description": "Geographic (spherical) math functions",
-  "repository": "ideditor/id-sdk",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/geo#readme",
+  "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
@@ -19,5 +20,8 @@
   "devDependencies": {
     "npm-run-all": "^4.0.0",
     "shx": "^0.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

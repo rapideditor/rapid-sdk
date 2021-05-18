@@ -2,7 +2,8 @@
   "name": "@id-sdk/projection",
   "version": "3.0.0-pre.0",
   "description": "Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates",
-  "repository": "ideditor/id-sdk",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/projection#readme",
+  "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
@@ -23,5 +24,8 @@
   "devDependencies": {
     "npm-run-all": "^4.0.0",
     "shx": "^0.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
