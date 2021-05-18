@@ -17,7 +17,7 @@
     "test": "jest --config ../../../jest.config.js tests/*.js"
   },
   "dependencies": {
-    "d3-geo": "^1.11.0",
+    "d3-geo": "^2.0.1",
     "d3-zoom": "^2.0.0"
   },
   "devDependencies": {
