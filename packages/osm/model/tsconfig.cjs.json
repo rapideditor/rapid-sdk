@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": [
+    "src/*.ts",
+    "./index.ts"
+  ],
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "target": "es5",
+    "outDir": "./built/cjs"
+  }
+}
