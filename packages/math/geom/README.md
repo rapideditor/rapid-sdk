@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Fgeom.svg)](https://badge.fury.io/js/%40id-sdk%2Fgeom)
+
 # @id-sdk/geom
 
 📈 Geometric (planar) math functions

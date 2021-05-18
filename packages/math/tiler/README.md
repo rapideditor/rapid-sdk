@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Ftiler.svg)](https://badge.fury.io/js/%40id-sdk%2Ftiler)
+
 # @id-sdk/tiler
 
 🀄️ Tiler class for splitting the world into rectangular tiles

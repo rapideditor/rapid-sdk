@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Fvector.svg)](https://badge.fury.io/js/%40id-sdk%2Fvector)
+
 # @id-sdk/vector
 
 📐 Vector (coordinate) math functions

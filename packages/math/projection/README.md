@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Fprojection.svg)](https://badge.fury.io/js/%40id-sdk%2Fprojection)
+
 # @id-sdk/projection
 
 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates

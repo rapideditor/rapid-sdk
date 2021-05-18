@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Fgeo.svg)](https://badge.fury.io/js/%40id-sdk%2Fgeo)
+
 # @id-sdk/geo
 
 🌐 Geographic (spherical) math functions

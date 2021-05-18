@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Fextent.svg)](https://badge.fury.io/js/%40id-sdk%2Fextent)
+
 # @id-sdk/extent
 
 📦 Extent class for creating bounding boxes
