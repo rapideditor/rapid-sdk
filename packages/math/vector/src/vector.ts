@@ -1,4 +1,4 @@
-type Vec2 = [number, number];
+export type Vec2 = [number, number];
 
 // Test whether two given vectors are equal (optionally, to within epsilon)
 export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
@@ -84,7 +84,7 @@ export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   return p[0] * q[1] - p[1] * q[0];
 }
 
-interface Edge {
+export interface Edge {
   index: number; // index of segment along path
   distance: number; // distance from point to path
   target: Vec2; // point along path

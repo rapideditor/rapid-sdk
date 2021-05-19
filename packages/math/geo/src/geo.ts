@@ -1,4 +1,4 @@
-type Vec2 = [number, number];
+import { Vec2 } from '@id-sdk/vector'
 
 // constants
 const TAU = 2 * Math.PI;
@@ -64,7 +64,7 @@ export function geoZoomToScale(z: number, tileSize?: number): number {
   return (tileSize * Math.pow(2, z)) / TAU;
 }
 
-interface Closest {
+export interface Closest {
   index: number; // index of segment along path
   distance: number; // distance from point to path
   point: Vec2; // point along path

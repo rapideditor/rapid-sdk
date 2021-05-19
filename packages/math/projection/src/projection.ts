@@ -1,9 +1,8 @@
 import { geoMercatorRaw as d3_geoMercatorRaw, geoTransform as d3_geoTransform } from 'd3-geo';
 import { zoomIdentity as d3_zoomIdentity } from 'd3-zoom';
+import { Vec2 } from '@id-sdk/vector'
 
-type Vec2 = [number, number];
-
-interface Transform {
+export interface Transform {
   x: number;
   y: number;
   k: number;

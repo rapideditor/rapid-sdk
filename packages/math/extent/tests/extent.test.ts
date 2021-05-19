@@ -1,4 +1,6 @@
+import 'jest-extended';
 import { Extent } from '..';
+import { Vec2 } from '@id-sdk/vector'
 
 describe('math/extent', () => {
   describe('constructor', () => {
@@ -9,23 +11,23 @@ describe('math/extent', () => {
     });
 
     it('constructs via a point', () => {
-      const p = [0, 0];
+      const p : Vec2 = [0, 0];
       const e = new Extent(p);
       expect(e.min).toStrictEqual(p);
       expect(e.max).toStrictEqual(p);
     });
 
     it('constructs via two points', () => {
-      const min = [0, 0];
-      const max = [5, 10];
+      const min : Vec2 = [0, 0];
+      const max : Vec2 = [5, 10];
       const e = new Extent(min, max);
       expect(e.min).toStrictEqual(min);
       expect(e.max).toStrictEqual(max);
     });
 
     it('constructs via an extent', () => {
-      const min = [0, 0];
-      const max = [5, 10];
+      const min : Vec2 = [0, 0];
+      const max : Vec2 = [5, 10];
       const e1 = new Extent(min, max);
       const e2 = new Extent(e1);
       expect(e2.min).toStrictEqual(min);
@@ -44,7 +46,7 @@ describe('math/extent', () => {
 
     it('accepts non-Extent argument', () => {
       const e1 = new Extent([0, 0], [10, 10]);
-      expect(e1.equals([0, 0], [10, 10])).toBeTruthy();
+      expect(e1.equals(new Extent([0, 0], [10, 10]))).toBeTruthy();
     });
   });
 
@@ -172,7 +174,7 @@ describe('math/extent', () => {
 
     it('accepts non-Extent argument', () => {
       const e1 = new Extent([0, 0], [5, 5]);
-      expect(e1.contains([1, 1], [2, 2])).toBeTrue();
+      expect(e1.contains(new Extent([1, 1], [2, 2]))).toBeTrue();
     });
   });
 
@@ -212,7 +214,7 @@ describe('math/extent', () => {
 
     it('accepts non-Extent argument', () => {
       const e1 = new Extent([0, 0], [5, 5]);
-      expect(e1.intersects([1, 1], [2, 2])).toBeTrue();
+      expect(e1.intersects(new Extent([1, 1], [2, 2]))).toBeTrue();
     });
   });
 
@@ -289,7 +291,7 @@ describe('math/extent', () => {
 
     it('accepts non-Extent argument', () => {
       const e1 = new Extent([0, 0], [2, 1]);
-      expect(e1.percentContainedIn([1, 0], [3, 1])).toBe(0.5);
+      expect(e1.percentContainedIn(new Extent([1, 0], [3, 1]))).toBe(0.5);
     });
   });
 });
