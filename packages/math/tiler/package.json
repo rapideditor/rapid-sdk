@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/tiler",
-  "version": "3.0.0-pre.3",
+  "version": "3.0.0-pre.4",
   "description": "Tiler class for splitting the world into rectangular tiles",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/tiler#readme",
   "repository": "github:ideditor/id-sdk",
