@@ -1,6 +1,6 @@
 import { Extent } from '@id-sdk/extent';
 import { Projection } from '@id-sdk/projection';
-import { geoScaleToZoom } from '@id-sdk/geo';
+import { geoScaleToZoom, geoZoomToScale } from '@id-sdk/geo';
 
 type Vec2 = [number, number];
 type TileCoord = [number, number, number];
@@ -57,8 +57,9 @@ export class Tiler {
     const viewExtent: Extent = new Extent(viewMin, viewMax);
 
     // a projection centered at Null Island, so we can invert back to lon/lat later
-    const worldOrigin: number = (Math.pow(2, z) / 2) * this._tileSize;
-    const worldProjection = new Projection(worldOrigin, worldOrigin, scale);
+    const worldOrigin: number = ((maxTile + 1) / 2) * this._tileSize;
+    const worldScale: number = geoZoomToScale(z);
+    const worldProjection = new Projection(worldOrigin, worldOrigin, worldScale);
 
     const cols: number[] = range(
       clamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
