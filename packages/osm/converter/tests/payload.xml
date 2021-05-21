@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.8.3 (2598603 spike-07.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+    <node id="25543275" visible="true" version="23" changeset="57694453" timestamp="2018-03-31T17:23:21Z" user="Daeron" uid="38239" lat="60.2085641" lon="24.9439048"/>
+    <node id="60707539" visible="true" version="12" changeset="57694453" timestamp="2018-03-31T17:23:21Z" user="Daeron" uid="38239" lat="60.2085395" lon="24.9437807"/>
+    <node id="271402643" visible="true" version="9" changeset="61725401" timestamp="2018-08-16T19:19:33Z" user="keimo" uid="306862" lat="60.2084283" lon="24.9438196">
+        <tag k="ele" v="18"/>
+        <tag k="source:ele" v="barometric*2"/>
+    </node>
+    <node id="765658993" visible="true" version="4" changeset="57694453" timestamp="2018-03-31T17:23:26Z" user="Daeron" uid="38239" lat="60.2085923" lon="24.9440530">
+        <tag k="lane:ends" v="right"/>
+    </node>
+    <way id="30326719" visible="true" version="8" changeset="20640488" timestamp="2014-02-18T16:52:58Z" user="ij_" uid="139957">
+        <nd ref="271402643"/>
+        <nd ref="60707539"/>
+        <tag k="highway" v="residential"/>
+        <tag k="lit" v="yes"/>
+        <tag k="name" v="Tursontie"/>
+        <tag k="name:fi" v="Tursontie"/>
+        <tag k="name:sv" v="Tursovägen"/>
+        <tag k="paved:date" v="2009-08"/>
+        <tag k="snowplowing" v="yes"/>
+        <tag k="surface" v="paved"/>
+        <tag k="traffic:hourly:22:We:winter:backward" v="8/7:30"/>
+        <tag k="traffic:hourly:22:We:winter:forward" v="&lt;8/7:30"/>
+    </way>
+    <way id="61281941" visible="true" version="8" changeset="36860502" timestamp="2016-01-28T16:51:13Z" user="anttihav" uid="3363">
+        <nd ref="765658993"/>
+        <nd ref="25543275"/>
+        <nd ref="60707539"/>
+        <tag k="fi:hkr:kunnossapitoluokka" v="I"/>
+        <tag k="guideposted_leads_to_ref" v="1;3"/>
+        <tag k="highway" v="primary"/>
+        <tag k="lanes" v="2"/>
+        <tag k="lit" v="yes"/>
+        <tag k="lit:perceived" v="very_good"/>
+        <tag k="maxspeed" v="50"/>
+        <tag k="name" v="Koskelantie"/>
+        <tag k="name:fi" v="Koskelantie"/>
+        <tag k="name:sv" v="Forsbyvägen"/>
+        <tag k="oneway" v="yes"/>
+        <tag k="parking:lane:both" v="no_stopping"/>
+        <tag k="paved:date" v="2009-08"/>
+        <tag k="priority_road" v="designated"/>
+        <tag k="ref" v="100"/>
+        <tag k="snowplowing" v="yes"/>
+        <tag k="snowplowing:category" v="first"/>
+        <tag k="surface" v="asphalt"/>
+    </way>
+    <relation id="57311" visible="true" version="6" changeset="4916274" timestamp="2010-06-06T11:05:16Z" user="alv" uid="4660">
+        <member type="node" ref="60707539" role="via"/>
+        <member type="way" ref="30326719" role="to"/>
+        <member type="way" ref="61281941" role="from"/>
+        <tag k="restriction" v="no_left_turn"/>
+        <tag k="type" v="restriction"/>
+    </relation>
+</osm>

@@ -1,0 +1,149 @@
+{
+    "version": "0.6",
+    "generator": "CGImap 0.8.3 (2540840 spike-07.openstreetmap.org)",
+    "copyright": "OpenStreetMap and contributors",
+    "attribution": "http://www.openstreetmap.org/copyright",
+    "license": "http://opendatacommons.org/licenses/odbl/1-0/",
+    "elements": [
+        {
+            "type": "node",
+            "id": 25543275,
+            "lat": 60.2085641,
+            "lon": 24.9439048,
+            "timestamp": "2018-03-31T17:23:21Z",
+            "version": 23,
+            "changeset": 57694453,
+            "user": "Daeron",
+            "uid": 38239
+        },
+        {
+            "type": "node",
+            "id": 60707539,
+            "lat": 60.2085395,
+            "lon": 24.9437807,
+            "timestamp": "2018-03-31T17:23:21Z",
+            "version": 12,
+            "changeset": 57694453,
+            "user": "Daeron",
+            "uid": 38239
+        },
+        {
+            "type": "node",
+            "id": 271402643,
+            "lat": 60.2084283,
+            "lon": 24.9438196,
+            "timestamp": "2018-08-16T19:19:33Z",
+            "version": 9,
+            "changeset": 61725401,
+            "user": "keimo",
+            "uid": 306862,
+            "tags": {
+                "ele": "18",
+                "source:ele": "barometric*2"
+            }
+        },
+        {
+            "type": "node",
+            "id": 765658993,
+            "lat": 60.2085923,
+            "lon": 24.9440530,
+            "timestamp": "2018-03-31T17:23:26Z",
+            "version": 4,
+            "changeset": 57694453,
+            "user": "Daeron",
+            "uid": 38239,
+            "tags": {
+                "lane:ends": "right"
+            }
+        },
+        {
+            "type": "way",
+            "id": 30326719,
+            "timestamp": "2014-02-18T16:52:58Z",
+            "version": 8,
+            "changeset": 20640488,
+            "user": "ij_",
+            "uid": 139957,
+            "nodes": [
+                271402643,
+                60707539
+            ],
+            "tags": {
+                "highway": "residential",
+                "lit": "yes",
+                "name": "Tursontie",
+                "name:fi": "Tursontie",
+                "name:sv": "Tursovägen",
+                "paved:date": "2009-08",
+                "snowplowing": "yes",
+                "surface": "paved",
+                "traffic:hourly:22:We:winter:backward": "8/7:30",
+                "traffic:hourly:22:We:winter:forward": "<8/7:30"
+            }
+        },
+        {
+            "type": "way",
+            "id": 61281941,
+            "timestamp": "2016-01-28T16:51:13Z",
+            "version": 8,
+            "changeset": 36860502,
+            "user": "anttihav",
+            "uid": 3363,
+            "nodes": [
+                765658993,
+                25543275,
+                60707539
+            ],
+            "tags": {
+                "fi:hkr:kunnossapitoluokka": "I",
+                "guideposted_leads_to_ref": "1;3",
+                "highway": "primary",
+                "lanes": "2",
+                "lit": "yes",
+                "lit:perceived": "very_good",
+                "maxspeed": "50",
+                "name": "Koskelantie",
+                "name:fi": "Koskelantie",
+                "name:sv": "Forsbyvägen",
+                "oneway": "yes",
+                "parking:lane:both": "no_stopping",
+                "paved:date": "2009-08",
+                "priority_road": "designated",
+                "ref": "100",
+                "snowplowing": "yes",
+                "snowplowing:category": "first",
+                "surface": "asphalt"
+            }
+        },
+        {
+            "type": "relation",
+            "id": 57311,
+            "timestamp": "2010-06-06T11:05:16Z",
+            "version": 6,
+            "changeset": 4916274,
+            "user": "alv",
+            "uid": 4660,
+            "members": [
+                {
+                    "type": "node",
+                    "ref": 60707539,
+                    "role": "via"
+                },
+                {
+                    "type": "way",
+                    "ref": 30326719,
+                    "role": "to"
+                },
+                {
+                    "type": "way",
+                    "ref": 61281941,
+                    "role": "from"
+                }
+            ],
+            "tags": {
+                "restriction": "no_left_turn",
+                "type": "restriction"
+            }
+        }
+    ]
+}

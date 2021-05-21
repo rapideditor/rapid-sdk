@@ -1,0 +1,30 @@
+{
+  "name": "@id-sdk/osm.converter",
+  "version": "3.0.0-pre.0",
+  "description": "Converter from osm to internal model",
+  "repository": "ideditor/id-sdk",
+  "license": "ISC",
+  "contributors": [
+    "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
+  ],
+  "main": "built/cjs/index.js",
+  "module": "built/es6/index.js",
+  "scripts": {
+    "clean": "shx rm -rf ./built/*",
+    "build": "npm-run-all -s build:**",
+    "build:es6": "tsc --project ./tsconfig.es6.json",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json",
+    "test": "jest --config ../../../../jest.config.js tests/*.js"
+  },
+  "keywords": [
+    "osm",
+    "converter",
+    "entity",
+    "json",
+    "xml"
+  ],
+  "devDependencies": {
+    "npm-run-all": "^4.0.0",
+    "shx": "^0.3.0"
+  }
+}
