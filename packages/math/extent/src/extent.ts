@@ -1,8 +1,7 @@
 import { geoMetersToLat, geoMetersToLon } from '@id-sdk/geo';
+import { Vec2 } from '@id-sdk/vector'
 
-type Vec2 = [number, number];
-
-interface BBox {
+export interface BBox {
   minX: number;
   minY: number;
   maxX: number;

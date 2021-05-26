@@ -15,10 +15,11 @@
     "build": "npm-run-all -s build:**",
     "build:es6": "tsc --project ./tsconfig.es6.json",
     "build:cjs": "tsc --project ./tsconfig.cjs.json",
-    "test": "jest --config ../../../jest.config.js tests/*.js"
+    "test": "jest --config=../../../jest.config.js --roots=./packages/math/extent"
   },
   "dependencies": {
-    "@id-sdk/geo": "^3.0.0-pre.2"
+    "@id-sdk/geo": "^3.0.0-pre.2",
+    "@id-sdk/vector": "^3.0.0-pre.2"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",

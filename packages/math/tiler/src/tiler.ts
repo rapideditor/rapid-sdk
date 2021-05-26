@@ -1,11 +1,11 @@
 import { Extent } from '@id-sdk/extent';
 import { Projection } from '@id-sdk/projection';
 import { geoScaleToZoom, geoZoomToScale } from '@id-sdk/geo';
+import { Vec2 } from '@id-sdk/vector'
 
-type Vec2 = [number, number];
-type TileCoord = [number, number, number];
+export type TileCoord = [number, number, number];
 
-interface Tile {
+export interface Tile {
   id: string; // tile identifier string ex. '0,0,0'
   xyz: TileCoord; // tile coordinate array ex. [0,0,0]
   pxExtent: Extent; // pixel x/y coordinate extent
@@ -13,7 +13,7 @@ interface Tile {
   isVisible: boolean; // true if the tile is visible, false if not
 }
 
-interface TileResult {
+export interface TileResult {
   tiles: Tile[];
   // translate: Vec2;
   // scale: number;

@@ -1,8 +1,6 @@
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
 import { Extent } from '@id-sdk/extent';
-import { vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from '@id-sdk/vector';
-
-type Vec2 = [number, number];
+import { Vec2, vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from '@id-sdk/vector';
 
 // Test whether two given coordinates describe the same edge
 export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
@@ -126,7 +124,7 @@ export function geomPolygonIntersectsPolygon(
   return testPoints(outer, inner) || (!!checkSegments && geomPathHasIntersections(outer, inner));
 }
 
-interface SSR {
+export interface SSR {
   poly: Vec2[]; // the smallest surrounding rectangle polygon
   angle: number; // angle offset from x axis
 }

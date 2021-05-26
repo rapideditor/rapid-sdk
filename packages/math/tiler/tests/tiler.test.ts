@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { Tiler } from '..';
 import { Projection } from '@id-sdk/projection';
 
@@ -29,8 +30,8 @@ describe('math/tiler', () => {
           //-180    +180
           //
           const k = (TS * Math.pow(2, 0)) / TAU; // z0
-          const t = new Tiler().tileSize(TS);
-          const p = new Projection(HALFTS, HALFTS, k).dimensions([[0, 0], [TS, TS]]); // entire world visible
+          const t : Tiler = new Tiler().tileSize(TS) as Tiler;
+          const p : Projection = new Projection(HALFTS, HALFTS, k).dimensions([[0, 0], [TS, TS]]) as Projection; // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -82,8 +83,8 @@ describe('math/tiler', () => {
           //-180      0     +180
           //
           const k = (TS * Math.pow(2, 1)) / TAU; // z1
-          const t = new Tiler().tileSize(TS);
-          const p = new Projection(TS, TS, k).dimensions([[0, 0], [TWOTS, TWOTS]]); // entire world visible
+          const t : Tiler = new Tiler().tileSize(TS) as Tiler;
+          const p : Projection = new Projection(TS, TS, k).dimensions([[0, 0], [TWOTS, TWOTS]]) as Projection; // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -165,8 +166,8 @@ describe('math/tiler', () => {
           //-180     -90      0      +90    +180
           //
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = new Tiler().tileSize(TS);
-          const p = new Projection(TWOTS, TWOTS, k).dimensions([[0, 0], [FOURTS, FOURTS]]); // entire world visible
+          const t : Tiler = new Tiler().tileSize(TS) as Tiler;
+          const p = new Projection(TWOTS, TWOTS, k).dimensions([[0, 0], [FOURTS, FOURTS]]) as Projection; // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -247,8 +248,8 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = new Tiler().tileSize(TS);
-          const p = new Projection(HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
+          const t : Tiler = new Tiler().tileSize(TS) as Tiler;
+          const p = new Projection(HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]) as Projection;
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -286,8 +287,8 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = new Tiler().tileSize(TS).margin(1);
-          const p = new Projection(HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
+          const t : Tiler = (new Tiler().tileSize(TS) as Tiler).margin(1) as Tiler;
+          const p = new Projection(HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]) as Projection;
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -338,9 +339,9 @@ describe('math/tiler', () => {
           // | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
           // |       |       |       |       |
           // +-------+-------+-------+-------+
-          const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = new Tiler().tileSize(TS);
-          const p = new Projection(0, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
+          const k = (TS * Math.pow(2, 2)) / TAU; // z2 
+          const t = new Tiler().tileSize(TS) as Tiler;
+          const p = new Projection(0, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]) as Projection;
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -378,8 +379,8 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = new Tiler().tileSize(TS).margin(1);
-          const p = new Projection(0, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
+          const t = (new Tiler().tileSize(TS) as Tiler).margin(1) as Tiler;
+          const p = new Projection(0, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]) as Projection;
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -431,11 +432,11 @@ describe('math/tiler', () => {
           // |         |         |         |         |
           // +---------+---------+---------+---------+
           const k = (TS * Math.pow(2, 7)) / TAU; // z7
-          const t = new Tiler()
-            .tileSize(TS)
-            .margin(1)
-            .skipNullIsland(true);
-          const p = new Projection(-HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]);
+          const t = ((new Tiler()
+            .tileSize(TS) as Tiler)
+            .margin(1) as Tiler)
+            .skipNullIsland(true) as Tiler;
+          const p = new Projection(-HALFTS, HALFTS, k).dimensions([[1, 1], [TS - 1, TS - 1]]) as Projection;
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -471,8 +472,8 @@ describe('math/tiler', () => {
         describe('getGeoJSON', () => {
           it('gets GeoJSON', () => {
             const k = (TS * Math.pow(2, 0)) / TAU; // z0
-            const t = new Tiler().tileSize(TS);
-            const p = new Projection(HALFTS, HALFTS, k).dimensions([[0, 0], [TS, TS]]);
+            const t = new Tiler().tileSize(TS) as Tiler;
+            const p = new Projection(HALFTS, HALFTS, k).dimensions([[0, 0], [TS, TS]]) as Projection;
 
             const result = t.getTiles(p);
             const gj = t.getGeoJSON(result);
@@ -557,28 +558,28 @@ describe('math/tiler', () => {
 
   describe('#tileSize', () => {
     it('sets/gets tileSize', () => {
-      const t = new Tiler().tileSize(512);
+      const t = new Tiler().tileSize(512) as Tiler;
       expect(t.tileSize()).toBe(512);
     });
   });
 
   describe('#zoomRange', () => {
     it('sets/gets zoomRange', () => {
-      const t = new Tiler().zoomRange([10, 20]);
+      const t = new Tiler().zoomRange([10, 20]) as Tiler;
       expect(t.zoomRange()).toStrictEqual([10, 20]);
     });
   });
 
   describe('#margin', () => {
     it('sets/gets margin', () => {
-      const t = new Tiler().margin(1);
+      const t = new Tiler().margin(1) as Tiler;
       expect(t.margin()).toBe(1);
     });
   });
 
   describe('#skipNullIsland', () => {
     it('sets/gets skipNullIsland', () => {
-      const t = new Tiler().skipNullIsland(true);
+      const t = new Tiler().skipNullIsland(true) as Tiler;
       expect(t.skipNullIsland()).toBeTrue();
     });
   });
