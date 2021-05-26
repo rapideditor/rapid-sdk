@@ -51,31 +51,31 @@ describe('math/vector', () => {
 
   describe('vecInterp', () => {
     it('interpolates halfway', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [10, 10];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [10, 10];
       expect(test.vecInterp(a, b, 0.5)).toEqual([5, 5]);
     });
     it('interpolates to one side', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [10, 10];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [10, 10];
       expect(test.vecInterp(a, b, 0)).toEqual([0, 0]);
     });
   });
 
   describe('vecLength', () => {
     it('distance between two same points is zero', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [0, 0];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [0, 0];
       expect(test.vecLength(a, b)).toEqual(0);
     });
     it('a straight 10 unit line is 10', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [10, 0];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [10, 0];
       expect(test.vecLength(a, b)).toEqual(10);
     });
     it('a pythagorean triangle is right', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [4, 3];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [4, 3];
       expect(test.vecLength(a, b)).toEqual(5);
     });
     it('defaults second argument to [0,0]', () => {
@@ -105,49 +105,49 @@ describe('math/vector', () => {
 
   describe('vecDot', () => {
     it('dot product of right angle is zero', () => {
-      const a : Vec2 = [1, 0];
-      const b : Vec2 = [0, 1];
+      const a: Vec2 = [1, 0];
+      const b: Vec2 = [0, 1];
       expect(test.vecDot(a, b)).toEqual(0);
     });
     it('dot product of same vector multiplies', () => {
-      const a : Vec2 = [2, 0];
-      const b : Vec2 = [2, 0];
+      const a: Vec2 = [2, 0];
+      const b: Vec2 = [2, 0];
       expect(test.vecDot(a, b)).toEqual(4);
     });
   });
 
   describe('vecNormalizedDot', () => {
     it('normalized dot product of right angle is zero', () => {
-      const a : Vec2 = [2, 0];
-      const b : Vec2 = [0, 2];
+      const a: Vec2 = [2, 0];
+      const b: Vec2 = [0, 2];
       expect(test.vecNormalizedDot(a, b)).toEqual(0);
     });
     it('normalized dot product of same vector multiplies unit vectors', () => {
-      const a : Vec2 = [2, 0];
-      const b : Vec2 = [2, 0];
+      const a: Vec2 = [2, 0];
+      const b: Vec2 = [2, 0];
       expect(test.vecNormalizedDot(a, b)).toEqual(1);
     });
     it('normalized dot product of 45 degrees', () => {
-      const a : Vec2 = [0, 2];
-      const b : Vec2 = [2, 2];
+      const a: Vec2 = [0, 2];
+      const b: Vec2 = [2, 2];
       expect(test.vecNormalizedDot(a, b)).toBeCloseTo(Math.sqrt(2) / 2, CLOSE);
     });
   });
 
   describe('vecCross', () => {
     it('2D cross product of right hand turn is positive', () => {
-      const a : Vec2 = [2, 0];
-      const b : Vec2 = [0, 2];
+      const a: Vec2 = [2, 0];
+      const b: Vec2 = [0, 2];
       expect(test.vecCross(a, b)).toEqual(4);
     });
     it('2D cross product of left hand turn is negative', () => {
-      const a : Vec2 = [2, 0];
-      const b : Vec2 = [0, -2];
+      const a: Vec2 = [2, 0];
+      const b: Vec2 = [0, -2];
       expect(test.vecCross(a, b)).toEqual(-4);
     });
     it('2D cross product of colinear points is zero', () => {
-      const a : Vec2 = [-2, 0];
-      const b : Vec2 = [2, 0];
+      const a: Vec2 = [-2, 0];
+      const b: Vec2 = [2, 0];
       expect(test.vecCross(a, b)).toBe(-0);
     });
   });
@@ -167,30 +167,30 @@ describe('math/vector', () => {
       // a --*--- b
       //
       // * = [2, 0]
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [5, 0];
-      const c : Vec2 = [2, 1];
-      const edge : Edge = test.vecProject(c, [a, b]) as Edge;
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [5, 0];
+      const c: Vec2 = [2, 1];
+      const edge: Edge = test.vecProject(c, [a, b]) as Edge;
       expect(edge.index).toEqual(1);
       expect(edge.distance).toEqual(1);
       expect(edge.target).toEqual([2, 0]);
     });
 
     it('returns the starting vertex when the orthogonal projection is < 0', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [5, 0];
-      const c : Vec2 = [-3, 4];
-      const edge : Edge = test.vecProject(c, [a, b]) as Edge;
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [5, 0];
+      const c: Vec2 = [-3, 4];
+      const edge: Edge = test.vecProject(c, [a, b]) as Edge;
       expect(edge.index).toEqual(1);
       expect(edge.distance).toEqual(5);
       expect(edge.target).toEqual([0, 0]);
     });
 
     it('returns the ending vertex when the orthogonal projection is > 1', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [5, 0];
-      const c : Vec2 = [8, 4];
-      const edge : Edge = test.vecProject(c, [a, b]) as Edge;
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [5, 0];
+      const c: Vec2 = [8, 4];
+      const edge: Edge = test.vecProject(c, [a, b]) as Edge;
       expect(edge.index).toEqual(1);
       expect(edge.distance).toEqual(5);
       expect(edge.target).toEqual([5, 0]);

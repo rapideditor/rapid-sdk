@@ -1,7 +1,7 @@
 import { Extent } from '@id-sdk/extent';
 import { Projection } from '@id-sdk/projection';
 import { geoScaleToZoom, geoZoomToScale } from '@id-sdk/geo';
-import { Vec2 } from '@id-sdk/vector'
+import { Vec2 } from '@id-sdk/vector';
 
 export type TileCoord = [number, number, number];
 

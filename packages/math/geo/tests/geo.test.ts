@@ -1,6 +1,6 @@
 import 'jest-extended';
-import * as test from '..'
-import { Vec2 } from '@id-sdk/vector'
+import * as test from '..';
+import { Vec2 } from '@id-sdk/vector';
 
 describe('math/geo', () => {
   describe('geoLatToMeters', () => {
@@ -115,28 +115,28 @@ describe('math/geo', () => {
     const CLOSE = 0; // digits
 
     it('distance between two same points is zero', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [0, 0];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [0, 0];
       expect(test.geoSphericalDistance(a, b)).toBe(0);
     });
     it('a straight 1 degree line at the equator is aproximately 111 km', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [1, 0];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [1, 0];
       expect(test.geoSphericalDistance(a, b)).toBeCloseTo(110946, CLOSE);
     });
     it('a pythagorean triangle is (nearly) right', () => {
-      const a : Vec2 = [0, 0];
-      const b : Vec2 = [4, 3];
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [4, 3];
       expect(test.geoSphericalDistance(a, b)).toBeCloseTo(555282, CLOSE);
     });
     it('east-west distances at high latitude are shorter', () => {
-      const a : Vec2 = [0, 60];
-      const b : Vec2= [1, 60];
+      const a: Vec2 = [0, 60];
+      const b: Vec2 = [1, 60];
       expect(test.geoSphericalDistance(a, b)).toBeCloseTo(55473, CLOSE);
     });
     it('north-south distances at high latitude are not shorter', () => {
-      const a : Vec2 = [0, 60];
-      const b : Vec2 = [0, 61];
+      const a: Vec2 = [0, 60];
+      const b: Vec2 = [0, 61];
       expect(test.geoSphericalDistance(a, b)).toBeCloseTo(111319, CLOSE);
     });
   });
@@ -170,7 +170,11 @@ describe('math/geo', () => {
 
     it('returns closest point', () => {
       const CLOSE = 0; // digits
-      const points  : Vec2[] = [[0, 0], [1, 0], [2, 0]];
+      const points: Vec2[] = [
+        [0, 0],
+        [1, 0],
+        [2, 0]
+      ];
       const result = test.geoSphericalClosestPoint(points, [1, 1]);
       expect(result).toHaveProperty('index', 1);
       expect(result).toHaveProperty('point', [1, 0]);

@@ -1,5 +1,5 @@
 import { Projection, Transform } from '..';
-import { Vec2 } from '@id-sdk/vector'
+import { Vec2 } from '@id-sdk/vector';
 
 describe('math/projection', () => {
   const CLOSE = 6; // digits
@@ -7,7 +7,7 @@ describe('math/projection', () => {
   describe('constructor', () => {
     it('creates a default Projection', () => {
       const proj = new Projection();
-      const t : Transform = proj.transform() as Transform;
+      const t: Transform = proj.transform() as Transform;
       expect(t.x).toBe(0);
       expect(t.y).toBe(0);
       expect(t.k).toBe(256 / Math.PI); // z1
@@ -15,7 +15,7 @@ describe('math/projection', () => {
 
     it('creates a Projection with parameters', () => {
       const proj = new Projection(20, 30, 512 / Math.PI);
-      const t : Transform = proj.transform() as Transform;
+      const t: Transform = proj.transform() as Transform;
       expect(t.x).toBe(20);
       expect(t.y).toBe(30);
       expect(t.k).toBe(512 / Math.PI); // z2
@@ -208,29 +208,35 @@ describe('math/projection', () => {
 
   describe('#scale', () => {
     it('sets/gets scale', () => {
-      const proj : Projection = new Projection().scale(512 / Math.PI) as Projection;
+      const proj: Projection = new Projection().scale(512 / Math.PI) as Projection;
       expect(proj.scale()).toBe(512 / Math.PI);
     });
   });
 
   describe('#translate', () => {
     it('sets/gets translate', () => {
-      const proj : Projection = new Projection().translate([20, 30]) as Projection;
+      const proj: Projection = new Projection().translate([20, 30]) as Projection;
       expect(proj.translate()).toStrictEqual([20, 30]);
     });
   });
 
   describe('#dimensions', () => {
     it('sets/gets dimensions', () => {
-      const proj : Projection = new Projection().dimensions([[0, 0], [800, 600]]) as Projection;
-      expect(proj.dimensions()).toStrictEqual([[0, 0], [800, 600]]);
+      const proj: Projection = new Projection().dimensions([
+        [0, 0],
+        [800, 600]
+      ]) as Projection;
+      expect(proj.dimensions()).toStrictEqual([
+        [0, 0],
+        [800, 600]
+      ]);
     });
   });
 
   describe('#transform', () => {
     it('sets/gets transform', () => {
       const t = { x: 20, y: 30, k: 512 / Math.PI };
-      const proj : Projection = new Projection().transform(t) as Projection;
+      const proj: Projection = new Projection().transform(t) as Projection;
       expect(proj.transform()).toMatchObject(t);
     });
   });

@@ -22,9 +22,12 @@ describe('math/geom', () => {
 
   describe('geomRotatePoints', () => {
     it('rotates points around [0, 0]', () => {
-      const points : Vec2[] = [[5, 0], [5, 1]];
+      const points: Vec2[] = [
+        [5, 0],
+        [5, 1]
+      ];
       const angle = Math.PI;
-      const around : Vec2 = [0, 0];
+      const around: Vec2 = [0, 0];
       const result = test.geomRotatePoints(points, angle, around);
       expect(result[0][0]).toBeCloseTo(-5, CLOSE);
       expect(result[0][1]).toBeCloseTo(0, CLOSE);
@@ -33,9 +36,12 @@ describe('math/geom', () => {
     });
 
     it('rotates points around [3, 0]', () => {
-      const points : Vec2[] = [[5, 0], [5, 1]];
+      const points: Vec2[] = [
+        [5, 0],
+        [5, 1]
+      ];
       const angle = Math.PI;
-      const around : Vec2 = [3, 0];
+      const around: Vec2 = [3, 0];
       const result = test.geomRotatePoints(points, angle, around);
       expect(result[0][0]).toBeCloseTo(1, CLOSE);
       expect(result[0][1]).toBeCloseTo(0, CLOSE);
@@ -46,8 +52,14 @@ describe('math/geom', () => {
 
   describe('geomLineIntersection', () => {
     it('returns null if either line is not a proper line segment', () => {
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[-5, 0], [5, 0]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [-5, 0],
+        [5, 0]
+      ];
       expect(test.geomLineIntersection([], b)).toBeNull();
       expect(test.geomLineIntersection([[0, 0]], b)).toBeNull();
       expect(test.geomLineIntersection(a, [])).toBeNull();
@@ -58,8 +70,14 @@ describe('math/geom', () => {
       //
       //   b0 --- a0 === b1 --- a1
       //
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[-5, 0], [5, 0]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [-5, 0],
+        [5, 0]
+      ];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
 
@@ -67,8 +85,14 @@ describe('math/geom', () => {
       //
       //   b0 --- b1     a0 --- a1
       //
-      const a : Vec2[] = [[5, 0], [10, 0]];
-      const b : Vec2[] = [[-10, 0], [-5, 0]];
+      const a: Vec2[] = [
+        [5, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [-10, 0],
+        [-5, 0]
+      ];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
 
@@ -76,8 +100,14 @@ describe('math/geom', () => {
       //   b0 ------- b1
       //
       //   a0 ------- a1
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[0, 5], [10, 5]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [0, 5],
+        [10, 5]
+      ];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
 
@@ -87,21 +117,41 @@ describe('math/geom', () => {
       //   a0 ---*--- a1
       //         |
       //         b1
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[5, 10], [5, -10]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [5, 10],
+        [5, -10]
+      ];
       expect(test.geomLineIntersection(a, b)).toStrictEqual([5, 0]);
     });
     it('returns null if lines are not parallel but not intersecting', () => {
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[-5, 10], [-5, -10]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [-5, 10],
+        [-5, -10]
+      ];
       expect(test.geomLineIntersection(a, b)).toBeNull();
     });
   });
 
   describe('geomPathIntersections', () => {
     it('returns empty array if either path is not at least a proper line segment', () => {
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [5, 5],
+        [5, -5],
+        [10, -5],
+        [5, 5]
+      ];
       expect(test.geomPathIntersections([], b)).toHaveLength(0);
       expect(test.geomPathIntersections([[0, 0]], b)).toHaveLength(0);
       expect(test.geomPathIntersections(a, [])).toHaveLength(0);
@@ -114,16 +164,35 @@ describe('math/geom', () => {
       //   a0 ---*--*--- a1
       //         |   \
       //        b1 -- b2
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[5, 5], [5, -5], [10, -5], [5, 5]];
-      expect(test.geomPathIntersections(a, b)).toStrictEqual([[5, 0], [7.5, 0]]);
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [5, 5],
+        [5, -5],
+        [10, -5],
+        [5, 5]
+      ];
+      expect(test.geomPathIntersections(a, b)).toStrictEqual([
+        [5, 0],
+        [7.5, 0]
+      ]);
     });
   });
 
   describe('geomPathHasIntersections', () => {
     it('returns false if either path is not at least a proper line segment', () => {
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [5, 5],
+        [5, -5],
+        [10, -5],
+        [5, 5]
+      ];
       expect(test.geomPathHasIntersections([], b)).toBeFalse();
       expect(test.geomPathHasIntersections([[0, 0]], b)).toBeFalse();
       expect(test.geomPathHasIntersections(a, [])).toBeFalse();
@@ -136,8 +205,16 @@ describe('math/geom', () => {
       //   a0 ---*--*--- a1
       //         |   \
       //        b1 -- b2
-      const a : Vec2[] = [[0, 0], [10, 0]];
-      const b : Vec2[] = [[5, 5], [5, -5], [10, -5], [5, 5]];
+      const a: Vec2[] = [
+        [0, 0],
+        [10, 0]
+      ];
+      const b: Vec2[] = [
+        [5, 5],
+        [5, -5],
+        [10, -5],
+        [5, 5]
+      ];
       expect(test.geomPathHasIntersections(a, b)).toBeTrue();
     });
   });
@@ -147,8 +224,14 @@ describe('math/geom', () => {
       //   p1 --- p2
       //   |   *   |
       //   p0 --- p3
-      const poly : Vec2[] = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
-      const point : Vec2 = [0.5, 0.5];
+      const poly: Vec2[] = [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 0],
+        [0, 0]
+      ];
+      const point: Vec2 = [0.5, 0.5];
       expect(test.geomPointInPolygon(point, poly)).toBeTrue();
     });
     it('says a point outside of a polygon is outside', () => {
@@ -156,8 +239,14 @@ describe('math/geom', () => {
       //   p1 --- p2
       //   |       |
       //   p0 --- p3
-      const poly : Vec2[] = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
-      const point : Vec2 = [0.5, 1.5];
+      const poly: Vec2[] = [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 0],
+        [0, 0]
+      ];
+      const point: Vec2 = [0.5, 1.5];
       expect(test.geomPointInPolygon(point, poly)).toBeFalse();
     });
   });
@@ -169,8 +258,20 @@ describe('math/geom', () => {
       //   |  |      |  |
       //   |  i0 -- i3  |
       //   o0 -------- o3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [1, 1],
+        [1, 2],
+        [2, 2],
+        [2, 1],
+        [1, 1]
+      ];
       expect(test.geomPolygonContainsPolygon(outer, inner)).toBeTrue();
     });
     it('says a polygon outside of a polygon is out', () => {
@@ -181,8 +282,20 @@ describe('math/geom', () => {
       //   |  |      |  |
       //   |  i0 -- i3  |
       //   o0 -------- o3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[1, 1], [1, 9], [2, 2], [2, 1], [1, 1]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [1, 1],
+        [1, 9],
+        [2, 2],
+        [2, 1],
+        [1, 1]
+      ];
       expect(test.geomPolygonContainsPolygon(outer, inner)).toBeFalse();
     });
   });
@@ -194,8 +307,20 @@ describe('math/geom', () => {
       //   |  |      |  |
       //   |  i0 -- i3  |
       //   o0 -------- o3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [1, 1],
+        [1, 2],
+        [2, 2],
+        [2, 1],
+        [1, 1]
+      ];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeTrue();
     });
 
@@ -205,8 +330,20 @@ describe('math/geom', () => {
       //   |  |      |  |
       //   |  o0 -- o3  |
       //   i0 -------- i3
-      const inner : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const outer : Vec2[] = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
+      const inner: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const outer: Vec2[] = [
+        [1, 1],
+        [1, 2],
+        [2, 2],
+        [2, 1],
+        [1, 1]
+      ];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeFalse();
     });
 
@@ -218,8 +355,20 @@ describe('math/geom', () => {
       //   |  |      |  |
       //   |  i0 -- i3  |
       //   o0 -------- o3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[1, 1], [1, 9], [2, 2], [2, 1], [1, 1]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [1, 1],
+        [1, 9],
+        [2, 2],
+        [2, 1],
+        [1, 1]
+      ];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeTrue();
     });
 
@@ -230,8 +379,20 @@ describe('math/geom', () => {
       //   |   |      |   |
       //   o0 -+------+-- o3
       //       i0 -- i3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [1, -1],
+        [1, 4],
+        [2, 4],
+        [2, -1],
+        [1, -1]
+      ];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeFalse();
     });
 
@@ -242,8 +403,20 @@ describe('math/geom', () => {
       //   |   |      |   |
       //   o0 -+------+-- o3
       //       i0 -- i3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [1, -1],
+        [1, 4],
+        [2, 4],
+        [2, -1],
+        [1, -1]
+      ];
       expect(test.geomPolygonIntersectsPolygon(outer, inner, true)).toBeTrue();
     });
 
@@ -252,8 +425,20 @@ describe('math/geom', () => {
       //   |        |    |        |
       //   |        |    |        |
       //   o0 ---- o3    i0 ---- i3
-      const outer : Vec2[] = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
-      const inner : Vec2[] = [[5, 0], [5, 3], [8, 3], [8, 0], [5, 0]];
+      const outer: Vec2[] = [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+        [0, 0]
+      ];
+      const inner: Vec2[] = [
+        [5, 0],
+        [5, 3],
+        [8, 3],
+        [8, 0],
+        [5, 0]
+      ];
       expect(test.geomPolygonIntersectsPolygon(outer, inner)).toBeFalse();
     });
   });
@@ -267,32 +452,50 @@ describe('math/geom', () => {
       //  +-- p1 ------ p3
       //  |              |
       //  p0 ------ p2 --+
-      const points : Vec2[] = [[0, -1], [5, 1], [10, -1], [15, 1]];
-      const ssr : SSR = test.geomGetSmallestSurroundingRectangle(points) as SSR;
-      expect(ssr.poly).toStrictEqual([[0, -1], [0, 1], [15, 1], [15, -1], [0, -1]]);
+      const points: Vec2[] = [
+        [0, -1],
+        [5, 1],
+        [10, -1],
+        [15, 1]
+      ];
+      const ssr: SSR = test.geomGetSmallestSurroundingRectangle(points) as SSR;
+      expect(ssr.poly).toStrictEqual([
+        [0, -1],
+        [0, 1],
+        [15, 1],
+        [15, -1],
+        [0, -1]
+      ]);
       expect(ssr.angle).toBe(0);
     });
   });
 
   describe('geomPathLength', () => {
     it('calculates a simple path length', () => {
-      const path : Vec2[] = [[0, 0], [0, 1], [3, 5]];
+      const path: Vec2[] = [
+        [0, 0],
+        [0, 1],
+        [3, 5]
+      ];
       expect(test.geomPathLength(path)).toBe(6);
     });
 
     it('does not fail on single-point path', () => {
-      const path : Vec2[] = [[0, 0]];
+      const path: Vec2[] = [[0, 0]];
       expect(test.geomPathLength(path)).toBe(0);
     });
 
     it('estimates zero-length edges', () => {
-      const path : Vec2[] = [[0, 0], [0, 0]];
+      const path: Vec2[] = [
+        [0, 0],
+        [0, 0]
+      ];
       expect(test.geomPathLength(path)).toBe(0);
     });
   });
 
   describe('geomViewportNudge', () => {
-    const dimensions : Vec2 = [1000, 1000];
+    const dimensions: Vec2 = [1000, 1000];
     it('returns null if the point is not at the edge', () => {
       expect(test.geomViewportNudge([500, 500], dimensions)).toBeNull();
     });

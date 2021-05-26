@@ -1,6 +1,6 @@
 import 'jest-extended';
 import { Extent } from '..';
-import { Vec2 } from '@id-sdk/vector'
+import { Vec2 } from '@id-sdk/vector';
 
 describe('math/extent', () => {
   describe('constructor', () => {
@@ -11,23 +11,23 @@ describe('math/extent', () => {
     });
 
     it('constructs via a point', () => {
-      const p : Vec2 = [0, 0];
+      const p: Vec2 = [0, 0];
       const e = new Extent(p);
       expect(e.min).toStrictEqual(p);
       expect(e.max).toStrictEqual(p);
     });
 
     it('constructs via two points', () => {
-      const min : Vec2 = [0, 0];
-      const max : Vec2 = [5, 10];
+      const min: Vec2 = [0, 0];
+      const max: Vec2 = [5, 10];
       const e = new Extent(min, max);
       expect(e.min).toStrictEqual(min);
       expect(e.max).toStrictEqual(max);
     });
 
     it('constructs via an extent', () => {
-      const min : Vec2 = [0, 0];
-      const max : Vec2 = [5, 10];
+      const min: Vec2 = [0, 0];
+      const max: Vec2 = [5, 10];
       const e1 = new Extent(min, max);
       const e2 = new Extent(e1);
       expect(e2.min).toStrictEqual(min);

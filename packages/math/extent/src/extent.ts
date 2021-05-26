@@ -1,5 +1,5 @@
 import { geoMetersToLat, geoMetersToLon } from '@id-sdk/geo';
-import { Vec2 } from '@id-sdk/vector'
+import { Vec2 } from '@id-sdk/vector';
 
 export interface BBox {
   minX: number;

@@ -1,4 +1,4 @@
-import { Vec2 } from '@id-sdk/vector'
+import { Vec2 } from '@id-sdk/vector';
 
 // constants
 const TAU = 2 * Math.PI;
