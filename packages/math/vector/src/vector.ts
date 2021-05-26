@@ -1,4 +1,5 @@
 export type Vec2 = [number, number];
+export type Vec3 = [number, number, number];
 
 // Test whether two given vectors are equal (optionally, to within epsilon)
 export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {

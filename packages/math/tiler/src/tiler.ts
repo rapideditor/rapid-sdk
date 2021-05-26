@@ -1,13 +1,11 @@
 import { Extent } from '@id-sdk/extent';
 import { Projection } from '@id-sdk/projection';
 import { geoScaleToZoom, geoZoomToScale } from '@id-sdk/geo';
-import { Vec2 } from '@id-sdk/vector';
-
-export type TileCoord = [number, number, number];
+import { Vec2, Vec3 } from '@id-sdk/vector';
 
 export interface Tile {
   id: string; // tile identifier string ex. '0,0,0'
-  xyz: TileCoord; // tile coordinate array ex. [0,0,0]
+  xyz: Vec3; // tile coordinate array ex. [0,0,0]
   pxExtent: Extent; // pixel x/y coordinate extent
   wgs84Extent: Extent; // wgs84 lon/lat coordinate extent
   isVisible: boolean; // true if the tile is visible, false if not
@@ -76,7 +74,7 @@ export class Tiler {
       for (let j: number = 0; j < cols.length; j++) {
         const x: number = cols[j];
 
-        const xyz: TileCoord = [x, y, z];
+        const xyz: Vec3 = [x, y, z];
         if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
 
         // still world pixel coordinates
@@ -115,7 +113,7 @@ export class Tiler {
   // Returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile.
   // Useful for displaying a tile grid for debugging.
   getGeoJSON(tileResult: TileResult): Object {
-    let features = tileResult.tiles.map(function (tile) {
+    let features = tileResult.tiles.map((tile) => {
       return {
         type: 'Feature',
         properties: {
