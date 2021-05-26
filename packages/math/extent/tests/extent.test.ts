@@ -46,7 +46,7 @@ describe('math/extent', () => {
 
     it('accepts non-Extent argument', () => {
       const e1 = new Extent([0, 0], [10, 10]);
-      expect(e1.equals(new Extent([0, 0], [10, 10]))).toBeTruthy();
+      expect(e1.equals([0, 0], [10, 10])).toBeTruthy();
     });
   });
 
@@ -265,6 +265,14 @@ describe('math/extent', () => {
       expect(a.intersection(b)).toStrictEqual(c);
       expect(b.intersection(a)).toStrictEqual(c);
     });
+
+    it('accepts non-Extent argument', () => {
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([3, 4], [7, 7]);
+      const c = new Extent([3, 4], [5, 5]);
+      expect(a.intersection([3, 4], [7, 7])).toStrictEqual(c);
+      expect(b.intersection([0, 0], [5, 5])).toStrictEqual(c);
+    });
   });
 
   describe('#percentContainedIn', () => {
@@ -291,7 +299,7 @@ describe('math/extent', () => {
 
     it('accepts non-Extent argument', () => {
       const e1 = new Extent([0, 0], [2, 1]);
-      expect(e1.percentContainedIn(new Extent([1, 0], [3, 1]))).toBe(0.5);
+      expect(e1.percentContainedIn([1, 0], [3, 1])).toBe(0.5);
     });
   });
 });

@@ -13,13 +13,13 @@ export class Extent {
   public max: Vec2 = [-Infinity, -Infinity];
 
   // Constructs a new Extent
-  constructor(otherOrMin?: Extent | Vec2, max?: Vec2) {
+  constructor(other?: Extent | Vec2, max?: Vec2) {
     let min;
-    if (otherOrMin instanceof Extent) {
-      min = otherOrMin.min;
-      max = otherOrMin.max;
+    if (other instanceof Extent) {
+      min = other.min;
+      max = other.max;
     } else {
-      min = otherOrMin;
+      min = other;
     }
 
     if (min && min.length === 2) {
@@ -34,8 +34,8 @@ export class Extent {
   }
 
   // Test whether extent equals another extent
-  equals(other: any): boolean {
-    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
+  equals(other: Extent | Vec2, max?: Vec2): boolean {
+    if (!(other instanceof Extent)) other = new Extent(other, max);
     return (
       this.min[0] === other.min[0] &&
       this.min[1] === other.min[1] &&
@@ -81,8 +81,8 @@ export class Extent {
   }
 
   // Test whether this extent contains another extent
-  contains(other: any): boolean {
-    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
+  contains(other: Extent | Vec2, max?: Vec2): boolean {
+    if (!(other instanceof Extent)) other = new Extent(other, max);
     return (
       other.min[0] >= this.min[0] &&
       other.min[1] >= this.min[1] &&
@@ -92,8 +92,8 @@ export class Extent {
   }
 
   // Test whether this extent intersects another extent
-  intersects(other: any): boolean {
-    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
+  intersects(other: Extent | Vec2, max?: Vec2): boolean {
+    if (!(other instanceof Extent)) other = new Extent(other, max);
     return (
       other.min[0] <= this.max[0] &&
       other.min[1] <= this.max[1] &&
@@ -103,7 +103,8 @@ export class Extent {
   }
 
   // Returns a new Extent representing the intersection of this and other extents
-  intersection(other: any): Extent {
+  intersection(other: Extent | Vec2, max?: Vec2): Extent {
+    if (!(other instanceof Extent)) other = new Extent(other, max);
     if (!this.intersects(other)) return new Extent();
     return new Extent(
       [Math.max(other.min[0], this.min[0]), Math.max(other.min[1], this.min[1])],
@@ -112,8 +113,8 @@ export class Extent {
   }
 
   // Returns the percent of other extent contained within this extent, by area
-  percentContainedIn(other: any): number {
-    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
+  percentContainedIn(other: Extent | Vec2, max?: Vec2): number {
+    if (!(other instanceof Extent)) other = new Extent(other, max);
     const a1 = this.intersection(other).area();
     const a2 = this.area();
 
@@ -125,8 +126,8 @@ export class Extent {
   }
 
   // Extend the bounds of an extent, returning a new Extent
-  extend(other: any): Extent {
-    if (!(other instanceof Extent)) other = Reflect.construct(Extent, arguments);
+  extend(other: Extent | Vec2, max?: Vec2): Extent {
+    if (!(other instanceof Extent)) other = new Extent(other, max);
     return new Extent(
       [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
       [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
