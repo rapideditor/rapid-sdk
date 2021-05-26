@@ -1,6 +1,6 @@
 import { Extent } from '@id-sdk/extent';
 import { Projection } from '@id-sdk/projection';
-import { geoScaleToZoom } from '@id-sdk/geo';
+import { geoScaleToZoom, geoZoomToScale } from '@id-sdk/geo';
 import { Vec2 } from '@id-sdk/vector'
 
 export type TileCoord = [number, number, number];
@@ -56,6 +56,11 @@ export class Tiler {
     const viewMax: Vec2 = [origin[0] + dimensions[1][0], origin[1] + dimensions[1][1]];
     const viewExtent: Extent = new Extent(viewMin, viewMax);
 
+    // a projection centered at Null Island, so we can invert back to lon/lat later
+    const worldOrigin: number = (Math.pow(2, z) / 2) * this._tileSize;
+    const worldScale: number = geoZoomToScale(z, this._tileSize);
+    const worldProjection = new Projection(worldOrigin, worldOrigin, worldScale);
+
     const cols: number[] = range(
       clamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
       clamp(Math.floor(viewMax[0] / k) + this._margin, minTile, maxTile)
@@ -81,8 +86,8 @@ export class Tiler {
         const isVisible: boolean = viewExtent.intersects(tileExtent);
 
         // back to lon/lat
-        const wgs84Min: Vec2 = projection.invert([tileMin[0], tileMax[1]]);
-        const wgs84Max: Vec2 = projection.invert([tileMax[0], tileMin[1]]);
+        const wgs84Min: Vec2 = worldProjection.invert([tileMin[0], tileMax[1]]);
+        const wgs84Max: Vec2 = worldProjection.invert([tileMax[0], tileMin[1]]);
 
         const tile: Tile = {
           id: xyz.toString(),

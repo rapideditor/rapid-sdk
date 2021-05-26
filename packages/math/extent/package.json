@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/extent",
-  "version": "3.0.0-pre.1",
+  "version": "3.0.0-pre.2",
   "description": "Extent class for creating bounding boxes",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/extent#readme",
   "repository": "github:ideditor/id-sdk",
@@ -18,8 +18,8 @@
     "test": "jest --config=../../../jest.config.js --roots=./packages/math/extent"
   },
   "dependencies": {
-    "@id-sdk/geo": "^3.0.0-pre.1",
-    "@id-sdk/vector": "^3.0.0-pre.1"
+    "@id-sdk/geo": "^3.0.0-pre.2",
+    "@id-sdk/vector": "^3.0.0-pre.2"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",
