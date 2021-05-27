@@ -1,0 +1,35 @@
+{
+  "name": "@id-sdk/math",
+  "version": "3.0.0-pre.2",
+  "description": "Collection of iD-sdk math libraries",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math#readme",
+  "repository": "github:ideditor/id-sdk",
+  "license": "ISC",
+  "contributors": [
+    "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
+  ],
+  "main": "built/cjs/math.js",
+  "module": "built/es6/math.js",
+  "scripts": {
+    "clean": "shx rm -rf ./built/*",
+    "build": "npm-run-all -s build:**",
+    "build:es6": "tsc --project ./tsconfig.es6.json",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json",
+    "test": "jest --config=../../jest.config.js --roots=./packages/math"
+  },
+  "dependencies": {
+    "@id-sdk/extent": "^3.0.0-pre.2",
+    "@id-sdk/geo": "^3.0.0-pre.2",
+    "@id-sdk/geom": "^3.0.0-pre.2",
+    "@id-sdk/projection": "^3.0.0-pre.2",
+    "@id-sdk/tiler": "^3.0.0-pre.4",
+    "@id-sdk/vector": "^3.0.0-pre.2"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.0.0",
+    "shx": "^0.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

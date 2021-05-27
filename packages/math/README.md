@@ -1,16 +1,24 @@
-[![build](https://github.com/ideditor/id-sdk/workflows/build/badge.svg)](https://github.com/ideditor/id-sdk/actions?query=workflow%3A%22build%22)
+[![npm version](https://badge.fury.io/js/%40id-sdk%2Fmath.svg)](https://badge.fury.io/js/%40id-sdk%2Fmath)
 
 
-# id-sdk
+# @id-sdk/math
 
-🆔 Map editing made easy
+🔢 Collection of iD-sdk math libraries
 
 
-## What is it?
+## Installing
 
-This project contains code for processing and editing map data.  Our goal is to provide a shared foundation upon which developers can build map editors, data processors, validators, and other innovative tools.
+`npm install @id-sdk/math`
 
-Much of the code was spun out of the [OpenStreetMap iD editor](https://github.com/openstreetmap/iD) project.
+This package contains a re-export of the iD-sdk math subpackages.
+
+This library is available in both ES5/CommonJS and ES6 module formats.
+
+```js
+const Extent = require('@id-sdk/math').Extent;   // CommonJS
+// or
+import { Extent } from '@id-sdk/math';   // ES6
+```
 
 
 ## Contributing
