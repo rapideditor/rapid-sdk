@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/math",
-  "version": "3.0.0-pre.2",
+  "version": "3.0.0-pre.5",
   "description": "Collection of iD-sdk math libraries",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math#readme",
   "repository": "github:ideditor/id-sdk",
@@ -18,12 +18,12 @@
     "test": "jest --config=../../jest.config.js --roots=./packages/math"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.2",
-    "@id-sdk/geo": "^3.0.0-pre.2",
-    "@id-sdk/geom": "^3.0.0-pre.2",
-    "@id-sdk/projection": "^3.0.0-pre.2",
-    "@id-sdk/tiler": "^3.0.0-pre.4",
-    "@id-sdk/vector": "^3.0.0-pre.2"
+    "@id-sdk/extent": "^3.0.0-pre.5",
+    "@id-sdk/geo": "^3.0.0-pre.5",
+    "@id-sdk/geom": "^3.0.0-pre.5",
+    "@id-sdk/projection": "^3.0.0-pre.5",
+    "@id-sdk/tiler": "^3.0.0-pre.5",
+    "@id-sdk/vector": "^3.0.0-pre.5"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",

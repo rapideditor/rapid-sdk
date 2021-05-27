@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/projection",
-  "version": "3.0.0-pre.2",
+  "version": "3.0.0-pre.5",
   "description": "Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/projection#readme",
   "repository": "github:ideditor/id-sdk",
@@ -18,9 +18,9 @@
     "test": "jest --config ../../../jest.config.js --roots=./packages/math/projection"
   },
   "dependencies": {
+    "@id-sdk/vector": "^3.0.0-pre.5",
     "d3-geo": "^2.0.1",
-    "d3-zoom": "^2.0.0",
-    "@id-sdk/vector": "^3.0.0-pre.1"
+    "d3-zoom": "^2.0.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",
