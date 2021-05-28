@@ -40,8 +40,8 @@ Module                | Description
 [@id-sdk/projection]  | 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
 [@id-sdk/tiler]       | 🀄️ Tiler class for splitting the world into rectangular tiles
 [@id-sdk/vector]      | 📐 Vector (coordinate) math functions
---------------------- | -------------
-[@id-sdk/math]        | 🔢 All of the above in one convenient package.
+<hr/>                 | <hr/>
+[@id-sdk/math]        | 🔢 All of the above in one convenient package
 
 [@id-sdk/extent]: /packages/math/extent
 [@id-sdk/geo]: /packages/math/geo
