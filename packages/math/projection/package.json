@@ -8,6 +8,7 @@
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
+  "files": ["built/", "src/"],
   "main": "built/cjs/projection.js",
   "module": "built/es6/projection.js",
   "scripts": {

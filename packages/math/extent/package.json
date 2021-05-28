@@ -8,6 +8,7 @@
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
+  "files": ["built/", "src/"],
   "main": "built/cjs/extent.js",
   "module": "built/es6/extent.js",
   "scripts": {

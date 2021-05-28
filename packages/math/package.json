@@ -8,6 +8,7 @@
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
+  "files": ["math.ts", "built/", "src/"],
   "main": "built/cjs/math.js",
   "module": "built/es6/math.js",
   "scripts": {
