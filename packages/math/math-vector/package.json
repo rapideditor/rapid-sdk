@@ -1,8 +1,8 @@
 {
-  "name": "@id-sdk/math",
+  "name": "@id-sdk/math-vector",
   "version": "3.0.0-pre.5",
-  "description": "Collection of iD-sdk math libraries",
-  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math#readme",
+  "description": "Vector (coordinate) math functions",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/vector#readme",
   "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
@@ -15,15 +15,7 @@
   "scripts": {
     "clean": "shx rm -rf ./built/*",
     "build": "tsc",
-    "test": "jest --config=../../jest.config.js --roots=./packages/math"
-  },
-  "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.5",
-    "@id-sdk/geo": "^3.0.0-pre.5",
-    "@id-sdk/geom": "^3.0.0-pre.5",
-    "@id-sdk/projection": "^3.0.0-pre.5",
-    "@id-sdk/tiler": "^3.0.0-pre.5",
-    "@id-sdk/vector": "^3.0.0-pre.5"
+    "test": "jest --config ../../../jest.config.js --roots=./packages/math/vector"
   },
   "devDependencies": {
     "npm-run-all": "^4.0.0",

@@ -18,27 +18,3 @@ Much of the code was spun out of the [OpenStreetMap iD editor](https://github.co
 This project is just getting started! 🌱
 
 We're not able to support external contributors at this time, but check back in a bit when things have matured.
-
-
-## Modules
-
-### math
-
-Module                | Description
---------------------- | -------------
-[@id-sdk/extent]      | 📦 Extent class for creating bounding boxes
-[@id-sdk/geo]         | 🌐 Geographic (spherical) math functions
-[@id-sdk/geom]        | 📈 Geometric (planar) math functions
-[@id-sdk/projection]  | 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
-[@id-sdk/tiler]       | 🀄️ Tiler class for splitting the world into rectangular tiles
-[@id-sdk/vector]      | 📐 Vector (coordinate) math functions
----                   | ---
-[@id-sdk/math]        | 🔢 All of the above in one convenient package
-
-[@id-sdk/extent]: /packages/math/extent
-[@id-sdk/geo]: /packages/math/geo
-[@id-sdk/geom]: /packages/math/geom
-[@id-sdk/projection]: /packages/math/projection
-[@id-sdk/tiler]: /packages/math/tiler
-[@id-sdk/vector]: /packages/math/vector
-[@id-sdk/math]: /packages/math

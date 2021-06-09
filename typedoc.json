@@ -1,0 +1,14 @@
+{
+  "entryPoints": [
+    "./packages/math/math-vector",
+    "./packages/math/math-extent",
+    "./packages/math/math-geo",
+
+    "./packages/math/index.ts",
+    
+    "./packages/osm"],
+  "out": "docs",
+  "exclude" : ["**/+(tests|built|src)/**"],
+  "includes" : ["./packages"],
+  "readme" : ["./README.md"]
+}

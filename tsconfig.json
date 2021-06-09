@@ -4,6 +4,8 @@
     "declarationMap": true,
     "listEmittedFiles": true,
     "moduleResolution": "node",
+    "module": "es6",
+    "target": "es6",
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -12,5 +14,5 @@
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "strictNullChecks": true
-  }
+  },
 }

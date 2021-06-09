@@ -1,8 +1,8 @@
 {
-  "name": "@id-sdk/math",
+  "name": "@id-sdk/osm-model",
   "version": "3.0.0-pre.5",
-  "description": "Collection of iD-sdk math libraries",
-  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math#readme",
+  "description": "Extent class for creating bounding boxes",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/extent#readme",
   "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
@@ -15,14 +15,10 @@
   "scripts": {
     "clean": "shx rm -rf ./built/*",
     "build": "tsc",
-    "test": "jest --config=../../jest.config.js --roots=./packages/math"
+    "test": "jest --config=../../../jest.config.js --roots=./packages/math/extent"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.5",
     "@id-sdk/geo": "^3.0.0-pre.5",
-    "@id-sdk/geom": "^3.0.0-pre.5",
-    "@id-sdk/projection": "^3.0.0-pre.5",
-    "@id-sdk/tiler": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5"
   },
   "devDependencies": {

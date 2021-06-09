@@ -1,0 +1,959 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>math | id-sdk</title>
+	<meta name="description" content="Documentation for id-sdk">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">id-sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">id-sdk</a>
+				</li>
+				<li>
+					<a href="math.html">math</a>
+				</li>
+			</ul>
+			<h1>Module math</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/math.extent.html" class="tsd-kind-icon">Extent</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="math.html#bbox" class="tsd-kind-icon">BBox</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="math.html#closest" class="tsd-kind-icon">Closest</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="math.html#edge" class="tsd-kind-icon">Edge</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="math.html#vec2" class="tsd-kind-icon">Vec2</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="math.html#vec3" class="tsd-kind-icon">Vec3</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geolattometers" class="tsd-kind-icon">geo<wbr>Lat<wbr>ToMeters</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geolontometers" class="tsd-kind-icon">geo<wbr>Lon<wbr>ToMeters</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geometerstolat" class="tsd-kind-icon">geo<wbr>Meters<wbr>ToLat</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geometerstolon" class="tsd-kind-icon">geo<wbr>Meters<wbr>ToLon</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geometerstooffset" class="tsd-kind-icon">geo<wbr>Meters<wbr>ToOffset</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geooffsettometers" class="tsd-kind-icon">geo<wbr>Offset<wbr>ToMeters</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geoscaletozoom" class="tsd-kind-icon">geo<wbr>Scale<wbr>ToZoom</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geosphericalclosestpoint" class="tsd-kind-icon">geo<wbr>Spherical<wbr>Closest<wbr>Point</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geosphericaldistance" class="tsd-kind-icon">geo<wbr>Spherical<wbr>Distance</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#geozoomtoscale" class="tsd-kind-icon">geo<wbr>Zoom<wbr>ToScale</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecadd" class="tsd-kind-icon">vec<wbr>Add</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecangle" class="tsd-kind-icon">vec<wbr>Angle</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#veccross" class="tsd-kind-icon">vec<wbr>Cross</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecdot" class="tsd-kind-icon">vec<wbr>Dot</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecequal" class="tsd-kind-icon">vec<wbr>Equal</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecfloor" class="tsd-kind-icon">vec<wbr>Floor</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecinterp" class="tsd-kind-icon">vec<wbr>Interp</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#veclength" class="tsd-kind-icon">vec<wbr>Length</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecnormalize" class="tsd-kind-icon">vec<wbr>Normalize</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecnormalizeddot" class="tsd-kind-icon">vec<wbr>Normalized<wbr>Dot</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecproject" class="tsd-kind-icon">vec<wbr>Project</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecscale" class="tsd-kind-icon">vec<wbr>Scale</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="math.html#vecsubtract" class="tsd-kind-icon">vec<wbr>Subtract</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="bbox" class="tsd-anchor"></a>
+					<h3>BBox</h3>
+					<div class="tsd-signature tsd-kind-icon">BBox<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>maxX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>maxY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>minX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>minY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in math/math-extent/built/src/extent.d.ts:2</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>maxX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>maxY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>minX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>minY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="closest" class="tsd-anchor"></a>
+					<h3>Closest</h3>
+					<div class="tsd-signature tsd-kind-icon">Closest<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>point<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in math/math-geo/built/src/geo.d.ts:11</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>point<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="edge" class="tsd-anchor"></a>
+					<h3>Edge</h3>
+					<div class="tsd-signature tsd-kind-icon">Edge<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>target<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in math/math-vector/built/src/vector.d.ts:15</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5>distance<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>target<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="vec2" class="tsd-anchor"></a>
+					<h3>Vec2</h3>
+					<div class="tsd-signature tsd-kind-icon">Vec2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in math/math-vector/built/src/vector.d.ts:1</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="vec3" class="tsd-anchor"></a>
+					<h3>Vec3</h3>
+					<div class="tsd-signature tsd-kind-icon">Vec3<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in math/math-vector/built/src/vector.d.ts:2</li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geolattometers" class="tsd-anchor"></a>
+					<h3>geo<wbr>Lat<wbr>ToMeters</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Lat<wbr>ToMeters<span class="tsd-signature-symbol">(</span>dLat<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:2</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>dLat: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geolontometers" class="tsd-anchor"></a>
+					<h3>geo<wbr>Lon<wbr>ToMeters</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Lon<wbr>ToMeters<span class="tsd-signature-symbol">(</span>dLon<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, atLat<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:3</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>dLon: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>atLat: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geometerstolat" class="tsd-anchor"></a>
+					<h3>geo<wbr>Meters<wbr>ToLat</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Meters<wbr>ToLat<span class="tsd-signature-symbol">(</span>m<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:4</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>m: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geometerstolon" class="tsd-anchor"></a>
+					<h3>geo<wbr>Meters<wbr>ToLon</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Meters<wbr>ToLon<span class="tsd-signature-symbol">(</span>m<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, atLat<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:5</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>m: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>atLat: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geometerstooffset" class="tsd-anchor"></a>
+					<h3>geo<wbr>Meters<wbr>ToOffset</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Meters<wbr>ToOffset<span class="tsd-signature-symbol">(</span>m<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, tileSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:6</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>m: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> tileSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geooffsettometers" class="tsd-anchor"></a>
+					<h3>geo<wbr>Offset<wbr>ToMeters</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Offset<wbr>ToMeters<span class="tsd-signature-symbol">(</span>offset<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, tileSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:7</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>offset: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> tileSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geoscaletozoom" class="tsd-anchor"></a>
+					<h3>geo<wbr>Scale<wbr>ToZoom</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Scale<wbr>ToZoom<span class="tsd-signature-symbol">(</span>k<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tileSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:9</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>k: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> tileSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geosphericalclosestpoint" class="tsd-anchor"></a>
+					<h3>geo<wbr>Spherical<wbr>Closest<wbr>Point</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Spherical<wbr>Closest<wbr>Point<span class="tsd-signature-symbol">(</span>points<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">[]</span>, a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#closest" class="tsd-signature-type" data-tsd-kind="Type alias">Closest</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:16</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>points: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#closest" class="tsd-signature-type" data-tsd-kind="Type alias">Closest</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geosphericaldistance" class="tsd-anchor"></a>
+					<h3>geo<wbr>Spherical<wbr>Distance</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Spherical<wbr>Distance<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:8</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="geozoomtoscale" class="tsd-anchor"></a>
+					<h3>geo<wbr>Zoom<wbr>ToScale</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">geo<wbr>Zoom<wbr>ToScale<span class="tsd-signature-symbol">(</span>z<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tileSize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-geo/built/src/geo.d.ts:10</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>z: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> tileSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecadd" class="tsd-anchor"></a>
+					<h3>vec<wbr>Add</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Add<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:4</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecangle" class="tsd-anchor"></a>
+					<h3>vec<wbr>Angle</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Angle<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:11</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="veccross" class="tsd-anchor"></a>
+					<h3>vec<wbr>Cross</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Cross<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, origin<span class="tsd-signature-symbol">?: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:14</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> origin: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecdot" class="tsd-anchor"></a>
+					<h3>vec<wbr>Dot</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Dot<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, origin<span class="tsd-signature-symbol">?: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:12</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> origin: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecequal" class="tsd-anchor"></a>
+					<h3>vec<wbr>Equal</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Equal<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, epsilon<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:3</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> epsilon: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecfloor" class="tsd-anchor"></a>
+					<h3>vec<wbr>Floor</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Floor<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:7</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecinterp" class="tsd-anchor"></a>
+					<h3>vec<wbr>Interp</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Interp<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, t<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:8</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>t: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="veclength" class="tsd-anchor"></a>
+					<h3>vec<wbr>Length</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Length<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">?: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:9</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecnormalize" class="tsd-anchor"></a>
+					<h3>vec<wbr>Normalize</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Normalize<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:10</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecnormalizeddot" class="tsd-anchor"></a>
+					<h3>vec<wbr>Normalized<wbr>Dot</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Normalized<wbr>Dot<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, origin<span class="tsd-signature-symbol">?: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:13</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> origin: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecproject" class="tsd-anchor"></a>
+					<h3>vec<wbr>Project</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Project<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, points<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#edge" class="tsd-signature-type" data-tsd-kind="Type alias">Edge</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:20</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>points: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#edge" class="tsd-signature-type" data-tsd-kind="Type alias">Edge</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecscale" class="tsd-anchor"></a>
+					<h3>vec<wbr>Scale</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Scale<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, n<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:6</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>n: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="vecsubtract" class="tsd-anchor"></a>
+					<h3>vec<wbr>Subtract</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">vec<wbr>Subtract<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a>, b<span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in math/math-vector/built/src/vector.d.ts:5</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="math.html#vec2" class="tsd-signature-type" data-tsd-kind="Type alias">Vec2</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="math.html">math</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="math_math_extent.html">math/math-<wbr>extent</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="math_math_geo.html">math/math-<wbr>geo</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="math_math_vector.html">math/math-<wbr>vector</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="osm_osm_model.html">osm/osm-<wbr>model</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/math.extent.html" class="tsd-kind-icon">Extent</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="math.html#bbox" class="tsd-kind-icon">BBox</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="math.html#closest" class="tsd-kind-icon">Closest</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="math.html#edge" class="tsd-kind-icon">Edge</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="math.html#vec2" class="tsd-kind-icon">Vec2</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="math.html#vec3" class="tsd-kind-icon">Vec3</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geolattometers" class="tsd-kind-icon">geo<wbr>Lat<wbr>ToMeters</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geolontometers" class="tsd-kind-icon">geo<wbr>Lon<wbr>ToMeters</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geometerstolat" class="tsd-kind-icon">geo<wbr>Meters<wbr>ToLat</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geometerstolon" class="tsd-kind-icon">geo<wbr>Meters<wbr>ToLon</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geometerstooffset" class="tsd-kind-icon">geo<wbr>Meters<wbr>ToOffset</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geooffsettometers" class="tsd-kind-icon">geo<wbr>Offset<wbr>ToMeters</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geoscaletozoom" class="tsd-kind-icon">geo<wbr>Scale<wbr>ToZoom</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geosphericalclosestpoint" class="tsd-kind-icon">geo<wbr>Spherical<wbr>Closest<wbr>Point</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geosphericaldistance" class="tsd-kind-icon">geo<wbr>Spherical<wbr>Distance</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#geozoomtoscale" class="tsd-kind-icon">geo<wbr>Zoom<wbr>ToScale</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecadd" class="tsd-kind-icon">vec<wbr>Add</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecangle" class="tsd-kind-icon">vec<wbr>Angle</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#veccross" class="tsd-kind-icon">vec<wbr>Cross</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecdot" class="tsd-kind-icon">vec<wbr>Dot</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecequal" class="tsd-kind-icon">vec<wbr>Equal</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecfloor" class="tsd-kind-icon">vec<wbr>Floor</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecinterp" class="tsd-kind-icon">vec<wbr>Interp</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#veclength" class="tsd-kind-icon">vec<wbr>Length</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecnormalize" class="tsd-kind-icon">vec<wbr>Normalize</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecnormalizeddot" class="tsd-kind-icon">vec<wbr>Normalized<wbr>Dot</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecproject" class="tsd-kind-icon">vec<wbr>Project</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecscale" class="tsd-kind-icon">vec<wbr>Scale</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="math.html#vecsubtract" class="tsd-kind-icon">vec<wbr>Subtract</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
