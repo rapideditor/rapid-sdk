@@ -8,14 +8,18 @@
   "contributors": [
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
-  "files": ["math.ts", "built/", "src/"],
-  "main": "built/cjs/math.js",
-  "module": "built/es6/math.js",
+  "files": ["math.ts", "built/"],
+  "type": "module",
+  "source": "./math.ts",
+  "types": "./built/math.d.ts",
+  "main": "./built/math.cjs.js",
+  "module": "./built/math.esm.js",
   "scripts": {
-    "clean": "shx rm -rf ./built/*",
-    "build": "npm-run-all -s build:**",
-    "build:es6": "tsc --project ./tsconfig.es6.json",
-    "build:cjs": "tsc --project ./tsconfig.cjs.json",
+    "clean": "shx rm -rf ./built",
+    "build": "run-p build:**",
+    "build:cjs": "esbuild ./math.ts --platform=node --format=cjs --outfile=./built/math.cjs.js",
+    "build:esm": "esbuild ./math.ts --platform=neutral --format=esm --outfile=./built/math.esm.js",
+    "tsc": "tsc",
     "test": "jest --config=../../jest.config.js --roots=./packages/math"
   },
   "dependencies": {
@@ -25,10 +29,6 @@
     "@id-sdk/projection": "^3.0.0-pre.5",
     "@id-sdk/tiler": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5"
-  },
-  "devDependencies": {
-    "npm-run-all": "^4.0.0",
-    "shx": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"

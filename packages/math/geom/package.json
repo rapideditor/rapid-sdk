@@ -9,23 +9,23 @@
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
   "files": ["built/", "src/"],
-  "main": "built/cjs/geom.js",
-  "module": "built/es6/geom.js",
+  "type": "module",
+  "source": "./src/geom.ts",
+  "types": "./built/geom.d.ts",
+  "main": "./built/geom.cjs.js",
+  "module": "./built/geom.esm.js",
   "scripts": {
-    "clean": "shx rm -rf ./built/*",
-    "build": "npm-run-all -s build:**",
-    "build:es6": "tsc --project ./tsconfig.es6.json",
-    "build:cjs": "tsc --project ./tsconfig.cjs.json",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/geom"
+    "clean": "shx rm -rf ./built",
+    "build": "run-p build:**",
+    "build:cjs": "esbuild ./src/geom.ts --platform=node --format=cjs --outfile=./built/geom.cjs.js",
+    "build:esm": "esbuild ./src/geom.ts --platform=neutral --format=esm --outfile=./built/geom.esm.js",
+    "test": "jest --config ../../../jest.config.js --roots=./packages/math/geom",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5",
     "d3-polygon": "^2.0.0"
-  },
-  "devDependencies": {
-    "npm-run-all": "^4.0.0",
-    "shx": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"

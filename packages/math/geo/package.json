@@ -9,21 +9,21 @@
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
   "files": ["built/", "src/"],
-  "main": "built/cjs/geo.js",
-  "module": "built/es6/geo.js",
+  "type": "module",
+  "source": "./src/geo.ts",
+  "types": "./built/geo.d.ts",
+  "main": "./built/geo.cjs.js",
+  "module": "./built/geo.esm.js",
   "scripts": {
-    "clean": "shx rm -rf ./built/*",
-    "build": "npm-run-all -s build:**",
-    "build:es6": "tsc --project ./tsconfig.es6.json",
-    "build:cjs": "tsc --project ./tsconfig.cjs.json",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/geo"
+    "clean": "shx rm -rf ./built",
+    "build": "run-p build:**",
+    "build:cjs": "esbuild ./src/geo.ts --platform=node --format=cjs --outfile=./built/geo.cjs.js",
+    "build:esm": "esbuild ./src/geo.ts --platform=neutral --format=esm --outfile=./built/geo.esm.js",
+    "test": "jest --config ../../../jest.config.js --roots=./packages/math/geo",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@id-sdk/vector": "^3.0.0-pre.5"
-  },
-  "devDependencies": {
-    "npm-run-all": "^4.0.0",
-    "shx": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"

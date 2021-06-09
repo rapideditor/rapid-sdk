@@ -9,24 +9,24 @@
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
   "files": ["built/", "src/"],
-  "main": "built/cjs/tiler.js",
-  "module": "built/es6/tiler.js",
+  "type": "module",
+  "source": "./src/tiler.ts",
+  "types": "./built/tiler.d.ts",
+  "main": "./built/tiler.cjs.js",
+  "module": "./built/tiler.esm.js",
   "scripts": {
-    "clean": "shx rm -rf ./built/*",
-    "build": "npm-run-all -s build:**",
-    "build:es6": "tsc --project ./tsconfig.es6.json",
-    "build:cjs": "tsc --project ./tsconfig.cjs.json",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/tiler"
+    "clean": "shx rm -rf ./built",
+    "build": "run-p build:**",
+    "build:cjs": "esbuild ./src/tiler.ts --platform=node --format=cjs --outfile=./built/tiler.cjs.js",
+    "build:esm": "esbuild ./src/tiler.ts --platform=neutral --format=esm --outfile=./built/tiler.esm.js",
+    "test": "jest --config ../../../jest.config.js --roots=./packages/math/tiler",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",
     "@id-sdk/geo": "^3.0.0-pre.5",
     "@id-sdk/projection": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5"
-  },
-  "devDependencies": {
-    "npm-run-all": "^4.0.0",
-    "shx": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"

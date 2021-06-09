@@ -2,7 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['**/built/cjs/*.js', '!**/node_modules/**'],
+  collectCoverageFrom: ['**/built/*.cjs.js', '!**/node_modules/**'],
   coverageDirectory: '<rootDir>/.coverage',
   transform: {
     "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"

@@ -9,18 +9,18 @@
     "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
   ],
   "files": ["built/", "src/"],
-  "main": "built/cjs/vector.js",
-  "module": "built/es6/vector.js",
+  "type": "module",
+  "source": "./src/vector.ts",
+  "types": "./built/vector.d.ts",
+  "main": "./built/vector.cjs.js",
+  "module": "./built/vector.esm.js",
   "scripts": {
-    "clean": "shx rm -rf ./built/*",
-    "build": "npm-run-all -s build:**",
-    "build:es6": "tsc --project ./tsconfig.es6.json",
-    "build:cjs": "tsc --project ./tsconfig.cjs.json",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/vector"
-  },
-  "devDependencies": {
-    "npm-run-all": "^4.0.0",
-    "shx": "^0.3.0"
+    "clean": "shx rm -rf ./built",
+    "build": "run-p build:**",
+    "build:cjs": "esbuild ./src/vector.ts --platform=node --format=cjs --outfile=./built/vector.cjs.js",
+    "build:esm": "esbuild ./src/vector.ts --platform=neutral --format=esm --outfile=./built/vector.esm.js",
+    "test": "jest --config ../../../jest.config.js --roots=./packages/math/vector",
+    "tsc": "tsc"
   },
   "publishConfig": {
     "access": "public"
