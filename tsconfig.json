@@ -13,6 +13,13 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@id-sdk/*": [
+        "packages/math/*/index.ts",
+        "packages/osm/*/index.ts"
+      ]
+    }
   },
 }
