@@ -19,7 +19,7 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./src/tiler.ts --platform=node --format=cjs --outfile=./built/tiler.cjs.js",
     "build:esm": "esbuild ./src/tiler.ts --platform=neutral --format=esm --outfile=./built/tiler.esm.js",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/tiler",
+    "test": "jest --config=../../../package.json --roots=./packages/math/tiler",
     "tsc": "tsc"
   },
   "dependencies": {

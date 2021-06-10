@@ -19,7 +19,7 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./src/vector.ts --platform=node --format=cjs --outfile=./built/vector.cjs.js",
     "build:esm": "esbuild ./src/vector.ts --platform=neutral --format=esm --outfile=./built/vector.esm.js",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/vector",
+    "test": "jest --config=../../../package.json --roots=./packages/math/vector",
     "tsc": "tsc"
   },
   "publishConfig": {

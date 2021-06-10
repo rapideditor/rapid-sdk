@@ -19,7 +19,7 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./src/geo.ts --platform=node --format=cjs --outfile=./built/geo.cjs.js",
     "build:esm": "esbuild ./src/geo.ts --platform=neutral --format=esm --outfile=./built/geo.esm.js",
-    "test": "jest --config ../../../jest.config.js --roots=./packages/math/geo",
+    "test": "jest --config=../../../package.json --roots=./packages/math/geo",
     "tsc": "tsc"
   },
   "dependencies": {

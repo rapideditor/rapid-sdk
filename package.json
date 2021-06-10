@@ -46,7 +46,7 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "collectCoverage": true,
-    "collectCoverageFrom": ["**/built/*.cjs.js", "!**/node_modules/**"],
+    "coverageProvider": "v8",
     "coverageDirectory": "<rootDir>/.coverage",
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
