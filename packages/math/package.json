@@ -6,7 +6,10 @@
   "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
-    "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)"
+    "Ben Clark <clarkben@fb.com> (https://github.com/bonkles)",
+    "Bryan Housel <bhousel@gmail.com> (https://github.com/bhousel)",
+    "Danny Krause (https://github.com/vanreece)",
+    "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
   "files": ["math.ts", "built/"],
   "type": "module",
