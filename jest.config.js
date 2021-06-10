@@ -5,7 +5,7 @@ module.exports = {
   collectCoverageFrom: ['**/built/*.cjs.js', '!**/node_modules/**'],
   coverageDirectory: '<rootDir>/.coverage',
   transform: {
-    "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+    "^.+\\.(ts|tsx)$": "ts-jest"
   },
   testMatch: [
     "**/tests/**/*.test.(ts|js)"
