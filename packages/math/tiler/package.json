@@ -19,8 +19,9 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./src/tiler.ts --platform=node --format=cjs --outfile=./built/tiler.cjs.js",
     "build:esm": "esbuild ./src/tiler.ts --platform=neutral --format=esm --outfile=./built/tiler.esm.js",
-    "test": "jest --config=../../../package.json --roots=./packages/math/tiler",
-    "tsc": "tsc"
+    "build:types": "tsc",
+    "esbuild": "run-p build:cjs build:esm",
+    "test": "jest --config=../../../package.json --roots=./packages/math/tiler"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",

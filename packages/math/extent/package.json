@@ -19,8 +19,9 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./src/extent.ts --platform=node --format=cjs --outfile=./built/extent.cjs.js",
     "build:esm": "esbuild ./src/extent.ts --platform=neutral --format=esm --outfile=./built/extent.esm.js",
-    "test": "jest --config=../../../package.json --roots=./packages/math/extent",
-    "tsc": "tsc"
+    "build:types": "tsc",
+    "esbuild": "run-p build:cjs build:esm",
+    "test": "jest --config=../../../package.json --roots=./packages/math/extent"
   },
   "dependencies": {
     "@id-sdk/geo": "^3.0.0-pre.5",

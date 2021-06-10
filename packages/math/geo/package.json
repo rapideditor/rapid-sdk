@@ -19,8 +19,9 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./src/geo.ts --platform=node --format=cjs --outfile=./built/geo.cjs.js",
     "build:esm": "esbuild ./src/geo.ts --platform=neutral --format=esm --outfile=./built/geo.esm.js",
-    "test": "jest --config=../../../package.json --roots=./packages/math/geo",
-    "tsc": "tsc"
+    "build:types": "tsc",
+    "esbuild": "run-p build:cjs build:esm",
+    "test": "jest --config=../../../package.json --roots=./packages/math/geo"
   },
   "dependencies": {
     "@id-sdk/vector": "^3.0.0-pre.5"

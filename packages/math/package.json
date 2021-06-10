@@ -19,8 +19,9 @@
     "build": "run-p build:**",
     "build:cjs": "esbuild ./math.ts --platform=node --format=cjs --outfile=./built/math.cjs.js",
     "build:esm": "esbuild ./math.ts --platform=neutral --format=esm --outfile=./built/math.esm.js",
-    "test": "jest --config=../../package.json --roots=./packages/math",
-    "tsc": "tsc"
+    "build:types": "tsc",
+    "esbuild": "run-p build:cjs build:esm",
+    "test": "jest --config=../../package.json --roots=./packages/math"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",
