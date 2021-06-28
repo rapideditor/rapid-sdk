@@ -20,7 +20,7 @@
     "packages/**"
   ],
   "devDependencies": {
-    "@types/d3-polygon": "^2.0.0",
+    "@types/d3-polygon": "^3.0.0",
     "@types/geojson": "^7946.0.7",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.3.0",
