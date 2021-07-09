@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src/"],
+  "exclude": ["node_modules/", "tests/"],
+  "compilerOptions": {
+    "outDir": "./built",
+
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "strictBindCallApply": false,
+    "strictFunctionTypes": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "allowJs": true,
+    "esModuleInterop": true
+  }
+}
