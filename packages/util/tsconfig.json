@@ -3,7 +3,6 @@
   "include": ["src/"],
   "exclude": ["node_modules/", "tests/"],
   "compilerOptions": {
-    "outDir": "./built",
-    "allowJs": true
+    "outDir": "./built"
   }
 }

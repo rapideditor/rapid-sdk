@@ -42,3 +42,12 @@ Module                | Description
 [@id-sdk/tiler]: /packages/math/tiler
 [@id-sdk/vector]: /packages/math/vector
 [@id-sdk/math]: /packages/math
+
+
+### util
+
+Module                | Description
+--------------------- | -------------
+[@id-sdk/util]        | 🧰 Collection of iD-sdk utility libraries
+
+[@id-sdk/util]: /packages/math/util
