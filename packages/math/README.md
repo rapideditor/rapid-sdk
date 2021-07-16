@@ -28,7 +28,7 @@ This project is just getting started! 🌱
 We're not able to support external contributors at this time, but check back in a bit when things have matured.
 
 
-## Modules
+## Packages
 
 ### math
 
@@ -43,10 +43,10 @@ Module                | Description
 ---                   | ---
 [@id-sdk/math]        | 🔢 All of the above in one convenient package
 
-[@id-sdk/extent]: /packages/math/extent
-[@id-sdk/geo]: /packages/math/geo
-[@id-sdk/geom]: /packages/math/geom
-[@id-sdk/projection]: /packages/math/projection
-[@id-sdk/tiler]: /packages/math/tiler
-[@id-sdk/vector]: /packages/math/vector
+[@id-sdk/extent]: /packages/math/packages/extent
+[@id-sdk/geo]: /packages/math/packages/geo
+[@id-sdk/geom]: /packages/math/packages/geom
+[@id-sdk/projection]: /packages/math/packages/projection
+[@id-sdk/tiler]: /packages/math/packages/tiler
+[@id-sdk/vector]: /packages/math/packages/vector
 [@id-sdk/math]: /packages/math

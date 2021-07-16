@@ -11,19 +11,17 @@
     "Danny Krause (https://github.com/vanreece)",
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
-  "files": ["math.ts", "built/"],
+  "files": ["index.ts", "built/"],
   "type": "module",
-  "source": "./math.ts",
-  "types": "./built/math.d.ts",
-  "main": "./built/math.cjs.js",
-  "module": "./built/math.esm.js",
+  "source": "./index.ts",
+  "types": "./built/index.d.ts",
+  "main": "./built/math.cjs",
+  "module": "./built/math.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./math.ts --platform=node --format=cjs --outfile=./built/math.cjs.js",
-    "build:esm": "esbuild ./math.ts --platform=neutral --format=esm --outfile=./built/math.esm.js",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
     "test": "jest --config=../../package.json --roots=./packages/math"
   },
   "dependencies": {

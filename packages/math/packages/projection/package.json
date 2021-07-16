@@ -15,16 +15,14 @@
   "type": "module",
   "source": "./src/projection.ts",
   "types": "./built/projection.d.ts",
-  "main": "./built/projection.cjs.js",
-  "module": "./built/projection.esm.js",
+  "main": "./built/projection.cjs",
+  "module": "./built/projection.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./src/projection.ts --platform=node --format=cjs --outfile=./built/projection.cjs.js",
-    "build:esm": "esbuild ./src/projection.ts --platform=neutral --format=esm --outfile=./built/projection.esm.js",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
-    "test": "jest --config=../../../package.json --roots=./packages/math/projection"
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
+    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/projection"
   },
   "dependencies": {
     "@id-sdk/vector": "^3.0.0-pre.5",

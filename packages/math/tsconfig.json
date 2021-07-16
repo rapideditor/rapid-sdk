@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["math.ts"],
+  "include": ["index.ts"],
   "exclude": ["node_modules/", "tests/"],
   "compilerOptions": {
     "outDir": "./built"

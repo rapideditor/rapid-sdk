@@ -15,16 +15,14 @@
   "type": "module",
   "source": "./src/geom.ts",
   "types": "./built/geom.d.ts",
-  "main": "./built/geom.cjs.js",
-  "module": "./built/geom.esm.js",
+  "main": "./built/geom.cjs",
+  "module": "./built/geom.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./src/geom.ts --platform=node --format=cjs --outfile=./built/geom.cjs.js",
-    "build:esm": "esbuild ./src/geom.ts --platform=neutral --format=esm --outfile=./built/geom.esm.js",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
-    "test": "jest --config=../../../package.json --roots=./packages/math/geom"
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
+    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/geom"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",

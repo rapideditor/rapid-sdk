@@ -15,16 +15,14 @@
   "type": "module",
   "source": "./src/tiler.ts",
   "types": "./built/tiler.d.ts",
-  "main": "./built/tiler.cjs.js",
-  "module": "./built/tiler.esm.js",
+  "main": "./built/tiler.cjs",
+  "module": "./built/tiler.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./src/tiler.ts --platform=node --format=cjs --outfile=./built/tiler.cjs.js",
-    "build:esm": "esbuild ./src/tiler.ts --platform=neutral --format=esm --outfile=./built/tiler.esm.js",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
-    "test": "jest --config=../../../package.json --roots=./packages/math/tiler"
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
+    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/tiler"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",

@@ -4,9 +4,9 @@ import { nodeExternalsPlugin } from 'esbuild-node-externals';
 // CommonJS
 esbuild.build({
   bundle: true,
-  entryPoints: ['./src/index.js'],
+  entryPoints: ['./src/geo.ts'],
   logLevel: 'info',
-  outfile: './built/util.cjs',
+  outfile: './built/geo.cjs',
   platform: 'node',
   plugins: [nodeExternalsPlugin()]
 }).catch(() => process.exit(1))
@@ -14,9 +14,9 @@ esbuild.build({
 // ESM
 esbuild.build({
   bundle: true,
-  entryPoints: ['./src/index.js'],
+  entryPoints: ['./src/geo.ts'],
   logLevel: 'info',
-  outfile: './built/util.mjs',
+  outfile: './built/geo.mjs',
   platform: 'neutral',
   plugins: [nodeExternalsPlugin()]
 }).catch(() => process.exit(1))

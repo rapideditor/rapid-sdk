@@ -15,16 +15,14 @@
   "type": "module",
   "source": "./src/geo.ts",
   "types": "./built/geo.d.ts",
-  "main": "./built/geo.cjs.js",
-  "module": "./built/geo.esm.js",
+  "main": "./built/geo.cjs",
+  "module": "./built/geo.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./src/geo.ts --platform=node --format=cjs --outfile=./built/geo.cjs.js",
-    "build:esm": "esbuild ./src/geo.ts --platform=neutral --format=esm --outfile=./built/geo.esm.js",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
-    "test": "jest --config=../../../package.json --roots=./packages/math/geo"
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
+    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/geo"
   },
   "dependencies": {
     "@id-sdk/vector": "^3.0.0-pre.5"

@@ -15,16 +15,14 @@
   "type": "module",
   "source": "./src/extent.ts",
   "types": "./built/extent.d.ts",
-  "main": "./built/extent.cjs.js",
-  "module": "./built/extent.esm.js",
+  "main": "./built/extent.cjs",
+  "module": "./built/extent.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./src/extent.ts --platform=node --format=cjs --outfile=./built/extent.cjs.js",
-    "build:esm": "esbuild ./src/extent.ts --platform=neutral --format=esm --outfile=./built/extent.esm.js",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
-    "test": "jest --config=../../../package.json --roots=./packages/math/extent"
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
+    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/extent"
   },
   "dependencies": {
     "@id-sdk/geo": "^3.0.0-pre.5",
