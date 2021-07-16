@@ -50,4 +50,4 @@ Module                | Description
 --------------------- | -------------
 [@id-sdk/util]        | 🧰 Collection of iD-sdk utility libraries
 
-[@id-sdk/util]: /packages/math/util
+[@id-sdk/util]: /packages/util
