@@ -24,8 +24,6 @@ export { utilGetAllNodes } from './osm';
 export { utilTagDiff } from './osm';
 export { utilTagText } from './osm';
 
-// export { utilRebind } from './rebind';
-
 export { utilSessionMutex } from './session_mutex';
 
 export { utilEditDistance } from './string';

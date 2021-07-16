@@ -19,17 +19,14 @@
   "module": "./built/util.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:cjs": "esbuild ./src/index.js --platform=node --format=cjs --bundle --external:'@id-sdk/*' --external:'aes-js' --outfile=./built/util.cjs",
-    "build:esm": "esbuild ./src/index.js --platform=neutral --format=esm --bundle --external:'@id-sdk/*' --external:'aes-js' --outfile=./built/util.mjs",
-    "build:types": "tsc",
-    "esbuild": "run-p build:cjs build:esm",
+    "build": "run-p esbuild tsc",
+    "esbuild": "node ./esbuild.js",
+    "tsc": "tsc",
     "test": "jest --config=../../package.json --roots=./packages/util"
   },
   "dependencies": {
     "aes-js": "^3.1.2",
-    "diacritics": "1.3.0",
-    "@id-sdk/extent": "^3.0.0-pre.5"
+    "diacritics": "1.3.0"
   },
   "publishConfig": {
     "access": "public"
