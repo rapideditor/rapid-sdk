@@ -1,4 +1,6 @@
-import { actionReverse } from '../actions/reverse';
+// import { actionReverse } from '../actions/reverse';  // TODO TEMPORARY
+import { actionReverse } from './reverse';  // TODO TEMPORARY
+
 import { osmIsInterestingTag } from './tags';
 import { osmWay } from './way';
 
