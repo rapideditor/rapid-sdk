@@ -1,8 +1,8 @@
 {
-  "name": "@id-sdk/projection",
+  "name": "@id-sdk/osm",
   "version": "3.0.0-pre.5",
-  "description": "Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates",
-  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/projection#readme",
+  "description": "Classes and functions for working with the OpenStreetMap data model",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/osm#readme",
   "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
@@ -13,21 +13,23 @@
   ],
   "files": ["built/", "src/"],
   "type": "module",
-  "source": "./src/projection.ts",
-  "types": "./built/projection.d.ts",
-  "main": "./built/projection.cjs",
-  "module": "./built/projection.mjs",
+  "source": "./src/index.js",
+  "types": "./built/index.d.ts",
+  "main": "./built/osm.cjs",
+  "module": "./built/osm.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
     "tsc": "tsc",
-    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/projection"
+    "test": "jest --config=../../package.json --roots=./packages/osm"
   },
   "dependencies": {
+    "@id-sdk/extent": "^3.0.0-pre.5",
+    "@id-sdk/geo": "^3.0.0-pre.5",
+    "@id-sdk/util": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5",
-    "d3-geo": "^3.0.1",
-    "d3-zoom": "^3.0.0"
+    "d3-geo": "^3.0.1"
   },
   "publishConfig": {
     "access": "public"

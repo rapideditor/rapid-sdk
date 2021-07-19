@@ -27,7 +27,7 @@
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5",
-    "d3-polygon": "^2.0.0"
+    "d3-polygon": "^3.0.1"
   },
   "publishConfig": {
     "access": "public"
