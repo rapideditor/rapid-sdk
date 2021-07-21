@@ -10,12 +10,11 @@ See: https://developers.google.com/maps/documentation/javascript/coordinates
 
 `npm install @id-sdk/tiler`
 
-This library is available in both ES5/CommonJS and ES6 module formats.
+This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
+For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 ```js
-const Tiler = require('@id-sdk/tiler').Tiler;   // CommonJS
-// or
-import { Tiler } from '@id-sdk/tiler';   // ES6
+import { Tiler } from '@id-sdk/tiler';
 ```
 
 

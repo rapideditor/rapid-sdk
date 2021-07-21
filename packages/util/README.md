@@ -10,12 +10,12 @@
 
 `npm install @id-sdk/util`
 
-This library is available in both ES5/CommonJS and ES6 module formats.
+This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
+For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 ```js
-const utilHashcode = require('@id-sdk/util').utilHashcode;   // CommonJS
-// or
-import { utilHashcode } from '@id-sdk/util';   // ES6
+import * as util from '@id-sdk/util';
+import { utilHashcode } from '@id-sdk/util';
 ```
 
 

@@ -9,12 +9,11 @@
 
 `npm install @id-sdk/extent`
 
-This library is available in both ES5/CommonJS and ES6 module formats.
+This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
+For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 ```js
-const Extent = require('@id-sdk/extent').Extent;   // CommonJS
-// or
-import { Extent } from '@id-sdk/extent';   // ES6
+import { Extent } from '@id-sdk/extent';
 ```
 
 

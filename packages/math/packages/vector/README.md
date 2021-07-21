@@ -9,14 +9,12 @@
 
 `npm install @id-sdk/vector`
 
-This library is available in both ES5/CommonJS and ES6 module formats.
+This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
+For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 ```js
-const vec = require('@id-sdk/vector');                 // CommonJS import all
-const vecEqual = require('@id-sdk/vector').vecEqual;   // CommonJS import named
-// or
-import * as vec from '@id-sdk/vector';         // ES6 import all
-import { vecEqual } from '@id-sdk/vector';     // ES6 import named
+import * as vec from '@id-sdk/vector';
+import { vecEqual } from '@id-sdk/vector';
 ```
 
 

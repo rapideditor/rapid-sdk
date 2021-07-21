@@ -1,7 +1,7 @@
-/**
- * @jest-environment jsdom
- */
-const util = require('..');
+/** @jest-environment jsdom */
+import 'jest-extended';
+import * as util from '..';
+
 
 describe('utilSessionMutex', () => {
   let a, b;

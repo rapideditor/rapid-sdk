@@ -1,4 +1,5 @@
-const util = require('..');
+import 'jest-extended';
+import * as util from '..';
 
 
 describe('utilEditDistance', () => {

@@ -15,6 +15,7 @@
     "map",
     "editor"
   ],
+  "type": "module",
   "private": true,
   "workspaces": [
     "packages/**"
@@ -40,9 +41,9 @@
     "build": "lerna run build",
     "clean": "lerna run clean --parallel",
     "esbuild": "lerna run esbuild",
-    "tsc": "lerna run tsc",
-    "test": "jest",
-    "pretty": "prettier --write \"./**/*.ts\""
+    "pretty": "prettier --write \"./**/*.ts\"",
+    "test": "lerna run test",
+    "tsc": "lerna run tsc"
   },
   "engines": {
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
@@ -67,7 +68,7 @@
       "**/tests/**/*.test.(ts|js)"
     ],
     "transform": {
-      "^.+\\.ts$": "ts-jest"
+      "^.+\\.(ts|js)$": "ts-jest"
     },
     "verbose": true
   },

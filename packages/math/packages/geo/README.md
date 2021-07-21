@@ -9,14 +9,12 @@
 
 `npm install @id-sdk/geo`
 
-This library is available in both ES5/CommonJS and ES6 module formats.
+This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
+For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 ```js
-const geo = require('@id-sdk/geo');                             // CommonJS import all
-const geoLatToMeters = require('@id-sdk/geo').geoLatToMeters;   // CommonJS import named
-// or
-import * as geo from '@id-sdk/geo';               // ES6 import all
-import { geoLatToMeters } from '@id-sdk/geo';     // ES6 import named
+import * as geo from '@id-sdk/geo';
+import { geoLatToMeters } from '@id-sdk/geo';
 ```
 
 

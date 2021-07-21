@@ -21,7 +21,7 @@
     "clean": "shx rm -rf ./built",
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
-    "test": "jest --no-cache --config=../../package.json --roots=./packages/osm",
+    "test-TODO": "jest --no-cache --config=../../package.json --roots=./packages/osm",
     "tsc": "tsc"
   },
   "dependencies": {

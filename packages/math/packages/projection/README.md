@@ -13,12 +13,11 @@
 
 `npm install @id-sdk/projection`
 
-This library is available in both ES5/CommonJS and ES6 module formats.
+This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
+For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 ```js
-const Projection = require('@id-sdk/projection').Projection;   // CommonJS
-// or
-import { Projection } from '@id-sdk/projection';   // ES6
+import { Projection } from '@id-sdk/projection';
 ```
 
 
