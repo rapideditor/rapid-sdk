@@ -1,5 +1,5 @@
 import 'jest-extended';
-import { Extent } from '..';
+import { Extent } from '../src/extent';
 import { Vec2 } from '@id-sdk/vector';
 
 describe('math/extent', () => {

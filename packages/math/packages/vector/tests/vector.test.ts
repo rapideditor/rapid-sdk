@@ -1,5 +1,5 @@
-import * as test from '..';
-import { Vec2, Edge } from '..';
+import * as test from '../src/vector';
+import { Vec2, Edge } from '../src/vector';
 
 const CLOSE = 6; // digits
 

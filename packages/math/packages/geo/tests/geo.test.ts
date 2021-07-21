@@ -1,5 +1,5 @@
 import 'jest-extended';
-import * as test from '..';
+import * as test from '../src/geo';
 import { Vec2 } from '@id-sdk/vector';
 
 describe('math/geo', () => {

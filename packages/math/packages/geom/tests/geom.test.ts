@@ -1,6 +1,6 @@
 import 'jest-extended';
-import * as test from '..';
-import { SSR } from '..';
+import * as test from '../src/geom';
+import { SSR } from '../src/geom';
 import { Vec2 } from '@id-sdk/vector';
 
 describe('math/geom', () => {

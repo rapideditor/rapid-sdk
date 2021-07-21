@@ -22,7 +22,7 @@
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
     "tsc": "tsc",
-    "test": "jest --config=../../../../package.json --roots=./packages/math/packages/extent"
+    "test": "jest --colors --config=../../../../package.json --roots=./packages/math/packages/extent"
   },
   "dependencies": {
     "@id-sdk/geo": "^3.0.0-pre.5",

@@ -65,7 +65,7 @@
     "setupFilesAfterEnv": ["jest-extended"],
     "testEnvironment": "node",
     "testMatch": [
-      "**/tests/**/*.test.(ts|js)"
+      "**/tests/*.test.(ts|js)"
     ],
     "transform": {
       "^.+\\.(ts|js)$": "ts-jest"

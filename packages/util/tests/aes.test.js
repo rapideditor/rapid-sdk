@@ -1,5 +1,5 @@
 import 'jest-extended';
-import * as util from '..';
+import * as util from '../src/index';
 
 
 describe('utilAes', () => {
