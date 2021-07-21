@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/vector.ts",
   "types": "./built/vector.d.ts",
-  "main": "./built/vector.cjs",
+  "main": "./built/vector.mjs",
   "module": "./built/vector.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/index.js",
   "types": "./built/index.d.ts",
-  "main": "./built/util.cjs",
+  "main": "./built/util.mjs",
   "module": "./built/util.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

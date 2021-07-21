@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/geo.ts",
   "types": "./built/geo.d.ts",
-  "main": "./built/geo.cjs",
+  "main": "./built/geo.mjs",
   "module": "./built/geo.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

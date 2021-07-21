@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./index.ts",
   "types": "./built/index.d.ts",
-  "main": "./built/math.cjs",
+  "main": "./built/math.mjs",
   "module": "./built/math.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

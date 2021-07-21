@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/geom.ts",
   "types": "./built/geom.d.ts",
-  "main": "./built/geom.cjs",
+  "main": "./built/geom.mjs",
   "module": "./built/geom.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

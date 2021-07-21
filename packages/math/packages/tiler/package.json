@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/tiler.ts",
   "types": "./built/tiler.d.ts",
-  "main": "./built/tiler.cjs",
+  "main": "./built/tiler.mjs",
   "module": "./built/tiler.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

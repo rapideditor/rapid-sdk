@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/extent.ts",
   "types": "./built/extent.d.ts",
-  "main": "./built/extent.cjs",
+  "main": "./built/extent.mjs",
   "module": "./built/extent.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",

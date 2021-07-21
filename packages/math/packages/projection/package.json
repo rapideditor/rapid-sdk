@@ -15,7 +15,7 @@
   "type": "module",
   "source": "./src/projection.ts",
   "types": "./built/projection.d.ts",
-  "main": "./built/projection.cjs",
+  "main": "./built/projection.mjs",
   "module": "./built/projection.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
