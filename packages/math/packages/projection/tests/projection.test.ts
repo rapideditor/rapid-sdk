@@ -1,4 +1,4 @@
-import { Projection, Transform } from '..';
+import { Projection, Transform } from '../src/projection';
 import { Vec2 } from '@id-sdk/vector';
 
 describe('math/projection', () => {

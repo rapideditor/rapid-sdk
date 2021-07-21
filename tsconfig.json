@@ -3,6 +3,7 @@
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
+    "esModuleInterop": true,
     "listEmittedFiles": true,
     "module": "ES2020",
     "moduleResolution": "node",

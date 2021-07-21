@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@id-sdk/vector": "^3.0.0-pre.5",
-    "d3-geo": "^3.0.1",
-    "d3-zoom": "^3.0.0"
+    "d3-geo": "^2.0.1",
+    "d3-zoom": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"

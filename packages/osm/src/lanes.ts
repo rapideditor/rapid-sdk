@@ -14,42 +14,42 @@ export function osmLanes(entity) {
   const bothways = laneDirections.bothways;
 
   // parse the piped string 'x|y|z' format
-  let turnLanes = {};
+  let turnLanes : any = {};
   turnLanes.unspecified = parseTurnLanes(tags['turn:lanes']);
   turnLanes.forward = parseTurnLanes(tags['turn:lanes:forward']);
   turnLanes.backward = parseTurnLanes(tags['turn:lanes:backward']);
 
-  let maxspeedLanes = {};
+  let maxspeedLanes : any = {};
   maxspeedLanes.unspecified = parseMaxspeedLanes(tags['maxspeed:lanes'], maxspeed);
   maxspeedLanes.forward = parseMaxspeedLanes(tags['maxspeed:lanes:forward'], maxspeed);
   maxspeedLanes.backward = parseMaxspeedLanes(tags['maxspeed:lanes:backward'], maxspeed);
 
-  let psvLanes = {};
+  let psvLanes : any = {};
   psvLanes.unspecified = parseMiscLanes(tags['psv:lanes']);
   psvLanes.forward = parseMiscLanes(tags['psv:lanes:forward']);
   psvLanes.backward = parseMiscLanes(tags['psv:lanes:backward']);
 
-  let busLanes = {};
+  let busLanes : any = {};
   busLanes.unspecified = parseMiscLanes(tags['bus:lanes']);
   busLanes.forward = parseMiscLanes(tags['bus:lanes:forward']);
   busLanes.backward = parseMiscLanes(tags['bus:lanes:backward']);
 
-  let taxiLanes = {};
+  let taxiLanes : any = {};
   taxiLanes.unspecified = parseMiscLanes(tags['taxi:lanes']);
   taxiLanes.forward = parseMiscLanes(tags['taxi:lanes:forward']);
   taxiLanes.backward = parseMiscLanes(tags['taxi:lanes:backward']);
 
-  let hovLanes = {};
+  let hovLanes : any = {};
   hovLanes.unspecified = parseMiscLanes(tags['hov:lanes']);
   hovLanes.forward = parseMiscLanes(tags['hov:lanes:forward']);
   hovLanes.backward = parseMiscLanes(tags['hov:lanes:backward']);
 
-  let hgvLanes = {};
+  let hgvLanes : any = {};
   hgvLanes.unspecified = parseMiscLanes(tags['hgv:lanes']);
   hgvLanes.forward = parseMiscLanes(tags['hgv:lanes:forward']);
   hgvLanes.backward = parseMiscLanes(tags['hgv:lanes:backward']);
 
-  let bicyclewayLanes = {};
+  let bicyclewayLanes : any = {};
   bicyclewayLanes.unspecified = parseBicycleWay(tags['bicycleway:lanes']);
   bicyclewayLanes.forward = parseBicycleWay(tags['bicycleway:lanes:forward']);
   bicyclewayLanes.backward = parseBicycleWay(tags['bicycleway:lanes:backward']);

@@ -48,18 +48,27 @@
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   },
   "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
     "collectCoverage": true,
     "coverageProvider": "v8",
     "coverageDirectory": "<rootDir>/.coverage",
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
+    "globals": {
+      "ts-jest": {
+        "useESM": true
+      }
     },
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
+    "setupFilesAfterEnv": ["jest-extended"],
+    "testEnvironment": "node",
     "testMatch": [
       "**/tests/**/*.test.(ts|js)"
     ],
-    "setupFilesAfterEnv": ["jest-extended"],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
     "verbose": true
   },
   "prettier": {

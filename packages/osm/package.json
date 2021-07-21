@@ -13,23 +13,23 @@
   ],
   "files": ["built/", "src/"],
   "type": "module",
-  "source": "./src/index.js",
+  "source": "./src/index.ts",
   "types": "./built/index.d.ts",
-  "main": "./built/osm.cjs",
+  "main": "./built/osm.mjs",
   "module": "./built/osm.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
-    "tsc": "tsc",
-    "test": "jest --config=../../package.json --roots=./packages/osm"
+    "test": "jest --no-cache --config=../../package.json --roots=./packages/osm",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.5",
     "@id-sdk/geo": "^3.0.0-pre.5",
     "@id-sdk/util": "^3.0.0-pre.5",
     "@id-sdk/vector": "^3.0.0-pre.5",
-    "d3-geo": "^3.0.1"
+    "d3-geo": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"
