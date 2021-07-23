@@ -1,6 +1,7 @@
 {
   "name": "@id-sdk/osm",
   "version": "3.0.0-pre.5",
+  "private": true,
   "description": "Classes and functions for working with the OpenStreetMap data model",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/osm#readme",
   "repository": "github:ideditor/id-sdk",

@@ -1,6 +1,7 @@
 {
   "name": "id-sdk",
   "version": "3.0.0-pre.1",
+  "private": true,
   "description": "Map editing made easy",
   "homepage": "https://github.com/ideditor/id-sdk#readme",
   "repository": "github:ideditor/id-sdk",
@@ -16,7 +17,6 @@
     "editor"
   ],
   "type": "module",
-  "private": true,
   "workspaces": [
     "packages/**"
   ],
