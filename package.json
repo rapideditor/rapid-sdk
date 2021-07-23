@@ -50,6 +50,9 @@
   },
   "jest": {
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/src/*.(ts|js)"
+    ],
     "coverageProvider": "v8",
     "coverageDirectory": "<rootDir>/.coverage",
     "extensionsToTreatAsEsm": [".ts"],
