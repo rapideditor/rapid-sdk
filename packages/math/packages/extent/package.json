@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/extent",
-  "version": "3.0.0-pre.5",
+  "version": "3.0.0-pre.6",
   "description": "Extent class for creating bounding boxes",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/extent#readme",
   "repository": "github:ideditor/id-sdk",
@@ -11,7 +11,10 @@
     "Danny Krause (https://github.com/vanreece)",
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
-  "files": ["built/", "src/"],
+  "files": [
+    "built/",
+    "src/"
+  ],
   "type": "module",
   "source": "./src/extent.ts",
   "types": "./built/extent.d.ts",
@@ -25,8 +28,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../../../package.json --roots=./packages/math/packages/extent"
   },
   "dependencies": {
-    "@id-sdk/geo": "^3.0.0-pre.5",
-    "@id-sdk/vector": "^3.0.0-pre.5"
+    "@id-sdk/geo": "^3.0.0-pre.6",
+    "@id-sdk/vector": "^3.0.0-pre.6"
   },
   "publishConfig": {
     "access": "public"

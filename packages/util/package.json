@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/util",
-  "version": "3.0.0-pre.5",
+  "version": "3.0.0-pre.6",
   "description": "util",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/util#readme",
   "repository": "github:ideditor/id-sdk",
@@ -11,7 +11,10 @@
     "Danny Krause (https://github.com/vanreece)",
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
-  "files": ["built/", "src/"],
+  "files": [
+    "built/",
+    "src/"
+  ],
   "type": "module",
   "source": "./src/index.js",
   "types": "./built/index.d.ts",

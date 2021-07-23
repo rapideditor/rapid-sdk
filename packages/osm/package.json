@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/osm",
-  "version": "3.0.0-pre.5",
+  "version": "3.0.0-pre.6",
   "private": true,
   "description": "Classes and functions for working with the OpenStreetMap data model",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/osm#readme",
@@ -12,7 +12,10 @@
     "Danny Krause (https://github.com/vanreece)",
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
-  "files": ["built/", "src/"],
+  "files": [
+    "built/",
+    "src/"
+  ],
   "type": "module",
   "source": "./src/index.ts",
   "types": "./built/index.d.ts",
@@ -26,10 +29,10 @@
     "tsc": "tsc"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.5",
-    "@id-sdk/geo": "^3.0.0-pre.5",
-    "@id-sdk/util": "^3.0.0-pre.5",
-    "@id-sdk/vector": "^3.0.0-pre.5",
+    "@id-sdk/extent": "^3.0.0-pre.6",
+    "@id-sdk/geo": "^3.0.0-pre.6",
+    "@id-sdk/util": "^3.0.0-pre.6",
+    "@id-sdk/vector": "^3.0.0-pre.6",
     "d3-geo": "^2.0.0"
   },
   "publishConfig": {

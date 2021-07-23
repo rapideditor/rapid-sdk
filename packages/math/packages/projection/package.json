@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/projection",
-  "version": "3.0.0-pre.5",
+  "version": "3.0.0-pre.6",
   "description": "Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/projection#readme",
   "repository": "github:ideditor/id-sdk",
@@ -11,7 +11,10 @@
     "Danny Krause (https://github.com/vanreece)",
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
-  "files": ["built/", "src/"],
+  "files": [
+    "built/",
+    "src/"
+  ],
   "type": "module",
   "source": "./src/projection.ts",
   "types": "./built/projection.d.ts",
@@ -25,7 +28,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../../../package.json --roots=./packages/math/packages/projection"
   },
   "dependencies": {
-    "@id-sdk/vector": "^3.0.0-pre.5",
+    "@id-sdk/vector": "^3.0.0-pre.6",
     "d3-geo": "^2.0.1",
     "d3-zoom": "^2.0.0"
   },
