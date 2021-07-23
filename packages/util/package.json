@@ -22,7 +22,7 @@
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
     "tsc": "tsc",
-    "test": "jest --colors --config=../../package.json --roots=./packages/util"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../package.json --roots=./packages/util"
   },
   "dependencies": {
     "aes-js": "^3.1.2",

@@ -22,8 +22,7 @@
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
     "tsc": "tsc",
-    "test": "jest --colors --config=./package.json",
-    "test-nope": "jest --colors --config=../../../../package.json --roots=./packages/math/packages/extent"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../../../package.json --roots=./packages/math/packages/extent"
   },
   "dependencies": {
     "@id-sdk/geo": "^3.0.0-pre.5",
@@ -31,22 +30,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-
-  "jest": {
-    "collectCoverage": true,
-    "coverageProvider": "v8",
-    "coverageDirectory": "<rootDir>/.coverage",
-    "setupFilesAfterEnv": [
-      "jest-extended"
-    ],
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/*.test.(ts|js)"
-    ],
-    "transform": {
-      "^.+$": ["esbuild-jest", { "sourcemap": "true"}]
-    },
-    "verbose": true
   }
 }

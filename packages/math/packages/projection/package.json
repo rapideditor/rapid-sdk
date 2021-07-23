@@ -22,7 +22,7 @@
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
     "tsc": "tsc",
-    "test": "jest --colors --config=../../../../package.json --roots=./packages/math/packages/projection"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../../../package.json --roots=./packages/math/packages/projection"
   },
   "dependencies": {
     "@id-sdk/vector": "^3.0.0-pre.5",

@@ -52,18 +52,19 @@
     "collectCoverage": true,
     "coverageProvider": "v8",
     "coverageDirectory": "<rootDir>/.coverage",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json"
+    "extensionsToTreatAsEsm": [".ts"],
+    "setupFilesAfterEnv": [
+      "jest-extended"
     ],
-    "setupFilesAfterEnv": ["jest-extended"],
     "testEnvironment": "node",
     "testMatch": [
       "**/tests/*.test.(ts|js)"
     ],
     "transform": {
-      "^.+$": ["esbuild-jest", { "sourcemap": "true" }]
+      "^.+\\.ts$": ["esbuild-jest", {
+        "format": "esm",
+        "sourcemap": "true"
+      }]
     },
     "verbose": true
   },
