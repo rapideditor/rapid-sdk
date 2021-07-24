@@ -82,6 +82,6 @@ export class Projection {
         const p: Vec2 = thiz.project([x, y]);
         this.stream.point(p[0], p[1]);
       }
-    }).stream();
+    }).stream;
   }
 }

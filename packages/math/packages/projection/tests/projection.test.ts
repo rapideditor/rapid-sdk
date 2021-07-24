@@ -244,7 +244,7 @@ describe('math/projection', () => {
   describe('#getStream', () => {
     it('gets a d3 transform stream', () => {
       const proj = new Projection(20, 30);
-      let s = proj.getStream();
+      let s = proj.getStream()();
       let p;
 
       s.stream = {

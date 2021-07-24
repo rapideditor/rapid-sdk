@@ -30,6 +30,7 @@
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.6",
     "@id-sdk/vector": "^3.0.0-pre.6",
+    "@types/d3-polygon": "^3.0.0",
     "d3-polygon": "^3.0.1"
   },
   "publishConfig": {
