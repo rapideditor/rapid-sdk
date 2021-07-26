@@ -1,7 +1,6 @@
 import 'jest-extended';
 import * as util from '../src/index';
 
-
 describe('utilCleanTags', () => {
   it('handles empty tags object', () => {
     const t = {};
@@ -16,7 +15,7 @@ describe('utilCleanTags', () => {
   });
 
   it('discards undefined values', () => {
-    const t = { 'foo': undefined };
+    const t = { foo: undefined };
     const result = util.utilCleanTags(t);
     expect(result).toStrictEqual({});
   });
@@ -63,9 +62,9 @@ describe('utilCleanTags', () => {
 
   it('does not clean description, note, fixme', () => {
     const t = {
-      'description': '   value',
-      'note': 'value  ',
-      'fixme': '   value  '
+      description: '   value',
+      note: 'value  ',
+      fixme: '   value  '
     };
     const result = util.utilCleanTags(t);
     expect(result).toStrictEqual(t);
@@ -73,23 +72,22 @@ describe('utilCleanTags', () => {
 
   it('uses semicolon-space delimiting for opening_hours, conditional: tags', () => {
     const t = {
-      'opening_hours': ' Mo-Su 08:00-18:00    ;Apr 10-15 off;Jun 08:00-14:00  ;  Aug off; Dec 25 off ',
-      'collection_times': '  Mo 10:00-12:00,12:30-15:00    ;Tu-Fr 08:00-12:00,12:30-15:00;Sa 08:00-12:00    ',
+      opening_hours:
+        ' Mo-Su 08:00-18:00    ;Apr 10-15 off;Jun 08:00-14:00  ;  Aug off; Dec 25 off ',
+      collection_times:
+        '  Mo 10:00-12:00,12:30-15:00    ;Tu-Fr 08:00-12:00,12:30-15:00;Sa 08:00-12:00    ',
       'maxspeed:conditional': '    120 @ (06:00-20:00)   ;80 @ wet  ',
       'restriction:conditional': '  no_u_turn @ (Mo-Fr 09:00-10:00,15:00-16:00;SH off)  '
     };
     const result = util.utilCleanTags(t);
     expect(result).toStrictEqual({
-      'opening_hours': 'Mo-Su 08:00-18:00; Apr 10-15 off; Jun 08:00-14:00; Aug off; Dec 25 off',
-      'collection_times': 'Mo 10:00-12:00,12:30-15:00; Tu-Fr 08:00-12:00,12:30-15:00; Sa 08:00-12:00',
+      opening_hours: 'Mo-Su 08:00-18:00; Apr 10-15 off; Jun 08:00-14:00; Aug off; Dec 25 off',
+      collection_times: 'Mo 10:00-12:00,12:30-15:00; Tu-Fr 08:00-12:00,12:30-15:00; Sa 08:00-12:00',
       'maxspeed:conditional': '120 @ (06:00-20:00); 80 @ wet',
       'restriction:conditional': 'no_u_turn @ (Mo-Fr 09:00-10:00,15:00-16:00; SH off)'
     });
   });
-
 });
-
-
 
 // describe('utilGetAllNodes', () => {
 //   const iD = {};  // fix
@@ -145,29 +143,43 @@ describe('utilCleanTags', () => {
 //   });
 // });
 
-
 describe('utilTagDiff', () => {
   const oldTags = { a: 'one', b: 'two', c: 'three' };
   const newTags = { a: 'one', b: 'three', d: 'four' };
   const diff = util.utilTagDiff(oldTags, newTags);
   expect(diff).toHaveLength(4);
   expect(diff[0]).toStrictEqual({
-    type: '-', key: 'b', oldVal: 'two', newVal: 'three', display: '- b=two'        // delete-modify
+    type: '-',
+    key: 'b',
+    oldVal: 'two',
+    newVal: 'three',
+    display: '- b=two' // delete-modify
   });
   expect(diff[1]).toStrictEqual({
-    type: '+', key: 'b', oldVal: 'two', newVal: 'three', display: '+ b=three'      // insert-modify
+    type: '+',
+    key: 'b',
+    oldVal: 'two',
+    newVal: 'three',
+    display: '+ b=three' // insert-modify
   });
   expect(diff[2]).toStrictEqual({
-    type: '-', key: 'c', oldVal: 'three', newVal: undefined, display: '- c=three'  // delete
+    type: '-',
+    key: 'c',
+    oldVal: 'three',
+    newVal: undefined,
+    display: '- c=three' // delete
   });
   expect(diff[3]).toStrictEqual({
-    type: '+', key: 'd', oldVal: undefined, newVal: 'four', display: '+ d=four'    // insert
+    type: '+',
+    key: 'd',
+    oldVal: undefined,
+    newVal: 'four',
+    display: '+ d=four' // insert
   });
 });
 
-
 describe('utilTagText', () => {
   expect(util.utilTagText({})).toEqual('');
-  expect(util.utilTagText({tags:{foo:'bar'}})).toEqual('foo=bar');
-  expect(util.utilTagText({tags:{foo:'bar',two:'three'}})).toEqual('foo=bar, two=three');
+  expect(util.utilTagText({ tags: { foo: 'bar' } })).toEqual('foo=bar');
+  expect(util.utilTagText({ tags: { foo: 'bar', two: 'three' } })).toEqual('foo=bar, two=three');
 });

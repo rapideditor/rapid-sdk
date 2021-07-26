@@ -1,9 +1,7 @@
 import 'jest-extended';
 import * as util from '../src/index';
 
-
 describe('utilAes', () => {
-
   it('encrypting and decrypting nothing yields nothing', () => {
     expect(util.utilAesEncrypt('')).toEqual('');
     expect(util.utilAesDecrypt('')).toEqual('');
@@ -17,6 +15,7 @@ describe('utilAes', () => {
   });
 
   it('encrypts and decrypts with a custom 16-bit key', () => {
+    // prettier-ignore
     const key = [
       216, 159, 213, 140, 129,  75,  80, 121,
        67, 201, 179, 120,  71, 237, 185,  42
@@ -28,6 +27,7 @@ describe('utilAes', () => {
   });
 
   it('encrypts and decrypts with a custom 24-bit key', () => {
+    // prettier-ignore
     const key = [
       180, 138, 124,  87, 157, 23, 209, 147,
        64,  65,  68, 206, 212, 79, 215, 114,
@@ -40,6 +40,7 @@ describe('utilAes', () => {
   });
 
   it('encrypts and decrypts with a custom 32-bit key', () => {
+    // prettier-ignore
     const key = [
         4,  48, 130, 253, 213, 139, 96,  178,
       170, 108, 127, 233, 167, 137, 181,  41,

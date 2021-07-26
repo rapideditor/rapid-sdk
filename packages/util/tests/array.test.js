@@ -1,7 +1,6 @@
 import 'jest-extended';
 import * as util from '../src/index';
 
-
 describe('utilArrayIdentical', () => {
   it('same Arrays are identical', () => {
     const a = [1, 2, 3];
@@ -31,12 +30,11 @@ describe('utilArrayIdentical', () => {
     const b = ['', 1];
     expect(util.utilArrayIdentical(a, b)).toBeFalse();
 
-    const c = [{foo: 'bar'}];
-    const d = [{foo: 'bar'}];
+    const c = [{ foo: 'bar' }];
+    const d = [{ foo: 'bar' }];
     expect(util.utilArrayIdentical(a, b)).toBeFalse();
   });
 });
-
 
 describe('utilArrayDifference', () => {
   it('returns difference of two Arrays', () => {
@@ -50,7 +48,6 @@ describe('utilArrayDifference', () => {
   });
 });
 
-
 describe('utilArrayIntersection', () => {
   it('returns intersection of two Arrays', () => {
     const a = [1, 2, 3];
@@ -62,7 +59,6 @@ describe('utilArrayIntersection', () => {
     expect(util.utilArrayIntersection(b, a)).toIncludeSameMembers([2, 3]);
   });
 });
-
 
 describe('utilArrayIntersection', () => {
   it('returns union of two Arrays', () => {
@@ -76,7 +72,6 @@ describe('utilArrayIntersection', () => {
   });
 });
 
-
 describe('utilArrayUniq', () => {
   it('utilArrayUniq returns unique values in an Array', () => {
     const a = [1, 1, 2, 3, 3];
@@ -84,7 +79,6 @@ describe('utilArrayUniq', () => {
     expect(util.utilArrayUniq(a)).toIncludeSameMembers([1, 2, 3]);
   });
 });
-
 
 describe('utilArrayChunk', () => {
   it('returns array split into given sized chunks', () => {
@@ -96,10 +90,12 @@ describe('utilArrayChunk', () => {
     // good chunkSizes
     expect(util.utilArrayChunk(a, 2)).toEqual([[1, 2], [3, 4], [5, 6], [7]]);
     expect(util.utilArrayChunk(a, 3)).toEqual([[1, 2, 3], [4, 5, 6], [7]]);
-    expect(util.utilArrayChunk(a, 4)).toEqual([[1, 2, 3, 4], [5, 6, 7]]);
+    expect(util.utilArrayChunk(a, 4)).toEqual([
+      [1, 2, 3, 4],
+      [5, 6, 7]
+    ]);
   });
 });
-
 
 describe('utilArrayFlatten', () => {
   it('utilArrayFlatten returns two level array as single level', () => {
@@ -107,7 +103,6 @@ describe('utilArrayFlatten', () => {
     expect(util.utilArrayFlatten(a)).toEqual([1, 2, 3, 4, 5, 6, 7]);
   });
 });
-
 
 describe('utilArrayGroupBy', () => {
   const pets = [
@@ -119,19 +114,30 @@ describe('utilArrayGroupBy', () => {
 
   it('groups by key property', () => {
     const expected = {
-      'Dog': [{type: 'Dog', name: 'Spot'}, {type: 'Dog', name: 'Rover'}],
-      'Cat': [{type: 'Cat', name: 'Tiger'}, {type: 'Cat', name: 'Leo'}]
+      Dog: [
+        { type: 'Dog', name: 'Spot' },
+        { type: 'Dog', name: 'Rover' }
+      ],
+      Cat: [
+        { type: 'Cat', name: 'Tiger' },
+        { type: 'Cat', name: 'Leo' }
+      ]
     };
     expect(util.utilArrayGroupBy(pets, 'type')).toEqual(expected);
   });
 
   it('groups by key function', () => {
     const expected = {
-      3: [{type: 'Cat', name: 'Leo'}],
-      4: [{type: 'Dog', name: 'Spot'}],
-      5: [{type: 'Cat', name: 'Tiger'}, {type: 'Dog', name: 'Rover'}]
+      3: [{ type: 'Cat', name: 'Leo' }],
+      4: [{ type: 'Dog', name: 'Spot' }],
+      5: [
+        { type: 'Cat', name: 'Tiger' },
+        { type: 'Dog', name: 'Rover' }
+      ]
     };
-    const keyFn = function(item) { return item.name.length; };
+    const keyFn = function (item) {
+      return item.name.length;
+    };
     expect(util.utilArrayGroupBy(pets, keyFn)).toEqual(expected);
   });
 
@@ -142,7 +148,6 @@ describe('utilArrayGroupBy', () => {
     expect(util.utilArrayGroupBy(pets)).toEqual(expected);
   });
 });
-
 
 describe('utilArrayUniqBy', () => {
   const pets = [
@@ -169,7 +174,9 @@ describe('utilArrayUniqBy', () => {
       //{ type: 'Dog', name: 'Rover' },   // not unique by name length
       { type: 'Cat', name: 'Leo' }
     ];
-    const keyFn = function(item) { return item.name.length; };
+    const keyFn = function (item) {
+      return item.name.length;
+    };
     expect(util.utilArrayUniqBy(pets, keyFn)).toEqual(expected);
   });
 

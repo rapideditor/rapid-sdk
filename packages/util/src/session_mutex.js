@@ -15,7 +15,10 @@ export function utilSessionMutex(name) {
 
   _mutex.lock = () => {
     if (_intervalID) return true;
-    let cookie = document.cookie.replace(new RegExp('(?:(?:^|.*;)\\s*' + name + '\\s*\\=\\s*([^;]*).*$)|^.*$'), '$1');
+    let cookie = document.cookie.replace(
+      new RegExp('(?:(?:^|.*;)\\s*' + name + '\\s*\\=\\s*([^;]*).*$)|^.*$'),
+      '$1'
+    );
     if (cookie) return false;
     renew();
     _intervalID = window.setInterval(renew, 4000);

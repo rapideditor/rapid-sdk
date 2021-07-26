@@ -1,7 +1,6 @@
 import 'jest-extended';
 import * as util from '../src/index';
 
-
 describe('utilObjectOmit', () => {
   it('omits keys', () => {
     const t = { a: 1, b: 2 };
@@ -10,4 +9,3 @@ describe('utilObjectOmit', () => {
     expect(util.utilObjectOmit(t, ['a', 'b'])).toStrictEqual({});
   });
 });
-

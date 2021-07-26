@@ -1,7 +1,6 @@
 import 'jest-extended';
 import * as util from '../src/index';
 
-
 describe('utilEditDistance', () => {
   it('returns zero for same strings', () => {
     expect(util.utilEditDistance('foo', 'foo')).toEqual(0);
@@ -20,7 +19,6 @@ describe('utilEditDistance', () => {
   });
 });
 
-
 describe('utilHashcode', () => {
   it('handles empty string', () => {
     expect(util.utilHashcode('')).toEqual(0);
@@ -30,33 +28,31 @@ describe('utilHashcode', () => {
   });
 });
 
-
 describe('utilStringQs', () => {
   it('converts a url querystring into an Object of k=v pairs', () => {
-    expect(util.utilStringQs('foo=bar')).toStrictEqual({foo: 'bar'});
-    expect(util.utilStringQs('foo=bar&one=2')).toStrictEqual({foo: 'bar', one: '2' });
+    expect(util.utilStringQs('foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
     expect(util.utilStringQs('')).toStrictEqual({});
   });
 
   it('trims leading # if present', () => {
-    expect(util.utilStringQs('#foo=bar')).toStrictEqual({foo: 'bar'});
-    expect(util.utilStringQs('#foo=bar&one=2')).toStrictEqual({foo: 'bar', one: '2' });
+    expect(util.utilStringQs('#foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('#foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
     expect(util.utilStringQs('#')).toStrictEqual({});
   });
 
   it('trims leading ? if present', () => {
-    expect(util.utilStringQs('?foo=bar')).toStrictEqual({foo: 'bar'});
-    expect(util.utilStringQs('?foo=bar&one=2')).toStrictEqual({foo: 'bar', one: '2' });
+    expect(util.utilStringQs('?foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('?foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
     expect(util.utilStringQs('?')).toStrictEqual({});
   });
 
   it('trims leading #? if present', () => {
-    expect(util.utilStringQs('#?foo=bar')).toStrictEqual({foo: 'bar'});
-    expect(util.utilStringQs('#?foo=bar&one=2')).toStrictEqual({foo: 'bar', one: '2' });
+    expect(util.utilStringQs('#?foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('#?foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
     expect(util.utilStringQs('#?')).toStrictEqual({});
   });
 });
-
 
 describe('utilQsString', () => {
   it('converts an Object of k=v pairs to a url querystring', () => {
@@ -71,7 +67,6 @@ describe('utilQsString', () => {
     expect(util.utilQsString({ map: '0/0/0' }, true)).toEqual('map=0/0/0');
   });
 });
-
 
 describe('utilUnicodeCharsCount', () => {
   it('counts empty string', () => {
@@ -102,7 +97,6 @@ describe('utilUnicodeCharsCount', () => {
     expect(util.utilUnicodeCharsCount('‍👩‍👩‍👧‍👧')).toBeOneOf([8, 12]);
     expect(util.utilUnicodeCharsCount('👩‍❤️‍💋‍👩')).toBeOneOf([8, 11]);
     expect(util.utilUnicodeCharsCount('😎😬😆😵😴😄🙂🤔')).toBeOneOf([8, 16]);
-
   });
 });
 
@@ -150,12 +144,14 @@ describe('utilUnicodeCharsTruncated', () => {
     expect(util.utilUnicodeCharsTruncated('👩‍❤️‍💋‍👩', 6)).toBeOneOf(['👩‍❤️‍💋', '👩‍❤️‍']);
     expect(util.utilUnicodeCharsTruncated('😎😬😆😵😴😄🙂🤔', 0)).toEqual('');
     expect(util.utilUnicodeCharsTruncated('😎😬😆😵😴😄🙂🤔', 4)).toBeOneOf(['😎😬😆😵', '😎😬']);
-    expect(util.utilUnicodeCharsTruncated('😎😬😆😵😴😄🙂🤔', 8)).toBeOneOf(['😎😬😆😵😴😄🙂🤔', '😎😬😆😵']);
+    expect(util.utilUnicodeCharsTruncated('😎😬😆😵😴😄🙂🤔', 8)).toBeOneOf([
+      '😎😬😆😵😴😄🙂🤔',
+      '😎😬😆😵'
+    ]);
     expect(util.utilUnicodeCharsTruncated('😎😬😆😵😴😄🙂🤔', 16)).toEqual('😎😬😆😵😴😄🙂🤔');
     expect(util.utilUnicodeCharsTruncated('😎😬😆😵😴😄🙂🤔', 255)).toEqual('😎😬😆😵😴😄🙂🤔');
   });
 });
-
 
 describe('utilSafeString', () => {
   it('replaces unsafe characters with _', () => {

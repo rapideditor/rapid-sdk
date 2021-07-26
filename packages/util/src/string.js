@@ -1,6 +1,5 @@
 import { remove as removeDiacritics } from 'diacritics';
 
-
 // Calculates Levenshtein distance between two strings
 // see:  https://en.wikipedia.org/wiki/Levenshtein_distance
 // first converts the strings to lowercase and replaces diacritic marks with ascii equivalents.
@@ -12,22 +11,29 @@ export function utilEditDistance(a, b) {
 
   let matrix = [];
   let i, j;
-  for (i = 0; i <= b.length; i++) { matrix[i] = [i]; }
-  for (j = 0; j <= a.length; j++) { matrix[0][j] = j; }
+  for (i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+  for (j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
   for (i = 1; i <= b.length; i++) {
     for (j = 1; j <= a.length; j++) {
-      if (b.charAt(i-1) === a.charAt(j-1)) {
-        matrix[i][j] = matrix[i-1][j-1];
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
       } else {
-        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
-          Math.min(matrix[i][j-1] + 1, // insertion
-          matrix[i-1][j] + 1)); // deletion
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+          Math.min(
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1
+          )
+        ); // deletion
       }
     }
   }
   return matrix[b.length][a.length];
 }
-
 
 // https://stackoverflow.com/questions/194846/is-there-any-kind-of-hash-code-function-in-javascript
 // https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
@@ -37,12 +43,11 @@ export function utilHashcode(str) {
 
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
   return hash;
 }
-
 
 // Object -> QueryString
 export function utilQsString(obj, noencode) {
@@ -52,29 +57,32 @@ export function utilQsString(obj, noencode) {
     return encodeURIComponent(s).replace(/(%2F|%3A|%2C|%7B|%7D)/g, decodeURIComponent);
   }
 
-  return Object.keys(obj).sort().map(key => {
-    return encodeURIComponent(key) + '=' + (
-      noencode ? softEncode(obj[key]) : encodeURIComponent(obj[key]));
-  }).join('&');
+  return Object.keys(obj)
+    .sort()
+    .map((key) => {
+      return (
+        encodeURIComponent(key) +
+        '=' +
+        (noencode ? softEncode(obj[key]) : encodeURIComponent(obj[key]))
+      );
+    })
+    .join('&');
 }
-
 
 // QueryString -> Object
 export function utilStringQs(str) {
-  let i = 0;  // advance past any leading '?' or '#' characters
+  let i = 0; // advance past any leading '?' or '#' characters
   while (i < str.length && (str[i] === '?' || str[i] === '#')) i++;
   str = str.slice(i);
 
   return str.split('&').reduce((obj, pair) => {
     const parts = pair.split('=');
     if (parts.length === 2) {
-      obj[parts[0]] = (null === parts[1]) ? '' : decodeURIComponent(parts[1]);
+      obj[parts[0]] = null === parts[1] ? '' : decodeURIComponent(parts[1]);
     }
     return obj;
   }, {});
 }
-
-
 
 // Returns the length of `str` in unicode characters. This can be less than
 // `String.length()` since a single unicode character can be composed of multiple
@@ -90,7 +98,6 @@ export function utilUnicodeCharsTruncated(str, limit) {
   return Array.from(str).slice(0, limit).join('');
 }
 
-
 // Returns version of `str` with all runs of special characters replaced by `_`;
 // suitable for HTML ids, classes, selectors, etc.
 export function utilSafeString(str) {
@@ -101,6 +108,5 @@ export function utilSafeString(str) {
 // used previously or that's present elsewhere in the document. Useful for preventing
 // browser-provided autofills or when embedding iD on pages with unknown elements.
 export function utilUniqueString(val) {
-  return 'ideditor-' + utilSafeString(val.toString()) + '-' + (new Date().getTime().toString());
+  return 'ideditor-' + utilSafeString(val.toString()) + '-' + new Date().getTime().toString();
 }
-

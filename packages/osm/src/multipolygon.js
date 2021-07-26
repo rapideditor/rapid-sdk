@@ -1,9 +1,8 @@
 // import { actionReverse } from '../actions/reverse';  // TODO TEMPORARY
-import { actionReverse } from './reverse';  // TODO TEMPORARY
+import { actionReverse } from './reverse'; // TODO TEMPORARY
 
 import { osmIsInterestingTag } from './tags';
 import { osmWay } from './way';
-
 
 // "Old" multipolyons, previously known as "simple" multipolygons, are as follows:
 //
@@ -14,97 +13,96 @@ import { osmWay } from './way';
 // Old multipolygons are no longer recommended but are still rendered as areas by iD.
 
 export function osmOldMultipolygonOuterMemberOfRelation(entity, graph) {
-    if (entity.type !== 'relation' ||
-        !entity.isMultipolygon()
-        || Object.keys(entity.tags).filter(osmIsInterestingTag).length > 1) {
+  if (
+    entity.type !== 'relation' ||
+    !entity.isMultipolygon() ||
+    Object.keys(entity.tags).filter(osmIsInterestingTag).length > 1
+  ) {
+    return false;
+  }
+
+  var outerMember;
+  for (var memberIndex in entity.members) {
+    var member = entity.members[memberIndex];
+    if (!member.role || member.role === 'outer') {
+      if (outerMember) return false;
+      if (member.type !== 'way') return false;
+      if (!graph.hasEntity(member.id)) return false;
+
+      outerMember = graph.entity(member.id);
+
+      if (Object.keys(outerMember.tags).filter(osmIsInterestingTag).length === 0) {
         return false;
+      }
     }
+  }
 
-    var outerMember;
-    for (var memberIndex in entity.members) {
-        var member = entity.members[memberIndex];
-        if (!member.role || member.role === 'outer') {
-            if (outerMember) return false;
-            if (member.type !== 'way') return false;
-            if (!graph.hasEntity(member.id)) return false;
-
-            outerMember = graph.entity(member.id);
-
-            if (Object.keys(outerMember.tags).filter(osmIsInterestingTag).length === 0) {
-                return false;
-            }
-        }
-    }
-
-    return outerMember;
+  return outerMember;
 }
 
 // For fixing up rendering of multipolygons with tags on the outer member.
 // https://github.com/openstreetmap/iD/issues/613
 export function osmIsOldMultipolygonOuterMember(entity, graph) {
-    if (entity.type !== 'way' ||
-        Object.keys(entity.tags).filter(osmIsInterestingTag).length === 0) {
-        return false;
+  if (entity.type !== 'way' || Object.keys(entity.tags).filter(osmIsInterestingTag).length === 0) {
+    return false;
+  }
+
+  var parents = graph.parentRelations(entity);
+  if (parents.length !== 1) return false;
+
+  var parent = parents[0];
+  if (!parent.isMultipolygon() || Object.keys(parent.tags).filter(osmIsInterestingTag).length > 1) {
+    return false;
+  }
+
+  var members = parent.members,
+    member;
+  for (var i = 0; i < members.length; i++) {
+    member = members[i];
+    if (member.id === entity.id && member.role && member.role !== 'outer') {
+      // Not outer member
+      return false;
     }
-
-    var parents = graph.parentRelations(entity);
-    if (parents.length !== 1) return false;
-
-    var parent = parents[0];
-    if (!parent.isMultipolygon() ||
-        Object.keys(parent.tags).filter(osmIsInterestingTag).length > 1) {
-        return false;
+    if (member.id !== entity.id && (!member.role || member.role === 'outer')) {
+      // Not a simple multipolygon
+      return false;
     }
+  }
 
-    var members = parent.members, member;
-    for (var i = 0; i < members.length; i++) {
-        member = members[i];
-        if (member.id === entity.id && member.role && member.role !== 'outer') {
-            // Not outer member
-            return false;
-        }
-        if (member.id !== entity.id && (!member.role || member.role === 'outer')) {
-            // Not a simple multipolygon
-            return false;
-        }
-    }
-
-    return parent;
+  return parent;
 }
-
 
 export function osmOldMultipolygonOuterMember(entity, graph) {
-    if (entity.type !== 'way') return false;
+  if (entity.type !== 'way') return false;
 
-    var parents = graph.parentRelations(entity);
-    if (parents.length !== 1) return false;
+  var parents = graph.parentRelations(entity);
+  if (parents.length !== 1) return false;
 
-    var parent = parents[0];
-    if (!parent.isMultipolygon() ||
-        Object.keys(parent.tags).filter(osmIsInterestingTag).length > 1) {
-        return false;
+  var parent = parents[0];
+  if (!parent.isMultipolygon() || Object.keys(parent.tags).filter(osmIsInterestingTag).length > 1) {
+    return false;
+  }
+
+  var members = parent.members,
+    member,
+    outerMember;
+  for (var i = 0; i < members.length; i++) {
+    member = members[i];
+    if (!member.role || member.role === 'outer') {
+      if (outerMember) return false; // Not a simple multipolygon
+      outerMember = member;
     }
+  }
 
-    var members = parent.members, member, outerMember;
-    for (var i = 0; i < members.length; i++) {
-        member = members[i];
-        if (!member.role || member.role === 'outer') {
-            if (outerMember) return false; // Not a simple multipolygon
-            outerMember = member;
-        }
-    }
+  if (!outerMember) return false;
 
-    if (!outerMember) return false;
+  var outerEntity = graph.hasEntity(outerMember.id);
+  if (!outerEntity || !Object.keys(outerEntity.tags).filter(osmIsInterestingTag).length) {
+    return false;
+  }
 
-    var outerEntity = graph.hasEntity(outerMember.id);
-    if (!outerEntity ||
-        !Object.keys(outerEntity.tags).filter(osmIsInterestingTag).length) {
-        return false;
-    }
-
-    return outerEntity;
+  return outerEntity;
 }
-
 
 // Join `toJoin` array into sequences of connecting ways.
 
@@ -132,104 +130,109 @@ export function osmOldMultipolygonOuterMember(entity, graph) {
 // false) and non-way members are ignored.
 //
 export function osmJoinWays(toJoin, graph) {
-    function resolve(member) {
-        return graph.childNodes(graph.entity(member.id));
+  function resolve(member) {
+    return graph.childNodes(graph.entity(member.id));
+  }
+
+  function reverse(item) {
+    var action = actionReverse(item.id, { reverseOneway: true });
+    sequences.actions.push(action);
+    return item instanceof osmWay ? action(graph).entity(item.id) : item;
+  }
+
+  // make a copy containing only the items to join
+  toJoin = toJoin.filter(function (member) {
+    return member.type === 'way' && graph.hasEntity(member.id);
+  });
+
+  // Are the things we are joining relation members or `osmWays`?
+  // If `osmWays`, skip the "prefer a forward path" code below (see #4872)
+  var i;
+  var joinAsMembers = true;
+  for (i = 0; i < toJoin.length; i++) {
+    if (toJoin[i] instanceof osmWay) {
+      joinAsMembers = false;
+      break;
     }
+  }
 
-    function reverse(item) {
-        var action = actionReverse(item.id, { reverseOneway: true });
-        sequences.actions.push(action);
-        return (item instanceof osmWay) ? action(graph).entity(item.id) : item;
-    }
+  var sequences = [];
+  sequences.actions = [];
 
-    // make a copy containing only the items to join
-    toJoin = toJoin.filter(function(member) {
-        return member.type === 'way' && graph.hasEntity(member.id);
-    });
+  while (toJoin.length) {
+    // start a new sequence
+    var item = toJoin.shift();
+    var currWays = [item];
+    var currNodes = resolve(item).slice();
 
-    // Are the things we are joining relation members or `osmWays`?
-    // If `osmWays`, skip the "prefer a forward path" code below (see #4872)
-    var i;
-    var joinAsMembers = true;
-    for (i = 0; i < toJoin.length; i++) {
-        if (toJoin[i] instanceof osmWay) {
-            joinAsMembers = false;
-            break;
-        }
-    }
-
-    var sequences = [];
-    sequences.actions = [];
-
+    // add to it
     while (toJoin.length) {
-        // start a new sequence
-        var item = toJoin.shift();
-        var currWays = [item];
-        var currNodes = resolve(item).slice();
+      var start = currNodes[0];
+      var end = currNodes[currNodes.length - 1];
+      var fn = null;
+      var nodes = null;
 
-        // add to it
-        while (toJoin.length) {
-            var start = currNodes[0];
-            var end = currNodes[currNodes.length - 1];
-            var fn = null;
-            var nodes = null;
+      // Find the next way/member to join.
+      for (i = 0; i < toJoin.length; i++) {
+        item = toJoin[i];
+        nodes = resolve(item);
 
-            // Find the next way/member to join.
-            for (i = 0; i < toJoin.length; i++) {
-                item = toJoin[i];
-                nodes = resolve(item);
-
-                // (for member ordering only, not way ordering - see #4872)
-                // Strongly prefer to generate a forward path that preserves the order
-                // of the members array. For multipolygons and most relations, member
-                // order does not matter - but for routes, it does. (see #4589)
-                // If we started this sequence backwards (i.e. next member way attaches to
-                // the start node and not the end node), reverse the initial way before continuing.
-                if (joinAsMembers && currWays.length === 1 && nodes[0] !== end && nodes[nodes.length - 1] !== end &&
-                    (nodes[nodes.length - 1] === start || nodes[0] === start)
-                ) {
-                    currWays[0] = reverse(currWays[0]);
-                    currNodes.reverse();
-                    start = currNodes[0];
-                    end = currNodes[currNodes.length - 1];
-                }
-
-                if (nodes[0] === end) {
-                    fn = currNodes.push;               // join to end
-                    nodes = nodes.slice(1);
-                    break;
-                } else if (nodes[nodes.length - 1] === end) {
-                    fn = currNodes.push;               // join to end
-                    nodes = nodes.slice(0, -1).reverse();
-                    item = reverse(item);
-                    break;
-                } else if (nodes[nodes.length - 1] === start) {
-                    fn = currNodes.unshift;            // join to beginning
-                    nodes = nodes.slice(0, -1);
-                    break;
-                } else if (nodes[0] === start) {
-                    fn = currNodes.unshift;            // join to beginning
-                    nodes = nodes.slice(1).reverse();
-                    item = reverse(item);
-                    break;
-                } else {
-                    fn = nodes = null;
-                }
-            }
-
-            if (!nodes) {     // couldn't find a joinable way/member
-                break;
-            }
-
-            fn.apply(currWays, [item]);
-            fn.apply(currNodes, nodes);
-
-            toJoin.splice(i, 1);
+        // (for member ordering only, not way ordering - see #4872)
+        // Strongly prefer to generate a forward path that preserves the order
+        // of the members array. For multipolygons and most relations, member
+        // order does not matter - but for routes, it does. (see #4589)
+        // If we started this sequence backwards (i.e. next member way attaches to
+        // the start node and not the end node), reverse the initial way before continuing.
+        if (
+          joinAsMembers &&
+          currWays.length === 1 &&
+          nodes[0] !== end &&
+          nodes[nodes.length - 1] !== end &&
+          (nodes[nodes.length - 1] === start || nodes[0] === start)
+        ) {
+          currWays[0] = reverse(currWays[0]);
+          currNodes.reverse();
+          start = currNodes[0];
+          end = currNodes[currNodes.length - 1];
         }
 
-        currWays.nodes = currNodes;
-        sequences.push(currWays);
+        if (nodes[0] === end) {
+          fn = currNodes.push; // join to end
+          nodes = nodes.slice(1);
+          break;
+        } else if (nodes[nodes.length - 1] === end) {
+          fn = currNodes.push; // join to end
+          nodes = nodes.slice(0, -1).reverse();
+          item = reverse(item);
+          break;
+        } else if (nodes[nodes.length - 1] === start) {
+          fn = currNodes.unshift; // join to beginning
+          nodes = nodes.slice(0, -1);
+          break;
+        } else if (nodes[0] === start) {
+          fn = currNodes.unshift; // join to beginning
+          nodes = nodes.slice(1).reverse();
+          item = reverse(item);
+          break;
+        } else {
+          fn = nodes = null;
+        }
+      }
+
+      if (!nodes) {
+        // couldn't find a joinable way/member
+        break;
+      }
+
+      fn.apply(currWays, [item]);
+      fn.apply(currNodes, nodes);
+
+      toJoin.splice(i, 1);
     }
 
-    return sequences;
+    currWays.nodes = currNodes;
+    sequences.push(currWays);
+  }
+
+  return sequences;
 }

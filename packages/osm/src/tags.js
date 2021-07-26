@@ -1,11 +1,13 @@
 export function osmIsInterestingTag(key) {
-  return key !== 'attribution' &&
+  return (
+    key !== 'attribution' &&
     key !== 'created_by' &&
     key !== 'source' &&
     key !== 'odbl' &&
     key.indexOf('source:') !== 0 &&
     key.indexOf('source_ref') !== 0 && // purposely exclude colon
-    key.indexOf('tiger:') !== 0;
+    key.indexOf('tiger:') !== 0
+  );
 }
 
 export let osmAreaKeys = {};
@@ -64,12 +66,10 @@ export function osmSetVertexTags(value) {
 export function osmNodeGeometriesForTags(nodeTags) {
   let geometries = {};
   for (let key in nodeTags) {
-    if (osmPointTags[key] &&
-      (osmPointTags[key]['*'] || osmPointTags[key][nodeTags[key]])) {
+    if (osmPointTags[key] && (osmPointTags[key]['*'] || osmPointTags[key][nodeTags[key]])) {
       geometries.point = true;
     }
-    if (osmVertexTags[key] &&
-      (osmVertexTags[key]['*'] || osmVertexTags[key][nodeTags[key]])) {
+    if (osmVertexTags[key] && (osmVertexTags[key]['*'] || osmVertexTags[key][nodeTags[key]])) {
       geometries.vertex = true;
     }
     // break early if both are already supported
@@ -79,111 +79,150 @@ export function osmNodeGeometriesForTags(nodeTags) {
 }
 
 export let osmOneWayTags = {
-  'aerialway': {
-    'chair_lift': true,
-    'drag_lift': true,
+  aerialway: {
+    chair_lift: true,
+    drag_lift: true,
     'j-bar': true,
-    'magic_carpet': true,
-    'mixed_lift': true,
-    'platter': true,
-    'rope_tow': true,
+    magic_carpet: true,
+    mixed_lift: true,
+    platter: true,
+    rope_tow: true,
     't-bar': true,
-    'zip_line': true
+    zip_line: true
   },
-  'highway': {
-    'motorway': true
+  highway: {
+    motorway: true
   },
-  'junction': {
-    'circular': true,
-    'roundabout': true
+  junction: {
+    circular: true,
+    roundabout: true
   },
-  'man_made': {
-    'goods_conveyor': true,
+  man_made: {
+    goods_conveyor: true,
     'piste:halfpipe': true
   },
   'piste:type': {
-    'downhill': true,
-    'sled': true,
-    'yes': true
+    downhill: true,
+    sled: true,
+    yes: true
   },
-  'waterway': {
-    'canal': true,
-    'ditch': true,
-    'drain': true,
-    'fish_pass': true,
-    'river': true,
-    'stream': true,
-    'tidal_channel': true
+  waterway: {
+    canal: true,
+    ditch: true,
+    drain: true,
+    fish_pass: true,
+    river: true,
+    stream: true,
+    tidal_channel: true
   }
 };
 
 // solid and smooth surfaces akin to the assumed default road surface in OSM
 export let osmPavedTags = {
-  'surface': {
-    'paved': true,
-    'asphalt': true,
-    'concrete': true,
+  surface: {
+    paved: true,
+    asphalt: true,
+    concrete: true,
     'concrete:lanes': true,
     'concrete:plates': true
   },
-  'tracktype': {
-    'grade1': true
+  tracktype: {
+    grade1: true
   }
 };
 
 // solid, if somewhat uncommon surfaces with a high range of smoothness
 export let osmSemipavedTags = {
-  'surface': {
-    'cobblestone': true,
+  surface: {
+    cobblestone: true,
     'cobblestone:flattened': true,
-    'unhewn_cobblestone': true,
-    'sett': true,
-    'paving_stones': true,
-    'metal': true,
-    'wood': true
+    unhewn_cobblestone: true,
+    sett: true,
+    paving_stones: true,
+    metal: true,
+    wood: true
   }
 };
 
 export let osmRightSideIsInsideTags = {
-  'natural': {
-    'cliff': true,
-    'coastline': 'coastline',
+  natural: {
+    cliff: true,
+    coastline: 'coastline'
   },
-  'barrier': {
-    'retaining_wall': true,
-    'kerb': true,
-    'guard_rail': true,
-    'city_wall': true,
+  barrier: {
+    retaining_wall: true,
+    kerb: true,
+    guard_rail: true,
+    city_wall: true
   },
-  'man_made': {
-    'embankment': true
+  man_made: {
+    embankment: true
   },
-  'waterway': {
-    'weir': true
+  waterway: {
+    weir: true
   }
 };
 
 // "highway" tag values for pedestrian or vehicle right-of-ways that make up the routable network
 // (does not include `raceway`)
 export let osmRoutableHighwayTagValues = {
-  motorway: true, trunk: true, primary: true, secondary: true, tertiary: true, residential: true,
-  motorway_link: true, trunk_link: true, primary_link: true, secondary_link: true, tertiary_link: true,
-  unclassified: true, road: true, service: true, track: true, living_street: true, bus_guideway: true,
-  path: true, footway: true, cycleway: true, bridleway: true, pedestrian: true, corridor: true, steps: true
+  motorway: true,
+  trunk: true,
+  primary: true,
+  secondary: true,
+  tertiary: true,
+  residential: true,
+  motorway_link: true,
+  trunk_link: true,
+  primary_link: true,
+  secondary_link: true,
+  tertiary_link: true,
+  unclassified: true,
+  road: true,
+  service: true,
+  track: true,
+  living_street: true,
+  bus_guideway: true,
+  path: true,
+  footway: true,
+  cycleway: true,
+  bridleway: true,
+  pedestrian: true,
+  corridor: true,
+  steps: true
 };
 // "highway" tag values that generally do not allow motor vehicles
 export let osmPathHighwayTagValues = {
-  path: true, footway: true, cycleway: true, bridleway: true, pedestrian: true, corridor: true, steps: true
+  path: true,
+  footway: true,
+  cycleway: true,
+  bridleway: true,
+  pedestrian: true,
+  corridor: true,
+  steps: true
 };
 
 // "railway" tag values representing existing railroad tracks (purposely does not include 'abandoned')
 export let osmRailwayTrackTagValues = {
-  rail: true, light_rail: true, tram: true, subway: true,
-  monorail: true, funicular: true, miniature: true, narrow_gauge: true,
-  disused: true, preserved: true
+  rail: true,
+  light_rail: true,
+  tram: true,
+  subway: true,
+  monorail: true,
+  funicular: true,
+  miniature: true,
+  narrow_gauge: true,
+  disused: true,
+  preserved: true
 };
 
 // "waterway" tag values for line features representing water flow
 export let osmFlowingWaterwayTagValues = {
-  canal: true, ditch: true, drain: true, fish_pass: true, river: true, stream: true, tidal_channel: true
+  canal: true,
+  ditch: true,
+  drain: true,
+  fish_pass: true,
+  river: true,
+  stream: true,
+  tidal_channel: true
 };

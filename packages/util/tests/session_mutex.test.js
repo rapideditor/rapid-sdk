@@ -2,7 +2,6 @@
 import 'jest-extended';
 import * as util from '../src/index';
 
-
 describe('utilSessionMutex', () => {
   let a, b;
 

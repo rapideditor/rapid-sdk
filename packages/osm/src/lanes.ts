@@ -1,4 +1,3 @@
-
 export function osmLanes(entity) {
   if (entity.type !== 'way') return null;
   if (!entity.tags.highway) return null;
@@ -14,42 +13,42 @@ export function osmLanes(entity) {
   const bothways = laneDirections.bothways;
 
   // parse the piped string 'x|y|z' format
-  let turnLanes : any = {};
+  let turnLanes: any = {};
   turnLanes.unspecified = parseTurnLanes(tags['turn:lanes']);
   turnLanes.forward = parseTurnLanes(tags['turn:lanes:forward']);
   turnLanes.backward = parseTurnLanes(tags['turn:lanes:backward']);
 
-  let maxspeedLanes : any = {};
+  let maxspeedLanes: any = {};
   maxspeedLanes.unspecified = parseMaxspeedLanes(tags['maxspeed:lanes'], maxspeed);
   maxspeedLanes.forward = parseMaxspeedLanes(tags['maxspeed:lanes:forward'], maxspeed);
   maxspeedLanes.backward = parseMaxspeedLanes(tags['maxspeed:lanes:backward'], maxspeed);
 
-  let psvLanes : any = {};
+  let psvLanes: any = {};
   psvLanes.unspecified = parseMiscLanes(tags['psv:lanes']);
   psvLanes.forward = parseMiscLanes(tags['psv:lanes:forward']);
   psvLanes.backward = parseMiscLanes(tags['psv:lanes:backward']);
 
-  let busLanes : any = {};
+  let busLanes: any = {};
   busLanes.unspecified = parseMiscLanes(tags['bus:lanes']);
   busLanes.forward = parseMiscLanes(tags['bus:lanes:forward']);
   busLanes.backward = parseMiscLanes(tags['bus:lanes:backward']);
 
-  let taxiLanes : any = {};
+  let taxiLanes: any = {};
   taxiLanes.unspecified = parseMiscLanes(tags['taxi:lanes']);
   taxiLanes.forward = parseMiscLanes(tags['taxi:lanes:forward']);
   taxiLanes.backward = parseMiscLanes(tags['taxi:lanes:backward']);
 
-  let hovLanes : any = {};
+  let hovLanes: any = {};
   hovLanes.unspecified = parseMiscLanes(tags['hov:lanes']);
   hovLanes.forward = parseMiscLanes(tags['hov:lanes:forward']);
   hovLanes.backward = parseMiscLanes(tags['hov:lanes:backward']);
 
-  let hgvLanes : any = {};
+  let hgvLanes: any = {};
   hgvLanes.unspecified = parseMiscLanes(tags['hgv:lanes']);
   hgvLanes.forward = parseMiscLanes(tags['hgv:lanes:forward']);
   hgvLanes.backward = parseMiscLanes(tags['hgv:lanes:backward']);
 
-  let bicyclewayLanes : any = {};
+  let bicyclewayLanes: any = {};
   bicyclewayLanes.unspecified = parseBicycleWay(tags['bicycleway:lanes']);
   bicyclewayLanes.forward = parseBicycleWay(tags['bicycleway:lanes:forward']);
   bicyclewayLanes.backward = parseBicycleWay(tags['bicycleway:lanes:backward']);
@@ -91,7 +90,6 @@ export function osmLanes(entity) {
   };
 }
 
-
 function getLaneCount(tags, isOneWay) {
   let count;
   if (tags.lanes) {
@@ -112,7 +110,6 @@ function getLaneCount(tags, isOneWay) {
   return count;
 }
 
-
 function parseMaxspeed(tags) {
   const maxspeed = tags.maxspeed;
   if (!maxspeed) return;
@@ -123,7 +120,6 @@ function parseMaxspeed(tags) {
   return parseInt(maxspeed, 10);
 }
 
-
 function parseLaneDirections(tags, isOneWay, laneCount) {
   let forward = parseInt(tags['lanes:forward'], 10);
   let backward = parseInt(tags['lanes:backward'], 10);
@@ -133,22 +129,18 @@ function parseLaneDirections(tags, isOneWay, laneCount) {
     forward = 0;
     bothways = 0;
     backward = laneCount;
-
   } else if (isOneWay) {
     forward = laneCount;
     bothways = 0;
     backward = 0;
-
   } else if (isNaN(forward) && isNaN(backward)) {
     backward = Math.floor((laneCount - bothways) / 2);
     forward = laneCount - bothways - backward;
-
   } else if (isNaN(forward)) {
     if (backward > laneCount - bothways) {
       backward = laneCount - bothways;
     }
     forward = laneCount - bothways - backward;
-
   } else if (isNaN(backward)) {
     if (forward > laneCount - bothways) {
       forward = laneCount - bothways;
@@ -163,66 +155,60 @@ function parseLaneDirections(tags, isOneWay, laneCount) {
   };
 }
 
-
 function parseTurnLanes(tag) {
   if (!tag) return;
 
   const validValues = [
-    'left', 'slight_left', 'sharp_left', 'through', 'right', 'slight_right',
-    'sharp_right', 'reverse', 'merge_to_left', 'merge_to_right', 'none'
+    'left',
+    'slight_left',
+    'sharp_left',
+    'through',
+    'right',
+    'slight_right',
+    'sharp_right',
+    'reverse',
+    'merge_to_left',
+    'merge_to_right',
+    'none'
   ];
 
-  return tag.split('|')
-    .map(s => {
-      return (s || 'none')
-        .split(';')
-        .map(d => validValues.indexOf(d) === -1 ? 'unknown': d);
-    });
+  return tag.split('|').map((s) => {
+    return (s || 'none').split(';').map((d) => (validValues.indexOf(d) === -1 ? 'unknown' : d));
+  });
 }
-
 
 function parseMaxspeedLanes(tag, maxspeed) {
   if (!tag) return;
 
-  return tag.split('|')
-    .map(s => {
-      if (s === 'none') return s;
-      const m = parseInt(s, 10);
-      if (s === '' || m === maxspeed) return null;
-      return isNaN(m) ? 'unknown' : m;
-    });
+  return tag.split('|').map((s) => {
+    if (s === 'none') return s;
+    const m = parseInt(s, 10);
+    if (s === '' || m === maxspeed) return null;
+    return isNaN(m) ? 'unknown' : m;
+  });
 }
-
 
 function parseMiscLanes(tag) {
   if (!tag) return;
 
-  const validValues = [
-    'yes', 'no', 'designated'
-  ];
+  const validValues = ['yes', 'no', 'designated'];
 
-  return tag.split('|')
-    .map(s => {
-      if (s === '') s = 'no';
-      return validValues.indexOf(s) === -1 ? 'unknown' : s;
-    });
+  return tag.split('|').map((s) => {
+    if (s === '') s = 'no';
+    return validValues.indexOf(s) === -1 ? 'unknown' : s;
+  });
 }
-
 
 function parseBicycleWay(tag) {
   if (!tag) return;
 
-  const validValues = [
-    'yes', 'no', 'designated', 'lane'
-  ];
+  const validValues = ['yes', 'no', 'designated', 'lane'];
 
-  return tag.split('|')
-    .map(s => {
-      if (s === '') s = 'no';
-      return validValues.indexOf(s) === -1 ? 'unknown' : s;
-    });
+  return tag.split('|').map((s) => {
+    if (s === '') s = 'no';
+    return validValues.indexOf(s) === -1 ? 'unknown' : s;
+  });
 }
-
 
 function mapToLanesObj(lanesObj, data, key) {
   if (data.forward) {

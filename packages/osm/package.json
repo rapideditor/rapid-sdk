@@ -25,7 +25,7 @@
     "clean": "shx rm -rf ./built",
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
-    "test-TODO": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --no-cache --config=../../package.json --roots=./packages/osm",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --no-cache --config=../../package.json --roots=./packages/osm",
     "tsc": "tsc"
   },
   "dependencies": {

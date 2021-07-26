@@ -1,6 +1,5 @@
 import { utilArrayUnion } from './array';
 
-
 //
 //
 //
@@ -16,7 +15,6 @@ export function utilCleanTags(tags) {
 
   return out;
 
-
   function cleanValue(k, v) {
     function keepSpaces(k) {
       return /_hours|_times|:conditional$/.test(k);
@@ -29,24 +27,19 @@ export function utilCleanTags(tags) {
 
     let cleaned = v
       .split(';')
-      .map(str => str.trim())
+      .map((str) => str.trim())
       .join(keepSpaces(k) ? '; ' : ';');
 
     // The code below is not intended to validate websites and emails.
     // It is only intended to prevent obvious copy-paste errors. (#2323)
     // clean website- and email-like tags
-    if (k.indexOf('website') !== -1 ||
-      k.indexOf('email') !== -1 ||
-      cleaned.indexOf('http') === 0) {
-      cleaned = cleaned
-        .replace(/[\u200B-\u200F\uFEFF]/g, '');  // strip LRM and other zero width chars
+    if (k.indexOf('website') !== -1 || k.indexOf('email') !== -1 || cleaned.indexOf('http') === 0) {
+      cleaned = cleaned.replace(/[\u200B-\u200F\uFEFF]/g, ''); // strip LRM and other zero width chars
     }
 
     return cleaned;
   }
 }
-
-
 
 // Returns a single object containing the tags of all the given entities.
 // Example:
@@ -71,29 +64,31 @@ export function utilCombinedTags(entityIDs, graph) {
   let tagCounts = {};
   let allKeys = new Set();
 
-  const entities = entityIDs
-    .map(entityID => graph.hasEntity(entityID))
-    .filter(Boolean);
+  const entities = entityIDs.map((entityID) => graph.hasEntity(entityID)).filter(Boolean);
 
   // gather the aggregate keys
-  entities.forEach(entity => {
+  entities.forEach((entity) => {
     const keys = Object.keys(entity.tags).filter(Boolean);
-    keys.forEach(key => allKeys.add(key));
+    keys.forEach((key) => allKeys.add(key));
   });
 
-  entities.forEach(entity => {
-    allKeys.forEach(k => {
-      let v = entity.tags[k];  // purposely allow `undefined`
+  entities.forEach((entity) => {
+    allKeys.forEach((k) => {
+      let v = entity.tags[k]; // purposely allow `undefined`
 
-      if (!tags.hasOwnProperty(k)) {  // first value, set as raw
+      if (!tags.hasOwnProperty(k)) {
+        // first value, set as raw
         tags[k] = v;
       } else {
         if (!Array.isArray(tags[k])) {
-          if (tags[k] !== v) {  // first alternate value, replace single value with array
+          if (tags[k] !== v) {
+            // first alternate value, replace single value with array
             tags[k] = [tags[k], v];
           }
-        } else { // type is array
-          if (tags[k].indexOf(v) === -1) {  // subsequent alternate value, add to array
+        } else {
+          // type is array
+          if (tags[k].indexOf(v) === -1) {
+            // subsequent alternate value, add to array
             tags[k].push(v);
           }
         }
@@ -122,8 +117,6 @@ export function utilCombinedTags(entityIDs, graph) {
   return tags;
 }
 
-
-
 //
 //
 //
@@ -135,15 +128,12 @@ export function utilEntityRoot(entityType) {
   }[entityType];
 }
 
-
 //
 //
 //
 export function utilEntitySelector(ids) {
   return ids.length ? '.' + ids.join(',.') : 'nothing';
 }
-
-
 
 // returns an selector to select entity ids for:
 //  - entityIDs passed in
@@ -157,11 +147,9 @@ export function utilEntityOrMemberSelector(ids, graph) {
     var entity = graph.hasEntity(id);
     if (!entity || entity.type !== 'relation') return;
 
-    (entity.members || [])
-      .forEach(member => seen.add(member.id));
+    (entity.members || []).forEach((member) => seen.add(member.id));
   }
 }
-
 
 // returns an selector to select entity ids for:
 //  - entityIDs passed in
@@ -169,7 +157,6 @@ export function utilEntityOrMemberSelector(ids, graph) {
 export function utilEntityOrDeepMemberSelector(ids, graph) {
   return utilEntitySelector(utilEntityAndDeepMemberIDs(ids, graph));
 }
-
 
 // returns an selector to select entity ids for:
 //  - entityIDs passed in
@@ -186,11 +173,9 @@ export function utilEntityAndDeepMemberIDs(ids, graph) {
     let entity = graph.hasEntity(id);
     if (!entity || entity.type !== 'relation') return;
 
-    (entity.members || [])
-      .forEach(member => collectDeepDescendants(member.id));   // recurse
+    (entity.members || []).forEach((member) => collectDeepDescendants(member.id)); // recurse
   }
 }
-
 
 // returns an selector to select entity ids for:
 //  - deep descendant entityIDs for any of those entities that are relations
@@ -213,11 +198,9 @@ export function utilDeepMemberSelector(ids, graph, skipMultipolgonMembers) {
     if (!entity || entity.type !== 'relation') return;
     if (skipMultipolgonMembers && entity.isMultipolygon()) return;
 
-    (entity.members || [])
-      .forEach(member => collectDeepDescendants(member.id));   // recurse
+    (entity.members || []).forEach((member) => collectDeepDescendants(member.id)); // recurse
   }
 }
-
 
 // returns an Array that is the union of:
 //  - nodes for any nodeIDs passed in
@@ -240,16 +223,12 @@ export function utilGetAllNodes(ids, graph) {
     if (entity.type === 'node') {
       nodes.add(entity);
     } else if (entity.type === 'way') {
-      (entity.nodes || [])
-        .forEach(collectNodes);   // recurse
+      (entity.nodes || []).forEach(collectNodes); // recurse
     } else {
-      (entity.members || [])
-        .forEach(member => collectNodes(member.id));   // recurse
+      (entity.members || []).forEach((member) => collectNodes(member.id)); // recurse
     }
   }
 }
-
-
 
 //
 //
@@ -257,7 +236,7 @@ export function utilGetAllNodes(ids, graph) {
 export function utilTagDiff(oldTags, newTags) {
   let tagDiff = [];
   const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort();
-  keys.forEach(k => {
+  keys.forEach((k) => {
     const oldVal = oldTags[k];
     const newVal = newTags[k];
 
@@ -283,13 +262,12 @@ export function utilTagDiff(oldTags, newTags) {
   return tagDiff;
 }
 
-
 //
 //
 //
 export function utilTagText(entity) {
   const obj = (entity && entity.tags) || {};
   return Object.keys(obj)
-    .map(k => `${k}=${obj[k]}`)
+    .map((k) => `${k}=${obj[k]}`)
     .join(', ');
 }

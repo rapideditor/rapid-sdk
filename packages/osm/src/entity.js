@@ -5,85 +5,75 @@ import { utilArrayUnion, utilUnicodeCharsTruncated } from '@id-sdk/util';
 // import { debug } from '../index';
 import { osmIsInterestingTag } from './tags';
 
-
 export class osmEntity {
   constructor(attrs) {
-
     this.tags = {};
 
-//    // For prototypal inheritance.
-//    if (this instanceof osmEntity) return;
-//
-//    // Create the appropriate subtype.
-//    if (attrs && attrs.type) {
-//        return osmEntity[attrs.type].apply(this, arguments);
-//    } else if (attrs && attrs.id) {
-//        return osmEntity[osmEntity.id.type(attrs.id)].apply(this, arguments);
-//    }
-//
-//    // Initialize a generic Entity (used only in tests).
-//    return (new osmEntity()).initialize(arguments);
+    //    // For prototypal inheritance.
+    //    if (this instanceof osmEntity) return;
+    //
+    //    // Create the appropriate subtype.
+    //    if (attrs && attrs.type) {
+    //        return osmEntity[attrs.type].apply(this, arguments);
+    //    } else if (attrs && attrs.id) {
+    //        return osmEntity[osmEntity.id.type(attrs.id)].apply(this, arguments);
+    //    }
+    //
+    //    // Initialize a generic Entity (used only in tests).
+    //    return (new osmEntity()).initialize(arguments);
   }
 
+  // osmEntity.id = function(type) {
+  //     return osmEntity.id.fromOSM(type, osmEntity.id.next[type]--);
+  // };
 
-// osmEntity.id = function(type) {
-//     return osmEntity.id.fromOSM(type, osmEntity.id.next[type]--);
-// };
+  // osmEntity.id.next = {
+  //     changeset: -1, node: -1, way: -1, relation: -1
+  // };
 
+  // osmEntity.id.fromOSM = function(type, id) {
+  //     return type[0] + id;
+  // };
 
-// osmEntity.id.next = {
-//     changeset: -1, node: -1, way: -1, relation: -1
-// };
+  // osmEntity.id.toOSM = function(id) {
+  //     return id.slice(1);
+  // };
 
-
-// osmEntity.id.fromOSM = function(type, id) {
-//     return type[0] + id;
-// };
-
-
-// osmEntity.id.toOSM = function(id) {
-//     return id.slice(1);
-// };
-
-
-// osmEntity.id.type = function(id) {
-//     return { 'c': 'changeset', 'n': 'node', 'w': 'way', 'r': 'relation' }[id[0]];
-// };
-
+  // osmEntity.id.type = function(id) {
+  //     return { 'c': 'changeset', 'n': 'node', 'w': 'way', 'r': 'relation' }[id[0]];
+  // };
 
   // A function suitable for use as the second argument to d3.selection#data().
   static key(entity) {
     return entity.id + 'v' + (entity.v || 0);
   }
 
+  //   _deprecatedTagValuesByKey;
 
-//   _deprecatedTagValuesByKey;
+  // osmEntity.deprecatedTagValuesByKey = function(dataDeprecated) {
+  //     if (!_deprecatedTagValuesByKey) {
+  //         _deprecatedTagValuesByKey = {};
+  //         dataDeprecated.forEach(function(d) {
+  //             var oldKeys = Object.keys(d.old);
+  //             if (oldKeys.length === 1) {
+  //                 var oldKey = oldKeys[0];
+  //                 var oldValue = d.old[oldKey];
+  //                 if (oldValue !== '*') {
+  //                     if (!_deprecatedTagValuesByKey[oldKey]) {
+  //                         _deprecatedTagValuesByKey[oldKey] = [oldValue];
+  //                     } else {
+  //                         _deprecatedTagValuesByKey[oldKey].push(oldValue);
+  //                     }
+  //                 }
+  //             }
+  //         });
+  //     }
+  //     return _deprecatedTagValuesByKey;
+  // };
 
-// osmEntity.deprecatedTagValuesByKey = function(dataDeprecated) {
-//     if (!_deprecatedTagValuesByKey) {
-//         _deprecatedTagValuesByKey = {};
-//         dataDeprecated.forEach(function(d) {
-//             var oldKeys = Object.keys(d.old);
-//             if (oldKeys.length === 1) {
-//                 var oldKey = oldKeys[0];
-//                 var oldValue = d.old[oldKey];
-//                 if (oldValue !== '*') {
-//                     if (!_deprecatedTagValuesByKey[oldKey]) {
-//                         _deprecatedTagValuesByKey[oldKey] = [oldValue];
-//                     } else {
-//                         _deprecatedTagValuesByKey[oldKey].push(oldValue);
-//                     }
-//                 }
-//             }
-//         });
-//     }
-//     return _deprecatedTagValuesByKey;
-// };
+  // osmEntity.prototype = {
 
-
-// osmEntity.prototype = {
-
-    // tags: {},
+  // tags: {},
 
   initialize(sources) {
     for (var i = 0; i < sources.length; ++i) {
@@ -118,7 +108,6 @@ export class osmEntity {
     return this;
   }
 
-
   copy(resolver, copies) {
     if (copies[this.id]) return copies[this.id];
 
@@ -127,24 +116,20 @@ export class osmEntity {
     return copy;
   }
 
-
   osmId() {
     return osmEntity.id.toOSM(this.id);
   }
-
 
   isNew() {
     return this.osmId() < 0;
   }
 
-
   update(attrs) {
     return osmEntity(this, attrs, { v: 1 + (this.v || 0) });
   }
 
-
   mergeTags(tags) {
-    let merged = Object.assign({}, this.tags);   // shallow copy
+    let merged = Object.assign({}, this.tags); // shallow copy
     let changed = false;
     for (const k in tags) {
       const t1 = merged[k];
@@ -163,16 +148,13 @@ export class osmEntity {
     return changed ? this.update({ tags: merged }) : this;
   }
 
-
   intersects(extent, resolver) {
     return this.extent(resolver).intersects(extent);
   }
 
-
   hasNonGeometryTags() {
-    return Object.keys(this.tags).some(k => k !== 'area');
+    return Object.keys(this.tags).some((k) => k !== 'area');
   }
-
 
   hasParentRelations(resolver) {
     return resolver.parentRelations(this).length > 0;
@@ -197,10 +179,10 @@ export class osmEntity {
     if (Object.keys(tags).length === 0) return [];
 
     var deprecated = [];
-    dataDeprecated.forEach(function(d) {
+    dataDeprecated.forEach(function (d) {
       var oldKeys = Object.keys(d.old);
       if (d.replace) {
-        var hasExistingValues = Object.keys(d.replace).some(function(replaceKey) {
+        var hasExistingValues = Object.keys(d.replace).some(function (replaceKey) {
           if (!tags[replaceKey] || d.old[replaceKey]) return false;
           var replaceValue = d.replace[replaceKey];
           if (replaceValue === '*') return false;
@@ -210,7 +192,7 @@ export class osmEntity {
         // don't flag deprecated tags if the upgrade path would overwrite existing data - #7843
         if (hasExistingValues) return;
       }
-      var matchesDeprecatedTags = oldKeys.every(function(oldKey) {
+      var matchesDeprecatedTags = oldKeys.every(function (oldKey) {
         if (!tags[oldKey]) return false;
         if (d.old[oldKey] === '*') return true;
         if (d.old[oldKey] === tags[oldKey]) return true;
@@ -224,7 +206,7 @@ export class osmEntity {
           if (tags[oldKey] === d.old[oldKey]) {
             if (d.replace && d.old[oldKey] === d.replace[oldKey]) {
               var replaceKeys = Object.keys(d.replace);
-              return !replaceKeys.every(function(replaceKey) {
+              return !replaceKeys.every(function (replaceKey) {
                 return tags[replaceKey] === d.replace[replaceKey];
               });
             } else {
@@ -242,5 +224,4 @@ export class osmEntity {
 
     return deprecated;
   }
-
 }
