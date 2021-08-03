@@ -1,5 +1,6 @@
 export function utilCleanTags(tags) {
-    var out = {};
+    console.log("Calling utilCleanTags");
+    var out = new Map();
     for (var k in tags) {
         if (!k) continue;
         var v = tags[k];

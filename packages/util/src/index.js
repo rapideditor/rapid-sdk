@@ -13,7 +13,7 @@ export { utilArrayUniqBy } from './array';
 
 export { utilObjectOmit } from './object';
 
-export { utilCleanTags } from './osm';
+export { utilCleanTags } from './clean_tags';
 export { utilCombinedTags } from './osm';
 export { utilDeepMemberSelector } from './osm';
 export { utilEntityRoot } from './osm';
