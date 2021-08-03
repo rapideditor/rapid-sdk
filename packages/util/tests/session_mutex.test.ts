@@ -1,4 +1,3 @@
-/** @jest-environment jsdom */
 import 'jest-extended';
 import * as util from '../src/index';
 
