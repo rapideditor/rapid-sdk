@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/geom",
-  "version": "3.0.0-pre.6",
+  "version": "3.0.0-pre.7",
   "description": "Geometric (planar) math functions",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/geom#readme",
   "repository": "github:ideditor/id-sdk",
@@ -28,8 +28,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../../../package.json --roots=./packages/math/packages/geom"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.6",
-    "@id-sdk/vector": "^3.0.0-pre.6",
+    "@id-sdk/extent": "^3.0.0-pre.7",
+    "@id-sdk/vector": "^3.0.0-pre.7",
     "@types/d3-polygon": "^3.0.0",
     "d3-polygon": "^3.0.1"
   },
