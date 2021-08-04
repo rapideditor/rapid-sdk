@@ -83,6 +83,27 @@ describe('math/vector', () => {
     });
   });
 
+  describe('vecLengthSquare', () => {
+    it('distance between two same points is zero', () => {
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [0, 0];
+      expect(test.vecLengthSquare(a, b)).toEqual(0);
+    });
+    it('a straight 10 unit line is 10', () => {
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [10, 0];
+      expect(test.vecLengthSquare(a, b)).toEqual(100);
+    });
+    it('a pythagorean triangle is right', () => {
+      const a: Vec2 = [0, 0];
+      const b: Vec2 = [4, 3];
+      expect(test.vecLengthSquare(a, b)).toEqual(25);
+    });
+    it('defaults second argument to [0,0]', () => {
+      expect(test.vecLengthSquare([4, 3])).toEqual(25);
+    });
+  });
+
   describe('vecNormalize', () => {
     it('gets unit vectors', () => {
       expect(test.vecNormalize([0, 0])).toEqual([0, 0]);
