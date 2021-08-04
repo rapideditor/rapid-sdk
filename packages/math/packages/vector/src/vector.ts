@@ -44,6 +44,11 @@ export function vecLength(a: Vec2, b?: Vec2): number {
   return Math.sqrt(x * x + y * y);
 }
 
+// length of vector raised to the power two
+export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]) {
+  return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+}
+
 // Normalize a vector (return a unit vector)
 export function vecNormalize(a: Vec2): Vec2 {
   const length: number = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
