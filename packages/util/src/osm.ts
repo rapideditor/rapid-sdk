@@ -59,10 +59,10 @@ export function utilCleanTags(tags) {
 //   service: [ 'driveway', 'parking_aisle' ],
 //   width: [ '3', undefined ]
 // }
-export function utilCombinedTags(entityIDs, graph) {
+export function utilCombinedTags(entityIDs: [string], graph) {
   let tags = {};
   let tagCounts = {};
-  let allKeys = new Set();
+  let allKeys: Set<string> = new Set();
 
   const entities = entityIDs.map((entityID) => graph.hasEntity(entityID)).filter(Boolean);
 
@@ -100,14 +100,14 @@ export function utilCombinedTags(entityIDs, graph) {
     });
   });
 
-  for (let key in tags) {
-    if (!Array.isArray(tags[key])) continue;
+  for (let k in tags) {
+    if (!Array.isArray(tags[k])) continue;
 
     // sort values by frequency then alphabetically
-    tags[key] = tags[key].sort((val1, val2) => {
-      let key = key; // capture
-      let count2 = tagCounts[key + '=' + val2];
-      let count1 = tagCounts[key + '=' + val1];
+    tags[k] = tags[k].sort((val1, val2) => {
+      const key = k;
+      const count2 = tagCounts[key + '=' + val2];
+      const count1 = tagCounts[key + '=' + val1];
       if (count2 !== count1) return count2 - count1;
       if (val2 && val1) return val1.localeCompare(val2);
       return val1 ? 1 : -1;
@@ -233,9 +233,17 @@ export function utilGetAllNodes(ids, graph) {
 //
 //
 //
+type TagDiff = {
+  type: string,
+  key: string,
+  oldVal: any,
+  newVal: any,
+  display: string
+};
+
 export function utilTagDiff(oldTags, newTags) {
-  let tagDiff = [];
-  const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort();
+  let tagDiff: TagDiff[] = [];
+  const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort() as [string];
   keys.forEach((k) => {
     const oldVal = oldTags[k];
     const newVal = newTags[k];
