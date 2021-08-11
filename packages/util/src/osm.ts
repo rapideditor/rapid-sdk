@@ -234,11 +234,11 @@ export function utilGetAllNodes(ids, graph) {
 //
 //
 type TagDiff = {
-  type: string,
-  key: string,
-  oldVal: any,
-  newVal: any,
-  display: string
+  type: string;
+  key: string;
+  oldVal: any;
+  newVal: any;
+  display: string;
 };
 
 export function utilTagDiff(oldTags, newTags) {

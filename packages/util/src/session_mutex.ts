@@ -31,7 +31,9 @@ export function utilSessionMutex(name) {
       clearInterval(_intervalID);
       _intervalID = null;
     },
-    locked: () => { return !!_intervalID; }
+    locked: () => {
+      return !!_intervalID;
+    }
   };
 
   return _mutex;
