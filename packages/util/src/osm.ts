@@ -41,101 +41,14 @@ export function utilCleanTags(tags) {
   }
 }
 
-// Returns a single object containing the tags of all the given entities.
-// Example:
-// {
-//   highway: 'service',
-//   service: 'parking_aisle'
-// }
-//           +
-// {
-//   highway: 'service',
-//   service: 'driveway',
-//   width: '3'
-// }
-//           =
-// {
-//   highway: 'service',
-//   service: [ 'driveway', 'parking_aisle' ],
-//   width: [ '3', undefined ]
-// }
-export function utilCombinedTags(entityIDs: [string], graph) {
-  let tags = {};
-  let tagCounts = {};
-  let allKeys: Set<string> = new Set();
-
-  const entities = entityIDs.map((entityID) => graph.hasEntity(entityID)).filter(Boolean);
-
-  // gather the aggregate keys
-  entities.forEach((entity) => {
-    const keys = Object.keys(entity.tags).filter(Boolean);
-    keys.forEach((key) => allKeys.add(key));
-  });
-
-  entities.forEach((entity) => {
-    allKeys.forEach((k) => {
-      let v = entity.tags[k]; // purposely allow `undefined`
-
-      if (!tags.hasOwnProperty(k)) {
-        // first value, set as raw
-        tags[k] = v;
-      } else {
-        if (!Array.isArray(tags[k])) {
-          if (tags[k] !== v) {
-            // first alternate value, replace single value with array
-            tags[k] = [tags[k], v];
-          }
-        } else {
-          // type is array
-          if (tags[k].indexOf(v) === -1) {
-            // subsequent alternate value, add to array
-            tags[k].push(v);
-          }
-        }
-      }
-
-      let tagHash = `${k}=${v}`;
-      if (!tagCounts[tagHash]) tagCounts[tagHash] = 0;
-      tagCounts[tagHash] += 1;
-    });
-  });
-
-  for (let k in tags) {
-    if (!Array.isArray(tags[k])) continue;
-
-    // sort values by frequency then alphabetically
-    tags[k] = tags[k].sort((val1, val2) => {
-      const key = k;
-      const count2 = tagCounts[key + '=' + val2];
-      const count1 = tagCounts[key + '=' + val1];
-      if (count2 !== count1) return count2 - count1;
-      if (val2 && val1) return val1.localeCompare(val2);
-      return val1 ? 1 : -1;
-    });
-  }
-
-  return tags;
-}
-
-//
-//
-//
-export function utilEntityRoot(entityType) {
-  return {
-    node: 'n',
-    way: 'w',
-    relation: 'r'
-  }[entityType];
-}
-
-//
-//
+// Generate a css selector for multiple entities
+// class1, class2 -> .class1,.class2
 //
 export function utilEntitySelector(ids) {
   return ids.length ? '.' + ids.join(',.') : 'nothing';
 }
 
-// returns an selector to select entity ids for:
+// returns a selector to select entity ids for:
 //  - entityIDs passed in
 //  - shallow descendant entityIDs for any of those entities that are relations
 export function utilEntityOrMemberSelector(ids, graph) {
