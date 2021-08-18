@@ -276,7 +276,41 @@ describe('math/extent', () => {
   });
 
   describe('#percentContainedIn', () => {
-    it('returns a 0 if self does not intersect other', () => {
+    it('returns 0 if either extent is infinite', () => {
+      const a = new Extent();
+      const b = new Extent([0, 3], [4, 1]);
+      expect(a.percentContainedIn(b)).toBe(0);
+      expect(b.percentContainedIn(a)).toBe(0);
+    });
+
+    it('returns 0 if extent w/o area does not intersect other extent w/o area', () => {
+      const a = new Extent([5, 5], [5, 5]);
+      const b = new Extent([2, 2], [2, 2]);
+      expect(a.percentContainedIn(b)).toBe(0);
+      expect(b.percentContainedIn(a)).toBe(0);
+    });
+
+    it('returns 1 if extent w/o area touching other extent w/ area', () => {
+      const a = new Extent([0, 0], [0, 0]);
+      const b = new Extent([0, 0], [1, 1]);
+      expect(a.percentContainedIn(b)).toBe(1);
+    });
+
+    it('returns 1 if extent w/o area touching (i.e. same as) other extent w/o area', () => {
+      const a = new Extent([0, 0], [0, 0]);
+      const b = new Extent([0, 0], [0, 0]);
+      expect(a.percentContainedIn(b)).toBe(1);
+      expect(b.percentContainedIn(a)).toBe(1);
+    });
+
+    it('returns 0 if extent w/ area touching other extent w/ area (zero-area intersection, corners touch only)', () => {
+      const a = new Extent([0, 0], [1, 1]);
+      const b = new Extent([1, 1], [2, 2]);
+      expect(a.percentContainedIn(b)).toBe(0);
+      expect(b.percentContainedIn(a)).toBe(0);
+    });
+
+    it('returns 0 if extent w/ area does not intersect other extent w/ area', () => {
       const a = new Extent([0, 0], [1, 1]);
       const b = new Extent([0, 3], [4, 1]);
       expect(a.percentContainedIn(b)).toBe(0);
