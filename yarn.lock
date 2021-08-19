@@ -325,6 +325,57 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
+"@id-sdk/extent@^3.0.0-pre.8":
+  version "3.0.0-pre.8"
+  resolved "https://registry.yarnpkg.com/@id-sdk/extent/-/extent-3.0.0-pre.8.tgz#efd25ae6fb666cc4b96e91a17ae796bbd18c0eb6"
+  integrity sha512-Ipqk8KQuB4FTJrTUP3+2AVZkHJ8EHMGIMFx8Vjva746A04hVvYup/Kya/hwhEiHdYpvgusXJkr0IYeK8yZTZ0A==
+  dependencies:
+    "@id-sdk/geo" "^3.0.0-pre.7"
+    "@id-sdk/vector" "^3.0.0-pre.7"
+
+"@id-sdk/geo@^3.0.0-pre.7":
+  version "3.0.0-pre.7"
+  resolved "https://registry.yarnpkg.com/@id-sdk/geo/-/geo-3.0.0-pre.7.tgz#9c41c7271b5f121738fa651ab4f4e0304d6ca0ad"
+  integrity sha512-yLnY2SFxxyUwMmZ3IFXp2x/hSUy9+j7zJoEI1+rPJFsqqEtFwFz1B2g3gh1ZbC1Sy8LIDcBycROOKHgXgGLVMg==
+  dependencies:
+    "@id-sdk/vector" "^3.0.0-pre.7"
+
+"@id-sdk/geom@^3.0.0-pre.8":
+  version "3.0.0-pre.8"
+  resolved "https://registry.yarnpkg.com/@id-sdk/geom/-/geom-3.0.0-pre.8.tgz#f30375e59e18d2a3cf38826fa70a1c37fdeea2cb"
+  integrity sha512-EDM5Ulk51/ru3z3JMCOBPW89wuCbJCWb9r/kqqBj2qHMwhto3SA9s7FhHI4wN6nOzi7+4HtBXKGMVoqZq607Yg==
+  dependencies:
+    "@id-sdk/extent" "^3.0.0-pre.8"
+    "@id-sdk/vector" "^3.0.0-pre.7"
+    "@types/d3-polygon" "^3.0.0"
+    d3-polygon "^3.0.1"
+
+"@id-sdk/projection@^3.0.0-pre.7":
+  version "3.0.0-pre.7"
+  resolved "https://registry.yarnpkg.com/@id-sdk/projection/-/projection-3.0.0-pre.7.tgz#180e4c48567fe080d1ad1fb9cf72f2d9ed2a94e1"
+  integrity sha512-6TLn8TBVf6e+q4+goRVs/6QCV/kI1uidTemX/JPSB50WNf4ipTbx5MVz6BKy7B7SWCea1oAUWXC71qC7wHUoFA==
+  dependencies:
+    "@id-sdk/vector" "^3.0.0-pre.7"
+    "@types/d3-geo" "^3.0.2"
+    "@types/d3-zoom" "^3.0.1"
+    d3-geo "^3.0.1"
+    d3-zoom "^3.0.0"
+
+"@id-sdk/tiler@^3.0.0-pre.8":
+  version "3.0.0-pre.8"
+  resolved "https://registry.yarnpkg.com/@id-sdk/tiler/-/tiler-3.0.0-pre.8.tgz#ac72f47a67848298990bc017a0c2a81f952e1c2d"
+  integrity sha512-XQ5N1LnXXf9bLsPxoqnRD2j+vj189HwvgIWuTkJXfGpab7Hv/6X6JptxPMHKYm0MPMjprsm2luDM0jJvMuYU0Q==
+  dependencies:
+    "@id-sdk/extent" "^3.0.0-pre.8"
+    "@id-sdk/geo" "^3.0.0-pre.7"
+    "@id-sdk/projection" "^3.0.0-pre.7"
+    "@id-sdk/vector" "^3.0.0-pre.7"
+
+"@id-sdk/vector@^3.0.0-pre.7":
+  version "3.0.0-pre.7"
+  resolved "https://registry.yarnpkg.com/@id-sdk/vector/-/vector-3.0.0-pre.7.tgz#622d9809940eafe90b66b150a9e00be5e968622a"
+  integrity sha512-wzCQkLvQeHRYWy+D5eQ3Uhr/pD+UcKRNmA0KQmQyBPOX3hPVdGSKJsFN+teutH8Yb5TfKNxtAMEjywiIDdmMIw==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1563,12 +1614,12 @@
     "@types/istanbul-lib-report" "*"
 
 "@types/jest@^27.0.0":
-  version "27.0.0"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.0.0.tgz#f1c28f741371739c7cd0e8edb5ed8e67acfa6c35"
-  integrity sha512-IlpQZVpxufe+3qPaAqEoSPHVSxnJh1cf0BqqWHJeKiAUbwnHdmNzjP3ZCWSZSTbmAGXQPNk9QmM3Bif0pR54rg==
+  version "27.0.1"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.0.1.tgz#fafcc997da0135865311bb1215ba16dba6bdf4ca"
+  integrity sha512-HTLpVXHrY69556ozYkcq47TtQJXpcWAWfkoqz+ZGz2JnmZhzlRjprCIyFnetSy8gpDWwTTGBcRVv1J1I1vBrHw==
   dependencies:
-    jest-diff "^26.0.0"
-    pretty-format "^26.0.0"
+    jest-diff "^27.0.0"
+    pretty-format "^27.0.0"
 
 "@types/minimatch@^3.0.3":
   version "3.0.5"
@@ -2808,11 +2859,6 @@ diff-sequences@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
   integrity sha512-Dj6Wk3tWyTE+Fo1rW8v0Xhwk80um6yFYKbuAxc9c3EZxIHFDYwbi34Uk42u1CdnIiVorvt4RmlSDjIPyzGC2ew==
-
-diff-sequences@^26.6.2:
-  version "26.6.2"
-  resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-26.6.2.tgz#48ba99157de1923412eed41db6b6d4aa9ca7c0b1"
-  integrity sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==
 
 diff-sequences@^27.0.6:
   version "27.0.6"
@@ -4170,17 +4216,7 @@ jest-diff@^24.9.0:
     jest-get-type "^24.9.0"
     pretty-format "^24.9.0"
 
-jest-diff@^26.0.0:
-  version "26.6.2"
-  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-26.6.2.tgz#1aa7468b52c3a68d7d5c5fdcdfcd5e49bd164394"
-  integrity sha512-6m+9Z3Gv9wN0WFVasqjCL/06+EFCMTqDEUl/b87HYK2rAPTyfz4ZIuSlPhY51PIQRWx5TaxeF1qmXKe9gfN3sA==
-  dependencies:
-    chalk "^4.0.0"
-    diff-sequences "^26.6.2"
-    jest-get-type "^26.3.0"
-    pretty-format "^26.6.2"
-
-jest-diff@^27.0.6:
+jest-diff@^27.0.0, jest-diff@^27.0.6:
   version "27.0.6"
   resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.0.6.tgz#4a7a19ee6f04ad70e0e3388f35829394a44c7b5e"
   integrity sha512-Z1mqgkTCSYaFgwTlP/NUiRzdqgxmmhzHY1Tq17zL94morOHfHu3K4bgSgl+CR4GLhpV8VxkuOYuIWnQ9LnFqmg==
@@ -4251,11 +4287,6 @@ jest-get-type@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-24.9.0.tgz#1684a0c8a50f2e4901b6644ae861f579eed2ef0e"
   integrity sha512-lUseMzAley4LhIcpSP9Jf+fTrQ4a1yHQwLNeeVa2cEmbCGeoZAtYPOIv8JaxLD/sUpKxetKGP+gsHl8f8TSj8Q==
-
-jest-get-type@^26.3.0:
-  version "26.3.0"
-  resolved "https://registry.yarnpkg.com/jest-get-type/-/jest-get-type-26.3.0.tgz#e97dc3c3f53c2b406ca7afaed4493b1d099199e0"
-  integrity sha512-TpfaviN1R2pQWkIihlfEanwOXK0zcxrKEE4MlU6Tn7keoXdN6/3gK/xl0yEh8DOunn5pOVGKf8hB4R9gVh04ig==
 
 jest-get-type@^27.0.6:
   version "27.0.6"
@@ -5953,17 +5984,7 @@ pretty-format@^24.9.0:
     ansi-styles "^3.2.0"
     react-is "^16.8.4"
 
-pretty-format@^26.0.0, pretty-format@^26.6.2:
-  version "26.6.2"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.2.tgz#e35c2705f14cb7fe2fe94fa078345b444120fc93"
-  integrity sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==
-  dependencies:
-    "@jest/types" "^26.6.2"
-    ansi-regex "^5.0.0"
-    ansi-styles "^4.0.0"
-    react-is "^17.0.1"
-
-pretty-format@^27.0.6:
+pretty-format@^27.0.0, pretty-format@^27.0.6:
   version "27.0.6"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.0.6.tgz#ab770c47b2c6f893a21aefc57b75da63ef49a11f"
   integrity sha512-8tGD7gBIENgzqA+UBzObyWqQ5B778VIFZA/S66cclyd5YkFLYs2Js7gxDKf0MXtTc9zcS7t1xhdfcElJ3YIvkQ==
