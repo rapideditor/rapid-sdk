@@ -102,46 +102,113 @@ describe('utilEntitySelector', () => {
 });
 
 describe('utilEntityOrMemberSelector', () => {
-  it('a', () => {
-    const w1 = {
-      id: 'w-1',
-      type: 'way'
-    };
-    const w2 = {
-      id: 'w-2',
-      type: 'way'
-    };
-    const r1 = {
-      id: 'r-1',
-      type: 'relation',
-      members: [{id: w1.id, type: w1.type, role: 'outer'}, {id: w2.id, type: w2.type, role: 'inner'}]
-    };
-    const r2 = {
-      id: 'r-2',
-      type: 'relation',
-      members: [{id: r1.id, type: r1.type, role: 'outer'}]
-    };
-    const entities = {
-      'w-1': w1,
-      'w-2': w2,
-      'r-1': r1,
-    };
-    const graph = {
-      hasEntity: function(id: string) {
-        return entities[id];
-      }
-    };
-
-    expect(graph.hasEntity('r-1')).toEqual(r1);
-    expect(graph.hasEntity('w-1')).toEqual(w1);
-    expect(graph.hasEntity('w-2')).toEqual(w2);
-
+  const w1 = {
+    id: 'w-1',
+    type: 'way'
+  };
+  const w2 = {
+    id: 'w-2',
+    type: 'way'
+  };
+  const r1 = {
+    id: 'r-1',
+    type: 'relation',
+    members: [{id: w1.id, type: w1.type, role: 'outer'}, {id: w2.id, type: w2.type, role: 'inner'}]
+  };
+  const r2 = {
+    id: 'r-2',
+    type: 'relation',
+    members: [{id: r1.id, type: r1.type, role: 'outer'}]
+  };
+  const entities = {
+    'w-1': w1,
+    'w-2': w2,
+    'r-1': r1,
+    'r-2': r2,
+  };
+  const graph = {
+    hasEntity: function(id: string) {
+      return entities[id];
+    }
+  };
+  it('trivially returns ways', () => {
     expect(util.utilEntityOrMemberSelector(['w-1'], graph)).toEqual('.w-1');
     expect(util.utilEntityOrMemberSelector(['w-2'], graph)).toEqual('.w-2');
-    expect(util.utilEntityOrMemberSelector(['r-2'], graph)).toEqual('.r-2');
+  });
+
+  it('does not descend into sub relations', () => {
+    expect(new Set(util.utilEntityOrMemberSelector(['r-2'], graph).split(',')))
+      .toEqual(new Set(['.r-2', '.r-1']));
+  });
+
+  it('correctly gathers up ways under a relation', () => {
     expect(new Set(util.utilEntityOrMemberSelector(['r-1'], graph).split(',')))
       .toEqual(new Set(['.r-1','.w-1','.w-2']));
+  });
+
+  it('works on an array of inputs', () => {
+    expect(new Set(util.utilEntityOrMemberSelector(['w-1', 'w-2'], graph).split(',')))
+      .toEqual(new Set(['.w-1','.w-2']));
     expect(new Set(util.utilEntityOrMemberSelector(['r-1', 'r-2'], graph).split(',')))
+      .toEqual(new Set(['.r-1','.w-1','.w-2','.r-2']));
+  });
+});
+
+describe('utilEntityOrDeepMemberSelector', () => {
+  const w1 = {
+    id: 'w-1',
+    type: 'way',
+  };
+  const w2 = {
+    id: 'w-2',
+    type: 'way',
+  };
+  const r1 = {
+    id: 'r-1',
+    type: 'relation',
+    members: [{id: w1.id, type: w1.type, role: 'outer'}, {id: w2.id, type: w2.type, role: 'inner'}],
+  };
+  const r2 = {
+    id: 'r-2',
+    type: 'relation',
+    members: [{id: r1.id, type: r1.type, role: 'outer'}],
+  };
+  const r3 = {
+    id: 'r-3',
+    type: 'relation',
+    members: [{id: r2.id, type: r2.type, role: 'outer'}],
+  };
+  const entities = {
+    'w-1': w1,
+    'w-2': w2,
+    'r-1': r1,
+    'r-2': r2,
+    'r-3': r3,
+  };
+  const graph = {
+    hasEntity: function(id: string) {
+      return entities[id];
+    }
+  };
+  it('trivially returns ways', () => {
+    expect(util.utilEntityOrDeepMemberSelector(['w-1'], graph)).toEqual('.w-1');
+    expect(util.utilEntityOrDeepMemberSelector(['w-2'], graph)).toEqual('.w-2');
+  });
+
+  it('does descend into sub relations', () => {
+    expect(new Set(util.utilEntityOrDeepMemberSelector(['r-3'], graph).split(',')))
+      .toEqual(new Set(['.r-3','.r-2','.r-1','.w-1','.w-2']));
+  });
+
+  it('correctly gathers up ways under a relation', () => {
+    expect(new Set(util.utilEntityOrDeepMemberSelector(['r-1'], graph).split(',')))
+      .toEqual(new Set(['.r-1','.w-1','.w-2']));
+  });
+
+  it('works on an array of inputs', () => {
+    expect(new Set(util.utilEntityOrDeepMemberSelector(['w-1', 'w-2'], graph).split(',')))
+      .toEqual(new Set(['.w-1','.w-2']));
+    expect(new Set(util.utilEntityOrDeepMemberSelector(['r-1', 'r-2'], graph).split(',')))
       .toEqual(new Set(['.r-1','.w-1','.w-2','.r-2']));
   });
 });
