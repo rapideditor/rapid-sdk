@@ -75,7 +75,7 @@ export function utilEntityOrDeepMemberSelector(ids: string[], graph) {
 //  - entityIDs passed in
 //  - deep descendant entityIDs for any of those entities that are relations
 export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
-  const seen: Set<string> = new Set();
+  const seen = new Set<string>();
   ids.forEach(collectDeepDescendants);
   return Array.from(seen);
 
@@ -94,8 +94,8 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
 //  - deep descendant entityIDs for any of those entities that are relations
 export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMembers: boolean) {
   let idsSet = new Set(ids);
-  let seen: Set<string> = new Set();
-  let returners: Set<string> = new Set();
+  let seen = new Set<string>();
+  let returners = new Set<string>();
   ids.forEach(collectDeepDescendants);
   return utilEntitySelector(Array.from(returners));
 
@@ -119,14 +119,14 @@ export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMemb
 //  - nodes for any nodeIDs passed in
 //  - child nodes of any wayIDs passed in
 //  - descendant member and child nodes of relationIDs passed in
-export function utilGetAllNodes(ids, graph) {
-  let seen = new Set();
-  let nodes = new Set();
+export function utilGetAllNodes(ids: string[], graph) {
+  const seen = new Set<string>();
+  const nodes = new Set();
 
   ids.forEach(collectNodes);
   return Array.from(nodes);
 
-  function collectNodes(id) {
+  function collectNodes(id: string) {
     if (seen.has(id)) return;
     seen.add(id);
 
@@ -138,7 +138,7 @@ export function utilGetAllNodes(ids, graph) {
     } else if (entity.type === 'way') {
       (entity.nodes || []).forEach(collectNodes); // recurse
     } else {
-      (entity.members || []).forEach((member) => collectNodes(member.id)); // recurse
+      (entity.members || []).forEach((member) => collectNodes(member.id as string)); // recurse
     }
   }
 }
