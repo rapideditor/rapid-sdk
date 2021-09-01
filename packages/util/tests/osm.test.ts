@@ -104,16 +104,26 @@ describe('utilEntitySelector', () => {
 describe('utilEntityOrMemberSelector', () => {
   const w1 = { id: 'w-1', type: 'way' };
   const w2 = { id: 'w-2', type: 'way' };
-  const r1 = { id: 'r-1', type: 'relation', members: [{id: w1.id, type: w1.type}, {id: w2.id, type: w2.type}] };
-  const r2 = { id: 'r-2', type: 'relation', members: [{id: r1.id, type: r1.type}] };
+  const r1 = {
+    id: 'r-1',
+    type: 'relation',
+    members: [
+      { id: w1.id, type: w1.type },
+      { id: w2.id, type: w2.type }
+    ]
+  };
+  const r2 = { id: 'r-2', type: 'relation', members: [{ id: r1.id, type: r1.type }] };
   const r3 = { id: 'r-3', type: 'relation' };
-  const graph = { hasEntity: (id: string) => ({
-    'w-1': w1,
-    'w-2': w2,
-    'r-1': r1,
-    'r-2': r2,
-    'r-3': r3,
-  }[id]) };
+  const graph = {
+    hasEntity: (id: string) =>
+      ({
+        'w-1': w1,
+        'w-2': w2,
+        'r-1': r1,
+        'r-2': r2,
+        'r-3': r3
+      }[id])
+  };
 
   it('trivially returns ways', () => {
     expect(util.utilEntityOrMemberSelector(['w-1'], graph)).toEqual('.w-1');
@@ -166,18 +176,28 @@ describe('utilEntityOrMemberSelector', () => {
 describe('utilEntityOrDeepMemberSelector', () => {
   const w1 = { id: 'w-1', type: 'way' };
   const w2 = { id: 'w-2', type: 'way' };
-  const r1 = { id: 'r-1', type: 'relation', members: [{id: w1.id, type: w1.type}, {id: w2.id, type: w2.type}] };
-  const r2 = { id: 'r-2', type: 'relation', members: [{id: r1.id, type: r1.type}] };
-  const r3 = { id: 'r-3', type: 'relation', members: [{id: r2.id, type: r2.type}] };
+  const r1 = {
+    id: 'r-1',
+    type: 'relation',
+    members: [
+      { id: w1.id, type: w1.type },
+      { id: w2.id, type: w2.type }
+    ]
+  };
+  const r2 = { id: 'r-2', type: 'relation', members: [{ id: r1.id, type: r1.type }] };
+  const r3 = { id: 'r-3', type: 'relation', members: [{ id: r2.id, type: r2.type }] };
   const r4 = { id: 'r-4', type: 'relation' };
-  const graph = { hasEntity: (id: string) => ({
-    'w-1': w1,
-    'w-2': w2,
-    'r-1': r1,
-    'r-2': r2,
-    'r-3': r3,
-    'r-4': r4,
-  }[id]) };
+  const graph = {
+    hasEntity: (id: string) =>
+      ({
+        'w-1': w1,
+        'w-2': w2,
+        'r-1': r1,
+        'r-2': r2,
+        'r-3': r3,
+        'r-4': r4
+      }[id])
+  };
 
   it('trivially returns ways', () => {
     expect(util.utilEntityOrDeepMemberSelector(['w-1'], graph)).toEqual('.w-1');
@@ -229,30 +249,36 @@ describe('utilDeepMemberSelector', () => {
   const r1 = {
     id: 'r-1',
     type: 'relation',
-    members: [{id: w1.id, type: w1.type}, {id: w2.id, type: w2.type}],
-    isMultipolygon: () => false,
+    members: [
+      { id: w1.id, type: w1.type },
+      { id: w2.id, type: w2.type }
+    ],
+    isMultipolygon: () => false
   };
   const r2 = {
     id: 'r-2',
     type: 'relation',
-    members: [{id: r1.id, type: r1.type}],
-    isMultipolygon: () => true,
+    members: [{ id: r1.id, type: r1.type }],
+    isMultipolygon: () => true
   };
   const r3 = {
     id: 'r-3',
     type: 'relation',
-    members: [{id: r2.id, type: r2.type}],
-    isMultipolygon: () => false,
+    members: [{ id: r2.id, type: r2.type }],
+    isMultipolygon: () => false
   };
   const r4 = { id: 'r-4', type: 'relation', isMultipolygon: () => true };
-  const graph = { hasEntity: (id: string) => ({
-    'w-1': w1,
-    'w-2': w2,
-    'r-1': r1,
-    'r-2': r2,
-    'r-3': r3,
-    'r-4': r4,
-  }[id]) };
+  const graph = {
+    hasEntity: (id: string) =>
+      ({
+        'w-1': w1,
+        'w-2': w2,
+        'r-1': r1,
+        'r-2': r2,
+        'r-3': r3,
+        'r-4': r4
+      }[id])
+  };
 
   it('does descend into sub relations', () => {
     const result = new Set(util.utilDeepMemberSelector(['r-3'], graph, false).split(','));
@@ -298,38 +324,47 @@ describe('utilGetAllNodes', () => {
   const r1 = {
     id: 'r-1',
     type: 'relation',
-    members: [{id: w1.id, type: w1.type}, {id: n3.id, type: n3.type}],
+    members: [
+      { id: w1.id, type: w1.type },
+      { id: n3.id, type: n3.type }
+    ]
   };
   const r2 = {
     id: 'r-2',
     type: 'relation',
-    members: [{id: r1.id, type: r1.type}],
+    members: [{ id: r1.id, type: r1.type }]
   };
   const r3 = {
     id: 'r-3',
     type: 'relation',
-    members: [{id: r2.id, type: r2.type}],
+    members: [{ id: r2.id, type: r2.type }]
   };
   const r4 = {
     id: 'r-4',
     type: 'relation',
-    members: [{id: r2.id, type: r2.type}, {id:'r-undef', type: 'relation'}],
+    members: [
+      { id: r2.id, type: r2.type },
+      { id: 'r-undef', type: 'relation' }
+    ]
   };
   const r5 = { id: 'r-5', type: 'relation' };
-  const graph = { hasEntity: (id: string) => ({
-    'n-1': n1,
-    'n-2': n2,
-    'n-3': n3,
-    'w-1': w1,
-    'w-2': w2,
-    'w-3': w3,
-    'w-4': w4,
-    'r-1': r1,
-    'r-2': r2,
-    'r-3': r3,
-    'r-4': r4,
-    'r-5': r5,
-  }[id]) };
+  const graph = {
+    hasEntity: (id: string) =>
+      ({
+        'n-1': n1,
+        'n-2': n2,
+        'n-3': n3,
+        'w-1': w1,
+        'w-2': w2,
+        'w-3': w3,
+        'w-4': w4,
+        'r-1': r1,
+        'r-2': r2,
+        'r-3': r3,
+        'r-4': r4,
+        'r-5': r5
+      }[id])
+  };
 
   it('handles nodes handed in', () => {
     expect(util.utilGetAllNodes(['n-1'], graph)).toEqual([n1]);
@@ -359,19 +394,22 @@ describe('utilGetAllNodes', () => {
     const c = { id: 'c', type: 'node' };
     const d = { id: 'd', type: 'node' };
     const e = { id: 'e', type: 'node' };
-    const w1 = { id: 'w1', nodes: ['a','b','a'], type: 'way' };
-    const w2 = { id: 'w2', nodes: ['c','b','a','c'], type: 'way' };
-    const r = { id: 'r', members: [{id: 'w1'}, {id: 'd'}] };
-    const graph = { hasEntity: (id: string) => ({
-      'a': a,
-      'b': b,
-      'c': c,
-      'd': d,
-      'e': e,
-      'w1': w1,
-      'w2': w2,
-      'r': r,
-    }[id]) };
+    const w1 = { id: 'w1', nodes: ['a', 'b', 'a'], type: 'way' };
+    const w2 = { id: 'w2', nodes: ['c', 'b', 'a', 'c'], type: 'way' };
+    const r = { id: 'r', members: [{ id: 'w1' }, { id: 'd' }] };
+    const graph = {
+      hasEntity: (id: string) =>
+        ({
+          a: a,
+          b: b,
+          c: c,
+          d: d,
+          e: e,
+          w1: w1,
+          w2: w2,
+          r: r
+        }[id])
+    };
     const result = util.utilGetAllNodes(['r', 'w2', 'e'], graph);
     expect(result).toContain(a);
     expect(result).toContain(b);
@@ -383,27 +421,28 @@ describe('utilGetAllNodes', () => {
 
   it('handles recursive relations', () => {
     const n = { id: 'n', type: 'node' };
-    const r1 = { id: 'r1', members: [{id: 'r2'}], type: 'relation' };
-    const r2 = { id: 'r2', members: [{id: 'r1'}, {id: 'n'}], type: 'relation' };
-    const graph = { hasEntity: (id: string) => ({
-      'n': n,
-      'r1': r1,
-      'r2': r2,
-    }[id]) };
+    const r1 = { id: 'r1', members: [{ id: 'r2' }], type: 'relation' };
+    const r2 = { id: 'r2', members: [{ id: 'r1' }, { id: 'n' }], type: 'relation' };
+    const graph = {
+      hasEntity: (id: string) =>
+        ({
+          n: n,
+          r1: r1,
+          r2: r2
+        }[id])
+    };
     const result = util.utilGetAllNodes(['r1'], graph);
 
     expect(result).toContain(n);
     expect(result).toHaveLength(1);
   });
-  
+
   it('handles degenerate ways', () => {
     expect(util.utilGetAllNodes(['w-4'], graph)).toEqual([]);
     expect(util.utilGetAllNodes(['r-5'], graph)).toEqual([]);
   });
 
-  it('handles degenerate relations', () => {
-
-  });
+  it('handles degenerate relations', () => {});
 });
 
 describe('utilTagDiff', () => {
