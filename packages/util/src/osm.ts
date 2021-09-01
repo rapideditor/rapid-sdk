@@ -41,109 +41,22 @@ export function utilCleanTags(tags) {
   }
 }
 
-// Returns a single object containing the tags of all the given entities.
-// Example:
-// {
-//   highway: 'service',
-//   service: 'parking_aisle'
-// }
-//           +
-// {
-//   highway: 'service',
-//   service: 'driveway',
-//   width: '3'
-// }
-//           =
-// {
-//   highway: 'service',
-//   service: [ 'driveway', 'parking_aisle' ],
-//   width: [ '3', undefined ]
-// }
-export function utilCombinedTags(entityIDs: [string], graph) {
-  let tags = {};
-  let tagCounts = {};
-  let allKeys: Set<string> = new Set();
-
-  const entities = entityIDs.map((entityID) => graph.hasEntity(entityID)).filter(Boolean);
-
-  // gather the aggregate keys
-  entities.forEach((entity) => {
-    const keys = Object.keys(entity.tags).filter(Boolean);
-    keys.forEach((key) => allKeys.add(key));
-  });
-
-  entities.forEach((entity) => {
-    allKeys.forEach((k) => {
-      let v = entity.tags[k]; // purposely allow `undefined`
-
-      if (!tags.hasOwnProperty(k)) {
-        // first value, set as raw
-        tags[k] = v;
-      } else {
-        if (!Array.isArray(tags[k])) {
-          if (tags[k] !== v) {
-            // first alternate value, replace single value with array
-            tags[k] = [tags[k], v];
-          }
-        } else {
-          // type is array
-          if (tags[k].indexOf(v) === -1) {
-            // subsequent alternate value, add to array
-            tags[k].push(v);
-          }
-        }
-      }
-
-      let tagHash = `${k}=${v}`;
-      if (!tagCounts[tagHash]) tagCounts[tagHash] = 0;
-      tagCounts[tagHash] += 1;
-    });
-  });
-
-  for (let k in tags) {
-    if (!Array.isArray(tags[k])) continue;
-
-    // sort values by frequency then alphabetically
-    tags[k] = tags[k].sort((val1, val2) => {
-      const key = k;
-      const count2 = tagCounts[key + '=' + val2];
-      const count1 = tagCounts[key + '=' + val1];
-      if (count2 !== count1) return count2 - count1;
-      if (val2 && val1) return val1.localeCompare(val2);
-      return val1 ? 1 : -1;
-    });
-  }
-
-  return tags;
-}
-
+// Generate a css selector for multiple entities
+// class1, class2 -> .class1,.class2
 //
-//
-//
-export function utilEntityRoot(entityType) {
-  return {
-    node: 'n',
-    way: 'w',
-    relation: 'r'
-  }[entityType];
-}
-
-//
-//
-//
-export function utilEntitySelector(ids) {
+export function utilEntitySelector(ids: string[]) {
   return ids.length ? '.' + ids.join(',.') : 'nothing';
 }
 
-// returns an selector to select entity ids for:
+// returns a selector to select entity ids for:
 //  - entityIDs passed in
 //  - shallow descendant entityIDs for any of those entities that are relations
-export function utilEntityOrMemberSelector(ids, graph) {
+export function utilEntityOrMemberSelector(ids: string[], graph) {
   let seen = new Set(ids);
   ids.forEach(collectShallowDescendants);
   return utilEntitySelector(Array.from(seen));
 
-  function collectShallowDescendants(id) {
+  function collectShallowDescendants(id: string) {
     var entity = graph.hasEntity(id);
     if (!entity || entity.type !== 'relation') return;
 
@@ -151,22 +64,22 @@ export function utilEntityOrMemberSelector(ids, graph) {
   }
 }
 
-// returns an selector to select entity ids for:
+// returns a selector to select entity ids for:
 //  - entityIDs passed in
 //  - deep descendant entityIDs for any of those entities that are relations
-export function utilEntityOrDeepMemberSelector(ids, graph) {
+export function utilEntityOrDeepMemberSelector(ids: string[], graph) {
   return utilEntitySelector(utilEntityAndDeepMemberIDs(ids, graph));
 }
 
-// returns an selector to select entity ids for:
+// returns a selector to select entity ids for:
 //  - entityIDs passed in
 //  - deep descendant entityIDs for any of those entities that are relations
-export function utilEntityAndDeepMemberIDs(ids, graph) {
-  let seen = new Set();
+export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
+  const seen = new Set<string>();
   ids.forEach(collectDeepDescendants);
   return Array.from(seen);
 
-  function collectDeepDescendants(id) {
+  function collectDeepDescendants(id: string) {
     if (seen.has(id)) return;
     seen.add(id);
 
@@ -177,16 +90,16 @@ export function utilEntityAndDeepMemberIDs(ids, graph) {
   }
 }
 
-// returns an selector to select entity ids for:
+// returns a selector to select entity ids for:
 //  - deep descendant entityIDs for any of those entities that are relations
-export function utilDeepMemberSelector(ids, graph, skipMultipolgonMembers) {
+export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMembers: boolean) {
   let idsSet = new Set(ids);
-  let seen = new Set();
-  let returners = new Set();
+  let seen = new Set<string>();
+  let returners = new Set<string>();
   ids.forEach(collectDeepDescendants);
   return utilEntitySelector(Array.from(returners));
 
-  function collectDeepDescendants(id) {
+  function collectDeepDescendants(id: string) {
     if (seen.has(id)) return;
     seen.add(id);
 
@@ -206,14 +119,14 @@ export function utilDeepMemberSelector(ids, graph, skipMultipolgonMembers) {
 //  - nodes for any nodeIDs passed in
 //  - child nodes of any wayIDs passed in
 //  - descendant member and child nodes of relationIDs passed in
-export function utilGetAllNodes(ids, graph) {
-  let seen = new Set();
-  let nodes = new Set();
+export function utilGetAllNodes(ids: string[], graph) {
+  const seen = new Set<string>();
+  const nodes = new Set();
 
   ids.forEach(collectNodes);
   return Array.from(nodes);
 
-  function collectNodes(id) {
+  function collectNodes(id: string) {
     if (seen.has(id)) return;
     seen.add(id);
 
@@ -225,7 +138,7 @@ export function utilGetAllNodes(ids, graph) {
     } else if (entity.type === 'way') {
       (entity.nodes || []).forEach(collectNodes); // recurse
     } else {
-      (entity.members || []).forEach((member) => collectNodes(member.id)); // recurse
+      (entity.members || []).forEach((member) => collectNodes(member.id as string)); // recurse
     }
   }
 }
@@ -243,7 +156,7 @@ type TagDiff = {
 
 export function utilTagDiff(oldTags, newTags) {
   let tagDiff: TagDiff[] = [];
-  const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort() as [string];
+  const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort() as string[];
   keys.forEach((k) => {
     const oldVal = oldTags[k];
     const newVal = newTags[k];

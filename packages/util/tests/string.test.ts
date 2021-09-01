@@ -17,6 +17,12 @@ describe('utilEditDistance', () => {
   it('does not fail on empty input', () => {
     expect(util.utilEditDistance('', '')).toEqual(0);
   });
+
+  it('works on empty inputs', () => {
+    expect(util.utilEditDistance('', '')).toEqual(0);
+    expect(util.utilEditDistance('foo', '')).toEqual(3);
+    expect(util.utilEditDistance('', 'foo')).toEqual(3);
+  });
 });
 
 describe('utilHashcode', () => {
@@ -31,25 +37,37 @@ describe('utilHashcode', () => {
 describe('utilStringQs', () => {
   it('converts a url querystring into an Object of k=v pairs', () => {
     expect(util.utilStringQs('foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('foo=')).toStrictEqual({ foo: '' });
     expect(util.utilStringQs('foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
+    expect(util.utilStringQs('foo=&one=2')).toStrictEqual({ foo: '', one: '2' });
+    expect(util.utilStringQs('foo=bar&one=')).toStrictEqual({ foo: 'bar', one: '' });
     expect(util.utilStringQs('')).toStrictEqual({});
   });
 
   it('trims leading # if present', () => {
     expect(util.utilStringQs('#foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('#foo=')).toStrictEqual({ foo: '' });
     expect(util.utilStringQs('#foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
+    expect(util.utilStringQs('#foo=&one=2')).toStrictEqual({ foo: '', one: '2' });
+    expect(util.utilStringQs('#foo=bar&one=')).toStrictEqual({ foo: 'bar', one: '' });
     expect(util.utilStringQs('#')).toStrictEqual({});
   });
 
   it('trims leading ? if present', () => {
     expect(util.utilStringQs('?foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('?foo=')).toStrictEqual({ foo: '' });
     expect(util.utilStringQs('?foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
+    expect(util.utilStringQs('?foo=&one=2')).toStrictEqual({ foo: '', one: '2' });
+    expect(util.utilStringQs('?foo=bar&one=')).toStrictEqual({ foo: 'bar', one: '' });
     expect(util.utilStringQs('?')).toStrictEqual({});
   });
 
   it('trims leading #? if present', () => {
     expect(util.utilStringQs('#?foo=bar')).toStrictEqual({ foo: 'bar' });
+    expect(util.utilStringQs('#?foo=')).toStrictEqual({ foo: '' });
     expect(util.utilStringQs('#?foo=bar&one=2')).toStrictEqual({ foo: 'bar', one: '2' });
+    expect(util.utilStringQs('#?foo=&one=2')).toStrictEqual({ foo: '', one: '2' });
+    expect(util.utilStringQs('#?foo=bar&one=')).toStrictEqual({ foo: 'bar', one: '' });
     expect(util.utilStringQs('#?')).toStrictEqual({});
   });
 });

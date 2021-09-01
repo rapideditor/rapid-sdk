@@ -14,9 +14,7 @@ export { utilArrayUniqBy } from './array';
 export { utilObjectOmit } from './object';
 
 export { utilCleanTags } from './osm';
-export { utilCombinedTags } from './osm';
 export { utilDeepMemberSelector } from './osm';
-export { utilEntityRoot } from './osm';
 export { utilEntitySelector } from './osm';
 export { utilEntityOrMemberSelector } from './osm';
 export { utilEntityOrDeepMemberSelector } from './osm';
