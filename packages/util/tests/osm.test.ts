@@ -106,12 +106,13 @@ describe('utilEntityOrMemberSelector', () => {
   const w2 = { id: 'w-2', type: 'way' };
   const r1 = { id: 'r-1', type: 'relation', members: [{id: w1.id, type: w1.type}, {id: w2.id, type: w2.type}] };
   const r2 = { id: 'r-2', type: 'relation', members: [{id: r1.id, type: r1.type}] };
-  const entities = {  };
+  const r3 = { id: 'r-3', type: 'relation' };
   const graph = { hasEntity: (id: string) => ({
     'w-1': w1,
     'w-2': w2,
     'r-1': r1,
     'r-2': r2,
+    'r-3': r3,
   }[id]) };
 
   it('trivially returns ways', () => {
@@ -124,6 +125,19 @@ describe('utilEntityOrMemberSelector', () => {
     expect(results).toContain('.r-1');
     expect(results).toContain('.r-2');
     expect(results).toHaveLength(2);
+  });
+
+  it('does not descend into sub relations', () => {
+    const results = util.utilEntityOrMemberSelector(['r-2'], graph).split(',');
+    expect(results).toContain('.r-1');
+    expect(results).toContain('.r-2');
+    expect(results).toHaveLength(2);
+  });
+
+  it('works with degenerate relation (no members)', () => {
+    const results = util.utilEntityOrMemberSelector(['r-3'], graph).split(',');
+    expect(results).toContain('.r-3');
+    expect(results).toHaveLength(1);
   });
 
   it('correctly gathers up ways under a relation', () => {
@@ -155,12 +169,14 @@ describe('utilEntityOrDeepMemberSelector', () => {
   const r1 = { id: 'r-1', type: 'relation', members: [{id: w1.id, type: w1.type}, {id: w2.id, type: w2.type}] };
   const r2 = { id: 'r-2', type: 'relation', members: [{id: r1.id, type: r1.type}] };
   const r3 = { id: 'r-3', type: 'relation', members: [{id: r2.id, type: r2.type}] };
+  const r4 = { id: 'r-4', type: 'relation' };
   const graph = { hasEntity: (id: string) => ({
     'w-1': w1,
     'w-2': w2,
     'r-1': r1,
     'r-2': r2,
     'r-3': r3,
+    'r-4': r4,
   }[id]) };
 
   it('trivially returns ways', () => {
@@ -176,6 +192,12 @@ describe('utilEntityOrDeepMemberSelector', () => {
     expect(results).toContain('.w-1');
     expect(results).toContain('.w-2');
     expect(results).toHaveLength(5);
+  });
+
+  it('works with degenerate relation (no members)', () => {
+    const results = util.utilEntityOrDeepMemberSelector(['r-4'], graph).split(',');
+    expect(results).toContain('.r-4');
+    expect(results).toHaveLength(1);
   });
 
   it('correctly gathers up ways under a relation', () => {
@@ -222,12 +244,14 @@ describe('utilDeepMemberSelector', () => {
     members: [{id: r2.id, type: r2.type}],
     isMultipolygon: () => false,
   };
+  const r4 = { id: 'r-4', type: 'relation', isMultipolygon: () => true };
   const graph = { hasEntity: (id: string) => ({
     'w-1': w1,
     'w-2': w2,
     'r-1': r1,
     'r-2': r2,
     'r-3': r3,
+    'r-4': r4,
   }[id]) };
 
   it('does descend into sub relations', () => {
@@ -236,6 +260,10 @@ describe('utilDeepMemberSelector', () => {
     expect(result).toContain('.r-1');
     expect(result).toContain('.w-2');
     expect(result).toContain('.w-1');
+  });
+
+  it('works with degenerate relation (no members)', () => {
+    expect(util.utilDeepMemberSelector(['r-4'], graph, false)).toEqual('nothing');
   });
 
   it('skips multipolygons when requested', () => {
@@ -265,6 +293,8 @@ describe('utilGetAllNodes', () => {
   const n3 = { id: 'n-3', type: 'node' };
   const w1 = { id: 'w-1', type: 'way', nodes: ['n-1', 'n-2', 'n-1'] };
   const w2 = { id: 'w-2', type: 'way', nodes: ['n-2', 'n-3'] };
+  const w3 = { id: 'w-3', type: 'way', nodes: ['n-4', 'n-3'] };
+  const w4 = { id: 'w-4', type: 'way' };
   const r1 = {
     id: 'r-1',
     type: 'relation',
@@ -280,15 +310,25 @@ describe('utilGetAllNodes', () => {
     type: 'relation',
     members: [{id: r2.id, type: r2.type}],
   };
+  const r4 = {
+    id: 'r-4',
+    type: 'relation',
+    members: [{id: r2.id, type: r2.type}, {id:'r-undef', type: 'relation'}],
+  };
+  const r5 = { id: 'r-5', type: 'relation' };
   const graph = { hasEntity: (id: string) => ({
     'n-1': n1,
     'n-2': n2,
     'n-3': n3,
     'w-1': w1,
     'w-2': w2,
+    'w-3': w3,
+    'w-4': w4,
     'r-1': r1,
     'r-2': r2,
     'r-3': r3,
+    'r-4': r4,
+    'r-5': r5,
   }[id]) };
 
   it('handles nodes handed in', () => {
@@ -306,6 +346,11 @@ describe('utilGetAllNodes', () => {
     expect(util.utilGetAllNodes(['r-1'], graph)).toEqual([n1, n2, n3]);
     expect(util.utilGetAllNodes(['r-2'], graph)).toEqual([n1, n2, n3]);
     expect(util.utilGetAllNodes(['r-3'], graph)).toEqual([n1, n2, n3]);
+  });
+
+  it('gracefully handles missing entities', () => {
+    expect(util.utilGetAllNodes(['w-3'], graph)).toEqual([n3]);
+    expect(util.utilGetAllNodes(['r-4'], graph)).toEqual([n1, n2, n3]);
   });
 
   it('gets all descendant nodes of multiple ids', () => {
@@ -349,6 +394,15 @@ describe('utilGetAllNodes', () => {
 
     expect(result).toContain(n);
     expect(result).toHaveLength(1);
+  });
+  
+  it('handles degenerate ways', () => {
+    expect(util.utilGetAllNodes(['w-4'], graph)).toEqual([]);
+    expect(util.utilGetAllNodes(['r-5'], graph)).toEqual([]);
+  });
+
+  it('handles degenerate relations', () => {
+
   });
 });
 

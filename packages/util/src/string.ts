@@ -77,7 +77,7 @@ export function utilStringQs(str) {
   return str.split('&').reduce((obj, pair) => {
     const parts = pair.split('=');
     if (parts.length === 2) {
-      obj[parts[0]] = null === parts[1] ? '' : decodeURIComponent(parts[1]);
+      obj[parts[0]] = decodeURIComponent(parts[1]);
     }
     return obj;
   }, {});
