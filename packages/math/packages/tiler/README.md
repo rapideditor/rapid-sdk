@@ -32,7 +32,7 @@ We're not able to support external contributors at this time, but check back in 
 * [getTiles](#getTiles)(projection: Projection): TileResult
 * [getGeoJSON](#getGeoJSON)(tileResult: TileResult): Object
 * [tileSize](#tileSize)(val?: number): number | Tiler
-* [zoomRange](#zoomRange)(val?: Vec2): Vec2 | Tiler
+* [zoomRange](#zoomRange)(min?: number, max?: number): Vec2 | Tiler
 * [margin](#margin)(val?: number): number | Tiler
 * [skipNullIsland](#skipNullIsland)(val?: boolean): boolean | Tiler
 
@@ -161,15 +161,15 @@ t.tileSize();   // gets tile size - returns 512
 ```
 
 
-<a name="zoomRange" href="#zoomRange">#</a> <b>zoomRange</b>(val?: Vec2): Vec2 | Tiler
+<a name="zoomRange" href="#zoomRange">#</a> <b>zoomRange</b>(min?: number, max?: number): Vec2 | Tiler
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/tiler/src/tiler.ts#L143 "Source")
 
-When passed a Vec2 argument, sets the min/max zoom range and returns `this` for method chaining.
+When passed min and max arguments, sets the min/max zoom range and returns `this` for method chaining.
 
 When passed no argument, returns the min/max zoom range.
 
 ```js
-const t = new Tiler().zoomRange([10, 20]);   // sets min/max zoom range
+const t = new Tiler().zoomRange(10, 20);   // sets min/max zoom range
 t.zoomRange();   // gets min/max zoom range - returns [10, 20]
 ```
 
