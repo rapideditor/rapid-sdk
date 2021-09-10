@@ -39,7 +39,7 @@ We're not able to support external contributors at this time, but check back in 
 * [intersects](#intersects)(other: Extent): boolean
 * [intersection](#intersection)(other: Extent): Extent
 * [percentContainedIn](#percentContainedIn)(other: Extent): number
-* [extend](#extend)(other: any): Extent
+* [extend](#extend)(other: Extent): Extent
 * [padByMeters](#padByMeters)(meters: number): Extent
 
 ##### Properties
