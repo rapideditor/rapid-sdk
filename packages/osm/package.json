@@ -30,9 +30,9 @@
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.9",
-    "@id-sdk/geo": "^3.0.0-pre.7",
+    "@id-sdk/geo": "^3.0.0-pre.9",
     "@id-sdk/util": "^3.0.0-pre.9",
-    "@id-sdk/vector": "^3.0.0-pre.7",
+    "@id-sdk/vector": "^3.0.0-pre.9",
     "@types/d3-geo": "^3.0.2",
     "d3-geo": "^3.0.1"
   },

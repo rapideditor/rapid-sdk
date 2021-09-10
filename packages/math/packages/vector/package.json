@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/vector",
-  "version": "3.0.0-pre.7",
+  "version": "3.0.0-pre.9",
   "description": "Vector (coordinate) math functions",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/vector#readme",
   "repository": "github:ideditor/id-sdk",

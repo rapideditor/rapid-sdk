@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.9",
-    "@id-sdk/geo": "^3.0.0-pre.7",
+    "@id-sdk/geo": "^3.0.0-pre.9",
     "@id-sdk/geom": "^3.0.0-pre.9",
-    "@id-sdk/projection": "^3.0.0-pre.7",
+    "@id-sdk/projection": "^3.0.0-pre.9",
     "@id-sdk/tiler": "^3.0.0-pre.9",
-    "@id-sdk/vector": "^3.0.0-pre.7"
+    "@id-sdk/vector": "^3.0.0-pre.9"
   },
   "publishConfig": {
     "access": "public"

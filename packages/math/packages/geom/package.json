@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@id-sdk/extent": "^3.0.0-pre.9",
-    "@id-sdk/vector": "^3.0.0-pre.7",
+    "@id-sdk/vector": "^3.0.0-pre.9",
     "@types/d3-polygon": "^3.0.0",
     "d3-polygon": "^3.0.1"
   },
