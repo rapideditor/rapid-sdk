@@ -15,9 +15,10 @@ export { utilObjectOmit } from './object';
 
 export { utilCleanTags } from './osm';
 export { utilDeepMemberSelector } from './osm';
-export { utilEntitySelector } from './osm';
+export { utilEntityAndDeepMemberIDs } from './osm';
 export { utilEntityOrMemberSelector } from './osm';
 export { utilEntityOrDeepMemberSelector } from './osm';
+export { utilEntitySelector } from './osm';
 export { utilGetAllNodes } from './osm';
 export { utilTagDiff } from './osm';
 export { utilTagText } from './osm';

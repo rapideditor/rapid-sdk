@@ -52,12 +52,11 @@ TODO
 
 #### OSM
 * `utilCleanTags`
-* `utilCombinedTags`
 * `utilDeepMemberSelector`
-* `utilEntityRoot`
-* `utilEntitySelector`
+* `utilEntityAndDeepMemberIDs`
 * `utilEntityOrMemberSelector`
 * `utilEntityOrDeepMemberSelector`
+* `utilEntitySelector`
 * `utilGetAllNodes`
 * `utilTagDiff`
 * `utilTagText`
