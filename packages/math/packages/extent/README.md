@@ -28,17 +28,17 @@ We're not able to support external contributors at this time, but check back in 
 
 ##### Methods
 * [new Extent](#constructor)(otherOrMin?: Extent | Vec2, max?: Vec2) _constructor_
-* [equals](#equals)(other: any): boolean
+* [equals](#equals)(other: Extent): boolean
 * [area](#area)(): number
 * [center](#center)(): Vec2
 * [rectangle](#rectangle)(): number[4]
 * [toParam](#toParam)(): string
 * [bbox](#bbox)(): BBox
 * [polygon](#polygon)(): Vec2[5]
-* [contains](#contains)(other: any): boolean
-* [intersects](#intersects)(other: any): boolean
-* [intersection](#intersection)(other: any): Extent
-* [percentContainedIn](#percentContainedIn)(other: any): number
+* [contains](#contains)(other: Extent): boolean
+* [intersects](#intersects)(other: Extent): boolean
+* [intersection](#intersection)(other: Extent): Extent
+* [percentContainedIn](#percentContainedIn)(other: Extent): number
 * [extend](#extend)(other: any): Extent
 * [padByMeters](#padByMeters)(meters: number): Extent
 
@@ -66,7 +66,7 @@ const e4 = new Extent(e3);              // copy an Extent to a new Extent
 ```
 
 
-<a name="equals" href="#equals">#</a> <b>equals</b>(other: any): boolean
+<a name="equals" href="#equals">#</a> <b>equals</b>(other: Extent): boolean
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/extent/src/extent.ts#L38 "Source")
 
 Test whether extent equals another extent.  Returns `true` if they are equal, `false` if not.
@@ -140,7 +140,7 @@ new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [0, 10], [5, 10], [5
 ```
 
 
-<a name="contains" href="#contains">#</a> <b>contains</b>(other: any): boolean
+<a name="contains" href="#contains">#</a> <b>contains</b>(other: Extent): boolean
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/extent/src/extent.ts#L85 "Source")
 
 Test whether this extent fully contains another extent.  Returns `true` if it does, `false` if not.
@@ -153,7 +153,7 @@ b.contains(a);   // returns false
 ```
 
 
-<a name="intersects" href="#intersects">#</a> <b>intersects</b>(other: any): boolean
+<a name="intersects" href="#intersects">#</a> <b>intersects</b>(other: Extent): boolean
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/extent/src/extent.ts#L96 "Source")
 
 Test whether this extent intersects another extent.  Returns `true` if it does, `false` if not.
@@ -166,7 +166,7 @@ b.intersects(a);   // returns true
 ```
 
 
-<a name="intersection" href="#intersection">#</a> <b>intersection</b>(other: any): Extent
+<a name="intersection" href="#intersection">#</a> <b>intersection</b>(other: Extent): Extent
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/extent/src/extent.ts#L107 "Source")
 
 Returns a new Extent representing the intersection of this and other extent.
@@ -179,7 +179,7 @@ b.intersection(a);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
 ```
 
 
-<a name="percentContainedIn" href="#percentContainedIn">#</a> <b>percentContainedIn</b>(other: any): number
+<a name="percentContainedIn" href="#percentContainedIn">#</a> <b>percentContainedIn</b>(other: Extent): number
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/extent/src/extent.ts#L116 "Source")
 
 Returns the percent of other extent contained within this extent, by area.
@@ -192,7 +192,7 @@ b.percentContainedIn(a);   // returns 0.5
 ```
 
 
-<a name="extend" href="#extend">#</a> <b>extend</b>(other: any): Extent
+<a name="extend" href="#extend">#</a> <b>extend</b>(other: Extent): Extent
 [<>](https://github.com/ideditor/id-sdk/blob/main/packages/math/extent/src/extent.ts#L129 "Source")
 
 Extend the bounds of an extent, returning a new Extent.  This method does not modify the original or other extents.
@@ -218,16 +218,17 @@ Returns a new Extent representing the current extent (assumed to be defined in W
 All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
 
 ```js
-const e1 = new Extent();                 // construct an initially empty extent
-const e2 = e1.extend([[0, 0], [5, 5]]);  // `extend` returns a new Extent, does not modify e1
+const a = new Extent();
+const b = new Extent([0, 0], [5, 5]);
+const c = a.extend(b);   // `extend` returns a new Extent, does not modify a or b
 ```
 
 However we make the `min` and `max` properties publicly mutable, in case you need to modify an extent bounds directly for performance reasons.
 
 ```js
-const e1 = new Extent();    // construct an initially empty extent
-e1.min = [0, 0];            // adjust its min/max later
-e1.max = [5, 5];
+const a = new Extent();    // construct an initially empty extent
+a.min = [0, 0];            // adjust its min/max later
+a.max = [5, 5];
 ```
 
 
