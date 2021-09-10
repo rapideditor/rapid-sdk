@@ -34,8 +34,7 @@ export class Extent {
   }
 
   // Test whether extent equals another extent
-  equals(other: Extent | Vec2, max?: Vec2): boolean {
-    if (!(other instanceof Extent)) other = new Extent(other, max);
+  equals(other: Extent): boolean {
     return (
       this.min[0] === other.min[0] &&
       this.min[1] === other.min[1] &&
@@ -81,8 +80,7 @@ export class Extent {
   }
 
   // Test whether this extent contains another extent
-  contains(other: Extent | Vec2, max?: Vec2): boolean {
-    if (!(other instanceof Extent)) other = new Extent(other, max);
+  contains(other: Extent): boolean {
     return (
       other.min[0] >= this.min[0] &&
       other.min[1] >= this.min[1] &&
@@ -92,8 +90,7 @@ export class Extent {
   }
 
   // Test whether this extent intersects another extent
-  intersects(other: Extent | Vec2, max?: Vec2): boolean {
-    if (!(other instanceof Extent)) other = new Extent(other, max);
+  intersects(other: Extent): boolean {
     return (
       other.min[0] <= this.max[0] &&
       other.min[1] <= this.max[1] &&
@@ -103,8 +100,7 @@ export class Extent {
   }
 
   // Returns a new Extent representing the intersection of this and other extents
-  intersection(other: Extent | Vec2, max?: Vec2): Extent {
-    if (!(other instanceof Extent)) other = new Extent(other, max);
+  intersection(other: Extent): Extent {
     if (!this.intersects(other)) return new Extent();
     return new Extent(
       [Math.max(other.min[0], this.min[0]), Math.max(other.min[1], this.min[1])],
@@ -113,8 +109,7 @@ export class Extent {
   }
 
   // Returns the percent of other extent contained within this extent, by area
-  percentContainedIn(other: Extent | Vec2, max?: Vec2): number {
-    if (!(other instanceof Extent)) other = new Extent(other, max);
+  percentContainedIn(other: Extent): number {
     const a1 = this.intersection(other).area();
     const a2 = this.area();
 
@@ -128,8 +123,7 @@ export class Extent {
   }
 
   // Extend the bounds of an extent, returning a new Extent
-  extend(other: Extent | Vec2, max?: Vec2): Extent {
-    if (!(other instanceof Extent)) other = new Extent(other, max);
+  extend(other: Extent): Extent {
     return new Extent(
       [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
       [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]

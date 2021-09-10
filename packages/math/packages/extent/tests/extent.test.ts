@@ -28,43 +28,41 @@ describe('math/extent', () => {
     it('constructs via an extent', () => {
       const min: Vec2 = [0, 0];
       const max: Vec2 = [5, 10];
-      const e1 = new Extent(min, max);
-      const e2 = new Extent(e1);
-      expect(e2.min).toStrictEqual(min);
-      expect(e2.max).toStrictEqual(max);
+      const a = new Extent(min, max);
+      const b = new Extent(a);
+      expect(b.min).toStrictEqual(min);
+      expect(b.max).toStrictEqual(max);
     });
   });
 
   describe('#equals', () => {
     it('tests extent equality', () => {
-      const e1 = new Extent([0, 0], [10, 10]);
-      const e2 = new Extent([0, 0], [10, 10]);
-      const e3 = new Extent([0, 0], [12, 12]);
-      expect(e1.equals(e2)).toBeTruthy();
-      expect(e1.equals(e3)).toBeFalsy();
-    });
-
-    it('accepts non-Extent argument', () => {
-      const e1 = new Extent([0, 0], [10, 10]);
-      expect(e1.equals([0, 0], [10, 10])).toBeTruthy();
+      const a = new Extent([0, 0], [10, 10]);
+      const b = new Extent([0, 0], [10, 10]);
+      const c = new Extent([0, 0], [12, 12]);
+      expect(a.equals(b)).toBeTruthy();
+      expect(a.equals(c)).toBeFalsy();
     });
   });
 
   describe('#area', () => {
     it('returns the area', () => {
-      expect(new Extent([0, 0], [5, 10]).area()).toBe(50);
+      const a = new Extent([0, 0], [5, 10]);
+      expect(a.area()).toBe(50);
     });
   });
 
   describe('#center', () => {
     it('returns the center point', () => {
-      expect(new Extent([0, 0], [5, 10]).center()).toStrictEqual([2.5, 5]);
+      const a = new Extent([0, 0], [5, 10]);
+      expect(a.center()).toStrictEqual([2.5, 5]);
     });
   });
 
   describe('#rectangle', () => {
     it('returns the extent as a rectangle Array', () => {
-      expect(new Extent([0, 0], [5, 10]).rectangle()).toStrictEqual([0, 0, 5, 10]);
+      const a = new Extent([0, 0], [5, 10]);
+      expect(a.rectangle()).toStrictEqual([0, 0, 5, 10]);
     });
   });
 
@@ -98,123 +96,126 @@ describe('math/extent', () => {
 
   describe('#padByMeters', () => {
     it('does not change centerpoint of an extent', () => {
-      const e1 = new Extent([0, 0], [5, 10]);
-      const e2 = e1.padByMeters(100);
-      expect(e2.center()).toStrictEqual([2.5, 5]);
+      const a = new Extent([0, 0], [5, 10]);
+      const b = a.padByMeters(100);
+      expect(b.center()).toStrictEqual([2.5, 5]);
     });
 
     it('does not affect the extent with a pad of zero', () => {
-      const e1 = new Extent([0, 0], [5, 10]);
-      const e2 = e1.padByMeters(0);
-      expect(e2.min).toStrictEqual([0, 0]);
-      expect(e2.max).toStrictEqual([5, 10]);
+      const a = new Extent([0, 0], [5, 10]);
+      const b = a.padByMeters(0);
+      expect(b.min).toStrictEqual([0, 0]);
+      expect(b.max).toStrictEqual([5, 10]);
     });
   });
 
   describe('#extend', () => {
     it('does not modify self', () => {
-      const e = new Extent([0, 0], [0, 0]);
-      e.extend([1, 1]);
-      expect(e.max).toStrictEqual([0, 0]);
+      const a = new Extent([0, 0], [0, 0]);
+      const b = new Extent([1, 1]);
+      a.extend(b);
+      expect(a.max).toStrictEqual([0, 0]);
     });
 
     it('returns the minimal extent containing self and the given point', () => {
-      const e1 = new Extent();
-      const e2 = e1.extend([0, 0]);
-      expect(e2.min).toStrictEqual([0, 0]);
-      expect(e2.max).toStrictEqual([0, 0]);
+      const a = new Extent();
+      const b = a.extend(new Extent([0, 0]));
+      expect(b.min).toStrictEqual([0, 0]);
+      expect(b.max).toStrictEqual([0, 0]);
 
-      const e3 = e2.extend([5, 10]);
-      expect(e3.min).toStrictEqual([0, 0]);
-      expect(e3.max).toStrictEqual([5, 10]);
+      const c = b.extend(new Extent([5, 10]));
+      expect(c.min).toStrictEqual([0, 0]);
+      expect(c.max).toStrictEqual([5, 10]);
     });
 
     it('returns the minimal extent containing self and the given extent', () => {
-      const e1 = new Extent([0, 0], [5, 10]);
-      const e2 = new Extent([4, -1], [5, 10]);
-      const e3 = e1.extend(e2);
-      expect(e3.min).toStrictEqual([0, -1]);
-      expect(e3.max).toStrictEqual([5, 10]);
+      const a = new Extent([0, 0], [5, 10]);
+      const b = new Extent([4, -1], [5, 10]);
+      const c = a.extend(b);
+      expect(c.min).toStrictEqual([0, -1]);
+      expect(c.max).toStrictEqual([5, 10]);
     });
   });
 
   describe('#contains', () => {
     it('returns true for a point inside self', () => {
-      expect(new Extent([0, 0], [5, 5]).contains([2, 2])).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([2, 2]);
+      expect(a.contains(b)).toBeTrue();
     });
 
     it('returns true for a point on the boundary of self', () => {
-      expect(new Extent([0, 0], [5, 5]).contains([0, 0])).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([0, 0]);
+      expect(a.contains(b)).toBeTrue();
     });
 
     it('returns false for a point outside self', () => {
-      expect(new Extent([0, 0], [5, 5]).contains([6, 6])).toBeFalse();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([6, 6]);
+      expect(a.contains(b)).toBeFalse();
     });
 
     it('returns true for an extent contained by self', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      const e2 = new Extent([1, 1], [2, 2]);
-      expect(e1.contains(e2)).toBeTrue();
-      expect(e2.contains(e1)).toBeFalse();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([1, 1], [2, 2]);
+      expect(a.contains(b)).toBeTrue();
+      expect(b.contains(a)).toBeFalse();
     });
 
     it('returns false for an extent partially contained by self', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      const e2 = new Extent([1, 1], [6, 6]);
-      expect(e1.contains(e2)).toBeFalse();
-      expect(e2.contains(e1)).toBeFalse();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([1, 1], [6, 6]);
+      expect(a.contains(b)).toBeFalse();
+      expect(b.contains(a)).toBeFalse();
     });
 
     it('returns false for an extent not intersected by self', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      const e2 = new Extent([6, 7], [7, 7]);
-      expect(e1.contains(e2)).toBeFalse();
-      expect(e2.contains(e1)).toBeFalse();
-    });
-
-    it('accepts non-Extent argument', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      expect(e1.contains(new Extent([1, 1], [2, 2]))).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([6, 7], [7, 7]);
+      expect(a.contains(b)).toBeFalse();
+      expect(b.contains(a)).toBeFalse();
     });
   });
 
   describe('#intersects', () => {
     it('returns true for a point inside self', () => {
-      expect(new Extent([0, 0], [5, 5]).intersects([2, 2])).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([2, 2]);
+      expect(a.intersects(b)).toBeTrue();
     });
 
     it('returns true for a point on the boundary of self', () => {
-      expect(new Extent([0, 0], [5, 5]).intersects([0, 0])).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([0, 0]);
+      expect(a.intersects(b)).toBeTrue();
     });
 
     it('returns false for a point outside self', () => {
-      expect(new Extent([0, 0], [5, 5]).intersects([6, 6])).toBeFalse();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([6, 6]);
+      expect(a.intersects(b)).toBeFalse();
     });
 
     it('returns true for an extent contained by self', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      const e2 = new Extent([1, 1], [2, 2]);
-      expect(e1.intersects(e2)).toBeTrue();
-      expect(e2.intersects(e1)).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([1, 1], [2, 2]);
+      expect(a.intersects(b)).toBeTrue();
+      expect(b.intersects(a)).toBeTrue();
     });
 
     it('returns true for an extent partially contained by self', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      const e2 = new Extent([1, 1], [6, 6]);
-      expect(e1.intersects(e2)).toBeTrue();
-      expect(e2.intersects(e1)).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([1, 1], [6, 6]);
+      expect(a.intersects(b)).toBeTrue();
+      expect(b.intersects(a)).toBeTrue();
     });
 
     it('returns false for an extent not intersected by self', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      const e2 = new Extent([6, 7], [7, 7]);
-      expect(e1.intersects(e2)).toBeFalse();
-      expect(e2.intersects(e1)).toBeFalse();
-    });
-
-    it('accepts non-Extent argument', () => {
-      const e1 = new Extent([0, 0], [5, 5]);
-      expect(e1.intersects(new Extent([1, 1], [2, 2]))).toBeTrue();
+      const a = new Extent([0, 0], [5, 5]);
+      const b = new Extent([6, 7], [7, 7]);
+      expect(a.intersects(b)).toBeFalse();
+      expect(b.intersects(a)).toBeFalse();
     });
   });
 
@@ -264,14 +265,6 @@ describe('math/extent', () => {
       const c = new Extent([1, 1], [2, 2]);
       expect(a.intersection(b)).toStrictEqual(c);
       expect(b.intersection(a)).toStrictEqual(c);
-    });
-
-    it('accepts non-Extent argument', () => {
-      const a = new Extent([0, 0], [5, 5]);
-      const b = new Extent([3, 4], [7, 7]);
-      const c = new Extent([3, 4], [5, 5]);
-      expect(a.intersection([3, 4], [7, 7])).toStrictEqual(c);
-      expect(b.intersection([0, 0], [5, 5])).toStrictEqual(c);
     });
   });
 
@@ -329,11 +322,6 @@ describe('math/extent', () => {
       const b = new Extent([3, 0], [4, 2]);
       expect(a.percentContainedIn(b)).toBe(0.25);
       expect(b.percentContainedIn(a)).toBe(0.5);
-    });
-
-    it('accepts non-Extent argument', () => {
-      const e1 = new Extent([0, 0], [2, 1]);
-      expect(e1.percentContainedIn([1, 0], [3, 1])).toBe(0.5);
     });
   });
 });
