@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/geo",
-  "version": "3.0.0-pre.9",
+  "version": "3.0.0-pre.10",
   "description": "Geographic (spherical) math functions",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/geo#readme",
   "repository": "github:ideditor/id-sdk",
@@ -28,7 +28,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../../../package.json --roots=./packages/math/packages/geo"
   },
   "dependencies": {
-    "@id-sdk/vector": "^3.0.0-pre.9"
+    "@id-sdk/vector": "^3.0.0-pre.10"
   },
   "publishConfig": {
     "access": "public"

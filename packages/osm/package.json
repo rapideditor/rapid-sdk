@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/osm",
-  "version": "3.0.0-pre.9",
+  "version": "3.0.0-pre.10",
   "private": true,
   "description": "Classes and functions for working with the OpenStreetMap data model",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/osm#readme",
@@ -29,10 +29,10 @@
     "tsc": "tsc"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.9",
-    "@id-sdk/geo": "^3.0.0-pre.9",
-    "@id-sdk/util": "^3.0.0-pre.9",
-    "@id-sdk/vector": "^3.0.0-pre.9",
+    "@id-sdk/extent": "^3.0.0-pre.10",
+    "@id-sdk/geo": "^3.0.0-pre.10",
+    "@id-sdk/util": "^3.0.0-pre.10",
+    "@id-sdk/vector": "^3.0.0-pre.10",
     "@types/d3-geo": "^3.0.2",
     "d3-geo": "^3.0.1"
   },
