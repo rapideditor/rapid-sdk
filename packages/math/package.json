@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/math",
-  "version": "3.0.0-pre.8",
+  "version": "3.0.0-pre.9",
   "description": "Collection of iD-sdk math libraries",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math#readme",
   "repository": "github:ideditor/id-sdk",
@@ -28,11 +28,11 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../package.json --roots=./packages/math"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.8",
+    "@id-sdk/extent": "^3.0.0-pre.9",
     "@id-sdk/geo": "^3.0.0-pre.7",
-    "@id-sdk/geom": "^3.0.0-pre.8",
+    "@id-sdk/geom": "^3.0.0-pre.9",
     "@id-sdk/projection": "^3.0.0-pre.7",
-    "@id-sdk/tiler": "^3.0.0-pre.8",
+    "@id-sdk/tiler": "^3.0.0-pre.9",
     "@id-sdk/vector": "^3.0.0-pre.7"
   },
   "publishConfig": {

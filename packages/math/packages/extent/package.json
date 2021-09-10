@@ -1,6 +1,6 @@
 {
   "name": "@id-sdk/extent",
-  "version": "3.0.0-pre.8",
+  "version": "3.0.0-pre.9",
   "description": "Extent class for creating bounding boxes",
   "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/math/extent#readme",
   "repository": "github:ideditor/id-sdk",
