@@ -591,8 +591,12 @@ describe('math/tiler', () => {
 
   describe('#zoomRange', () => {
     it('sets/gets zoomRange', () => {
-      const t = new Tiler().zoomRange([10, 20]) as Tiler;
+      const t = new Tiler().zoomRange(10, 20) as Tiler;
       expect(t.zoomRange()).toStrictEqual([10, 20]);
+    });
+    it('max defaults to min', () => {
+      const t = new Tiler().zoomRange(10) as Tiler;
+      expect(t.zoomRange()).toStrictEqual([10, 10]);
     });
   });
 

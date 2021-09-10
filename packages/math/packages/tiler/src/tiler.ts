@@ -141,9 +141,10 @@ export class Tiler {
   }
 
   // Sets/Gets the current zoomRange
-  zoomRange(val?: Vec2): Vec2 | Tiler {
-    if (val === undefined) return this._zoomRange;
-    this._zoomRange = val;
+  zoomRange(min: number, max?: number): Vec2 | Tiler {
+    if (min === undefined) return this._zoomRange;
+    if (max === undefined) max = min;
+    this._zoomRange = [min, max];
     return this;
   }
 
