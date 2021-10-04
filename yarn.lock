@@ -325,6 +325,57 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
+"@id-sdk/extent@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/extent/-/extent-3.0.0-pre.10.tgz#f48b72dc987f145842ca42a69b0df066d379df11"
+  integrity sha512-6UEUwQfoyE57REUrg7mNGiT76ySYgUMXl1jDEMvrs7hDq4e9VyhgFITU5zZVi6m/Mqu4EViYdnVK5a83r3vyWw==
+  dependencies:
+    "@id-sdk/geo" "^3.0.0-pre.10"
+    "@id-sdk/vector" "^3.0.0-pre.10"
+
+"@id-sdk/geo@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/geo/-/geo-3.0.0-pre.10.tgz#6a8aa4d870d43bed5d778fd2971c7700d538887c"
+  integrity sha512-JWVOpGKGUDObDZ+BxLfpdZD5WdPe5XUwkkP+2GYUJMKSP03k6yJ740VbwApUS2js/5J1OleR9K8E+7EiYXdJ5g==
+  dependencies:
+    "@id-sdk/vector" "^3.0.0-pre.10"
+
+"@id-sdk/geom@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/geom/-/geom-3.0.0-pre.10.tgz#9c13242944bdcf6d54735ca80861b2b4856c5aea"
+  integrity sha512-4xj/cQu6c14ErWQ/edF64FAWlQeChTkMi1lCZRzqrucuUymi0BrBhYGbeQgz6co90aD8d/QX6ZJepbEgPIS1KQ==
+  dependencies:
+    "@id-sdk/extent" "^3.0.0-pre.10"
+    "@id-sdk/vector" "^3.0.0-pre.10"
+    "@types/d3-polygon" "^3.0.0"
+    d3-polygon "^3.0.1"
+
+"@id-sdk/projection@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/projection/-/projection-3.0.0-pre.10.tgz#a4fb8b59678dbe178e886e87d2dd481af456d7df"
+  integrity sha512-xidjW7roaVezW411RvQTux+8wqTMD/5xlgClMRo5U1VIpLbGXu+ufEiSipMIbUq+n2o0s4UH2r1Ht6wgRnU46w==
+  dependencies:
+    "@id-sdk/vector" "^3.0.0-pre.10"
+    "@types/d3-geo" "^3.0.2"
+    "@types/d3-zoom" "^3.0.1"
+    d3-geo "^3.0.1"
+    d3-zoom "^3.0.0"
+
+"@id-sdk/tiler@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/tiler/-/tiler-3.0.0-pre.10.tgz#c5891278caf759fb1c5d552b4651629eb9d395fc"
+  integrity sha512-Mr41pkmFVutLH1ozg7DEOYE+ROaOh6OpSUFbUmRWa3H0QkXf5QyxMgN/PaGsUR5uasZHtA6CZ/vV8bwtZpWjOQ==
+  dependencies:
+    "@id-sdk/extent" "^3.0.0-pre.10"
+    "@id-sdk/geo" "^3.0.0-pre.10"
+    "@id-sdk/projection" "^3.0.0-pre.10"
+    "@id-sdk/vector" "^3.0.0-pre.10"
+
+"@id-sdk/vector@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/vector/-/vector-3.0.0-pre.10.tgz#81801bc2288ad75587be22d41afbbf5982b7f0ea"
+  integrity sha512-qU3jOo/48EgYH8DaOjnWzYwiRAU9sbALbQAIBjJFqJEwXnpOhkezXxGXHqlpmGG9BDLO7Ecps2FAwRTXqzUtBw==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1592,9 +1643,9 @@
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
 "@types/node@*", "@types/node@^16.3.2":
-  version "16.9.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.4.tgz#a12f0ee7847cf17a97f6fdf1093cb7a9af23cca4"
-  integrity sha512-KDazLNYAGIuJugdbULwFZULF9qQ13yNWEBFnfVpqlpgAAo6H/qnM9RjBgh0A0kmHf3XxAKLdN5mTIng9iUvVLA==
+  version "16.10.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.10.2.tgz#5764ca9aa94470adb4e1185fe2e9f19458992b2e"
+  integrity sha512-zCclL4/rx+W5SQTzFs9wyvvyCwoK9QtBpratqz2IYJ3O8Umrn0m3nsTv0wQBk9sRGpvUe9CwPDrQFB10f1FIjQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
