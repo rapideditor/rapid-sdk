@@ -1,10 +1,10 @@
 // export * from './changeset';
-// export * from './entity';
-// // export * from './intersection';
+export * from './entity';
+// export * from './intersection';
 export * from './lanes';
 // export * from './multipolygon';
-// export * from './node';
+export * from './node';
 // export * from './note';
 // export * from './relation';
-// export * from './tags';
+export * from './tags';
 // export * from './way';

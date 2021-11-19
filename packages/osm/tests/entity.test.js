@@ -1,333 +1,457 @@
-describe('iD.osmEntity', function () {
-  it('returns a subclass of the appropriate type', function () {
-    expect(iD.osmEntity({ type: 'node' })).be.an.instanceOf(iD.osmNode);
-    expect(iD.osmEntity({ type: 'way' })).be.an.instanceOf(iD.osmWay);
-    expect(iD.osmEntity({ type: 'relation' })).be.an.instanceOf(iD.osmRelation);
-    expect(iD.osmEntity({ id: 'n1' })).be.an.instanceOf(iD.osmNode);
-    expect(iD.osmEntity({ id: 'w1' })).be.an.instanceOf(iD.osmWay);
-    expect(iD.osmEntity({ id: 'r1' })).be.an.instanceOf(iD.osmRelation);
-  });
+import { Entity } from '../src/index';
+import { Extent } from '@id-sdk/extent';
 
-  if (iD.debug) {
-    it('is frozen', function () {
-      expect(Object.isFrozen(iD.osmEntity())).to.be.true;
+describe('Entity', () => {
+
+  describe('constructor', () => {
+    it('constructs an Entity', () => {
+      const e = new Entity();
+      expect(e).toBeInstanceOf(Entity);
     });
 
-    it('freezes tags', function () {
-      expect(Object.isFrozen(iD.osmEntity().tags)).to.be.true;
-    });
-  }
+    describe('id', () => {
+      it('generates unique ids', () => {
+        const e1 = new Entity();
+        const e2 = new Entity();
+        expect(e1.id).not.toBe(e2.id);
+      });
 
-  describe('.id', function () {
-    it('generates unique IDs', function () {
-      expect(iD.osmEntity.id('node')).not.to.equal(iD.osmEntity.id('node'));
-    });
-
-    describe('.fromOSM', function () {
-      it('returns a ID string unique across entity types', function () {
-        expect(iD.osmEntity.id.fromOSM('node', '1')).to.equal('n1');
+      it('constructs Entity with given id', () => {
+        const e = new Entity({ id: 'eTest' });
+        expect(e.id).toBe('eTest');
       });
     });
 
-    describe('.toOSM', function () {
-      it('reverses fromOSM', function () {
-        expect(iD.osmEntity.id.toOSM(iD.osmEntity.id.fromOSM('node', '1'))).to.equal('1');
+    describe('v', () => {
+      it('constructs Entity internal version to 1 if unspecified', () => {
+        const e = new Entity();
+        expect(e.v).toBe(1);
+      });
+
+      it('increments Entity internal version if specified', () => {
+        const e = new Entity({ v: 10 });
+        expect(e.v).toBe(11);
+      });
+    });
+
+    describe('visible', () => {
+      it('constructs Entity as visible, default to true unless passed explicit false', () => {
+        const e1 = new Entity();
+        const e2 = new Entity({ visible: 'whatever' });
+        const e3 = new Entity({ visible: undefined });
+        const e4 = new Entity({ visible: null });
+        const e5 = new Entity({ visible: false });
+        expect(e1.visible).toBeTrue();
+        expect(e2.visible).toBeTrue();
+        expect(e3.visible).toBeTrue();
+        expect(e4.visible).toBeTrue();
+        expect(e5.visible).toBeFalse();
+      });
+    });
+
+    describe('tags', () => {
+      it('constructs Entity with no tags by default', () => {
+        const e = new Entity();
+        const tags = e.tags;
+        expect(tags).toBeInstanceOf(Map);
+        expect(tags.size).toBe(0);
+      });
+
+      it('constructs Entity with tags passed as Object', () => {
+        const t = { foo: 'bar' };
+        const e = new Entity({ tags: t });
+        const tags = e.tags;
+        expect(tags).toBeInstanceOf(Map);
+        expect(tags.get('foo')).toBe('bar');
+      });
+
+      it('constructs Entity with tags passed as Map', () => {
+        const t = new Map().set('foo', 'bar');
+        const e = new Entity({ tags: t });
+        const tags = e.tags;
+        expect(tags).toBeInstanceOf(Map);
+        expect(tags.get('foo')).toBe('bar');
+      });
+    });
+
+    describe('copy constructor', () => {
+      it('constructs Entity from another Entity', () => {
+        const e1 = new Entity({ id: 'e123', visible: false, tags: { foo: 'bar'} });
+        expect(e1.v).toBe(1);
+
+        const e2 = new Entity(e1);
+        expect(e2).toBeInstanceOf(Entity);
+        expect(e2).not.toBe(e1);
+        expect(e2.id).toBe('e123');
+        expect(e2.v).toBe(2);
+        expect(e2.visible).toBe(false);
+        expect(e2.tags.get('foo')).toBe('bar');
+      });
+    });
+
+  });
+
+//   it('returns a subclass of the appropriate type', () => {
+//     expect(Entity({ type: 'node' })).be.an.instanceOf(iD.osmNode);
+//     expect(Entity({ type: 'way' })).be.an.instanceOf(iD.osmWay);
+//     expect(Entity({ type: 'relation' })).be.an.instanceOf(iD.osmRelation);
+//     expect(Entity({ id: 'n1' })).be.an.instanceOf(iD.osmNode);
+//     expect(Entity({ id: 'w1' })).be.an.instanceOf(iD.osmWay);
+//     expect(Entity({ id: 'r1' })).be.an.instanceOf(iD.osmRelation);
+//   });
+
+  describe('static .id', () => {
+    describe('.fromOSM', () => {
+      it('returns a ID string unique across entity types', () => {
+        expect(Entity.id.fromOSM('node', '1')).toBe('n1');
+      });
+    });
+    describe('.toOSM', () => {
+      it('reverses fromOSM', () => {
+        expect(Entity.id.toOSM(Entity.id.fromOSM('node', '1'))).toBe('1');
       });
     });
   });
 
-  describe('#copy', function () {
-    it('returns a new Entity', function () {
-      var n = iD.osmEntity({ id: 'n' });
-      var result = n.copy(null, {});
-      expect(result).to.be.an.instanceof(iD.osmEntity);
-      expect(result).not.to.equal(n);
-    });
-
-    it('adds the new Entity to input object', function () {
-      var n = iD.osmEntity({ id: 'n' });
-      var copies = {};
-      var result = n.copy(null, copies);
-      expect(Object.keys(copies)).to.have.length(1);
-      expect(copies.n).to.equal(result);
-    });
-
-    it('returns an existing copy in input object', function () {
-      var n = iD.osmEntity({ id: 'n' });
-      var copies = {};
-      var result1 = n.copy(null, copies);
-      var result2 = n.copy(null, copies);
-      expect(Object.keys(copies)).to.have.length(1);
-      expect(result1).to.equal(result2);
-    });
-
-    it("resets 'id', 'user', and 'version' properties", function () {
-      var n = iD.osmEntity({ id: 'n', version: 10, user: 'user' });
-      var copies = {};
-      n.copy(null, copies);
-      expect(copies.n.isNew()).to.be.ok;
-      expect(copies.n.version).to.be.undefined;
-      expect(copies.n.user).to.be.undefined;
-    });
-
-    it('copies tags', function () {
-      var n = iD.osmEntity({ id: 'n', tags: { foo: 'foo' } });
-      var copies = {};
-      n.copy(null, copies);
-      expect(copies.n.tags).to.equal(n.tags);
+  describe('static .key', () => {
+    it('returns an identifier that combines the id and internal version', () => {
+      const e = new Entity({ id: 'e123' });
+      expect(Entity.key(e)).toBe('e123v1');
     });
   });
 
-  describe('#update', function () {
-    it('returns a new Entity', function () {
-      var a = iD.osmEntity();
-      var b = a.update({});
-      expect(b instanceof iD.osmEntity).to.be.true;
-      expect(a).not.to.equal(b);
+  describe('#copy', () => {
+    it('returns a new Entity', () => {
+      const e1 = new Entity({ id: 'n' });
+      const e2 = e1.copy(null, {});
+      expect(e2).toBeInstanceOf(Entity);
+      expect(e2).not.toBe(e1);
     });
 
-    it('updates the specified attributes', function () {
-      var tags = { foo: 'bar' };
-      var e = iD.osmEntity().update({ tags: tags });
-      expect(e.tags).to.equal(tags);
+    it("works without 'copies' argument", () => {
+      const e1 = new Entity({ id: 'n' });
+      const e2 = e1.copy(null);
+      expect(e2).toBeInstanceOf(Entity);
+      expect(e2).not.toBe(e1);
     });
 
-    it('preserves existing attributes', function () {
-      var e = iD.osmEntity({ id: 'w1' }).update({});
-      expect(e.id).to.equal('w1');
+    it('adds the new Entity to input object', () => {
+      let copies = {};
+      const e1 = new Entity({ id: 'n' });
+      const e2 = e1.copy(null, copies);
+      expect(Object.keys(copies)).toHaveLength(1);
+      expect(copies.n).toBe(e2);
     });
 
-    it("doesn't modify the input", function () {
-      var attrs = { tags: { foo: 'bar' } };
-      iD.osmEntity().update(attrs);
-      expect(attrs).to.eql({ tags: { foo: 'bar' } });
+    it('returns an existing copy in input object', () => {
+      let copies = {};
+      const e1 = new Entity({ id: 'n' });
+      const e2 = e1.copy(null, copies);
+      const e3 = e1.copy(null, copies);
+      expect(Object.keys(copies)).toHaveLength(1);
+      expect(e2).toBe(e3);
     });
 
-    it("doesn't copy prototype properties", function () {
-      expect(iD.osmEntity().update({})).not.to.have.ownProperty('update');
+    it("resets 'id', 'user', and 'version' properties", () => {
+      let copies = {};
+      const e = new Entity({ id: 'n', version: 10, user: 'user' });
+      e.copy(null, copies);
+      expect(copies.n.isNew()).toBeTruthy();
+      expect(copies.n.version).toBeUndefined();
+      expect(copies.n.user).toBeUndefined();
     });
 
-    it('sets v to 1 if previously undefined', function () {
-      expect(iD.osmEntity().update({}).v).to.equal(1);
-    });
-
-    it('increments v', function () {
-      expect(iD.osmEntity({ v: 1 }).update({}).v).to.equal(2);
-    });
-  });
-
-  describe('#mergeTags', function () {
-    it('returns self if unchanged', function () {
-      var a = iD.osmEntity({ tags: { a: 'a' } });
-      var b = a.mergeTags({ a: 'a' });
-      expect(a).to.equal(b);
-    });
-
-    it('returns a new Entity if changed', function () {
-      var a = iD.osmEntity({ tags: { a: 'a' } });
-      var b = a.mergeTags({ a: 'b' });
-      expect(b instanceof iD.osmEntity).to.be.true;
-      expect(a).not.to.equal(b);
-    });
-
-    it('merges tags', function () {
-      var a = iD.osmEntity({ tags: { a: 'a' } });
-      var b = a.mergeTags({ b: 'b' });
-      expect(b.tags).to.eql({ a: 'a', b: 'b' });
-    });
-
-    it('combines non-conflicting tags', function () {
-      var a = iD.osmEntity({ tags: { a: 'a' } });
-      var b = a.mergeTags({ a: 'a' });
-      expect(b.tags).to.eql({ a: 'a' });
-    });
-
-    it('combines conflicting tags with semicolons', function () {
-      var a = iD.osmEntity({ tags: { a: 'a' } });
-      var b = a.mergeTags({ a: 'b' });
-      expect(b.tags).to.eql({ a: 'a;b' });
-    });
-
-    it('combines combined tags', function () {
-      var a = iD.osmEntity({ tags: { a: 'a;b' } });
-      var b = iD.osmEntity({ tags: { a: 'b' } });
-
-      expect(a.mergeTags(b.tags).tags).to.eql({ a: 'a;b' });
-      expect(b.mergeTags(a.tags).tags).to.eql({ a: 'b;a' });
-    });
-
-    it('combines combined tags with whitespace', function () {
-      var a = iD.osmEntity({ tags: { a: 'a; b' } });
-      var b = iD.osmEntity({ tags: { a: 'b' } });
-
-      expect(a.mergeTags(b.tags).tags).to.eql({ a: 'a;b' });
-      expect(b.mergeTags(a.tags).tags).to.eql({ a: 'b;a' });
+    it('copies tags', () => {
+      let copies = {};
+      const e = new Entity({ id: 'n', tags: { foo: 'foo' } });
+      e.copy(null, copies);
+      expect(copies.n.tags).toEqual(e.tags);
     });
   });
 
-  describe('#osmId', function () {
-    it('returns an OSM ID as a string', function () {
-      expect(iD.osmEntity({ id: 'w1234' }).osmId()).to.eql('1234');
-      expect(iD.osmEntity({ id: 'n1234' }).osmId()).to.eql('1234');
-      expect(iD.osmEntity({ id: 'r1234' }).osmId()).to.eql('1234');
+  describe('#osmId', () => {
+    it('returns the numeric OSM id as a string', () => {
+      expect(new Entity({ id: 'w1234' }).osmId()).toBe('1234');
+      expect(new Entity({ id: 'n1234' }).osmId()).toBe('1234');
+      expect(new Entity({ id: 'r1234' }).osmId()).toBe('1234');
     });
   });
 
-  describe('#intersects', function () {
-    it('returns true for a way with a node within the given extent', function () {
-      var node = iD.osmNode({ loc: [0, 0] });
-      var way = iD.osmWay({ nodes: [node.id] });
-      var graph = iD.coreGraph([node, way]);
-      expect(
-        way.intersects(
-          [
-            [-5, -5],
-            [5, 5]
-          ],
-          graph
-        )
-      ).to.equal(true);
-    });
-
-    it('returns false for way with no nodes within the given extent', function () {
-      var node = iD.osmNode({ loc: [6, 6] });
-      var way = iD.osmWay({ nodes: [node.id] });
-      var graph = iD.coreGraph([node, way]);
-      expect(
-        way.intersects(
-          [
-            [-5, -5],
-            [5, 5]
-          ],
-          graph
-        )
-      ).to.equal(false);
+  describe('#isNew', () => {
+    it('returns true if the OSM id is negative', () => {
+      expect(new Entity({ id: 'n-1234' }).isNew()).toBeTrue();
+      expect(new Entity({ id: 'n1234' }).isNew()).toBeFalse();
     });
   });
 
-  describe('#hasNonGeometryTags', function () {
-    it('returns false for an entity without tags', function () {
-      var node = iD.osmNode();
-      expect(node.hasNonGeometryTags()).to.equal(false);
+
+  describe('#update', () => {
+    it('returns a new Entity', () => {
+      const e1 = new Entity();
+      const e2 = e1.update({});
+      expect(e2).toBeInstanceOf(Entity);
+      expect(e2).not.toBe(e1);
     });
 
-    it('returns true for an entity with tags', function () {
-      var node = iD.osmNode({ tags: { foo: 'bar' } });
-      expect(node.hasNonGeometryTags()).to.equal(true);
+    it('updates the specified attributes', () => {
+      const tags = new Map().set('foo', 'bar');
+      const e = new Entity().update({ tags: tags });
+      expect(e.tags).toEqual(tags);
     });
 
-    it('returns false for an entity with only an area=yes tag', function () {
-      var node = iD.osmNode({ tags: { area: 'yes' } });
-      expect(node.hasNonGeometryTags()).to.equal(false);
-    });
-  });
-
-  describe('#hasParentRelations', function () {
-    it('returns true for an entity that is a relation member', function () {
-      var node = iD.osmNode();
-      var relation = iD.osmRelation({ members: [{ id: node.id }] });
-      var graph = iD.coreGraph([node, relation]);
-      expect(node.hasParentRelations(graph)).to.equal(true);
+    it('preserves existing attributes', () => {
+      const e = new Entity({ id: 'w1' }).update({});
+      expect(e.id).toBe('w1');
     });
 
-    it('returns false for an entity that is not a relation member', function () {
-      var node = iD.osmNode();
-      var graph = iD.coreGraph([node]);
-      expect(node.hasParentRelations(graph)).to.equal(false);
-    });
-  });
-
-  describe('#deprecatedTags', function () {
-    var deprecated = [
-      { old: { highway: 'no' } },
-      { old: { amenity: 'toilet' }, replace: { amenity: 'toilets' } },
-      { old: { speedlimit: '*' }, replace: { maxspeed: '$1' } },
-      { old: { man_made: 'water_tank' }, replace: { man_made: 'storage_tank', content: 'water' } },
-      { old: { amenity: 'gambling', gambling: 'casino' }, replace: { amenity: 'casino' } }
-    ];
-
-    it('returns none if entity has no tags', function () {
-      expect(iD.osmEntity().deprecatedTags(deprecated)).to.eql([]);
+    it("doesn't modify the input", () => {
+      const props1 = { tags: { foo: 'bar' } };
+      const props2 = props1;
+      new Entity().update(props1);
+      expect(props1).toBe(props2);
     });
 
-    it('returns none when no tags are deprecated', function () {
-      expect(iD.osmEntity({ tags: { amenity: 'toilets' } }).deprecatedTags(deprecated)).to.eql([]);
+    it("doesn't copy prototype properties", () => {
+      const e = new Entity().update({});
+      expect(e.hasOwnProperty('update')).toBeFalsy();
     });
 
-    it('returns 1:0 replacement', function () {
-      expect(iD.osmEntity({ tags: { highway: 'no' } }).deprecatedTags(deprecated)).to.eql([
-        { old: { highway: 'no' } }
-      ]);
-    });
-
-    it('returns 1:1 replacement', function () {
-      expect(iD.osmEntity({ tags: { amenity: 'toilet' } }).deprecatedTags(deprecated)).to.eql([
-        { old: { amenity: 'toilet' }, replace: { amenity: 'toilets' } }
-      ]);
-    });
-
-    it('returns 1:1 wildcard', function () {
-      expect(iD.osmEntity({ tags: { speedlimit: '50' } }).deprecatedTags(deprecated)).to.eql([
-        { old: { speedlimit: '*' }, replace: { maxspeed: '$1' } }
-      ]);
-    });
-
-    it('returns 1:2 total replacement', function () {
-      expect(iD.osmEntity({ tags: { man_made: 'water_tank' } }).deprecatedTags(deprecated)).to.eql([
-        { old: { man_made: 'water_tank' }, replace: { man_made: 'storage_tank', content: 'water' } }
-      ]);
-    });
-
-    it('returns 1:2 partial replacement', function () {
-      expect(
-        iD
-          .osmEntity({ tags: { man_made: 'water_tank', content: 'water' } })
-          .deprecatedTags(deprecated)
-      ).to.eql([
-        { old: { man_made: 'water_tank' }, replace: { man_made: 'storage_tank', content: 'water' } }
-      ]);
-    });
-
-    it('returns 2:1 replacement', function () {
-      expect(
-        iD
-          .osmEntity({ tags: { amenity: 'gambling', gambling: 'casino' } })
-          .deprecatedTags(deprecated)
-      ).to.eql([
-        { old: { amenity: 'gambling', gambling: 'casino' }, replace: { amenity: 'casino' } }
-      ]);
+    it('increments v', () => {
+      const e1 = new Entity()
+      expect(e1.v).toBe(1);
+      const e2 = e1.update({});
+      expect(e2.v).toBe(2);
     });
   });
 
-  describe('#hasInterestingTags', function () {
-    it('returns false if the entity has no tags', function () {
-      expect(iD.osmEntity().hasInterestingTags()).to.equal(false);
+  describe('#mergeTags', () => {
+    it('returns self if unchanged', () => {
+      const e1 = new Entity({ tags: { a: 'a' } });
+      const e2 = e1.mergeTags({ a: 'a' });
+      expect(e2).toBe(e1);
     });
 
-    it("returns true if the entity has tags other than 'attribution', 'created_by', 'source', 'odbl' and tiger tags", function () {
-      expect(iD.osmEntity({ tags: { foo: 'bar' } }).hasInterestingTags()).to.equal(true);
+    it('returns self if passed bad argument', () => {
+      const e = new Entity({ tags: { a: 'a' } });
+      expect(e.mergeTags({})).toBe(e);
+      expect(e.mergeTags()).toBe(e);
+      expect(e.mergeTags(null)).toBe(e);
+      expect(e.mergeTags(5)).toBe(e);
+      expect(e.mergeTags([])).toBe(e);
     });
 
-    it('return false if the entity has only uninteresting tags', function () {
-      expect(iD.osmEntity({ tags: { source: 'Bing' } }).hasInterestingTags()).to.equal(false);
+    it('returns a new Entity if changed', () => {
+      const e1 = new Entity({ tags: { a: 'a' } });
+      const e2 = e1.mergeTags({ a: 'b' });
+      expect(e2 instanceof Entity).toBeTrue();
+      expect(e2).not.toBe(e1);
     });
 
-    it('return false if the entity has only tiger tags', function () {
-      expect(
-        iD.osmEntity({ tags: { 'tiger:source': 'blah', 'tiger:foo': 'bar' } }).hasInterestingTags()
-      ).to.equal(false);
+    it('merges tags passed as Object', () => {
+      const e1 = new Entity({ tags: { a: 'a' } });
+      const e2 = e1.mergeTags({ b: 'b' });
+      const tags = e2.tags;
+      expect(tags).toBeInstanceOf(Map);
+      expect(tags.get('a')).toBe('a');
+      expect(tags.get('b')).toBe('b');
+    });
+
+    it('merges tags passed as Map', () => {
+      const e1 = new Entity({ tags: { a: 'a' } });
+      const e2 = e1.mergeTags(new Map().set('b', 'b'));
+      const tags = e2.tags;
+      expect(tags).toBeInstanceOf(Map);
+      expect(tags.get('a')).toBe('a');
+      expect(tags.get('b')).toBe('b');
+    });
+
+    it('coaxes undefined and null to empty string', () => {
+      const e = new Entity();
+      expect(e.mergeTags({ a: undefined }).tags.get('a')).toBe('');
+      expect(e.mergeTags({ a: null }).tags.get('a')).toBe('');
+    });
+
+    it('combines conflicting tags with semicolons', () => {
+      const e1 = new Entity({ tags: { a: 'a' } });
+      const e2 = e1.mergeTags({ a: 'b' });
+      const tags = e2.tags;
+      expect(tags).toBeInstanceOf(Map);
+      expect(tags.get('a')).toBe('a;b');
+    });
+
+    it('combines combined tags', () => {
+      const e1 = new Entity({ tags: { a: 'a;b' } });
+      const e2 = new Entity({ tags: { a: 'b' } });
+
+      const e3 = e1.mergeTags(e2.tags);
+      expect(e3.tags).toBeInstanceOf(Map);
+      expect(e3.tags.get('a')).toBe('a;b');
+
+      const e4 = e2.mergeTags(e1.tags);
+      expect(e4.tags).toBeInstanceOf(Map);
+      expect(e4.tags.get('a')).toBe('b;a');
+    });
+
+    it('combines combined tags with whitespace', () => {
+      const e1 = new Entity({ tags: { a: 'a; b' } });
+      const e2 = new Entity({ tags: { a: 'b' } });
+
+      const e3 = e1.mergeTags(e2.tags);
+      expect(e3.tags).toBeInstanceOf(Map);
+      expect(e3.tags.get('a')).toBe('a;b');
+
+      const e4 = e2.mergeTags(e1.tags);
+      expect(e4.tags).toBeInstanceOf(Map);
+      expect(e4.tags.get('a')).toBe('b;a');
     });
   });
 
-  describe('#isHighwayIntersection', function () {
-    it('returns false', function () {
-      expect(iD.osmEntity().isHighwayIntersection()).to.be.false;
+  describe('#extent', () => {
+    it('returns a default Extent', () => {
+      const e = new Entity();
+      const extent = e.extent();
+      expect(extent).toBeInstanceOf(Extent);
+      expect(extent.min).toStrictEqual([Infinity, Infinity]);
+      expect(extent.max).toStrictEqual([-Infinity, -Infinity]);
     });
   });
 
-  describe('#isDegenerate', function () {
-    it('returns true', function () {
-      expect(iD.osmEntity().isDegenerate()).to.be.true;
+  describe('#intersects', () => {
+    it('intersects the default Extent', () => {
+      const e = new Entity();
+      expect(e.intersects(new Extent([0, 0]))).toBeFalsy();
     });
   });
+
+
+//   describe('#hasNonGeometryTags', () => {
+//     it('returns false for an entity without tags', () => {
+//       var node = iD.osmNode();
+//       expect(node.hasNonGeometryTags()).to.equal(false);
+//     });
+
+//     it('returns true for an entity with tags', () => {
+//       var node = iD.osmNode({ tags: { foo: 'bar' } });
+//       expect(node.hasNonGeometryTags()).to.equal(true);
+//     });
+
+//     it('returns false for an entity with only an area=yes tag', () => {
+//       var node = iD.osmNode({ tags: { area: 'yes' } });
+//       expect(node.hasNonGeometryTags()).to.equal(false);
+//     });
+//   });
+
+//   describe('#hasParentRelations', () => {
+//     it('returns true for an entity that is a relation member', () => {
+//       var node = iD.osmNode();
+//       var relation = iD.osmRelation({ members: [{ id: node.id }] });
+//       var graph = iD.coreGraph([node, relation]);
+//       expect(node.hasParentRelations(graph)).to.equal(true);
+//     });
+
+//     it('returns false for an entity that is not a relation member', () => {
+//       var node = iD.osmNode();
+//       var graph = iD.coreGraph([node]);
+//       expect(node.hasParentRelations(graph)).to.equal(false);
+//     });
+//   });
+
+//   describe('#deprecatedTags', () => {
+//     var deprecated = [
+//       { old: { highway: 'no' } },
+//       { old: { amenity: 'toilet' }, replace: { amenity: 'toilets' } },
+//       { old: { speedlimit: '*' }, replace: { maxspeed: '$1' } },
+//       { old: { man_made: 'water_tank' }, replace: { man_made: 'storage_tank', content: 'water' } },
+//       { old: { amenity: 'gambling', gambling: 'casino' }, replace: { amenity: 'casino' } }
+//     ];
+
+//     it('returns none if entity has no tags', () => {
+//       expect(Entity().deprecatedTags(deprecated)).toBe([]);
+//     });
+
+//     it('returns none when no tags are deprecated', () => {
+//       expect(Entity({ tags: { amenity: 'toilets' } }).deprecatedTags(deprecated)).toBe([]);
+//     });
+
+//     it('returns 1:0 replacement', () => {
+//       expect(Entity({ tags: { highway: 'no' } }).deprecatedTags(deprecated)).toBe([
+//         { old: { highway: 'no' } }
+//       ]);
+//     });
+
+//     it('returns 1:1 replacement', () => {
+//       expect(Entity({ tags: { amenity: 'toilet' } }).deprecatedTags(deprecated)).toBe([
+//         { old: { amenity: 'toilet' }, replace: { amenity: 'toilets' } }
+//       ]);
+//     });
+
+//     it('returns 1:1 wildcard', () => {
+//       expect(Entity({ tags: { speedlimit: '50' } }).deprecatedTags(deprecated)).toBe([
+//         { old: { speedlimit: '*' }, replace: { maxspeed: '$1' } }
+//       ]);
+//     });
+
+//     it('returns 1:2 total replacement', () => {
+//       expect(Entity({ tags: { man_made: 'water_tank' } }).deprecatedTags(deprecated)).toBe([
+//         { old: { man_made: 'water_tank' }, replace: { man_made: 'storage_tank', content: 'water' } }
+//       ]);
+//     });
+
+//     it('returns 1:2 partial replacement', () => {
+//       expect(
+//         iD
+//           .osmEntity({ tags: { man_made: 'water_tank', content: 'water' } })
+//           .deprecatedTags(deprecated)
+//       ).toBe([
+//         { old: { man_made: 'water_tank' }, replace: { man_made: 'storage_tank', content: 'water' } }
+//       ]);
+//     });
+
+//     it('returns 2:1 replacement', () => {
+//       expect(
+//         iD
+//           .osmEntity({ tags: { amenity: 'gambling', gambling: 'casino' } })
+//           .deprecatedTags(deprecated)
+//       ).toBe([
+//         { old: { amenity: 'gambling', gambling: 'casino' }, replace: { amenity: 'casino' } }
+//       ]);
+//     });
+//   });
+
+  describe('#hasInterestingTags', () => {
+    it('returns false if the entity has no tags', () => {
+      const e = new Entity();
+      expect(e.hasInterestingTags()).toBeFalse();
+    });
+
+    it("returns true if the entity has tags other than 'attribution', 'created_by', 'source', 'odbl' and tiger tags", () => {
+      const e = new Entity({ tags: { foo: 'bar' } });
+      expect(e.hasInterestingTags()).toBeTrue();
+    });
+
+    it('return false if the entity has only uninteresting tags', () => {
+      const e = new Entity({ tags: { source: 'Bing' } });
+      expect(e.hasInterestingTags()).toBeFalse();
+    });
+
+    it('return false if the entity has only tiger tags', () => {
+      const e = new Entity({ tags: { 'tiger:source': 'blah', 'tiger:foo': 'bar' } });
+      expect(e.hasInterestingTags()).toBeFalse();
+    });
+  });
+
+  describe('#isHighwayIntersection', () => {
+    it('returns false', () => {
+      const e = new Entity();
+      expect(e.isHighwayIntersection()).toBeFalse();
+    });
+  });
+
+  describe('#isDegenerate', () => {
+    it('returns true', () => {
+      const e = new Entity();
+      expect(e.isDegenerate()).toBeTrue();
+    });
+  });
+
 });
