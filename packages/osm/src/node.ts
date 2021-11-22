@@ -2,6 +2,7 @@
 // import { geoAngle } from '@id-sdk/geo';
 import { Extent } from '@id-sdk/extent';
 import { utilArrayUniq } from '@id-sdk/util';
+import { Vec2 } from '@id-sdk/vector';
 
 // internal
 import { Entity } from './entity';
@@ -11,66 +12,53 @@ import { Entity } from './entity';
  *
  */
 export class Node extends Entity {
-  readonly loc: [number, number];
+  readonly loc: Vec2;
 
-  constructor(props?: { [key: string]: any }) {
+  constructor(props?: Node | Record<string, any>) {
     props = Object.assign({ type: 'node' }, props);
     super(props);
 
     this.loc = props.loc || [9999, 9999];
   }
 
-}
 
+  geometry(graph: any): string {
+    const that = this;
+    return graph.transient(that, 'geometry', () => {
+      return graph.isPoi(that) ? 'point' : 'vertex';
+    });
+  }
 
-// export function osmNode() {
-//   if (!(this instanceof osmNode)) {
-//     return new osmNode().initialize(arguments);
-//   } else if (arguments.length) {
-//     this.initialize(arguments);
-//   }
-// }
+  extent(graph?: any): Extent {
+    return new Extent(this.loc);
+  }
 
-// osmEntity.node = osmNode;
+  update(props: Record<string, any>): Node {
+    return new Node(Object.assign({}, this, props));
+  }
 
-// osmNode.prototype = Object.create(osmEntity.prototype);
+  move(loc: Vec2): Node {
+    return this.update({ loc: loc });
+  }
 
-// Object.assign(osmNode.prototype, {
-//   type: 'node',
-//   loc: [9999, 9999],
-
-//   extent: function () {
-//     return new geoExtent(this.loc);
-//   },
-
-//   geometry: function (graph) {
-//     return graph.transient(this, 'geometry', function () {
-//       return graph.isPoi(this) ? 'point' : 'vertex';
-//     });
-//   },
-
-//   move: function (loc) {
-//     return this.update({ loc: loc });
-//   },
-
-//   isDegenerate: function () {
-//     return !(
-//       Array.isArray(this.loc) &&
-//       this.loc.length === 2 &&
-//       this.loc[0] >= -180 &&
-//       this.loc[0] <= 180 &&
-//       this.loc[1] >= -90 &&
-//       this.loc[1] <= 90
-//     );
-//   },
+  isDegenerate(): boolean {
+    return !(
+      Array.isArray(this.loc) &&
+      this.loc.length === 2 &&
+      this.loc[0] >= -180 &&
+      this.loc[0] <= 180 &&
+      this.loc[1] >= -90 &&
+      this.loc[1] <= 90
+    );
+  }
 
 //   // Inspect tags and geometry to determine which direction(s) this node/vertex points
-//   directions: function (resolver, projection) {
+//   directions: function (graph, projection) {
 //     var val;
 //     var i;
 
 //     // which tag to use?
-//     if (this.isHighwayIntersection(resolver) && (this.tags.stop || '').toLowerCase() === 'all') {
+//     if (this.isHighwayIntersection(graph) && (this.tags.stop || '').toLowerCase() === 'all') {
 //       // all-way stop tag on a highway intersection
 //       val = 'all';
 //     } else {
@@ -149,7 +137,7 @@ export class Node extends Entity {
 //       if (!lookForward && !lookBackward) return;
 
 //       var nodeIds = {};
-//       resolver.parentWays(this).forEach(function (parent) {
+//       graph.parentWays(this).forEach(function (parent) {
 //         var nodes = parent.nodes;
 //         for (i = 0; i < nodes.length; i++) {
 //           if (nodes[i] === this.id) {
@@ -166,109 +154,110 @@ export class Node extends Entity {
 
 //       Object.keys(nodeIds).forEach(function (nodeId) {
 //         // +90 because geoAngle returns angle from X axis, not Y (north)
-//         results.push(geoAngle(this, resolver.entity(nodeId), projection) * (180 / Math.PI) + 90);
+//         results.push(geoAngle(this, graph.entity(nodeId), projection) * (180 / Math.PI) + 90);
 //       }, this);
 //     }, this);
 
 //     return utilArrayUniq(results);
 //   },
 
-//   isEndpoint: function (resolver) {
-//     return resolver.transient(this, 'isEndpoint', function () {
-//       var id = this.id;
-//       return (
-//         resolver.parentWays(this).filter(function (parent) {
-//           return !parent.isClosed() && !!parent.affix(id);
-//         }).length > 0
-//       );
-//     });
-//   },
+  isEndpoint(graph: any): boolean {
+    const that = this;
+    return graph.transient(that, 'isEndpoint', () => {
+      return graph.parentWays(that)
+        .some(parent => !parent.isClosed() && !!parent.affix(that.id));
+    });
+  }
 
-//   isConnected: function (resolver) {
-//     return resolver.transient(this, 'isConnected', function () {
-//       var parents = resolver.parentWays(this);
+  isConnected(graph: any): boolean {
+    const that = this;
+    return graph.transient(that, 'isConnected', () => {
+      const parents = graph.parentWays(that);
 
-//       if (parents.length > 1) {
-//         // vertex is connected to multiple parent ways
-//         for (var i in parents) {
-//           if (parents[i].geometry(resolver) === 'line' && parents[i].hasInterestingTags())
-//             return true;
-//         }
-//       } else if (parents.length === 1) {
-//         var way = parents[0];
-//         var nodes = way.nodes.slice();
-//         if (way.isClosed()) {
-//           nodes.pop();
-//         } // ignore connecting node if closed
+      if (parents.length > 1) {    // vertex is connected to multiple parent ways
+        for (let i in parents) {
+          if (parents[i].geometry(graph) === 'line' && parents[i].hasInterestingTags()) {
+            return true;
+          }
+        }
 
-//         // return true if vertex appears multiple times (way is self intersecting)
-//         return nodes.indexOf(this.id) !== nodes.lastIndexOf(this.id);
-//       }
+      } else if (parents.length === 1) {
+        const way = parents[0];
+        let nodes = way.nodes.slice();  // copy
+        if (way.isClosed()) {
+          nodes.pop();
+        } // ignore connecting node if closed
 
-//       return false;
-//     });
-//   },
+        // return true if vertex appears multiple times (way is self intersecting)
+        return nodes.indexOf(that.id) !== nodes.lastIndexOf(that.id);
+      }
 
-//   parentIntersectionWays: function (resolver) {
-//     return resolver.transient(this, 'parentIntersectionWays', function () {
-//       return resolver.parentWays(this).filter(function (parent) {
-//         return (
-//           (parent.tags.highway ||
-//             parent.tags.waterway ||
-//             parent.tags.railway ||
-//             parent.tags.aeroway) &&
-//           parent.geometry(resolver) === 'line'
-//         );
-//       });
-//     });
-//   },
+      return false;
+    });
+  }
 
-//   isIntersection: function (resolver) {
-//     return this.parentIntersectionWays(resolver).length > 1;
-//   },
+  parentIntersectionWays(graph: any) {
+    const that = this;
+    return graph.transient(that, 'parentIntersectionWays', () => {
+      return graph.parentWays(that).filter(parent => {
+        return (
+          (parent.tags.has('highway') ||
+            parent.tags.has('waterway') ||
+            parent.tags.has('railway') ||
+            parent.tags.has('aeroway')) &&
+          parent.geometry(graph) === 'line'
+        );
+      });
+    });
+  }
 
-//   isHighwayIntersection: function (resolver) {
-//     return resolver.transient(this, 'isHighwayIntersection', function () {
-//       return (
-//         resolver.parentWays(this).filter(function (parent) {
-//           return parent.tags.highway && parent.geometry(resolver) === 'line';
-//         }).length > 1
-//       );
-//     });
-//   },
+  isIntersection(graph: any): boolean {
+    return this.parentIntersectionWays(graph).length > 1;
+  }
 
-//   isOnAddressLine: function (resolver) {
-//     return resolver.transient(this, 'isOnAddressLine', function () {
-//       return (
-//         resolver.parentWays(this).filter(function (parent) {
-//           return (
-//             parent.tags.hasOwnProperty('addr:interpolation') && parent.geometry(resolver) === 'line'
-//           );
-//         }).length > 0
-//       );
-//     });
-//   },
+  isHighwayIntersection(graph: any): boolean {
+    const that = this;
+    return graph.transient(that, 'isHighwayIntersection', () => {
+      return (
+        graph.parentWays(that).filter(parent => {
+          return parent.tags.has('highway') && parent.geometry(graph) === 'line';
+        }).length > 1
+      );
+    });
+  }
 
-//   asJXON: function (changeset_id) {
-//     var r = {
-//       node: {
-//         '@id': this.osmId(),
-//         '@lon': this.loc[0],
-//         '@lat': this.loc[1],
-//         '@version': this.version || 0,
-//         tag: Object.keys(this.tags).map(function (k) {
-//           return { keyAttributes: { k: k, v: this.tags[k] } };
-//         }, this)
-//       }
-//     };
-//     if (changeset_id) r.node['@changeset'] = changeset_id;
-//     return r;
-//   },
+  isOnAddressLine(graph: any): boolean {
+    const that = this;
+    return graph.transient(that, 'isOnAddressLine', () => {
+      return graph.parentWays(that).some(parent => {
+        return parent.tags.has('addr:interpolation') && parent.geometry(graph) === 'line';
+      });
+    });
+  }
 
-//   asGeoJSON: function () {
-//     return {
-//       type: 'Point',
-//       coordinates: this.loc
-//     };
-//   }
+  asJXON(changeset_id?: string): any {
+    const that = this;
+    let result = {
+      node: {
+        '@id': that.osmId(),
+        '@lon': that.loc[0],
+        '@lat': that.loc[1],
+        '@version': that.version || 0,
+        tag: [...that.tags.entries()].map(pair => ({ keyAttributes: { k: pair[0], v: pair[1] }}) )
+      }
+    };
+    if (changeset_id) {
+      result.node['@changeset'] = changeset_id;
+    }
+    return result;
+  }
+
+  asGeoJSON() {
+    return {
+      type: 'Point',
+      coordinates: this.loc
+    };
+  }
+
 // });
+}

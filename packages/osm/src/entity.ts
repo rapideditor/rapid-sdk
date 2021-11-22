@@ -17,8 +17,9 @@ export type LooseTags = Record<string, string | undefined>;
 export class Entity {
   readonly type: string;
   readonly id: string;
-  readonly v: number;
-  readonly visible: boolean;
+  readonly v: number;         // internal version
+  readonly version?: number;  // osm version
+  readonly visible: boolean;  // osm visible
   readonly tags: StrictTags;
 
 
@@ -36,7 +37,7 @@ export class Entity {
     this.id = props.id || `${c}${num}`;  // OSM id: 'n-1', 'w-1', etc
 
     this.v = (props.v || 0) + 1;
-
+    this.version = props.version;
     this.visible = (props.visible !== false);
 
     if (props.tags instanceof Map) {
@@ -82,10 +83,6 @@ export class Entity {
   //     return _deprecatedTagValuesByKey;
   // };
 
-  // Entity.prototype = {
-
-  // tags: {},
-
   // initialize(sources) {
   //   for (var i = 0; i < sources.length; ++i) {
   //     const source = sources[i];
@@ -99,14 +96,12 @@ export class Entity {
   //       }
   //     }
   //   }
-
   //   if (!this.id && this.type) {
   //     this.id = Entity.id(this.type);
   //   }
   //   if (!this.hasOwnProperty('visible')) {
   //     this.visible = true;
   //   }
-
   //   return this;
   // }
 
@@ -184,7 +179,7 @@ export class Entity {
     return [...this.tags.keys()].some(osmIsInterestingTag);
   }
 
-  isHighwayIntersection(): boolean {
+  isHighwayIntersection(graph: any): boolean {
     return false;
   }
 

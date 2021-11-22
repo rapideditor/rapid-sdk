@@ -7,6 +7,7 @@ describe('Entity', () => {
     it('constructs an Entity', () => {
       const e = new Entity();
       expect(e).toBeInstanceOf(Entity);
+      expect(e.type).toBe('entity');
     });
 
     describe('id', () => {
@@ -183,7 +184,6 @@ describe('Entity', () => {
       expect(new Entity({ id: 'n1234' }).isNew()).toBeFalse();
     });
   });
-
 
   describe('#update', () => {
     it('returns a new Entity', () => {
