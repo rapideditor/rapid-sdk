@@ -2,7 +2,7 @@
 // import { geoAngle } from '@id-sdk/geo';
 import { Extent } from '@id-sdk/extent';
 import { utilArrayUniq } from '@id-sdk/util';
-import { Vec2 } from '@id-sdk/vector';
+import { Vec2, vecAngle } from '@id-sdk/vector';
 
 // internal
 import { Entity } from './entity';
@@ -52,114 +52,119 @@ export class Node extends Entity {
     );
   }
 
-//   // Inspect tags and geometry to determine which direction(s) this node/vertex points
-//   directions: function (graph, projection) {
-//     var val;
-//     var i;
+  // Inspect tags and geometry to determine which direction(s) this node/vertex points
+  directions(graph: any, projection: any): Array<number> {
+    const that = this;
+    let val: string;
 
-//     // which tag to use?
-//     if (this.isHighwayIntersection(graph) && (this.tags.stop || '').toLowerCase() === 'all') {
-//       // all-way stop tag on a highway intersection
-//       val = 'all';
-//     } else {
-//       // generic direction tag
-//       val = (this.tags.direction || '').toLowerCase();
+    // which tag to use?
+    if (that.isHighwayIntersection(graph) && (that.tags.get('stop') || '').toLowerCase() === 'all') {
+      // all-way stop tag on a highway intersection
+      val = 'all';
+    } else {
+      // generic direction tag
+      val = (that.tags.get('direction') || '').toLowerCase();
 
-//       // better suffix-style direction tag
-//       var re = /:direction$/i;
-//       var keys = Object.keys(this.tags);
-//       for (i = 0; i < keys.length; i++) {
-//         if (re.test(keys[i])) {
-//           val = this.tags[keys[i]].toLowerCase();
-//           break;
-//         }
-//       }
-//     }
+      // look for a better suffix-style direction tag
+      const re = /:direction$/i;
+      const keys = [...that.tags.keys()];
+      for (let i = 0; i < keys.length; i++) {
+        const k = keys[i];
+        if (re.test(k)) {
+          val = (that.tags.get(k) || '').toLowerCase();
+          break;
+        }
+      }
+    }
 
-//     if (val === '') return [];
+    if (val === '') return [];
 
-//     var cardinal = {
-//       north: 0,
-//       n: 0,
-//       northnortheast: 22,
-//       nne: 22,
-//       northeast: 45,
-//       ne: 45,
-//       eastnortheast: 67,
-//       ene: 67,
-//       east: 90,
-//       e: 90,
-//       eastsoutheast: 112,
-//       ese: 112,
-//       southeast: 135,
-//       se: 135,
-//       southsoutheast: 157,
-//       sse: 157,
-//       south: 180,
-//       s: 180,
-//       southsouthwest: 202,
-//       ssw: 202,
-//       southwest: 225,
-//       sw: 225,
-//       westsouthwest: 247,
-//       wsw: 247,
-//       west: 270,
-//       w: 270,
-//       westnorthwest: 292,
-//       wnw: 292,
-//       northwest: 315,
-//       nw: 315,
-//       northnorthwest: 337,
-//       nnw: 337
-//     };
+    const cardinal = {
+      north: 0,
+      n: 0,
+      northnortheast: 22,
+      nne: 22,
+      northeast: 45,
+      ne: 45,
+      eastnortheast: 67,
+      ene: 67,
+      east: 90,
+      e: 90,
+      eastsoutheast: 112,
+      ese: 112,
+      southeast: 135,
+      se: 135,
+      southsoutheast: 157,
+      sse: 157,
+      south: 180,
+      s: 180,
+      southsouthwest: 202,
+      ssw: 202,
+      southwest: 225,
+      sw: 225,
+      westsouthwest: 247,
+      wsw: 247,
+      west: 270,
+      w: 270,
+      westnorthwest: 292,
+      wnw: 292,
+      northwest: 315,
+      nw: 315,
+      northnorthwest: 337,
+      nnw: 337
+    };
 
-//     var values = val.split(';');
-//     var results = [];
+    const values = val.split(';');
+    let results: Array<number> = [];
 
-//     values.forEach(function (v) {
-//       // swap cardinal for numeric directions
-//       if (cardinal[v] !== undefined) {
-//         v = cardinal[v];
-//       }
+    values.forEach(v => {
+      // swap cardinal for numeric directions
+      if (cardinal[v] !== undefined) {
+        v = cardinal[v];
+      }
 
-//       // numeric direction - just add to results
-//       if (v !== '' && !isNaN(+v)) {
-//         results.push(+v);
-//         return;
-//       }
+      // numeric direction - just add to results
+      if (v !== '' && !isNaN(+v)) {
+        results.push(+v);
+        return;
+      }
 
-//       // string direction - inspect parent ways
-//       var lookBackward =
-//         this.tags['traffic_sign:backward'] || v === 'backward' || v === 'both' || v === 'all';
-//       var lookForward =
-//         this.tags['traffic_sign:forward'] || v === 'forward' || v === 'both' || v === 'all';
+      // string direction - inspect parent ways
+      const lookBackward =
+        that.tags.get('traffic_sign:backward') || v === 'backward' || v === 'both' || v === 'all';
+      const lookForward =
+        that.tags.get('traffic_sign:forward') || v === 'forward' || v === 'both' || v === 'all';
 
-//       if (!lookForward && !lookBackward) return;
+      if (!lookForward && !lookBackward) return;
 
-//       var nodeIds = {};
-//       graph.parentWays(this).forEach(function (parent) {
-//         var nodes = parent.nodes;
-//         for (i = 0; i < nodes.length; i++) {
-//           if (nodes[i] === this.id) {
-//             // match current entity
-//             if (lookForward && i > 0) {
-//               nodeIds[nodes[i - 1]] = true; // look back to prev node
-//             }
-//             if (lookBackward && i < nodes.length - 1) {
-//               nodeIds[nodes[i + 1]] = true; // look ahead to next node
-//             }
-//           }
-//         }
-//       }, this);
+      let nodeIDs = {};
+      graph.parentWays(that).forEach(parent => {
+        const nodes: Array<string> = parent.nodes;
+        for (let i = 0; i < nodes.length; i++) {
+          if (nodes[i] === that.id) {
+            // match current entity
+            if (lookForward && i > 0) {
+              nodeIDs[nodes[i - 1]] = true; // look back to prev node
+            }
+            if (lookBackward && i < nodes.length - 1) {
+              nodeIDs[nodes[i + 1]] = true; // look ahead to next node
+            }
+          }
+        }
+      });
 
-//       Object.keys(nodeIds).forEach(function (nodeId) {
-//         // +90 because geoAngle returns angle from X axis, not Y (north)
-//         results.push(geoAngle(this, graph.entity(nodeId), projection) * (180 / Math.PI) + 90);
-//       }, this);
-//     }, this);
+      const a = projection(that.loc);
+      Object.keys(nodeIDs).forEach(nodeID => {
+        const b = projection(graph.entity(nodeID).loc);
+        // +90 because vecAngle returns angle from X axis, not Y (north)
+        const ang = (vecAngle(a, b) * 180 / Math.PI) + 90;
+        results.push(ang);
+      });
+    });
 
-//     return utilArrayUniq(results);
-//   },
+    return utilArrayUniq(results) as Array<number>;
+  }
+
 
   isEndpoint(graph: any): boolean {
     const that = this;
@@ -175,11 +180,9 @@ export class Node extends Entity {
       const parents = graph.parentWays(that);
 
       if (parents.length > 1) {    // vertex is connected to multiple parent ways
-        for (let i in parents) {
-          if (parents[i].geometry(graph) === 'line' && parents[i].hasInterestingTags()) {
-            return true;
-          }
-        }
+        return parents.some(parent => {
+          return parent.geometry(graph) === 'line' && parent.hasInterestingTags();
+        });
 
       } else if (parents.length === 1) {
         const way = parents[0];

@@ -198,28 +198,17 @@ describe('Node', () => {
     });
   });
 
+  describe('#intersects', () => {
+    it('returns true for a node within the given extent', () => {
+      const n = new Node({ loc: [0, 0] });
+      expect(n.intersects(new Extent([-1, -1], [1, 1]))).toBeTrue();
+    });
 
-
-//   describe('#intersects', () => {
-//     it('returns true for a node within the given extent', () => {
-//       expect(
-//         new Node({ loc: [0, 0] }).intersects([
-//           [-5, -5],
-//           [5, 5]
-//         ])
-//       ).toBeTrue();
-//     });
-
-//     it('returns false for a node outside the given extend', () => {
-//       expect(
-//         new Node({ loc: [6, 6] }).intersects([
-//           [-5, -5],
-//           [5, 5]
-//         ])
-//       ).toBeFalse();
-//     });
-//   });
-
+    it('returns false for a node outside the given extend', () => {
+      const n = new Node({ loc: [2, 2] });
+      expect(n.intersects(new Extent([-1, -1], [1, 1]))).toBeFalse();
+    });
+  });
 
   describe('#isEndpoint', () => {
     it('returns true for a node at an endpoint along a linear way', () => {
@@ -247,7 +236,13 @@ describe('Node', () => {
 
 
   describe('#isConnected', () => {
-    it('returns true for a node with multiple parent ways, at least one interesting', () => {
+    it('returns false for a node no parent ways', () => {
+      const node = new Node();
+      const graph = new MockGraph([node]);
+      expect(node.isConnected(graph)).toBeFalse();
+    });
+
+    it('returns true for a node with multiple parent ways, one interesting, one not', () => {
       const node = new Node();
       const w1 = new MockWay({ nodes: [node.id] });
       const w2 = new MockWay({ nodes: [node.id], tags: { highway: 'residential' } });
@@ -373,515 +368,489 @@ describe('Node', () => {
   });
 
 
-//   describe('#directions', () => {
-//     const projection = function (_) {
-//       return _;
-//     };
-//     it('returns empty array if no direction tag', () => {
-//       const node1 = new Node({ loc: [0, 0], tags: {} });
-//       const graph = new MockGraph([node1]);
-//       expect(node1.directions(graph, projection)).to.eql([], 'no direction tag');
-//     });
+  describe('#directions', () => {
+    const projection = p => p;
 
-//     it('returns empty array if nonsense direction tag', () => {
-//       const node1 = new Node({ loc: [0, 0], tags: { direction: 'blah' } });
-//       const node2 = new Node({ loc: [0, 0], tags: { direction: '' } });
-//       const node3 = new Node({ loc: [0, 0], tags: { direction: 'NaN' } });
-//       const node4 = new Node({ loc: [0, 0], tags: { direction: 'eastwest' } });
-//       const graph = new MockGraph([node1, node2, node3, node4]);
+    it('returns empty array if no direction tag', () => {
+      const n1 = new Node({ loc: [0, 0], tags: {} });
+      const graph = new MockGraph([n1]);
+      expect(n1.directions(graph, projection)).toStrictEqual([]);  // 'no direction tag'
+    });
 
-//       expect(node1.directions(graph, projection)).to.eql([], 'nonsense direction tag');
-//       expect(node2.directions(graph, projection)).to.eql([], 'empty string direction tag');
-//       expect(node3.directions(graph, projection)).to.eql([], 'NaN direction tag');
-//       expect(node4.directions(graph, projection)).to.eql([], 'eastwest direction tag');
-//     });
+    it('returns empty array if nonsense value', () => {
+      const n1 = new Node({ loc: [0, 0], tags: { direction: 'blah' } });
+      const n2 = new Node({ loc: [0, 0], tags: { direction: '' } });
+      const n3 = new Node({ loc: [0, 0], tags: { direction: 'NaN' } });
+      const n4 = new Node({ loc: [0, 0], tags: { 'camera:direction': 'eastwest' } });
+      const n5 = new Node({ loc: [0, 0], tags: { 'camera:direction': '' } });
+      const graph = new MockGraph([n1, n2, n3, n4, n5]);
 
-//     it('supports numeric direction tag', () => {
-//       const node1 = new Node({ loc: [0, 0], tags: { direction: '0' } });
-//       const node2 = new Node({ loc: [0, 0], tags: { direction: '45' } });
-//       const node3 = new Node({ loc: [0, 0], tags: { direction: '-45' } });
-//       const node4 = new Node({ loc: [0, 0], tags: { direction: '360' } });
-//       const node5 = new Node({ loc: [0, 0], tags: { direction: '1000' } });
-//       const graph = new MockGraph([node1, node2, node3, node4, node5]);
+      expect(n1.directions(graph, projection)).toStrictEqual([]);  // 'nonsense direction tag'
+      expect(n2.directions(graph, projection)).toStrictEqual([]);  // 'empty direction tag'
+      expect(n3.directions(graph, projection)).toStrictEqual([]);  // 'NaN direction tag'
+      expect(n4.directions(graph, projection)).toStrictEqual([]);  // 'eastwest direction tag'
+      expect(n5.directions(graph, projection)).toStrictEqual([]);  // 'empty camera:direction tag'
+    });
 
-//       expect(node1.directions(graph, projection)).to.eql([0], 'numeric 0');
-//       expect(node2.directions(graph, projection)).to.eql([45], 'numeric 45');
-//       expect(node3.directions(graph, projection)).to.eql([-45], 'numeric -45');
-//       expect(node4.directions(graph, projection)).to.eql([360], 'numeric 360');
-//       expect(node5.directions(graph, projection)).to.eql([1000], 'numeric 1000');
-//     });
+    it('supports numeric direction tag', () => {
+      const n1 = new Node({ loc: [0, 0], tags: { direction: '0' } });
+      const n2 = new Node({ loc: [0, 0], tags: { direction: '45' } });
+      const n3 = new Node({ loc: [0, 0], tags: { direction: '-45' } });
+      const n4 = new Node({ loc: [0, 0], tags: { 'camera:direction': '360' } });
+      const n5 = new Node({ loc: [0, 0], tags: { 'camera:direction': '1000' } });
+      const graph = new MockGraph([n1, n2, n3, n4, n5]);
 
-//     it('supports cardinal direction tags (test abbreviated and mixed case)', () => {
-//       const nodeN1 = new Node({ loc: [0, 0], tags: { direction: 'n' } });
-//       const nodeN2 = new Node({ loc: [0, 0], tags: { direction: 'N' } });
-//       const nodeN3 = new Node({ loc: [0, 0], tags: { direction: 'north' } });
-//       const nodeN4 = new Node({ loc: [0, 0], tags: { direction: 'NOrth' } });
+      expect(n1.directions(graph, projection)).toStrictEqual([0]);     // 'numeric 0'
+      expect(n2.directions(graph, projection)).toStrictEqual([45]);    // 'numeric 45'
+      expect(n3.directions(graph, projection)).toStrictEqual([-45]);   // 'numeric -45'
+      expect(n4.directions(graph, projection)).toStrictEqual([360]);   // 'numeric 360'
+      expect(n5.directions(graph, projection)).toStrictEqual([1000]);  // 'numeric 1000'
+    });
 
-//       const nodeNNE1 = new Node({ loc: [0, 0], tags: { direction: 'nne' } });
-//       const nodeNNE2 = new Node({ loc: [0, 0], tags: { direction: 'NnE' } });
-//       const nodeNNE3 = new Node({ loc: [0, 0], tags: { direction: 'northnortheast' } });
-//       const nodeNNE4 = new Node({ loc: [0, 0], tags: { direction: 'NOrthnorTHEast' } });
+    it('prefixed :direction overrides regular direction tag', () => {
+      const n = new Node({ loc: [0, 0], tags: { 'camera:direction': '20', direction: '10' } });
+      const graph = new MockGraph([n]);
+      expect(n.directions(graph, projection)).toStrictEqual([20]);
+    });
 
-//       const nodeNE1 = new Node({ loc: [0, 0], tags: { direction: 'ne' } });
-//       const nodeNE2 = new Node({ loc: [0, 0], tags: { direction: 'nE' } });
-//       const nodeNE3 = new Node({ loc: [0, 0], tags: { direction: 'northeast' } });
-//       const nodeNE4 = new Node({ loc: [0, 0], tags: { direction: 'norTHEast' } });
+    it('supports cardinal direction tags (test abbreviated and mixed case)', () => {
+      const nodeN1 = new Node({ loc: [0, 0], tags: { direction: 'n' } });
+      const nodeN2 = new Node({ loc: [0, 0], tags: { direction: 'N' } });
+      const nodeN3 = new Node({ loc: [0, 0], tags: { direction: 'north' } });
+      const nodeN4 = new Node({ loc: [0, 0], tags: { direction: 'NOrth' } });
 
-//       const nodeENE1 = new Node({ loc: [0, 0], tags: { direction: 'ene' } });
-//       const nodeENE2 = new Node({ loc: [0, 0], tags: { direction: 'EnE' } });
-//       const nodeENE3 = new Node({ loc: [0, 0], tags: { direction: 'eastnortheast' } });
-//       const nodeENE4 = new Node({ loc: [0, 0], tags: { direction: 'EAstnorTHEast' } });
+      const nodeNNE1 = new Node({ loc: [0, 0], tags: { direction: 'nne' } });
+      const nodeNNE2 = new Node({ loc: [0, 0], tags: { direction: 'NnE' } });
+      const nodeNNE3 = new Node({ loc: [0, 0], tags: { direction: 'northnortheast' } });
+      const nodeNNE4 = new Node({ loc: [0, 0], tags: { direction: 'NOrthnorTHEast' } });
 
-//       const nodeE1 = new Node({ loc: [0, 0], tags: { direction: 'e' } });
-//       const nodeE2 = new Node({ loc: [0, 0], tags: { direction: 'E' } });
-//       const nodeE3 = new Node({ loc: [0, 0], tags: { direction: 'east' } });
-//       const nodeE4 = new Node({ loc: [0, 0], tags: { direction: 'EAst' } });
+      const nodeNE1 = new Node({ loc: [0, 0], tags: { direction: 'ne' } });
+      const nodeNE2 = new Node({ loc: [0, 0], tags: { direction: 'nE' } });
+      const nodeNE3 = new Node({ loc: [0, 0], tags: { direction: 'northeast' } });
+      const nodeNE4 = new Node({ loc: [0, 0], tags: { direction: 'norTHEast' } });
 
-//       const nodeESE1 = new Node({ loc: [0, 0], tags: { direction: 'ese' } });
-//       const nodeESE2 = new Node({ loc: [0, 0], tags: { direction: 'EsE' } });
-//       const nodeESE3 = new Node({ loc: [0, 0], tags: { direction: 'eastsoutheast' } });
-//       const nodeESE4 = new Node({ loc: [0, 0], tags: { direction: 'EAstsouTHEast' } });
+      const nodeENE1 = new Node({ loc: [0, 0], tags: { direction: 'ene' } });
+      const nodeENE2 = new Node({ loc: [0, 0], tags: { direction: 'EnE' } });
+      const nodeENE3 = new Node({ loc: [0, 0], tags: { direction: 'eastnortheast' } });
+      const nodeENE4 = new Node({ loc: [0, 0], tags: { direction: 'EAstnorTHEast' } });
 
-//       const nodeSE1 = new Node({ loc: [0, 0], tags: { direction: 'se' } });
-//       const nodeSE2 = new Node({ loc: [0, 0], tags: { direction: 'sE' } });
-//       const nodeSE3 = new Node({ loc: [0, 0], tags: { direction: 'southeast' } });
-//       const nodeSE4 = new Node({ loc: [0, 0], tags: { direction: 'souTHEast' } });
+      const nodeE1 = new Node({ loc: [0, 0], tags: { direction: 'e' } });
+      const nodeE2 = new Node({ loc: [0, 0], tags: { direction: 'E' } });
+      const nodeE3 = new Node({ loc: [0, 0], tags: { direction: 'east' } });
+      const nodeE4 = new Node({ loc: [0, 0], tags: { direction: 'EAst' } });
 
-//       const nodeSSE1 = new Node({ loc: [0, 0], tags: { direction: 'sse' } });
-//       const nodeSSE2 = new Node({ loc: [0, 0], tags: { direction: 'SsE' } });
-//       const nodeSSE3 = new Node({ loc: [0, 0], tags: { direction: 'southsoutheast' } });
-//       const nodeSSE4 = new Node({ loc: [0, 0], tags: { direction: 'SOuthsouTHEast' } });
+      const nodeESE1 = new Node({ loc: [0, 0], tags: { direction: 'ese' } });
+      const nodeESE2 = new Node({ loc: [0, 0], tags: { direction: 'EsE' } });
+      const nodeESE3 = new Node({ loc: [0, 0], tags: { direction: 'eastsoutheast' } });
+      const nodeESE4 = new Node({ loc: [0, 0], tags: { direction: 'EAstsouTHEast' } });
 
-//       const nodeS1 = new Node({ loc: [0, 0], tags: { direction: 's' } });
-//       const nodeS2 = new Node({ loc: [0, 0], tags: { direction: 'S' } });
-//       const nodeS3 = new Node({ loc: [0, 0], tags: { direction: 'south' } });
-//       const nodeS4 = new Node({ loc: [0, 0], tags: { direction: 'SOuth' } });
+      const nodeSE1 = new Node({ loc: [0, 0], tags: { direction: 'se' } });
+      const nodeSE2 = new Node({ loc: [0, 0], tags: { direction: 'sE' } });
+      const nodeSE3 = new Node({ loc: [0, 0], tags: { direction: 'southeast' } });
+      const nodeSE4 = new Node({ loc: [0, 0], tags: { direction: 'souTHEast' } });
 
-//       const nodeSSW1 = new Node({ loc: [0, 0], tags: { direction: 'ssw' } });
-//       const nodeSSW2 = new Node({ loc: [0, 0], tags: { direction: 'SsW' } });
-//       const nodeSSW3 = new Node({ loc: [0, 0], tags: { direction: 'southsouthwest' } });
-//       const nodeSSW4 = new Node({ loc: [0, 0], tags: { direction: 'SOuthsouTHWest' } });
+      const nodeSSE1 = new Node({ loc: [0, 0], tags: { direction: 'sse' } });
+      const nodeSSE2 = new Node({ loc: [0, 0], tags: { direction: 'SsE' } });
+      const nodeSSE3 = new Node({ loc: [0, 0], tags: { direction: 'southsoutheast' } });
+      const nodeSSE4 = new Node({ loc: [0, 0], tags: { direction: 'SOuthsouTHEast' } });
 
-//       const nodeSW1 = new Node({ loc: [0, 0], tags: { direction: 'sw' } });
-//       const nodeSW2 = new Node({ loc: [0, 0], tags: { direction: 'sW' } });
-//       const nodeSW3 = new Node({ loc: [0, 0], tags: { direction: 'southwest' } });
-//       const nodeSW4 = new Node({ loc: [0, 0], tags: { direction: 'souTHWest' } });
+      const nodeS1 = new Node({ loc: [0, 0], tags: { direction: 's' } });
+      const nodeS2 = new Node({ loc: [0, 0], tags: { direction: 'S' } });
+      const nodeS3 = new Node({ loc: [0, 0], tags: { direction: 'south' } });
+      const nodeS4 = new Node({ loc: [0, 0], tags: { direction: 'SOuth' } });
 
-//       const nodeWSW1 = new Node({ loc: [0, 0], tags: { direction: 'wsw' } });
-//       const nodeWSW2 = new Node({ loc: [0, 0], tags: { direction: 'WsW' } });
-//       const nodeWSW3 = new Node({ loc: [0, 0], tags: { direction: 'westsouthwest' } });
-//       const nodeWSW4 = new Node({ loc: [0, 0], tags: { direction: 'WEstsouTHWest' } });
+      const nodeSSW1 = new Node({ loc: [0, 0], tags: { direction: 'ssw' } });
+      const nodeSSW2 = new Node({ loc: [0, 0], tags: { direction: 'SsW' } });
+      const nodeSSW3 = new Node({ loc: [0, 0], tags: { direction: 'southsouthwest' } });
+      const nodeSSW4 = new Node({ loc: [0, 0], tags: { direction: 'SOuthsouTHWest' } });
 
-//       const nodeW1 = new Node({ loc: [0, 0], tags: { direction: 'w' } });
-//       const nodeW2 = new Node({ loc: [0, 0], tags: { direction: 'W' } });
-//       const nodeW3 = new Node({ loc: [0, 0], tags: { direction: 'west' } });
-//       const nodeW4 = new Node({ loc: [0, 0], tags: { direction: 'WEst' } });
+      const nodeSW1 = new Node({ loc: [0, 0], tags: { direction: 'sw' } });
+      const nodeSW2 = new Node({ loc: [0, 0], tags: { direction: 'sW' } });
+      const nodeSW3 = new Node({ loc: [0, 0], tags: { direction: 'southwest' } });
+      const nodeSW4 = new Node({ loc: [0, 0], tags: { direction: 'souTHWest' } });
 
-//       const nodeWNW1 = new Node({ loc: [0, 0], tags: { direction: 'wnw' } });
-//       const nodeWNW2 = new Node({ loc: [0, 0], tags: { direction: 'WnW' } });
-//       const nodeWNW3 = new Node({ loc: [0, 0], tags: { direction: 'westnorthwest' } });
-//       const nodeWNW4 = new Node({ loc: [0, 0], tags: { direction: 'WEstnorTHWest' } });
+      const nodeWSW1 = new Node({ loc: [0, 0], tags: { direction: 'wsw' } });
+      const nodeWSW2 = new Node({ loc: [0, 0], tags: { direction: 'WsW' } });
+      const nodeWSW3 = new Node({ loc: [0, 0], tags: { direction: 'westsouthwest' } });
+      const nodeWSW4 = new Node({ loc: [0, 0], tags: { direction: 'WEstsouTHWest' } });
 
-//       const nodeNW1 = new Node({ loc: [0, 0], tags: { direction: 'nw' } });
-//       const nodeNW2 = new Node({ loc: [0, 0], tags: { direction: 'nW' } });
-//       const nodeNW3 = new Node({ loc: [0, 0], tags: { direction: 'northwest' } });
-//       const nodeNW4 = new Node({ loc: [0, 0], tags: { direction: 'norTHWest' } });
+      const nodeW1 = new Node({ loc: [0, 0], tags: { direction: 'w' } });
+      const nodeW2 = new Node({ loc: [0, 0], tags: { direction: 'W' } });
+      const nodeW3 = new Node({ loc: [0, 0], tags: { direction: 'west' } });
+      const nodeW4 = new Node({ loc: [0, 0], tags: { direction: 'WEst' } });
 
-//       const nodeNNW1 = new Node({ loc: [0, 0], tags: { direction: 'nnw' } });
-//       const nodeNNW2 = new Node({ loc: [0, 0], tags: { direction: 'NnW' } });
-//       const nodeNNW3 = new Node({ loc: [0, 0], tags: { direction: 'northnorthwest' } });
-//       const nodeNNW4 = new Node({ loc: [0, 0], tags: { direction: 'NOrthnorTHWest' } });
+      const nodeWNW1 = new Node({ loc: [0, 0], tags: { direction: 'wnw' } });
+      const nodeWNW2 = new Node({ loc: [0, 0], tags: { direction: 'WnW' } });
+      const nodeWNW3 = new Node({ loc: [0, 0], tags: { direction: 'westnorthwest' } });
+      const nodeWNW4 = new Node({ loc: [0, 0], tags: { direction: 'WEstnorTHWest' } });
 
-//       const graph = new MockGraph([
-//         nodeN1,
-//         nodeN2,
-//         nodeN3,
-//         nodeN4,
-//         nodeNNE1,
-//         nodeNNE2,
-//         nodeNNE3,
-//         nodeNNE4,
-//         nodeNE1,
-//         nodeNE2,
-//         nodeNE3,
-//         nodeNE4,
-//         nodeENE1,
-//         nodeENE2,
-//         nodeENE3,
-//         nodeENE4,
-//         nodeE1,
-//         nodeE2,
-//         nodeE3,
-//         nodeE4,
-//         nodeESE1,
-//         nodeESE2,
-//         nodeESE3,
-//         nodeESE4,
-//         nodeSE1,
-//         nodeSE2,
-//         nodeSE3,
-//         nodeSE4,
-//         nodeSSE1,
-//         nodeSSE2,
-//         nodeSSE3,
-//         nodeSSE4,
-//         nodeS1,
-//         nodeS2,
-//         nodeS3,
-//         nodeS4,
-//         nodeSSW1,
-//         nodeSSW2,
-//         nodeSSW3,
-//         nodeSSW4,
-//         nodeSW1,
-//         nodeSW2,
-//         nodeSW3,
-//         nodeSW4,
-//         nodeWSW1,
-//         nodeWSW2,
-//         nodeWSW3,
-//         nodeWSW4,
-//         nodeW1,
-//         nodeW2,
-//         nodeW3,
-//         nodeW4,
-//         nodeWNW1,
-//         nodeWNW2,
-//         nodeWNW3,
-//         nodeWNW4,
-//         nodeNW1,
-//         nodeNW2,
-//         nodeNW3,
-//         nodeNW4,
-//         nodeNNW1,
-//         nodeNNW2,
-//         nodeNNW3,
-//         nodeNNW4
-//       ]);
+      const nodeNW1 = new Node({ loc: [0, 0], tags: { direction: 'nw' } });
+      const nodeNW2 = new Node({ loc: [0, 0], tags: { direction: 'nW' } });
+      const nodeNW3 = new Node({ loc: [0, 0], tags: { direction: 'northwest' } });
+      const nodeNW4 = new Node({ loc: [0, 0], tags: { direction: 'norTHWest' } });
 
-//       expect(nodeN1.directions(graph, projection)).to.eql([0], 'cardinal n');
-//       expect(nodeN2.directions(graph, projection)).to.eql([0], 'cardinal N');
-//       expect(nodeN3.directions(graph, projection)).to.eql([0], 'cardinal north');
-//       expect(nodeN4.directions(graph, projection)).to.eql([0], 'cardinal NOrth');
+      const nodeNNW1 = new Node({ loc: [0, 0], tags: { direction: 'nnw' } });
+      const nodeNNW2 = new Node({ loc: [0, 0], tags: { direction: 'NnW' } });
+      const nodeNNW3 = new Node({ loc: [0, 0], tags: { direction: 'northnorthwest' } });
+      const nodeNNW4 = new Node({ loc: [0, 0], tags: { direction: 'NOrthnorTHWest' } });
 
-//       expect(nodeNNE1.directions(graph, projection)).to.eql([22], 'cardinal nne');
-//       expect(nodeNNE2.directions(graph, projection)).to.eql([22], 'cardinal NnE');
-//       expect(nodeNNE3.directions(graph, projection)).to.eql([22], 'cardinal northnortheast');
-//       expect(nodeNNE4.directions(graph, projection)).to.eql([22], 'cardinal NOrthnorTHEast');
+      const graph = new MockGraph([
+        nodeN1,
+        nodeN2,
+        nodeN3,
+        nodeN4,
+        nodeNNE1,
+        nodeNNE2,
+        nodeNNE3,
+        nodeNNE4,
+        nodeNE1,
+        nodeNE2,
+        nodeNE3,
+        nodeNE4,
+        nodeENE1,
+        nodeENE2,
+        nodeENE3,
+        nodeENE4,
+        nodeE1,
+        nodeE2,
+        nodeE3,
+        nodeE4,
+        nodeESE1,
+        nodeESE2,
+        nodeESE3,
+        nodeESE4,
+        nodeSE1,
+        nodeSE2,
+        nodeSE3,
+        nodeSE4,
+        nodeSSE1,
+        nodeSSE2,
+        nodeSSE3,
+        nodeSSE4,
+        nodeS1,
+        nodeS2,
+        nodeS3,
+        nodeS4,
+        nodeSSW1,
+        nodeSSW2,
+        nodeSSW3,
+        nodeSSW4,
+        nodeSW1,
+        nodeSW2,
+        nodeSW3,
+        nodeSW4,
+        nodeWSW1,
+        nodeWSW2,
+        nodeWSW3,
+        nodeWSW4,
+        nodeW1,
+        nodeW2,
+        nodeW3,
+        nodeW4,
+        nodeWNW1,
+        nodeWNW2,
+        nodeWNW3,
+        nodeWNW4,
+        nodeNW1,
+        nodeNW2,
+        nodeNW3,
+        nodeNW4,
+        nodeNNW1,
+        nodeNNW2,
+        nodeNNW3,
+        nodeNNW4
+      ]);
 
-//       expect(nodeNE1.directions(graph, projection)).to.eql([45], 'cardinal ne');
-//       expect(nodeNE2.directions(graph, projection)).to.eql([45], 'cardinal nE');
-//       expect(nodeNE3.directions(graph, projection)).to.eql([45], 'cardinal northeast');
-//       expect(nodeNE4.directions(graph, projection)).to.eql([45], 'cardinal norTHEast');
+      expect(nodeN1.directions(graph, projection)).toStrictEqual([0]);  // 'cardinal n'
+      expect(nodeN2.directions(graph, projection)).toStrictEqual([0]);  // 'cardinal N'
+      expect(nodeN3.directions(graph, projection)).toStrictEqual([0]);  // 'cardinal north'
+      expect(nodeN4.directions(graph, projection)).toStrictEqual([0]);  // 'cardinal NOrth'
 
-//       expect(nodeENE1.directions(graph, projection)).to.eql([67], 'cardinal ene');
-//       expect(nodeENE2.directions(graph, projection)).to.eql([67], 'cardinal EnE');
-//       expect(nodeENE3.directions(graph, projection)).to.eql([67], 'cardinal eastnortheast');
-//       expect(nodeENE4.directions(graph, projection)).to.eql([67], 'cardinal EAstnorTHEast');
+      expect(nodeNNE1.directions(graph, projection)).toStrictEqual([22]);  // 'cardinal nne'
+      expect(nodeNNE2.directions(graph, projection)).toStrictEqual([22]);  // 'cardinal NnE'
+      expect(nodeNNE3.directions(graph, projection)).toStrictEqual([22]);  // 'cardinal northnortheast'
+      expect(nodeNNE4.directions(graph, projection)).toStrictEqual([22]);  // 'cardinal NOrthnorTHEast'
 
-//       expect(nodeE1.directions(graph, projection)).to.eql([90], 'cardinal e');
-//       expect(nodeE2.directions(graph, projection)).to.eql([90], 'cardinal E');
-//       expect(nodeE3.directions(graph, projection)).to.eql([90], 'cardinal east');
-//       expect(nodeE4.directions(graph, projection)).to.eql([90], 'cardinal EAst');
+      expect(nodeNE1.directions(graph, projection)).toStrictEqual([45]);  // 'cardinal ne'
+      expect(nodeNE2.directions(graph, projection)).toStrictEqual([45]);  // 'cardinal nE'
+      expect(nodeNE3.directions(graph, projection)).toStrictEqual([45]);  // 'cardinal northeast'
+      expect(nodeNE4.directions(graph, projection)).toStrictEqual([45]);  // 'cardinal norTHEast'
 
-//       expect(nodeESE1.directions(graph, projection)).to.eql([112], 'cardinal ese');
-//       expect(nodeESE2.directions(graph, projection)).to.eql([112], 'cardinal EsE');
-//       expect(nodeESE3.directions(graph, projection)).to.eql([112], 'cardinal eastsoutheast');
-//       expect(nodeESE4.directions(graph, projection)).to.eql([112], 'cardinal EAstsouTHEast');
+      expect(nodeENE1.directions(graph, projection)).toStrictEqual([67]);  // 'cardinal ene'
+      expect(nodeENE2.directions(graph, projection)).toStrictEqual([67]);  // 'cardinal EnE'
+      expect(nodeENE3.directions(graph, projection)).toStrictEqual([67]);  // 'cardinal eastnortheast'
+      expect(nodeENE4.directions(graph, projection)).toStrictEqual([67]);  // 'cardinal EAstnorTHEast'
 
-//       expect(nodeSE1.directions(graph, projection)).to.eql([135], 'cardinal se');
-//       expect(nodeSE2.directions(graph, projection)).to.eql([135], 'cardinal sE');
-//       expect(nodeSE3.directions(graph, projection)).to.eql([135], 'cardinal southeast');
-//       expect(nodeSE4.directions(graph, projection)).to.eql([135], 'cardinal souTHEast');
+      expect(nodeE1.directions(graph, projection)).toStrictEqual([90]);  // 'cardinal e'
+      expect(nodeE2.directions(graph, projection)).toStrictEqual([90]);  // 'cardinal E'
+      expect(nodeE3.directions(graph, projection)).toStrictEqual([90]);  // 'cardinal east'
+      expect(nodeE4.directions(graph, projection)).toStrictEqual([90]);  // 'cardinal EAst'
 
-//       expect(nodeSSE1.directions(graph, projection)).to.eql([157], 'cardinal sse');
-//       expect(nodeSSE2.directions(graph, projection)).to.eql([157], 'cardinal SsE');
-//       expect(nodeSSE3.directions(graph, projection)).to.eql([157], 'cardinal southsoutheast');
-//       expect(nodeSSE4.directions(graph, projection)).to.eql([157], 'cardinal SouthsouTHEast');
+      expect(nodeESE1.directions(graph, projection)).toStrictEqual([112]);  // 'cardinal ese'
+      expect(nodeESE2.directions(graph, projection)).toStrictEqual([112]);  // 'cardinal EsE'
+      expect(nodeESE3.directions(graph, projection)).toStrictEqual([112]);  // 'cardinal eastsoutheast'
+      expect(nodeESE4.directions(graph, projection)).toStrictEqual([112]);  // 'cardinal EAstsouTHEast'
 
-//       expect(nodeS1.directions(graph, projection)).to.eql([180], 'cardinal s');
-//       expect(nodeS2.directions(graph, projection)).to.eql([180], 'cardinal S');
-//       expect(nodeS3.directions(graph, projection)).to.eql([180], 'cardinal south');
-//       expect(nodeS4.directions(graph, projection)).to.eql([180], 'cardinal SOuth');
+      expect(nodeSE1.directions(graph, projection)).toStrictEqual([135]);  // 'cardinal se'
+      expect(nodeSE2.directions(graph, projection)).toStrictEqual([135]);  // 'cardinal sE'
+      expect(nodeSE3.directions(graph, projection)).toStrictEqual([135]);  // 'cardinal southeast'
+      expect(nodeSE4.directions(graph, projection)).toStrictEqual([135]);  // 'cardinal souTHEast'
 
-//       expect(nodeSSW1.directions(graph, projection)).to.eql([202], 'cardinal ssw');
-//       expect(nodeSSW2.directions(graph, projection)).to.eql([202], 'cardinal SsW');
-//       expect(nodeSSW3.directions(graph, projection)).to.eql([202], 'cardinal southsouthwest');
-//       expect(nodeSSW4.directions(graph, projection)).to.eql([202], 'cardinal SouthsouTHWest');
+      expect(nodeSSE1.directions(graph, projection)).toStrictEqual([157]);  // 'cardinal sse'
+      expect(nodeSSE2.directions(graph, projection)).toStrictEqual([157]);  // 'cardinal SsE'
+      expect(nodeSSE3.directions(graph, projection)).toStrictEqual([157]);  // 'cardinal southsoutheast'
+      expect(nodeSSE4.directions(graph, projection)).toStrictEqual([157]);  // 'cardinal SouthsouTHEast'
 
-//       expect(nodeSW1.directions(graph, projection)).to.eql([225], 'cardinal sw');
-//       expect(nodeSW2.directions(graph, projection)).to.eql([225], 'cardinal sW');
-//       expect(nodeSW3.directions(graph, projection)).to.eql([225], 'cardinal southwest');
-//       expect(nodeSW4.directions(graph, projection)).to.eql([225], 'cardinal souTHWest');
+      expect(nodeS1.directions(graph, projection)).toStrictEqual([180]);  // 'cardinal s'
+      expect(nodeS2.directions(graph, projection)).toStrictEqual([180]);  // 'cardinal S'
+      expect(nodeS3.directions(graph, projection)).toStrictEqual([180]);  // 'cardinal south'
+      expect(nodeS4.directions(graph, projection)).toStrictEqual([180]);  // 'cardinal SOuth'
 
-//       expect(nodeWSW1.directions(graph, projection)).to.eql([247], 'cardinal wsw');
-//       expect(nodeWSW2.directions(graph, projection)).to.eql([247], 'cardinal WsW');
-//       expect(nodeWSW3.directions(graph, projection)).to.eql([247], 'cardinal westsouthwest');
-//       expect(nodeWSW4.directions(graph, projection)).to.eql([247], 'cardinal WEstsouTHWest');
+      expect(nodeSSW1.directions(graph, projection)).toStrictEqual([202]);  // 'cardinal ssw'
+      expect(nodeSSW2.directions(graph, projection)).toStrictEqual([202]);  // 'cardinal SsW'
+      expect(nodeSSW3.directions(graph, projection)).toStrictEqual([202]);  // 'cardinal southsouthwest'
+      expect(nodeSSW4.directions(graph, projection)).toStrictEqual([202]);  // 'cardinal SouthsouTHWest'
 
-//       expect(nodeW1.directions(graph, projection)).to.eql([270], 'cardinal w');
-//       expect(nodeW2.directions(graph, projection)).to.eql([270], 'cardinal W');
-//       expect(nodeW3.directions(graph, projection)).to.eql([270], 'cardinal west');
-//       expect(nodeW4.directions(graph, projection)).to.eql([270], 'cardinal WEst');
+      expect(nodeSW1.directions(graph, projection)).toStrictEqual([225]);  // 'cardinal sw'
+      expect(nodeSW2.directions(graph, projection)).toStrictEqual([225]);  // 'cardinal sW'
+      expect(nodeSW3.directions(graph, projection)).toStrictEqual([225]);  // 'cardinal southwest'
+      expect(nodeSW4.directions(graph, projection)).toStrictEqual([225]);  // 'cardinal souTHWest'
 
-//       expect(nodeWNW1.directions(graph, projection)).to.eql([292], 'cardinal wnw');
-//       expect(nodeWNW2.directions(graph, projection)).to.eql([292], 'cardinal WnW');
-//       expect(nodeWNW3.directions(graph, projection)).to.eql([292], 'cardinal westnorthwest');
-//       expect(nodeWNW4.directions(graph, projection)).to.eql([292], 'cardinal WEstnorTHWest');
+      expect(nodeWSW1.directions(graph, projection)).toStrictEqual([247]);  // 'cardinal wsw'
+      expect(nodeWSW2.directions(graph, projection)).toStrictEqual([247]);  // 'cardinal WsW'
+      expect(nodeWSW3.directions(graph, projection)).toStrictEqual([247]);  // 'cardinal westsouthwest'
+      expect(nodeWSW4.directions(graph, projection)).toStrictEqual([247]);  // 'cardinal WEstsouTHWest'
 
-//       expect(nodeNW1.directions(graph, projection)).to.eql([315], 'cardinal nw');
-//       expect(nodeNW2.directions(graph, projection)).to.eql([315], 'cardinal nW');
-//       expect(nodeNW3.directions(graph, projection)).to.eql([315], 'cardinal northwest');
-//       expect(nodeNW4.directions(graph, projection)).to.eql([315], 'cardinal norTHWest');
+      expect(nodeW1.directions(graph, projection)).toStrictEqual([270]);  // 'cardinal w'
+      expect(nodeW2.directions(graph, projection)).toStrictEqual([270]);  // 'cardinal W'
+      expect(nodeW3.directions(graph, projection)).toStrictEqual([270]);  // 'cardinal west'
+      expect(nodeW4.directions(graph, projection)).toStrictEqual([270]);  // 'cardinal WEst'
 
-//       expect(nodeNNW1.directions(graph, projection)).to.eql([337], 'cardinal nnw');
-//       expect(nodeNNW2.directions(graph, projection)).to.eql([337], 'cardinal NnW');
-//       expect(nodeNNW3.directions(graph, projection)).to.eql([337], 'cardinal northnorthwest');
-//       expect(nodeNNW4.directions(graph, projection)).to.eql([337], 'cardinal NOrthnorTHWest');
-//     });
+      expect(nodeWNW1.directions(graph, projection)).toStrictEqual([292]);  // 'cardinal wnw'
+      expect(nodeWNW2.directions(graph, projection)).toStrictEqual([292]);  // 'cardinal WnW'
+      expect(nodeWNW3.directions(graph, projection)).toStrictEqual([292]);  // 'cardinal westnorthwest'
+      expect(nodeWNW4.directions(graph, projection)).toStrictEqual([292]);  // 'cardinal WEstnorTHWest'
 
-//     it('supports direction=forward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'forward' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([270]);
-//     });
+      expect(nodeNW1.directions(graph, projection)).toStrictEqual([315]);  // 'cardinal nw'
+      expect(nodeNW2.directions(graph, projection)).toStrictEqual([315]);  // 'cardinal nW'
+      expect(nodeNW3.directions(graph, projection)).toStrictEqual([315]);  // 'cardinal northwest'
+      expect(nodeNW4.directions(graph, projection)).toStrictEqual([315]);  // 'cardinal norTHWest'
 
-//     it('supports direction=backward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'backward' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([90]);
-//     });
+      expect(nodeNNW1.directions(graph, projection)).toStrictEqual([337]);  // 'cardinal nnw'
+      expect(nodeNNW2.directions(graph, projection)).toStrictEqual([337]);  // 'cardinal NnW'
+      expect(nodeNNW3.directions(graph, projection)).toStrictEqual([337]);  // 'cardinal northnorthwest'
+      expect(nodeNNW4.directions(graph, projection)).toStrictEqual([337]);  // 'cardinal NOrthnorTHWest'
+    });
 
-//     it('supports direction=both', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'both' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('supports direction=forward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'forward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([270]);
+    });
 
-//     it('supports direction=all', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'all' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('supports direction=backward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'backward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([90]);
+    });
 
-//     it('supports traffic_signals:direction=forward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'traffic_signals:direction': 'forward' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([270]);
-//     });
+    it('supports direction=both', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'both' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports traffic_signals:direction=backward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'traffic_signals:direction': 'backward' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([90]);
-//     });
+    it('supports direction=all', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'all' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports traffic_signals:direction=both', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'traffic_signals:direction': 'both' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('ignores case in values', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { direction: 'ALL' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports traffic_signals:direction=all', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'traffic_signals:direction': 'all' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('supports traffic_signals:direction=forward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'traffic_signals:direction': 'forward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([270]);
+    });
 
-//     it('supports railway:signal:direction=forward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'railway:signal:direction': 'forward' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([270]);
-//     });
+    it('supports traffic_signals:direction=backward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'traffic_signals:direction': 'backward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([90]);
+    });
 
-//     it('supports railway:signal:direction=backward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'railway:signal:direction': 'backward' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([90]);
-//     });
+    it('supports traffic_signals:direction=both', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'traffic_signals:direction': 'both' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports railway:signal:direction=both', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'railway:signal:direction': 'both' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('supports traffic_signals:direction=all', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'traffic_signals:direction': 'all' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports railway:signal:direction=all', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({
-//         id: 'n2',
-//         loc: [0, 0],
-//         tags: { 'railway:signal:direction': 'all' }
-//       });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('ignores case in prefixed :direction keys', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'TraFFic_SigNaLs:direction': 'all' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports camera:direction=forward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'forward' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([270]);
-//     });
+    it('supports railway:signal:direction=forward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'railway:signal:direction': 'forward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([270]);
+    });
 
-//     it('supports camera:direction=backward', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'backward' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.eql([90]);
-//     });
+    it('supports railway:signal:direction=backward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'railway:signal:direction': 'backward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([90]);
+    });
 
-//     it('supports camera:direction=both', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'both' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('supports railway:signal:direction=both', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'railway:signal:direction': 'both' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports camera:direction=all', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'all' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270]);
-//     });
+    it('supports railway:signal:direction=all', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'railway:signal:direction': 'all' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('returns directions for an all-way stop at a highway interstction', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { highway: 'stop', stop: 'all' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const node4 = new Node({ id: 'n4', loc: [0, -1] });
-//       const node5 = new Node({ id: 'n5', loc: [0, 1] });
-//       const way1 = new MockWay({
-//         id: 'w1',
-//         nodes: ['n1', 'n2', 'n3'],
-//         tags: { highway: 'residential' }
-//       });
-//       const way2 = new MockWay({
-//         id: 'w2',
-//         nodes: ['n4', 'n2', 'n5'],
-//         tags: { highway: 'residential' }
-//       });
-//       const graph = new MockGraph([node1, node2, node3, node4, node5, way1, way2]);
-//       expect(node2.directions(graph, projection)).to.have.members([0, 90, 180, 270]);
-//     });
+    it('supports camera:direction=forward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'forward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([270]);
+    });
 
-//     it('does not return directions for an all-way stop not at a highway interstction', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0], tags: { highway: 'stop', stop: 'all' } });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0] });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0], tags: { highway: 'stop', stop: 'all' } });
-//       const node4 = new Node({ id: 'n4', loc: [0, -1], tags: { highway: 'stop', stop: 'all' } });
-//       const node5 = new Node({ id: 'n5', loc: [0, 1], tags: { highway: 'stop', stop: 'all' } });
-//       const way1 = new MockWay({
-//         id: 'w1',
-//         nodes: ['n1', 'n2', 'n3'],
-//         tags: { highway: 'residential' }
-//       });
-//       const way2 = new MockWay({
-//         id: 'w2',
-//         nodes: ['n4', 'n2', 'n5'],
-//         tags: { highway: 'residential' }
-//       });
-//       const graph = new MockGraph([node1, node2, node3, node4, node5, way1, way2]);
-//       expect(node2.directions(graph, projection)).to.eql([]);
-//     });
+    it('supports camera:direction=backward', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'backward' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toStrictEqual([90]);
+    });
 
-//     it('supports multiple directions delimited by ;', () => {
-//       const node1 = new Node({ loc: [0, 0], tags: { direction: '0;45' } });
-//       const node2 = new Node({ loc: [0, 0], tags: { direction: '45;north' } });
-//       const node3 = new Node({ loc: [0, 0], tags: { direction: 'north;east' } });
-//       const node4 = new Node({ loc: [0, 0], tags: { direction: 'n;s;e;w' } });
-//       const node5 = new Node({ loc: [0, 0], tags: { direction: 's;wat' } });
-//       const graph = new MockGraph([node1, node2, node3, node4, node5]);
+    it('supports camera:direction=both', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'both' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//       expect(node1.directions(graph, projection)).to.eql([0, 45], 'numeric 0, numeric 45');
-//       expect(node2.directions(graph, projection)).to.eql([45, 0], 'numeric 45, cardinal north');
-//       expect(node3.directions(graph, projection)).to.eql([0, 90], 'cardinal north and east');
-//       expect(node4.directions(graph, projection)).to.eql([0, 180, 90, 270], 'cardinal n,s,e,w');
-//       expect(node5.directions(graph, projection)).to.eql([180], 'cardinal 180 and nonsense');
-//     });
+    it('supports camera:direction=all', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'all' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270]);
+    });
 
-//     it('supports mixing textual, cardinal, numeric directions, delimited by ;', () => {
-//       const node1 = new Node({ id: 'n1', loc: [-1, 0] });
-//       const node2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'both;ne;60' } });
-//       const node3 = new Node({ id: 'n3', loc: [1, 0] });
-//       const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
-//       const graph = new MockGraph([node1, node2, node3, way]);
-//       expect(node2.directions(graph, projection)).to.have.members([90, 270, 45, 60]);
-//     });
-//   });
+    it('returns directions for an all-way stop at a highway interstction', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { highway: 'stop', stop: 'all' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const n4 = new Node({ id: 'n4', loc: [0, -1] });
+      const n5 = new Node({ id: 'n5', loc: [0, 1] });
+      const w1 = new MockWay({ id: 'w1', nodes: ['n1', 'n2', 'n3'], tags: { highway: 'residential' } });
+      const w2 = new MockWay({ id: 'w2', nodes: ['n4', 'n2', 'n5'], tags: { highway: 'residential' } });
+      const graph = new MockGraph([n1, n2, n3, n4, n5, w1, w2]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([0, 90, 180, 270]);
+    });
 
-// });
+    it('does not return directions for an all-way stop not at a highway interstction', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0], tags: { highway: 'stop', stop: 'all' } });
+      const n2 = new Node({ id: 'n2', loc: [0, 0] });
+      const n3 = new Node({ id: 'n3', loc: [1, 0], tags: { highway: 'stop', stop: 'all' } });
+      const n4 = new Node({ id: 'n4', loc: [0, -1], tags: { highway: 'stop', stop: 'all' } });
+      const n5 = new Node({ id: 'n5', loc: [0, 1], tags: { highway: 'stop', stop: 'all' } });
+      const w1 = new MockWay({ id: 'w1', nodes: ['n1', 'n2', 'n3'], tags: { highway: 'residential' } });
+      const w2 = new MockWay({ id: 'w2', nodes: ['n4', 'n2', 'n5'], tags: { highway: 'residential' } });
+      const graph = new MockGraph([n1, n2, n3, n4, n5, w1, w2]);
+      expect(n2.directions(graph, projection)).toBeArrayOfSize(0);
+    });
+
+    it('supports multiple directions delimited by ;', () => {
+      const n1 = new Node({ loc: [0, 0], tags: { direction: '0;45' } });
+      const n2 = new Node({ loc: [0, 0], tags: { direction: '45;north' } });
+      const n3 = new Node({ loc: [0, 0], tags: { direction: 'north;east' } });
+      const n4 = new Node({ loc: [0, 0], tags: { direction: 'n;s;e;w' } });
+      const n5 = new Node({ loc: [0, 0], tags: { direction: 's;wat' } });
+      const graph = new MockGraph([n1, n2, n3, n4, n5]);
+      expect(n1.directions(graph, projection)).toIncludeSameMembers([0, 45]); // 'numeric 0, numeric 45'
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([45, 0]); // 'numeric 45, cardinal north'
+      expect(n3.directions(graph, projection)).toIncludeSameMembers([0, 90]); // 'cardinal north and east'
+      expect(n4.directions(graph, projection)).toIncludeSameMembers([0, 180, 90, 270]); // 'cardinal n,s,e,w'
+      expect(n5.directions(graph, projection)).toIncludeSameMembers([180]);   // 'cardinal 180 and nonsense'
+    });
+
+    it('supports mixing textual, cardinal, numeric directions, delimited by ;', () => {
+      const n1 = new Node({ id: 'n1', loc: [-1, 0] });
+      const n2 = new Node({ id: 'n2', loc: [0, 0], tags: { 'camera:direction': 'both;ne;60' } });
+      const n3 = new Node({ id: 'n3', loc: [1, 0] });
+      const way = new MockWay({ nodes: ['n1', 'n2', 'n3'] });
+      const graph = new MockGraph([n1, n2, n3, way]);
+      expect(n2.directions(graph, projection)).toIncludeSameMembers([90, 270, 45, 60]);
+    });
+  });
 
 
   describe('#asJXON', () => {
