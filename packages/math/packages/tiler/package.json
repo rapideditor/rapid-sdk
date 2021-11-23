@@ -16,6 +16,7 @@
     "src/"
   ],
   "type": "module",
+  "typedocMain" : "./src/tiler.ts", 
   "source": "./src/tiler.ts",
   "types": "./built/tiler.d.ts",
   "main": "./built/tiler.mjs",

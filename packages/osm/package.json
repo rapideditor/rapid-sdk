@@ -17,6 +17,7 @@
     "src/"
   ],
   "type": "module",
+  "typedocMain" : "./src/index.ts",
   "source": "./src/index.ts",
   "types": "./built/index.d.ts",
   "main": "./built/osm.mjs",
