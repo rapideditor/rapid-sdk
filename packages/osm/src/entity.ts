@@ -3,13 +3,10 @@ import { Extent } from '@id-sdk/extent';
 import { utilArrayUnion, utilUnicodeCharsTruncated } from '@id-sdk/util';
 
 // internal
-import { osmIsInterestingTag } from './tags';
+import { StrictTags, LooseTags, osmIsInterestingTag } from './tags';
 
 
 let nextNumber: Record<string, number> = {};
-
-export type StrictTags = Map<string, string | undefined>;
-export type LooseTags = Record<string, string | undefined>;
 
 /**
  *

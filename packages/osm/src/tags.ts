@@ -1,4 +1,32 @@
-export function osmIsInterestingTag(key) {
+
+// "Strict" tags are stored in a `Map` to avoid key conflicts with
+// reserved JavaScript keywords like `__proto__` and `constructor`
+export type StrictTags = Map<string, string | undefined>;
+
+// Tags are often stored and passed around in plain Object pairs:
+// e.g. `{ highway: 'residential', surface: 'paved' }`
+// "Loose" tags are for any value that might be an Object, or might be a Strict tag Map.
+export type LooseTags = Record<string, string | undefined>;
+
+// `KeepDiscard` Objects represent a keeplist/discardlist of tags.
+// A closed way with a tag (k, v) is assumed to be an area `if k in L && !(v in L[k])` (see iD.osmWay#isArea()).
+// In other words, the keys of `L` form the keeplist, and the subkeys form the discardlist
+// {
+//   "areaKeys": {
+//     …
+//     "landuse": { },         // `landuse=*` is assumed to be an area…
+//     "leisure": {            // `leisure=*` is assumed to be an area, except…
+//       "slipway": true,      //    `leisure=slipway` is a line
+//       "track": true         //    `leisure=track` is a line
+//     },
+//     …
+//   }
+// }
+export type KeepDiscard = Record<string, Record<string, boolean | string> >;
+
+//
+//
+export function osmIsInterestingTag(key: string): boolean {
   return (
     key !== 'attribution' &&
     key !== 'created_by' &&
@@ -10,20 +38,32 @@ export function osmIsInterestingTag(key) {
   );
 }
 
-export let osmAreaKeys = {};
-export function osmSetAreaKeys(value) {
+//
+//
+export let osmAreaKeys: KeepDiscard = {};
+export function osmSetAreaKeys(value: KeepDiscard) {
   osmAreaKeys = value;
 }
 
+//
 // returns an object with the tag from `tags` that implies an area geometry, if any
-export function osmTagSuggestingArea(tags) {
-  if (tags.area === 'yes') return { area: 'yes' };
-  if (tags.area === 'no') return null;
+export function osmTagSuggestingArea(other: LooseTags): LooseTags | null {
+  let tags: StrictTags;
+  if (other instanceof Map) {
+    tags = other;
+  } else if (other instanceof Object) {
+    tags = new Map(Object.entries(other));
+  } else {
+    return null;
+  }
+
+  if (tags.get('area') === 'yes') return { area: 'yes' };
+  if (tags.get('area') === 'no') return null;
 
   // `highway` and `railway` are typically linear features, but there
   // are a few exceptions that should be treated as areas, even in the
   // absence of a proper `area=yes` or `areaKeys` tag.. see #4194
-  let lineKeys = {
+  let lineKeys: KeepDiscard = {
     highway: {
       rest_area: true,
       services: true
@@ -36,35 +76,44 @@ export function osmTagSuggestingArea(tags) {
       wash: true
     }
   };
-  let returnTags = {};
-  for (let key in tags) {
-    if (key in osmAreaKeys && !(tags[key] in osmAreaKeys[key])) {
-      returnTags[key] = tags[key];
+
+  let returnTags: LooseTags = {};
+  for (const k of tags) {
+    const v: string = tags.get(k) || '';
+    if ((k in osmAreaKeys) && !(v in osmAreaKeys[k])) {
+      returnTags[k] = v;
       return returnTags;
     }
-    if (key in lineKeys && tags[key] in lineKeys[key]) {
-      returnTags[key] = tags[key];
+    if ((k in lineKeys) && (v in lineKeys[k])) {
+      returnTags[k] = v;
       return returnTags;
     }
   }
   return null;
 }
 
+
 // Tags that indicate a node can be a standalone point
 // e.g. { amenity: { bar: true, parking: true, ... } ... }
-export let osmPointTags = {};
-export function osmSetPointTags(value) {
+export let osmPointTags: KeepDiscard = {};
+export function osmSetPointTags(value: KeepDiscard) {
   osmPointTags = value;
 }
 // Tags that indicate a node can be part of a way
 // e.g. { amenity: { parking: true, ... }, highway: { stop: true ... } ... }
-export let osmVertexTags = {};
-export function osmSetVertexTags(value) {
+export let osmVertexTags: KeepDiscard = {};
+export function osmSetVertexTags(value: KeepDiscard) {
   osmVertexTags = value;
 }
 
-export function osmNodeGeometriesForTags(nodeTags) {
-  let geometries = {};
+//
+//
+export interface NodeGeometriesResult {
+  point?: boolean;
+  vertex?: boolean;
+}
+export function osmNodeGeometriesForTags(nodeTags: LooseTags): NodeGeometriesResult {
+  let geometries: NodeGeometriesResult = {};
   for (let key in nodeTags) {
     if (osmPointTags[key] && (osmPointTags[key]['*'] || osmPointTags[key][nodeTags[key]])) {
       geometries.point = true;
@@ -78,7 +127,7 @@ export function osmNodeGeometriesForTags(nodeTags) {
   return geometries;
 }
 
-export let osmOneWayTags = {
+export let osmOneWayTags: KeepDiscard = {
   aerialway: {
     chair_lift: true,
     drag_lift: true,
@@ -118,7 +167,7 @@ export let osmOneWayTags = {
 };
 
 // solid and smooth surfaces akin to the assumed default road surface in OSM
-export let osmPavedTags = {
+export let osmPavedTags: KeepDiscard = {
   surface: {
     paved: true,
     asphalt: true,
@@ -132,7 +181,7 @@ export let osmPavedTags = {
 };
 
 // solid, if somewhat uncommon surfaces with a high range of smoothness
-export let osmSemipavedTags = {
+export let osmSemipavedTags: KeepDiscard = {
   surface: {
     cobblestone: true,
     'cobblestone:flattened': true,
@@ -144,7 +193,7 @@ export let osmSemipavedTags = {
   }
 };
 
-export let osmRightSideIsInsideTags = {
+export let osmRightSideIsInsideTags: KeepDiscard = {
   natural: {
     cliff: true,
     coastline: 'coastline'
@@ -165,7 +214,7 @@ export let osmRightSideIsInsideTags = {
 
 // "highway" tag values for pedestrian or vehicle right-of-ways that make up the routable network
 // (does not include `raceway`)
-export let osmRoutableHighwayTagValues = {
+export let osmRoutableHighwayTagValues: Record<string, boolean> = {
   motorway: true,
   trunk: true,
   primary: true,
@@ -192,7 +241,7 @@ export let osmRoutableHighwayTagValues = {
   steps: true
 };
 // "highway" tag values that generally do not allow motor vehicles
-export let osmPathHighwayTagValues = {
+export let osmPathHighwayTagValues: Record<string, boolean> = {
   path: true,
   footway: true,
   cycleway: true,
@@ -203,7 +252,7 @@ export let osmPathHighwayTagValues = {
 };
 
 // "railway" tag values representing existing railroad tracks (purposely does not include 'abandoned')
-export let osmRailwayTrackTagValues = {
+export let osmRailwayTrackTagValues: Record<string, boolean> = {
   rail: true,
   light_rail: true,
   tram: true,
@@ -217,7 +266,7 @@ export let osmRailwayTrackTagValues = {
 };
 
 // "waterway" tag values for line features representing water flow
-export let osmFlowingWaterwayTagValues = {
+export let osmFlowingWaterwayTagValues: Record<string, boolean> = {
   canal: true,
   ditch: true,
   drain: true,
