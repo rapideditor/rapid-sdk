@@ -1,8 +1,10 @@
 import { utilArrayUnion } from './array';
 
-//
-//
-//
+/**
+ * Cleans tags
+ * @param tags 
+ * @returns 
+ */
 export function utilCleanTags(tags) {
   let out = {};
   for (const k in tags) {
@@ -41,8 +43,13 @@ export function utilCleanTags(tags) {
   }
 }
 
-// returns a selector to select entity ids for:
-//  - deep descendant entityIDs for any of those entities that are relations
+/** Returns a selector to select entity ids for:
+ * deep descendant entityIDs for any of those entities that are relations
+ * @param ids 
+ * @param graph 
+ * @param skipMultipolgonMembers 
+ * @returns 
+ */
 export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMembers: boolean) {
   let idsSet = new Set(ids);
   let seen = new Set<string>();
@@ -65,10 +72,14 @@ export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMemb
     (entity.members || []).forEach((member) => collectDeepDescendants(member.id)); // recurse
   }
 }
-
-// returns a selector to select entity ids for:
-//  - entityIDs passed in
-//  - deep descendant entityIDs for any of those entities that are relations
+  
+/** Returns a selector to select entity ids for:
+ * - entityIDs passed in
+ * - deep descendant entityIDs for any of those entities that are relations
+ * @param ids 
+ * @param graph 
+ * @returns 
+ */
 export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
   const seen = new Set<string>();
   ids.forEach(collectDeepDescendants);
@@ -85,9 +96,13 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
   }
 }
 
-// returns a selector to select entity ids for:
-//  - entityIDs passed in
-//  - shallow descendant entityIDs for any of those entities that are relations
+/** Returns a selector to select entity ids for:
+ * - entityIDs passed in
+ * - shallow descendant entityIDs for any of those entities that are relations
+ * @param ids 
+ * @param graph 
+ * @returns 
+ */
 export function utilEntityOrMemberSelector(ids: string[], graph) {
   let seen = new Set(ids);
   ids.forEach(collectShallowDescendants);
@@ -101,24 +116,34 @@ export function utilEntityOrMemberSelector(ids: string[], graph) {
   }
 }
 
-// returns a selector to select entity ids for:
-//  - entityIDs passed in
-//  - deep descendant entityIDs for any of those entities that are relations
+/** Returns a selector to select entity ids for:
+ * - entityIDs passed in
+ * - deep descendant entityIDs for any of those entities that are relations
+ * @param ids 
+ * @param graph 
+ * @returns 
+ */
 export function utilEntityOrDeepMemberSelector(ids: string[], graph) {
   return utilEntitySelector(utilEntityAndDeepMemberIDs(ids, graph));
 }
 
-// Generate a css selector for multiple entities
-// class1, class2 -> .class1,.class2
-//
+/** Generate a css selector for multiple entities
+ * class1, class2 -> .class1,.class2
+ * @param ids 
+ * @returns 
+ */
 export function utilEntitySelector(ids: string[]) {
   return ids.length ? '.' + ids.join(',.') : 'nothing';
 }
 
-// returns an Array that is the union of:
-//  - nodes for any nodeIDs passed in
-//  - child nodes of any wayIDs passed in
-//  - descendant member and child nodes of relationIDs passed in
+/**  Returns an Array that is the union of:
+ * - nodes for any nodeIDs passed in
+ * - child nodes of any wayIDs passed in
+ * - descendant member and child nodes of relationIDs passed in
+ * @param ids 
+ * @param graph 
+ * @returns 
+ */
 export function utilGetAllNodes(ids: string[], graph) {
   const seen = new Set<string>();
   const nodes = new Set();
@@ -143,9 +168,6 @@ export function utilGetAllNodes(ids: string[], graph) {
   }
 }
 
-//
-//
-//
 type TagDiff = {
   type: string;
   key: string;
@@ -154,6 +176,11 @@ type TagDiff = {
   display: string;
 };
 
+/** Performs tag diff between old and new tags
+ * @param oldTags 
+ * @param newTags 
+ * @returns the resulting diff
+ */
 export function utilTagDiff(oldTags, newTags) {
   let tagDiff: TagDiff[] = [];
   const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort() as string[];
@@ -183,9 +210,6 @@ export function utilTagDiff(oldTags, newTags) {
   return tagDiff;
 }
 
-//
-//
-//
 export function utilTagText(entity) {
   const obj = (entity && entity.tags) || {};
   return Object.keys(obj)
