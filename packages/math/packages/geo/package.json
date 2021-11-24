@@ -16,6 +16,7 @@
     "src/"
   ],
   "type": "module",
+  "typedocMain" : "./src/geo.ts", 
   "source": "./src/geo.ts",
   "types": "./built/geo.d.ts",
   "main": "./built/geo.mjs",

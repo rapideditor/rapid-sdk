@@ -16,6 +16,7 @@
     "src/"
   ],
   "type": "module",
+  "typedocMain" : "./src/geom.ts",
   "source": "./src/geom.ts",
   "types": "./built/geom.d.ts",
   "main": "./built/geom.mjs",

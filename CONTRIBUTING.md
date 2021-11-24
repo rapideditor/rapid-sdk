@@ -25,11 +25,12 @@ If adding the new workspace (name: $workspaceName), copy any existing workspace 
 - Craft README.md accordingly
 - Add appropriate source code to src/ and tests to tests/
 
-After performing code changes, check if there are build and test passes:
+After performing code changes, check if build, test and docs generation passes:
 $  yarn run all
 $  yarn run test
+$  yarn run docs
 
-If build/test passes, bump versions and push a code change:
+If abovementioned passes, bump versions and push a code change:
 $  npx lerna version
 
 Create a PR and once passed finally perform:

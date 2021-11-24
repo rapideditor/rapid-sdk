@@ -16,6 +16,7 @@
     "src/"
   ],
   "type": "module",
+  "typedocMain" : "./src/projection.ts",
   "source": "./src/projection.ts",
   "types": "./built/projection.d.ts",
   "main": "./built/projection.mjs",

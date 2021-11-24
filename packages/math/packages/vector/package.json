@@ -16,6 +16,7 @@
     "src/"
   ],
   "type": "module",
+  "typedocMain" : "./src/vector.ts",
   "source": "./src/vector.ts",
   "types": "./built/vector.d.ts",
   "main": "./built/vector.mjs",
