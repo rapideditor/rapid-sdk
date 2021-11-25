@@ -59,71 +59,67 @@ export class Tiler {
    * @param projection
    * @returns tile result
    * @example ```
-   * ##### At zoom 0:
+   * At zoom 0:
    *
-   *  +-------+  +85.0511
-   *  |       |
-   *  | 0,0,0 |
-   *  |       |
-   *  +-------+  -85.0511
-   *-180    +180
+   *   +-------+  +85.0511
+   *   |       |
+   *   | 0,0,0 |
+   *   |       |
+   *   +-------+  -85.0511
+   * -180    +180
    *
-   *const t0 = new Tiler();
-   *const p0 = new Projection(128, 128, 128 / Math.PI)  // z0
-   *    .dimensions([[0, 0], [256, 256]]);              // entire world visible
+   * const t0 = new Tiler();
+   * const p0 = new Projection(128, 128, 128 / Math.PI)  // z0
+   *     .dimensions([[0, 0], [256, 256]]);              // entire world visible
    *
-   *let result = t0.getTiles(p0);
+   * let result = t0.getTiles(p0);
    *
-   *##### At zoom 1:
+   * At zoom 1:
    *
-   *  +-------+-------+  +85.0511
-   *  |       |       |
-   *  | 0,0,1 | 1,0,1 |
-   *  |       |       |
-   *  +-------+-------+   0
-   *  |       |       |
-   *  | 0,1,1 | 1,1,1 |
-   *  |       |       |
-   *  +-------+-------+  -85.0511
-   *-180      0     +180
+   *   +-------+-------+  +85.0511
+   *   |       |       |
+   *   | 0,0,1 | 1,0,1 |
+   *   |       |       |
+   *   +-------+-------+   0
+   *   |       |       |
+   *   | 0,1,1 | 1,1,1 |
+   *   |       |       |
+   *   +-------+-------+  -85.0511
+   * -180      0     +180
    *
-   *const t1 = new Tiler();
-   *const p1 = new Projection(256, 256, 256 / Math.PI)  // z1
-   *    .dimensions([[0, 0], [512, 512]]);              // entire world visible
+   * const t1 = new Tiler();
+   * const p1 = new Projection(256, 256, 256 / Math.PI)  // z1
+   *     .dimensions([[0, 0], [512, 512]]);              // entire world visible
    *
-   *let result = t1.getTiles(p1);
-   *##### At zoom 2:
+   * let result = t1.getTiles(p1);
+   * 
+   * At zoom 2:
    *
-   *  +-------+-------+-------+-------+  +85.0511
-   *  |       |       |       |       |
-   *  | 0,0,2 | 1,0,2 | 2,0,2 | 3,0,2 |
-   *  |       |       |       |       |
-   *  +-------+-------+-------+-------+  +66.5133
-   *  |       |       |       |       |
-   *  | 0,1,2 | 1,1,2 | 2,1,2 | 3,1,2 |
-   *  |       |       |       |       |
-   *  +-------+-------+-------+-------+   0
-   *  |       |       |       |       |
-   *  | 0,2,2 | 1,2,2 | 2,2,2 | 3,2,2 |
-   *  |       |       |       |       |
-   *  +-------+-------+-------+-------+  -66.5133
-   *  |       |       |       |       |
-   *  | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
-   *  |       |       |       |       |
-   *  +-------+-------+-------+-------+  -85.0511
-   *-180     -90      0      +90    +180
+   *   +-------+-------+-------+-------+  +85.0511
+   *   |       |       |       |       |
+   *   | 0,0,2 | 1,0,2 | 2,0,2 | 3,0,2 |
+   *   |       |       |       |       |
+   *   +-------+-------+-------+-------+  +66.5133
+   *   |       |       |       |       |
+   *   | 0,1,2 | 1,1,2 | 2,1,2 | 3,1,2 |
+   *   |       |       |       |       |
+   *   +-------+-------+-------+-------+   0
+   *   |       |       |       |       |
+   *   | 0,2,2 | 1,2,2 | 2,2,2 | 3,2,2 |
+   *   |       |       |       |       |
+   *   +-------+-------+-------+-------+  -66.5133
+   *   |       |       |       |       |
+   *   | 0,3,2 | 1,3,2 | 2,3,2 | 3,3,2 |
+   *   |       |       |       |       |
+   *   +-------+-------+-------+-------+  -85.0511
+   * -180     -90      0      +90    +180
    *
-   *const t2 = new Tiler();
-   *const p2 = new Projection(512, 512, 512 / Math.PI)  // z2
-   *    .dimensions([[0, 0], [1024, 1024]]);            // entire world visible
+   * const t2 = new Tiler();
+   * const p2 = new Projection(512, 512, 512 / Math.PI)  // z2
+   *     .dimensions([[0, 0], [1024, 1024]]);            // entire world visible
    *
-   *let result = t2.getTiles(p2);
+   * let result = t2.getTiles(p2);
    *```
-   */
-
-  /** Returns a TileResult object which contains details about all the tiles covering the given projection and viewport
-   * @param projection encapsulates the state of the current viewport (translation, scale, and dimensions)
-   * @returns tile result
    */
   getTiles(projection: Projection): TileResult {
     const dimensions: Vec2[] = projection.dimensions() as Vec2[];

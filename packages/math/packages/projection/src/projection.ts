@@ -78,7 +78,7 @@ export class Projection {
 
   /** Sets/Gets the scale factor
    * @param val scale factor
-   * @returns When passed a numeric argument, sets the scale factor and returns `this` for method chaining.
+   * @returns When argument is provided, sets the scale factor and returns `this` for method chaining.
    * Returns the scale factor otherwise
    * @example ```
    * const p = new Projection().scale(512 / Math.PI);   // sets scale
@@ -93,7 +93,7 @@ export class Projection {
 
   /** Sets/Gets the translation factor
    * @param val translation factor
-   * @returns When passed a numeric argument, sets the `x`,`y` translation values and returns `this` for method chaining
+   * @returns When argument is provided, sets the `x`,`y` translation values and returns `this` for method chaining.
    * Returns the `x`,`y` translation values otherwise
    * @example ```
    * const p = new Projection().translate([20, 30]);    // sets translation
@@ -109,7 +109,7 @@ export class Projection {
 
   /** Sets/Gets the current viewport dimensions
    * @param val viewport dimensions
-   * @returns When an argument is passed, sets the viewport min/max dimensions and returns `this` for method chaining
+   * @returns When argument is provided, sets the viewport min/max dimensions and returns `this` for method chaining.
    * Returns the viewport min/max dimensions otherwise
    * @example ```
    * const p = new Projection().dimensions([[0, 0], [800, 600]]);    // sets viewport dimensions
@@ -124,7 +124,7 @@ export class Projection {
 
   /** Sets/Gets a transform object
    * @param val an object representing the current translation and scale
-   * @returns When an argument is passed, sets `x`,`y`,`k` from the Transform and returns `this` for method chaining
+   * @returns When argument is provided, sets `x`,`y`,`k` from the Transform and returns `this` for method chaining.
    * Returns a Transform object containing the current `x`,`y`,`k` values otherwise
    * @example ```
    * const t = { x: 20, y: 30, k: 512 / Math.PI };

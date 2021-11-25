@@ -149,7 +149,7 @@ export function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean 
   return false;
 }
 
-/** Return true if point is contained in polygon
+/** Return true if point is contained in polygon, false otherwise
  * @description From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  * @param point
@@ -182,7 +182,7 @@ export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
   return inside;
 }
 
-/** Return true if every point of inner polygon is contained within outer polygon
+/** Return true if every point of inner polygon is contained within outer polygon, false otherwise
  * @description From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  * @param outer
@@ -205,7 +205,7 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
   });
 }
 
-/** Return true if any part of inner polygon intersects outer polygon
+/** Return true if any part of inner polygon intersects outer polygon, false otherwise
  * @param outer
  * @param inner
  * @param checkSegments if true test each segment (stricter but slower).

@@ -18,10 +18,10 @@ export interface BBox {
  * @description All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
  */
 export class Extent {
-  /** @public Minimum corner coordinate for the extent */
+  /** Minimum corner coordinate for the extent */
   public min: Vec2 = [Infinity, Infinity];
 
-  /** @public Maximum corner coordinate for the extent */
+  /** Maximum corner coordinate for the extent */
   public max: Vec2 = [-Infinity, -Infinity];
 
   /** Constructs a new Extent
