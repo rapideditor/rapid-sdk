@@ -15,7 +15,7 @@ const POLAR_RADIUS = 6378137.0;
  * @returns meters
  * @example ```
  * geoLatToMeters(1);  // returns ≈111319
- * ``` 
+ * ```
  */
 export function geoLatToMeters(dLat: number): number {
   return dLat * ((TAU * POLAR_RADIUS) / 360);
@@ -27,7 +27,7 @@ export function geoLatToMeters(dLat: number): number {
  * @returns meters
  * @example ```
  * geoLonToMeters(1, 0);  // returns ≈110946 at equator
- * ``` 
+ * ```
  */
 export function geoLonToMeters(dLon: number, atLat: number): number {
   return Math.abs(atLat) >= 90
@@ -40,7 +40,7 @@ export function geoLonToMeters(dLon: number, atLat: number): number {
  * @returns degrees latitude
  * @example ```
  * geoMetersToLat(111319);  // returns ≈1°
- * ``` 
+ * ```
  */
 export function geoMetersToLat(m: number): number {
   return m / ((TAU * POLAR_RADIUS) / 360);
@@ -52,7 +52,7 @@ export function geoMetersToLat(m: number): number {
  * @returns degrees longitude
  * @example ```
  * geoMetersToLon(110946, 0);  // returns ≈1° at equator
- * ``` 
+ * ```
  */
 export function geoMetersToLon(m: number, atLat: number): number {
   return Math.abs(atLat) >= 90
@@ -66,7 +66,7 @@ export function geoMetersToLon(m: number, atLat: number): number {
  * @returns offset in tile pixels
  * @example ```
  * geoMetersToOffset([100, 100]);  // returns ≈[0.00064, -0.00064] pixels
- * ``` 
+ * ```
  */
 export function geoMetersToOffset(m: Vec2, tileSize?: number): Vec2 {
   tileSize = tileSize || 256;
@@ -79,7 +79,7 @@ export function geoMetersToOffset(m: Vec2, tileSize?: number): Vec2 {
  * @returns offset in meters
  * @example ```
  * geoOffsetToMeters([0.00064, -0.00064]);  // returns ≈[100, 100] meters
- * ``` 
+ * ```
  */
 export function geoOffsetToMeters(offset: Vec2, tileSize?: number): Vec2 {
   tileSize = tileSize || 256;
@@ -90,12 +90,12 @@ export function geoOffsetToMeters(offset: Vec2, tileSize?: number): Vec2 {
 }
 
 /** Equirectangular approximation of spherical distances on Earth
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns distance in meters
  * @example ```
  * geoSphericalDistance([0, 0], [1, 0]);  // returns ≈110946 meters
- * ``` 
+ * ```
  */
 export function geoSphericalDistance(a: Vec2, b: Vec2): number {
   const x: number = geoLonToMeters(a[0] - b[0], (a[1] + b[1]) / 2);
@@ -109,7 +109,7 @@ export function geoSphericalDistance(a: Vec2, b: Vec2): number {
  * @returns tile zoom level
  * @example ```
  * geoScaleToZoom(5340353.7154);  // returns ≈17
- * ``` 
+ * ```
  */
 export function geoScaleToZoom(k: number, tileSize?: number): number {
   tileSize = tileSize || 256;
@@ -123,7 +123,7 @@ export function geoScaleToZoom(k: number, tileSize?: number): number {
  * @returns projection scale factor
  * @example ```
  * geoZoomToScale(17);  // returns ≈5340353.7154
- * ``` 
+ * ```
  */
 export function geoZoomToScale(z: number, tileSize?: number): number {
   tileSize = tileSize || 256;

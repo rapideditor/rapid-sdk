@@ -3,8 +3,8 @@ import { remove as removeDiacritics } from 'diacritics';
 /** Calculates Levenshtein distance between two strings
  * @description See: https://en.wikipedia.org/wiki/Levenshtein_distance
  * First converts the strings to lowercase and replaces diacritic marks with ascii equivalents.
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns levenshtein distance
  */
 export function utilEditDistance(a, b) {
@@ -38,11 +38,11 @@ export function utilEditDistance(a, b) {
   return matrix[b.length][a.length];
 }
 
-/** Returns hash code of a string 
+/** Returns hash code of a string
  * @description https://stackoverflow.com/questions/194846/is-there-any-kind-of-hash-code-function-in-javascript
  * https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
- * @param str 
- * @returns 
+ * @param str
+ * @returns
  */
 export function utilHashcode(str) {
   let hash = 0;
@@ -56,9 +56,9 @@ export function utilHashcode(str) {
   return hash;
 }
 
-/** Transforms object into Query string 
- * @param obj 
- * @param noencode 
+/** Transforms object into Query string
+ * @param obj
+ * @param noencode
  * @returns query string
  */
 export function utilQsString(obj, noencode) {
@@ -80,7 +80,7 @@ export function utilQsString(obj, noencode) {
     .join('&');
 }
 
-/** Transforms query string into object 
+/** Transforms query string into object
  * @param str
  * @returns object
  */
@@ -112,7 +112,7 @@ export function utilUnicodeCharsCount(str) {
  * @description Note that this runs the risk of splitting graphemes
  * @param str target string
  * @param limit length in unicode characters
- * @returns 
+ * @returns
  */
 export function utilUnicodeCharsTruncated(str, limit) {
   return Array.from(str).slice(0, limit).join('');
@@ -120,8 +120,8 @@ export function utilUnicodeCharsTruncated(str, limit) {
 
 /** Returns version of `str` with all runs of special characters replaced by `_`
  * @description Suitable for HTML ids, classes, selectors, etc.
- * @param str 
- * @returns 
+ * @param str
+ * @returns
  */
 export function utilSafeString(str) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '_');
@@ -129,8 +129,8 @@ export function utilSafeString(str) {
 
 /** Returns string based on `val` that is highly unlikely to collide with an id used previously or that's present elsewhere in the document
  * @descirption Useful for preventing browser-provided autofills or when embedding iD on pages with unknown elements
- * @param val 
- * @returns 
+ * @param val
+ * @returns
  */
 export function utilUniqueString(val) {
   return 'ideditor-' + utilSafeString(val.toString()) + '-' + new Date().getTime().toString();

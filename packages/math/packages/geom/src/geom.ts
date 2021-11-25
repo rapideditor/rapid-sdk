@@ -16,8 +16,8 @@ import {
 } from '@id-sdk/vector';
 
 /** Test whether two given coordinates describe the same edge
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns `true` if equal, `false` if unequal.
  * @example ```
  * geomEdgeEqual([1, 2], [1, 2]);   // returns true
@@ -52,8 +52,8 @@ export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): V
 /** Return the intersection point of 2 line segments
  * @description From https://github.com/pgkelley4/line-segments-intersect
  * This uses the vector cross product approach http://stackoverflow.com/a/565282/786339
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns intersection point if exists, null otherwise
  * @example ```
  *         b0
@@ -91,8 +91,8 @@ export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
 }
 
 /** Return all intersection points of 2 paths
- * @param path1 
- * @param path2 
+ * @param path1
+ * @param path2
  * @returns intersection points
  * @example ```
  *        b0
@@ -103,7 +103,7 @@ export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
  * const a = [[0, 0], [10, 0]];
  * const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
  * geomPathIntersections(a, b);   // returns [[5, 0], [7.5, 0]]
- * ``` 
+ * ```
  */
 export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
   let intersections: Vec2[] = [];
@@ -121,8 +121,8 @@ export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
 }
 
 /** Return true if paths intersect, false if not
- * @param path1 
- * @param path2 
+ * @param path1
+ * @param path2
  * @returns
  * @example ```
  *        b0
@@ -152,9 +152,9 @@ export function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean 
 /** Return true if point is contained in polygon
  * @description From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
- * @param point 
- * @param polygon 
- * @returns 
+ * @param point
+ * @param polygon
+ * @returns
  * @example ```
  *  p1 --- p2
  *  |   *   |
@@ -185,9 +185,9 @@ export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
 /** Return true if every point of inner polygon is contained within outer polygon
  * @description From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
- * @param outer 
- * @param inner 
- * @returns 
+ * @param outer
+ * @param inner
+ * @returns
  * @example ```
  *  o1 -------- o2
  *  |  i1 -- i2  |
@@ -206,10 +206,10 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
 }
 
 /** Return true if any part of inner polygon intersects outer polygon
- * @param outer 
- * @param inner 
+ * @param outer
+ * @param inner
  * @param checkSegments if true test each segment (stricter but slower).
- * @returns 
+ * @returns
  * @example ```
  *      i1 -- i2
  *  o1 -+------+-- o2
@@ -240,7 +240,7 @@ export function geomPolygonIntersectsPolygon(
 /** Smallest Surrounding Rectangle. An Object containing `poly` and `angle` properties. */
 export interface SSR {
   /** the smallest surrounding rectangle polygon */
-  poly: Vec2[]; 
+  poly: Vec2[];
   /** angle offset from x axis */
   angle: number;
 }
@@ -249,7 +249,7 @@ export interface SSR {
  * @description
  * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
  * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
- * @param points 
+ * @param points
  * @returns rectangle if exists, null otherwise
  * @example ```
  * +-- p1 ------ p3
@@ -300,7 +300,7 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR | null 
 }
 
 /** Return the length of the given path
- * @param path 
+ * @param path
  * @returns length
  * @example ```
  *          p2
@@ -319,9 +319,9 @@ export function geomPathLength(path: Vec2[]): number {
 }
 
 /** If the given point is at the edge of the padded viewport, return a vector that will nudge the viewport in that direction
- * @param point 
- * @param dimensions 
- * @returns 
+ * @param point
+ * @param dimensions
+ * @returns
  */
 export function geomViewportNudge(point: Vec2, dimensions: Vec2): Vec2 | null {
   const pad: number[] = [80, 20, 50, 20]; // top, right, bottom, left

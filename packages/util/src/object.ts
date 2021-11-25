@@ -1,7 +1,7 @@
 /** Creates a new obj from provided obj which does not contain provided keys
- * @param obj 
+ * @param obj
  * @param omitKeys - keys to omit
- * @returns 
+ * @returns
  */
 export function utilObjectOmit(obj, omitKeys) {
   return Object.keys(obj).reduce((result, key) => {

@@ -146,7 +146,7 @@ export class Projection {
    * const proj = new Projection();
    * let s = proj.getStream();
    * let p;
-   * 
+   *
    * s.stream = {
    *   point: (x, y) => {
    *     p = [x, y];

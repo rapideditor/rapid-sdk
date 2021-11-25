@@ -1,6 +1,6 @@
 /** Checks if provided arguments have same elements at the same indices
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns Returns true if a and b have the same elements at the same indices, false otherwise
  */
 export function utilArrayIdentical(a, b) {
@@ -17,8 +17,8 @@ export function utilArrayIdentical(a, b) {
 
 /** (a \ b) Create a set that contains those elements of set a that are not in set b.
  * @description This operation is also sometimes called minus (-)
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns result of a \ b
  * @example ```
  * let a = [1,2,3];
@@ -34,8 +34,8 @@ export function utilArrayDifference(a, b) {
 
 /** (a ∩ b) Create a set that contains those elements of set a that are also in set b.
  * @description This operation is known as intersection
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns result of a ∩ b
  * @example ```
  * let a = [1,2,3];
@@ -50,8 +50,8 @@ export function utilArrayIntersection(a, b) {
 
 /** (a ∪ b) Create a set that contains the elements of both set a and set b
  * @description This operation is known as union
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns result of a ∩ b
  * @example ```
  * let a = [1,2,3];
@@ -66,7 +66,7 @@ export function utilArrayUnion(a, b) {
 }
 
 /** Returns an array with all the duplicates removed
- * @param a 
+ * @param a
  * @returns array with unique elements
  * @example ```
  * let a = [1,1,2,3,3];
@@ -80,7 +80,7 @@ export function utilArrayUniq(a) {
 /** Splits array into chunks of given chunk size
  * @param a target array
  * @param chunkSize size of chunk
- * @returns 
+ * @returns
  * @example ```
  * let a = [1,2,3,4,5,6,7];
  * utilArrayChunk(a, 3);  // returns: [[1,2,3],[4,5,6],[7]];
@@ -124,7 +124,7 @@ export function utilArrayFlatten(a) {
  *   'Dog': [{type: 'Dog', name: 'Spot'}, {type: 'Dog', name: 'Rover'}],
  *   'Cat': [{type: 'Cat', name: 'Tiger'}, {type: 'Cat', name: 'Leo'}]
  * }
- * 
+ *
  * utilArrayGroupBy(pets, function(item) { return item.name.length; })
  * returns:
  * {
@@ -142,11 +142,11 @@ export function utilArrayGroupBy(a, key) {
   }, {});
 }
 
-/** Returns an Array with all the duplicates removed 
+/** Returns an Array with all the duplicates removed
  * where uniqueness determined by the given key
- * @param a 
+ * @param a
  * @param key property or a key function
- * @returns 
+ * @returns
  * @example ```
  * let pets = [
  *   { type: 'Dog', name: 'Spot' },

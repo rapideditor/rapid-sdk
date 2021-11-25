@@ -2,8 +2,8 @@ import { utilArrayUnion } from './array';
 
 /**
  * Cleans tags
- * @param tags 
- * @returns 
+ * @param tags
+ * @returns
  */
 export function utilCleanTags(tags) {
   let out = {};
@@ -45,10 +45,10 @@ export function utilCleanTags(tags) {
 
 /** Returns a selector to select entity ids for:
  * deep descendant entityIDs for any of those entities that are relations
- * @param ids 
- * @param graph 
- * @param skipMultipolgonMembers 
- * @returns 
+ * @param ids
+ * @param graph
+ * @param skipMultipolgonMembers
+ * @returns
  */
 export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMembers: boolean) {
   let idsSet = new Set(ids);
@@ -72,13 +72,13 @@ export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMemb
     (entity.members || []).forEach((member) => collectDeepDescendants(member.id)); // recurse
   }
 }
-  
+
 /** Returns a selector to select entity ids for:
  * - entityIDs passed in
  * - deep descendant entityIDs for any of those entities that are relations
- * @param ids 
- * @param graph 
- * @returns 
+ * @param ids
+ * @param graph
+ * @returns
  */
 export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
   const seen = new Set<string>();
@@ -99,9 +99,9 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
 /** Returns a selector to select entity ids for:
  * - entityIDs passed in
  * - shallow descendant entityIDs for any of those entities that are relations
- * @param ids 
- * @param graph 
- * @returns 
+ * @param ids
+ * @param graph
+ * @returns
  */
 export function utilEntityOrMemberSelector(ids: string[], graph) {
   let seen = new Set(ids);
@@ -119,9 +119,9 @@ export function utilEntityOrMemberSelector(ids: string[], graph) {
 /** Returns a selector to select entity ids for:
  * - entityIDs passed in
  * - deep descendant entityIDs for any of those entities that are relations
- * @param ids 
- * @param graph 
- * @returns 
+ * @param ids
+ * @param graph
+ * @returns
  */
 export function utilEntityOrDeepMemberSelector(ids: string[], graph) {
   return utilEntitySelector(utilEntityAndDeepMemberIDs(ids, graph));
@@ -129,8 +129,8 @@ export function utilEntityOrDeepMemberSelector(ids: string[], graph) {
 
 /** Generate a css selector for multiple entities
  * class1, class2 -> .class1,.class2
- * @param ids 
- * @returns 
+ * @param ids
+ * @returns
  */
 export function utilEntitySelector(ids: string[]) {
   return ids.length ? '.' + ids.join(',.') : 'nothing';
@@ -140,9 +140,9 @@ export function utilEntitySelector(ids: string[]) {
  * - nodes for any nodeIDs passed in
  * - child nodes of any wayIDs passed in
  * - descendant member and child nodes of relationIDs passed in
- * @param ids 
- * @param graph 
- * @returns 
+ * @param ids
+ * @param graph
+ * @returns
  */
 export function utilGetAllNodes(ids: string[], graph) {
   const seen = new Set<string>();
@@ -177,8 +177,8 @@ type TagDiff = {
 };
 
 /** Performs tag diff between old and new tags
- * @param oldTags 
- * @param newTags 
+ * @param oldTags
+ * @param newTags
  * @returns the resulting diff
  */
 export function utilTagDiff(oldTags, newTags) {

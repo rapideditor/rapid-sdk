@@ -7,8 +7,8 @@ export type Vec2 = [number, number];
 export type Vec3 = [number, number, number];
 
 /** Test whether two given vectors are equal
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @param epsilon if provideed, equality is done within epsilon
  * @returns true if equal, false otherwise
  * @example ```
@@ -25,8 +25,8 @@ export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
 }
 
 /** Adds two vectors
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns sum of two vectors
  * @example ```
  * vecAdd([1, 2], [3, 4]);   // returns [4, 6]
@@ -37,8 +37,8 @@ export function vecAdd(a: Vec2, b: Vec2): Vec2 {
 }
 
 /** Subtract two vectors
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns difference of `a - b`
  * @example ```
  * vecSubtract([1, 2], [3, 4]);   // returns [-2, -2]
@@ -86,7 +86,7 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
 
 /** Returns the length of a vector
  * @description http://jsperf.com/id-dist-optimization
- * @param a 
+ * @param a
  * @param b If not passed, defaults to [0,0].
  * @returns vector length
  * @example ```
@@ -103,8 +103,8 @@ export function vecLength(a: Vec2, b?: Vec2): number {
 
 /** Length of vector raised to the power two
  * @param a
- * @param b 
- * @returns 
+ * @param b
+ * @returns
  */
 export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]) {
   return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
@@ -127,8 +127,8 @@ export function vecNormalize(a: Vec2): Vec2 {
 
 /** Return the counterclockwise angle in the range (-pi, pi)
  * between the positive X axis and the line intersecting a and b.
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @returns resulting angle
  * @example ```
  * vecAngle([0, 0], [-1, 0]);   // returns π
@@ -139,8 +139,8 @@ export function vecAngle(a: Vec2, b: Vec2): number {
 }
 
 /** Returns the dot product of two vectors
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @param origin If not passed, defaults to [0,0]
  * @returns dot product result
  * @example ```
@@ -155,8 +155,8 @@ export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
 }
 
 /** Normalized Dot Product - normalizes input vectors before returning dot product
- * @param a 
- * @param b 
+ * @param a
+ * @param b
  * @param origin If not passed, defaults to [0,0]
  * @returns normalized dot product result
  * @example ```
@@ -203,9 +203,9 @@ export interface Edge {
  *      c
  *      |
  *  a --*--- b
- * 
+ *
  *  * = [2, 0]
- * 
+ *
  * const a = [0, 0];
  * const b = [5, 0];
  * const c = [2, 1];

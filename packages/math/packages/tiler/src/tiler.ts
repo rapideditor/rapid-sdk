@@ -56,7 +56,7 @@ export class Tiler {
   constructor() {}
 
   /** Returns a TileResult object which contains details about all the tiles covering the given projection and viewport
-   * @param projection 
+   * @param projection
    * @returns tile result
    * @example ```
    * ##### At zoom 0:
@@ -202,7 +202,7 @@ export class Tiler {
 
   /** Returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile
    * @description Useful for displaying a tile grid for debugging.
-   * @param tileResult 
+   * @param tileResult
    * @returns FeatureCollection containing a Feature for each rectangular tile
    * @example ```
    * const t = new Tiler();
@@ -249,8 +249,8 @@ export class Tiler {
   }
 
   /** Sets/Gets the current zoomRange
-   * @param min 
-   * @param max 
+   * @param min
+   * @param max
    * @returns When arguments are passed, sets the min/max zoom range and returns `this` for method chaining
    * Returns the min/max zoom range otherwise
    * @example ```
@@ -266,7 +266,7 @@ export class Tiler {
   }
 
   /** Sets/Gets the current tile margin (number to extend the rows/columns beyond those covering the viewport)
-   * @param val 
+   * @param val
    * @returns When an argument is passed, sets the tile margin and returns `this` for method chaining
    * Returns the tile margin otherwise
    * @example ```
@@ -283,7 +283,7 @@ export class Tiler {
   /** Sets/Gets the current skipNullIsland value
    * @description When loading data from a tiled service, it is common for invalid data to be located around "Null Island",
    * therefore it can be useful to skip loading these tiles
-   * @param val 
+   * @param val
    * @returns When an argument is passed, sets the `skipNullIsland` value and returns `this` for method chaining
    * Returns the `skipNullIsland` value otherwise
    * @example ```
@@ -300,9 +300,9 @@ export class Tiler {
   /** Tests whether the given tile coordinate is near [0,0] (Null Island)
    * @description A tile is considered "near" if it >= z7 and around the center of the map
    * within these or descendent tiles (roughly within about 2.8° of [0,0]).
-   * @param x 
-   * @param y 
-   * @param z 
+   * @param x
+   * @param y
+   * @param z
    * @returns true if near null island, false otherwise
    * @example ```
    * +---------+---------+
@@ -316,7 +316,7 @@ export class Tiler {
    * +---------+---------+
    * Tiler.isNearNullIsland(31, 31, 6);    // returns false (zoom 6)
    * Tiler.isNearNullIsland(63, 65, 7);    // returns false (south of Null Island region)
-   * 
+   *
    * Tiler.isNearNullIsland(63, 63, 7);    // returns true
    * Tiler.isNearNullIsland(127, 127, 8);  // returns true
    * ```

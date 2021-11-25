@@ -14,10 +14,10 @@ export interface BBox {
   maxY: number;
 }
 
- /** Extent class for creating bounding boxes
+/** Extent class for creating bounding boxes
  * @description All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
  */
- export class Extent {
+export class Extent {
   /** @public Minimum corner coordinate for the extent */
   public min: Vec2 = [Infinity, Infinity];
 
@@ -236,7 +236,7 @@ export interface BBox {
     );
   }
 
-  /** Returns a new Extent representing the current extent 
+  /** Returns a new Extent representing the current extent
    * (assumed to be defined in WGS84 geographic coordinates) padded by given meters
    * @param meters
    * @returns new Extent containing this padded by given meters
