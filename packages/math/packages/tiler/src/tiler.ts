@@ -92,7 +92,7 @@ export class Tiler {
    *     .dimensions([[0, 0], [512, 512]]);              // entire world visible
    *
    * let result = t1.getTiles(p1);
-   * 
+   *
    * At zoom 2:
    *
    *   +-------+-------+-------+-------+  +85.0511
