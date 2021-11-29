@@ -182,3 +182,18 @@ describe('utilUniqueString', () => {
     expect(util.utilUniqueString('Hello World!')).toMatch(/^ideditor-hello_world_-\d+$/);
   });
 });
+
+describe('utilSortString', function() {
+  var cmp = util.utilSortString('en');
+  it('sorts strings', function() {
+      expect(cmp('a', 'b')).toBeLessThan(0);
+      expect(cmp('b', 'a')).toBeGreaterThan(0);
+      expect(cmp('a', 'a')).toEqual(0);
+  });
+  it('sorts strings case insentitively', function() {
+      expect(cmp('a', 'A')).toEqual(0);
+  });
+  it('sorts strings not regarding diacritics insentitively', function() {
+      expect(cmp('a', 'à')).toEqual(0);
+  });
+});
