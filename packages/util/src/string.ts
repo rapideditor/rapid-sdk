@@ -114,9 +114,9 @@ export function utilUniqueString(val) {
 // regardless of case or diacritics.
 // If supported, will use the browser's language sensitive string comparison, see:
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator
-export function utilSortString(locale: string): (x: string, y: string) => number {
-  if ('Intl' in window && 'Collator' in Intl) {
-      return (new Intl.Collator(locale || 'en', {
+export function utilSortString(locale = 'en'): (x: string, y: string) => number {
+  if (typeof Intl === 'object' && 'Collator' in Intl) {
+      return (new Intl.Collator(locale, {
           sensitivity: 'base',
           numeric: true
       })).compare;
