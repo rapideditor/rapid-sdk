@@ -1,8 +1,8 @@
-// A per-domain session mutex backed by a cookie and dead man's
-// switch. If the session crashes, the mutex will auto-release
-// after 5 seconds.
-
-// This accepts a string and returns an object that complies with utilSessionMutexType
+/** A per-domain session mutex backed by a cookie and dead man's switch
+ * @description If the session crashes, the mutex will auto-release after 5 seconds.
+ * @param name string name
+ * @returns object that complies with utilSessionMutexType
+ */
 export function utilSessionMutex(name) {
   // let _mutex = {};
   let _intervalID;

@@ -1,3 +1,8 @@
+/**
+ * 🧰 Collection of iD-sdk utility libraries
+ * @module
+ */
+
 export { utilAesEncrypt } from './aes';
 export { utilAesDecrypt } from './aes';
 
