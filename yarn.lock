@@ -330,6 +330,26 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
+"@id-sdk/extent@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/extent/-/extent-3.0.0-pre.10.tgz#f48b72dc987f145842ca42a69b0df066d379df11"
+  integrity sha512-6UEUwQfoyE57REUrg7mNGiT76ySYgUMXl1jDEMvrs7hDq4e9VyhgFITU5zZVi6m/Mqu4EViYdnVK5a83r3vyWw==
+  dependencies:
+    "@id-sdk/geo" "^3.0.0-pre.10"
+    "@id-sdk/vector" "^3.0.0-pre.10"
+
+"@id-sdk/geo@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/geo/-/geo-3.0.0-pre.10.tgz#6a8aa4d870d43bed5d778fd2971c7700d538887c"
+  integrity sha512-JWVOpGKGUDObDZ+BxLfpdZD5WdPe5XUwkkP+2GYUJMKSP03k6yJ740VbwApUS2js/5J1OleR9K8E+7EiYXdJ5g==
+  dependencies:
+    "@id-sdk/vector" "^3.0.0-pre.10"
+
+"@id-sdk/vector@^3.0.0-pre.10":
+  version "3.0.0-pre.10"
+  resolved "https://registry.yarnpkg.com/@id-sdk/vector/-/vector-3.0.0-pre.10.tgz#81801bc2288ad75587be22d41afbbf5982b7f0ea"
+  integrity sha512-qU3jOo/48EgYH8DaOjnWzYwiRAU9sbALbQAIBjJFqJEwXnpOhkezXxGXHqlpmGG9BDLO7Ecps2FAwRTXqzUtBw==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"

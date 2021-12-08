@@ -5,10 +5,10 @@
  * See: https://developers.google.com/maps/documentation/javascript/coordinates
  */
 
-import { Extent } from '@id-sdk/extent';
-import { Projection } from '@id-sdk/projection';
-import { geoScaleToZoom, geoZoomToScale } from '@id-sdk/geo';
-import { Vec2, Vec3 } from '@id-sdk/vector';
+import { Extent } from './extent';
+import { Projection } from './projection';
+import { geoScaleToZoom, geoZoomToScale } from './geo';
+import { Vec2, Vec3 } from './vector';
 
 /** Contains essential information about a tile */
 export interface Tile {

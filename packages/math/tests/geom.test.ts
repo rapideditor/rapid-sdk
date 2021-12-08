@@ -1,7 +1,6 @@
-import 'jest-extended';
 import * as test from '../src/geom';
 import { SSR } from '../src/geom';
-import { Vec2 } from '@id-sdk/vector';
+import { Vec2 } from '../src/vector';
 
 describe('math/geom', () => {
   const CLOSE = 6; // digits

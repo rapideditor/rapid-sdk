@@ -3,8 +3,8 @@
  * @module
  */
 
-import { geoMetersToLat, geoMetersToLon } from '@id-sdk/geo';
-import { Vec2 } from '@id-sdk/vector';
+import { geoMetersToLat, geoMetersToLon } from './geo';
+import { Vec2 } from './vector';
 
 /** Bounding box containing minX, minY, maxX, maxY numbers */
 export interface BBox {

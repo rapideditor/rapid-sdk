@@ -1,4 +1,3 @@
-import 'jest-extended';
 import * as util from '../src/index';
 
 describe('utilEditDistance', () => {

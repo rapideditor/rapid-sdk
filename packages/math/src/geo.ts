@@ -3,7 +3,7 @@
  * @module
  */
 
-import { Vec2 } from '@id-sdk/vector';
+import { Vec2 } from './vector';
 
 // constants
 const TAU = 2 * Math.PI;

@@ -1,6 +1,5 @@
-import 'jest-extended';
 import * as test from '../src/geo';
-import { Vec2 } from '@id-sdk/vector';
+import { Vec2 } from '../src/vector';
 
 describe('math/geo', () => {
   describe('geoLatToMeters', () => {

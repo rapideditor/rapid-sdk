@@ -1,6 +1,5 @@
 /** @jest-environment jsdom */
 import * as util from '../src/index';
-import 'jest-extended';
 
 describe('utilSessionMutex', () => {
   let a, b;
