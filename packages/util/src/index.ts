@@ -38,3 +38,4 @@ export { utilUnicodeCharsCount } from './string';
 export { utilUnicodeCharsTruncated } from './string';
 export { utilSafeString } from './string';
 export { utilUniqueString } from './string';
+export { utilSortString } from './string';

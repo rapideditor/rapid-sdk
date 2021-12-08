@@ -135,3 +135,22 @@ export function utilSafeString(str) {
 export function utilUniqueString(val) {
   return 'ideditor-' + utilSafeString(val.toString()) + '-' + new Date().getTime().toString();
 }
+
+// Returns a comparator function for sorting strings alphabetically in ascending order,
+// regardless of case or diacritics.
+// If supported, will use the browser's language sensitive string comparison, see:
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator
+export function utilSortString(locale = 'en'): (x: string, y: string) => number {
+  if (typeof Intl === 'object' && 'Collator' in Intl) {
+      return (new Intl.Collator(locale, {
+          sensitivity: 'base',
+          numeric: true
+      })).compare;
+  } else {
+      return (a, b) => {
+          a = removeDiacritics(a.toLowerCase());
+          b = removeDiacritics(b.toLowerCase());
+          return a < b ? -1 : a > b ? 1 : 0;
+      };
+  }
+}
