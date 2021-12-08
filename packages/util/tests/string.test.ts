@@ -183,17 +183,17 @@ describe('utilUniqueString', () => {
   });
 });
 
-describe('utilSortString', function() {
+describe('utilSortString', function () {
   function testCases(cmp) {
-    it('sorts strings', function() {
+    it('sorts strings', function () {
       expect(cmp('a', 'b')).toBeLessThan(0);
       expect(cmp('b', 'a')).toBeGreaterThan(0);
       expect(cmp('a', 'a')).toEqual(0);
     });
-    it('sorts strings case insentitively', function() {
+    it('sorts strings case insentitively', function () {
       expect(cmp('a', 'A')).toEqual(0);
     });
-    it('sorts strings not regarding diacritics insentitively', function() {
+    it('sorts strings not regarding diacritics insentitively', function () {
       expect(cmp('a', 'à')).toEqual(0);
     });
   }

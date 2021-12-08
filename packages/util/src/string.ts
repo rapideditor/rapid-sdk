@@ -142,15 +142,15 @@ export function utilUniqueString(val) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator
 export function utilSortString(locale = 'en'): (x: string, y: string) => number {
   if (typeof Intl === 'object' && 'Collator' in Intl) {
-      return (new Intl.Collator(locale, {
-          sensitivity: 'base',
-          numeric: true
-      })).compare;
+    return new Intl.Collator(locale, {
+      sensitivity: 'base',
+      numeric: true
+    }).compare;
   } else {
-      return (a, b) => {
-          a = removeDiacritics(a.toLowerCase());
-          b = removeDiacritics(b.toLowerCase());
-          return a < b ? -1 : a > b ? 1 : 0;
-      };
+    return (a, b) => {
+      a = removeDiacritics(a.toLowerCase());
+      b = removeDiacritics(b.toLowerCase());
+      return a < b ? -1 : a > b ? 1 : 0;
+    };
   }
 }

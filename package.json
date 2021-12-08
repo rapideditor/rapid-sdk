@@ -55,7 +55,9 @@
       "**/src/*.(ts|js)"
     ],
     "coverageDirectory": "<rootDir>/.coverage",
-    "extensionsToTreatAsEsm": [".ts"],
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "setupFilesAfterEnv": [
       "jest-extended/all"
     ],
@@ -64,10 +66,13 @@
       "**/tests/*.test.(ts|js)"
     ],
     "transform": {
-      "^.+\\.ts$": ["esbuild-jest", {
-        "format": "esm",
-        "sourcemap": "true"
-      }]
+      "^.+\\.ts$": [
+        "esbuild-jest",
+        {
+          "format": "esm",
+          "sourcemap": "true"
+        }
+      ]
     },
     "verbose": true
   },
