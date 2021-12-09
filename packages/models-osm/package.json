@@ -1,9 +1,9 @@
 {
-  "name": "@id-sdk/osm",
+  "name": "@id-sdk/models-osm",
   "version": "3.0.0-pre.10",
   "private": true,
   "description": "Classes and functions for working with the OpenStreetMap data model",
-  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/osm#readme",
+  "homepage": "https://github.com/ideditor/id-sdk/tree/main/packages/models-osm#readme",
   "repository": "github:ideditor/id-sdk",
   "license": "ISC",
   "contributors": [
@@ -20,13 +20,13 @@
   "typedocMain" : "./src/index.ts",
   "source": "./src/index.ts",
   "types": "./built/index.d.ts",
-  "main": "./built/osm.mjs",
-  "module": "./built/osm.mjs",
+  "main": "./built/models-osm.mjs",
+  "module": "./built/models-osm.mjs",
   "scripts": {
     "clean": "shx rm -rf ./built",
     "build": "run-p esbuild tsc",
     "esbuild": "node ./esbuild.js",
-    "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" npx jest --colors --no-cache --config=../../package.json --roots=./packages/osm",
+    "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" npx jest --colors --no-cache --config=../../package.json --roots=./packages/models-osm",
     "tsc": "tsc"
   },
   "dependencies": {

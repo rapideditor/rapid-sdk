@@ -5,7 +5,7 @@ esbuild.build({
   bundle: true,
   entryPoints: ['./src/index.js'],
   logLevel: 'info',
-  outfile: './built/osm.mjs',
+  outfile: './built/models-osm.mjs',
   platform: 'neutral',
   plugins: [nodeExternalsPlugin()]
 }).catch(() => process.exit(1))
