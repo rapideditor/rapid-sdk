@@ -4,16 +4,8 @@
  */
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
-import { Extent } from '@id-sdk/extent';
-import {
-  Vec2,
-  vecCross,
-  vecDot,
-  vecEqual,
-  vecInterp,
-  vecLength,
-  vecSubtract
-} from '@id-sdk/vector';
+import { Extent } from './extent';
+import { Vec2, vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from './vector';
 
 /** Test whether two given coordinates describe the same edge
  * @param a

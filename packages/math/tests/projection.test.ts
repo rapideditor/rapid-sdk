@@ -1,5 +1,5 @@
 import { Projection, Transform } from '../src/projection';
-import { Vec2 } from '@id-sdk/vector';
+import { Vec2 } from '../src/vector';
 
 describe('math/projection', () => {
   const CLOSE = 6; // digits

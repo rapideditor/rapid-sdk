@@ -3,7 +3,7 @@ import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
 esbuild.build({
   bundle: true,
-  entryPoints: ['./src/index.js'],
+  entryPoints: ['./src/index.ts'],
   logLevel: 'info',
   outfile: './built/util.mjs',
   platform: 'neutral',
