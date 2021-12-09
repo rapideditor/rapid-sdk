@@ -1,5 +1,5 @@
 // external
-import { geoAngle, geoSphericalDistance } from '@id-sdk/geo';
+import { geoAngle, geoSphericalDistance } from '@id-sdk/math';
 import { utilArrayDifference, utilArrayUniq } from '@id-sdk/util';
 
 // internal

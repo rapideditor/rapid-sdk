@@ -1,5 +1,5 @@
 import { Entity } from '../src/index';
-import { Extent } from '@id-sdk/extent';
+import { Extent } from '@id-sdk/math';
 
 describe('Entity', () => {
 

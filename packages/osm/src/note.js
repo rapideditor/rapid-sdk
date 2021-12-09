@@ -1,5 +1,5 @@
 // external
-import { Extent } from '@id-sdk/extent';
+import { Extent } from '@id-sdk/math';
 
 export function osmNote() {
   if (!(this instanceof osmNote)) {

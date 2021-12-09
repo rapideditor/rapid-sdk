@@ -1,8 +1,6 @@
 // external
-// import { geoAngle } from '@id-sdk/geo';
-import { Extent } from '@id-sdk/extent';
+import { Extent, Vec2, vecAngle } from '@id-sdk/math';
 import { utilArrayUniq } from '@id-sdk/util';
-import { Vec2, vecAngle } from '@id-sdk/vector';
 
 // internal
 import { Entity } from './entity';

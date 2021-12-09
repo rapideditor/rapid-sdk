@@ -1,9 +1,9 @@
 // external
-import { Extent } from '@id-sdk/extent';
+import { Extent } from '@id-sdk/math';
 import { utilArrayUnion, utilUnicodeCharsTruncated } from '@id-sdk/util';
 
 // internal
-import { StrictTags, LooseTags, osmIsInterestingTag } from './tags';
+import { StrictTags, LooseTags, osmIsInterestingTag, osmToStrictTags } from './tags';
 
 
 let nextNumber: Record<string, number> = {};
@@ -39,10 +39,8 @@ export class Entity {
 
     if (props.tags instanceof Map) {
       this.tags = new Map(props.tags);
-    } else if (props.tags instanceof Object) {
-      this.tags = new Map(Object.entries(props.tags));
     } else {
-      this.tags = new Map();
+      this.tags = osmToStrictTags(props.tags);
     }
   }
 
@@ -126,17 +124,9 @@ export class Entity {
 
 // belongs in util?  maybe there already?
   mergeTags(other: LooseTags): Entity {
-    let tags: StrictTags;
+    let tags: StrictTags = osmToStrictTags(other);
     let merged: StrictTags = new Map(this.tags);  // copy
     let changed: boolean = false;
-
-    if (other instanceof Map) {
-      tags = other;
-    } else if (other instanceof Object) {
-      tags = new Map(Object.entries(other));
-    } else {
-      return this;
-    }
 
     for (const [k, v] of tags) {
       const ours: string = (merged.get(k) || '');

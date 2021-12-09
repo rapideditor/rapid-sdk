@@ -1,5 +1,5 @@
 import { Entity, Node } from '../src/index';
-import { Extent } from '@id-sdk/extent';
+import { Extent } from '@id-sdk/math';
 
 const DEFAULT = [9999, 9999];
 const HIGHPOINT = [-74.66155, 41.32095];

@@ -1,12 +1,33 @@
 
 // "Strict" tags are stored in a `Map` to avoid key conflicts with
 // reserved JavaScript keywords like `__proto__` and `constructor`
-export type StrictTags = Map<string, string | undefined>;
+export type StrictTags = Map<string, string>;
 
 // Tags are often stored and passed around in plain Object pairs:
 // e.g. `{ highway: 'residential', surface: 'paved' }`
 // "Loose" tags are for any value that might be an Object, or might be a Strict tag Map.
 export type LooseTags = Record<string, string | undefined>;
+
+
+//
+//
+//
+export function osmToStrictTags(other: LooseTags): StrictTags {
+  if (other instanceof Map) {
+    return other;
+  } else if (other instanceof Object) {
+    let tags = new Map();
+    Object.entries(other).forEach(([k, v]) => {
+      if (k) {                            // only if key is defined
+        tags.set(k.toString(), v || '');  // convert undefined/null values to empty string
+      }
+    });
+    return tags;
+  } else {
+    return new Map();
+  }
+}
+
 
 // `KeepDiscard` Objects represent a keeplist/discardlist of tags.
 // A closed way with a tag (k, v) is assumed to be an area `if k in L && !(v in L[k])` (see iD.osmWay#isArea()).
@@ -45,25 +66,19 @@ export function osmSetAreaKeys(value: KeepDiscard) {
   osmAreaKeys = value;
 }
 
+
 //
 // returns an object with the tag from `tags` that implies an area geometry, if any
 export function osmTagSuggestingArea(other: LooseTags): LooseTags | null {
-  let tags: StrictTags;
-  if (other instanceof Map) {
-    tags = other;
-  } else if (other instanceof Object) {
-    tags = new Map(Object.entries(other));
-  } else {
-    return null;
-  }
+  const tags: StrictTags = osmToStrictTags(other);
 
   if (tags.get('area') === 'yes') return { area: 'yes' };
   if (tags.get('area') === 'no') return null;
 
   // `highway` and `railway` are typically linear features, but there
   // are a few exceptions that should be treated as areas, even in the
-  // absence of a proper `area=yes` or `areaKeys` tag.. see #4194
-  let lineKeys: KeepDiscard = {
+  // absence of a proper `area=yes` or `areaKeys` tag.. see iD#4194
+  const lineKeys: KeepDiscard = {
     highway: {
       rest_area: true,
       services: true
@@ -78,8 +93,7 @@ export function osmTagSuggestingArea(other: LooseTags): LooseTags | null {
   };
 
   let returnTags: LooseTags = {};
-  for (const k of tags) {
-    const v: string = tags.get(k) || '';
+  for (const [k, v] of tags) {
     if ((k in osmAreaKeys) && !(v in osmAreaKeys[k])) {
       returnTags[k] = v;
       return returnTags;
@@ -112,20 +126,24 @@ export interface NodeGeometriesResult {
   point?: boolean;
   vertex?: boolean;
 }
-export function osmNodeGeometriesForTags(nodeTags: LooseTags): NodeGeometriesResult {
+export function osmNodeGeometriesForTags(other: LooseTags): NodeGeometriesResult {
   let geometries: NodeGeometriesResult = {};
-  for (let key in nodeTags) {
-    if (osmPointTags[key] && (osmPointTags[key]['*'] || osmPointTags[key][nodeTags[key]])) {
+  const tags: StrictTags = osmToStrictTags(other);
+
+  for (const [k, v] of tags) {
+    if (osmPointTags[k] && (osmPointTags[k]['*'] || osmPointTags[k][v])) {
       geometries.point = true;
     }
-    if (osmVertexTags[key] && (osmVertexTags[key]['*'] || osmVertexTags[key][nodeTags[key]])) {
+    if (osmVertexTags[k] && (osmVertexTags[k]['*'] || osmVertexTags[k][v])) {
       geometries.vertex = true;
     }
     // break early if both are already supported
     if (geometries.point && geometries.vertex) break;
   }
+
   return geometries;
 }
+
 
 export let osmOneWayTags: KeepDiscard = {
   aerialway: {
