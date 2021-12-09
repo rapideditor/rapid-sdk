@@ -12,11 +12,12 @@
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
   "files": [
-    "index.ts",
-    "built/"
+    "built/",
+    "src/"
   ],
   "type": "module",
-  "source": "./index.ts",
+  "typedocMain" : "./src/index.ts",
+  "source": "./src/index.ts",
   "types": "./built/index.d.ts",
   "main": "./built/math.mjs",
   "module": "./built/math.mjs",
@@ -28,12 +29,12 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../package.json --roots=./packages/math"
   },
   "dependencies": {
-    "@id-sdk/extent": "^3.0.0-pre.10",
-    "@id-sdk/geo": "^3.0.0-pre.10",
-    "@id-sdk/geom": "^3.0.0-pre.10",
-    "@id-sdk/projection": "^3.0.0-pre.10",
-    "@id-sdk/tiler": "^3.0.0-pre.10",
-    "@id-sdk/vector": "^3.0.0-pre.10"
+    "@types/d3-geo": "^3.0.2",
+    "@types/d3-polygon": "^3.0.0",
+    "@types/d3-zoom": "^3.0.1",
+    "d3-geo": "^3.0.1",
+    "d3-polygon": "^3.0.1",
+    "d3-zoom": "^3.0.0"
   },
   "publishConfig": {
     "access": "public"

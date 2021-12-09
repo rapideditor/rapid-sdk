@@ -1,3 +1,8 @@
+/**
+ * 🧰 Collection of iD-sdk utility libraries
+ * @module
+ */
+
 export { utilAesEncrypt } from './aes';
 export { utilAesDecrypt } from './aes';
 
@@ -33,3 +38,4 @@ export { utilUnicodeCharsCount } from './string';
 export { utilUnicodeCharsTruncated } from './string';
 export { utilSafeString } from './string';
 export { utilUniqueString } from './string';
+export { utilSortString } from './string';

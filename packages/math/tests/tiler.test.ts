@@ -1,6 +1,5 @@
-import 'jest-extended';
 import { Tiler } from '../src/tiler';
-import { Projection } from '@id-sdk/projection';
+import { Projection } from '../src/projection';
 
 describe('math/tiler', () => {
   describe('constructor', () => {
