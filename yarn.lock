@@ -2977,9 +2977,9 @@ esbuild-netbsd-64@0.14.2:
   integrity sha512-I8+LzYK5iSNpspS9eCV9sW67Rj8FgMHimGri4mKiGAmN0pNfx+hFX146rYtzGtewuxKtTsPywWteHx+hPRLDsw==
 
 esbuild-node-externals@~1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/esbuild-node-externals/-/esbuild-node-externals-1.4.0.tgz#960890c326ae0b959dcd493e84d9c1eff38b3bb2"
-  integrity sha512-blz9ksGOSABtNkwhw6WvPlTL3dhUP7CNjA0HFBW2JXvIRn+WGEGT+rbC6X4y6DNE87EeDwgGT4gXkAfGYMNRXg==
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/esbuild-node-externals/-/esbuild-node-externals-1.4.1.tgz#7f8602c32791c113c70efef433eac55477136e29"
+  integrity sha512-ZFNGa6w1kYzn4wx9ty4eaItaOTSe2hWQZ6WXa/8guKJCiXL3XpW2CZT4gkx2OhfBKxpqaqa7ZeGK54ScoLSUdw==
   dependencies:
     find-up "5.0.0"
     tslib "2.3.1"
