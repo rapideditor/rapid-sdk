@@ -13,6 +13,11 @@ This project contains code for processing and editing map data.  Our goal is to 
 This code is used by the [Rapid](https://github.com/facebook/Rapid) map editor.
 
 
+## Documentation
+
+The modules and methods are documented at [ideditor.github.io/id-sdk](https://ideditor.github.io/id-sdk/modules.html) ([using typedoc](https://github.com/ideditor/id-sdk/blob/main/CONTRIBUTING.md#writting-code-documentation)).
+
+
 ## Contributing
 
 This project is just getting started! 🌱
