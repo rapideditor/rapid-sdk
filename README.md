@@ -35,12 +35,12 @@ Module                | Description
 ---                   | ---
 [@id-sdk/math]        | 🔢 All of the above in one convenient package
 
-[@id-sdk/extent]: /packages/math/packages/extent
-[@id-sdk/geo]: /packages/math/packages/geo
-[@id-sdk/geom]: /packages/math/packages/geom
-[@id-sdk/projection]: /packages/math/packages/projection
-[@id-sdk/tiler]: /packages/math/packages/tiler
-[@id-sdk/vector]: /packages/math/packages/vector
+[@id-sdk/extent]: /packages/math/src/extent.ts
+[@id-sdk/geo]: /packages/math/src/geo.ts
+[@id-sdk/geom]: /packages/math/src/geom.ts
+[@id-sdk/projection]: /packages/math/src/projection.ts
+[@id-sdk/tiler]: /packages/math/src/tiler.ts
+[@id-sdk/vector]: /packages/math/src/vector.ts
 [@id-sdk/math]: /packages/math
 
 
