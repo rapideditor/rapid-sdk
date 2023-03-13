@@ -128,12 +128,12 @@ export function utilSafeString(str) {
 }
 
 /** Returns string based on `val` that is highly unlikely to collide with an id used previously or that's present elsewhere in the document
- * @descirption Useful for preventing browser-provided autofills or when embedding iD on pages with unknown elements
+ * @descirption Useful for preventing browser-provided autofills or when embedding on pages with unknown elements
  * @param val
  * @returns
  */
 export function utilUniqueString(val) {
-  return 'ideditor-' + utilSafeString(val.toString()) + '-' + new Date().getTime().toString();
+  return 'rapideditor-' + utilSafeString(val.toString()) + '-' + new Date().getTime().toString();
 }
 
 // Returns a comparator function for sorting strings alphabetically in ascending order,

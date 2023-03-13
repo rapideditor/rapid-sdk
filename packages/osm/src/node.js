@@ -1,7 +1,7 @@
 // external
-import { geoAngle } from '@id-sdk/geo';
-import { Extent } from '@id-sdk/extent';
-import { utilArrayUniq } from '@id-sdk/util';
+import { geoAngle } from '@rapid-sdk/geo';
+import { Extent } from '@rapid-sdk/extent';
+import { utilArrayUniq } from '@rapid-sdk/util';
 
 // internal
 import { osmEntity } from './entity';

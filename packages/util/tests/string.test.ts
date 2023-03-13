@@ -178,7 +178,7 @@ describe('utilSafeString', () => {
 
 describe('utilUniqueString', () => {
   it('generates a reasonably unique identifier string', () => {
-    expect(util.utilUniqueString('Hello World!')).toMatch(/^ideditor-hello_world_-\d+$/);
+    expect(util.utilUniqueString('Hello World!')).toMatch(/^rapideditor-hello_world_-\d+$/);
   });
 });
 

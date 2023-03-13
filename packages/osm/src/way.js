@@ -1,8 +1,8 @@
 // external
 import { geoArea as d3_geoArea } from 'd3-geo';
-import { vecCross } from '@id-sdk/vector';
-import { Extent } from '@id-sdk/extent';
-import { utilArrayUniq } from '@id-sdk/util';
+import { vecCross } from '@rapid-sdk/vector';
+import { Extent } from '@rapid-sdk/extent';
+import { utilArrayUniq } from '@rapid-sdk/util';
 
 // internal
 import { osmEntity } from './entity';

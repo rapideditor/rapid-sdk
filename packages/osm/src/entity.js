@@ -1,5 +1,5 @@
 // external
-import { utilArrayUnion, utilUnicodeCharsTruncated } from '@id-sdk/util';
+import { utilArrayUnion, utilUnicodeCharsTruncated } from '@rapid-sdk/util';
 
 // internal
 // import { debug } from '../index';

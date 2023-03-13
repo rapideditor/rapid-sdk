@@ -1,7 +1,7 @@
 // external
 import { geoArea as d3_geoArea } from 'd3-geo';
-import { geoPolygonContainsPolygon, geoPolygonIntersectsPolygon } from '@id-sdk/geo';
-import { Extent } from '@id-sdk/extent';
+import { geoPolygonContainsPolygon, geoPolygonIntersectsPolygon } from '@rapid-sdk/geo';
+import { Extent } from '@rapid-sdk/extent';
 
 // internal
 import { osmEntity } from './entity';

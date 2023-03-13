@@ -1,5 +1,5 @@
 // external
-import { Extent } from '@id-sdk/extent';
+import { Extent } from '@rapid-sdk/extent';
 
 // internal
 import { osmEntity } from './entity';

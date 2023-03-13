@@ -1,5 +1,5 @@
 /**
- * 🧰 Collection of iD-sdk math libraries
+ * 🧳 Collection of rapid-sdk math libraries
  * @module
  */
 

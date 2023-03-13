@@ -1,23 +1,23 @@
-[![npm version](https://badge.fury.io/js/%40id-sdk%2Fmath.svg)](https://badge.fury.io/js/%40id-sdk%2Fmath)
+[![npm version](https://badge.fury.io/js/%40rapid-sdk%2Fmath.svg)](https://badge.fury.io/js/%40rapid-sdk%2Fmath)
 
 
-# @id-sdk/math
+# @rapid-sdk/math
 
-🔢 Collection of iD-sdk math libraries
+🔢 Collection of rapid-sdk math libraries
 
 
 ## Installing
 
-`npm install @id-sdk/math`
+`npm install @rapid-sdk/math`
 
-This package contains a re-export of the iD-sdk math subpackages.
+This package contains a re-export of the rapid-sdk math subpackages.
 
 This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
 For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
 
 
 ```js
-import { Extent } from '@id-sdk/math';
+import { Extent } from '@rapid-sdk/math';
 ```
 
 

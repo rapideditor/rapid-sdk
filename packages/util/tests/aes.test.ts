@@ -7,8 +7,8 @@ describe('utilAes', () => {
   });
 
   it('encrypts and decrypts with default key', () => {
-    const text = 'Hello iD!';
-    const encrypted = '5597506f958c68543c';
+    const text = 'Hello Rapid!';
+    const encrypted = '5597506f958c53716d3dbd79';
     expect(util.utilAesEncrypt(text)).toEqual(encrypted);
     expect(util.utilAesDecrypt(encrypted)).toEqual(text);
   });
@@ -19,8 +19,8 @@ describe('utilAes', () => {
       216, 159, 213, 140, 129,  75,  80, 121,
        67, 201, 179, 120,  71, 237, 185,  42
     ];
-    const text = 'Hello iD!';
-    const encrypted = '9ff50e32b04f86640a';
+    const text = 'Hello Rapid!';
+    const encrypted = '9ff50e32b04fbd415b8dbcd0';
     expect(util.utilAesEncrypt(text, key)).toEqual(encrypted);
     expect(util.utilAesDecrypt(encrypted, key)).toEqual(text);
   });
@@ -32,8 +32,8 @@ describe('utilAes', () => {
        64,  65,  68, 206, 212, 79, 215, 114,
        37,  18, 159,  94, 168, 68, 177, 202
     ];
-    const text = 'Hello iD!';
-    const encrypted = '85fc05011fa7848417';
+    const text = 'Hello Rapid!';
+    const encrypted = '85fc05011fa7bfa1464db2ea';
     expect(util.utilAesEncrypt(text, key)).toEqual(encrypted);
     expect(util.utilAesDecrypt(encrypted, key)).toEqual(text);
   });
@@ -46,8 +46,8 @@ describe('utilAes', () => {
       145,  62, 251,   9,  82, 159, 103, 198,
        63, 200, 158, 104, 188,  77, 193,  16
     ];
-    const text = 'Hello iD!';
-    const encrypted = '13c21d3dc25165c57c';
+    const text = 'Hello Rapid!';
+    const encrypted = '13c21d3dc2515ee02d93b537';
     expect(util.utilAesEncrypt(text, key)).toEqual(encrypted);
     expect(util.utilAesDecrypt(encrypted, key)).toEqual(text);
   });

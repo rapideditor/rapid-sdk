@@ -1,5 +1,5 @@
 /**
- * 🧰 Collection of iD-sdk utility libraries
+ * 🧳 Collection of rapid-sdk utility libraries
  * @module
  */
 

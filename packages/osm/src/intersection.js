@@ -1,6 +1,6 @@
 // external
-import { geoAngle, geoSphericalDistance } from '@id-sdk/geo';
-import { utilArrayDifference, utilArrayUniq } from '@id-sdk/util';
+import { geoAngle, geoSphericalDistance } from '@rapid-sdk/geo';
+import { utilArrayDifference, utilArrayUniq } from '@rapid-sdk/util';
 
 // internal
 import { actionDeleteRelation } from '../actions/delete_relation';
