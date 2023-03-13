@@ -16,7 +16,7 @@
     "src/"
   ],
   "type": "module",
-  "typedocMain" : "./src/index.ts",
+  "typedocMain": "./src/index.ts",
   "source": "./src/index.ts",
   "types": "./built/index.d.ts",
   "main": "./built/util.mjs",
