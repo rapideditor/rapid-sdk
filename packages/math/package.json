@@ -22,10 +22,11 @@
   "main": "./built/math.mjs",
   "module": "./built/math.mjs",
   "scripts": {
+    "all": "run-s clean build test",
     "clean": "shx rm -rf ./built",
-    "build": "run-p esbuild tsc",
-    "esbuild": "node ./esbuild.js",
-    "tsc": "tsc",
+    "build": "run-p build:**",
+    "build:js": "node ./esbuild.js",
+    "build:types": "tsc",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../package.json --roots=./packages/math"
   },
   "dependencies": {

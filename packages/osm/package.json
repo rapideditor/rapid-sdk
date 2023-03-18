@@ -23,11 +23,12 @@
   "main": "./built/osm.mjs",
   "module": "./built/osm.mjs",
   "scripts": {
+    "all": "run-s clean build",
     "clean": "shx rm -rf ./built",
-    "build": "run-p esbuild tsc",
-    "esbuild": "node ./esbuild.js",
-    "test-notyet": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --no-cache --config=../../package.json --roots=./packages/osm",
-    "tsc": "tsc"
+    "build": "run-p build:**",
+    "build:js": "node ./esbuild.js",
+    "build:types": "tsc",
+    "test-notyet": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --no-cache --config=../../package.json --roots=./packages/osm"
   },
   "dependencies": {
     "@rapid-sdk/math": "^1.0.0-pre.1",

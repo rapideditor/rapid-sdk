@@ -1,11 +1,14 @@
 import esbuild from 'esbuild';
-import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
 esbuild.build({
   bundle: true,
   entryPoints: ['./src/index.ts'],
+  format: 'esm',
   logLevel: 'info',
+  mainFields: ['module', 'main'],
   outfile: './built/util.mjs',
-  platform: 'neutral',
-  plugins: [nodeExternalsPlugin()]
+  packages: 'external',  // don't actually bundle dependencies
+  platform: 'node',
+  sourcemap: true,
+  target: 'es2020'
 }).catch(() => process.exit(1))
