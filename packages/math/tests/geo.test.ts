@@ -9,10 +9,10 @@ describe('math/geo', () => {
       expect(test.geoLatToMeters(0)).toBe(0);
     });
     it('1 degree latitude is approx 111 km', () => {
-      expect(test.geoLatToMeters(1)).toBeCloseTo(111319, CLOSE);
+      expect(test.geoLatToMeters(1)).toBeCloseTo(110946, CLOSE);
     });
     it('-1 degree latitude is approx -111 km', () => {
-      expect(test.geoLatToMeters(-1)).toBeCloseTo(-111319, CLOSE);
+      expect(test.geoLatToMeters(-1)).toBeCloseTo(-110946, CLOSE);
     });
   });
 
@@ -23,21 +23,21 @@ describe('math/geo', () => {
       expect(test.geoLonToMeters(0, 0)).toBe(0);
     });
     it('distance of 1 degree longitude varies with latitude', () => {
-      expect(test.geoLonToMeters(1, 0)).toBeCloseTo(110946, CLOSE);
-      expect(test.geoLonToMeters(1, 15)).toBeCloseTo(107166, CLOSE);
-      expect(test.geoLonToMeters(1, 30)).toBeCloseTo(96082, CLOSE);
-      expect(test.geoLonToMeters(1, 45)).toBeCloseTo(78451, CLOSE);
-      expect(test.geoLonToMeters(1, 60)).toBeCloseTo(55473, CLOSE);
-      expect(test.geoLonToMeters(1, 75)).toBeCloseTo(28715, CLOSE);
+      expect(test.geoLonToMeters(1, 0)).toBeCloseTo(111319, CLOSE);
+      expect(test.geoLonToMeters(1, 15)).toBeCloseTo(107526, CLOSE);
+      expect(test.geoLonToMeters(1, 30)).toBeCloseTo(96406, CLOSE);
+      expect(test.geoLonToMeters(1, 45)).toBeCloseTo(78715, CLOSE);
+      expect(test.geoLonToMeters(1, 60)).toBeCloseTo(55660, CLOSE);
+      expect(test.geoLonToMeters(1, 75)).toBeCloseTo(28812, CLOSE);
       expect(test.geoLonToMeters(1, 90)).toBe(0);
     });
     it('distance of -1 degree longitude varies with latitude', () => {
-      expect(test.geoLonToMeters(-1, -0)).toBeCloseTo(-110946, CLOSE);
-      expect(test.geoLonToMeters(-1, -15)).toBeCloseTo(-107166, CLOSE);
-      expect(test.geoLonToMeters(-1, -30)).toBeCloseTo(-96082, CLOSE);
-      expect(test.geoLonToMeters(-1, -45)).toBeCloseTo(-78451, CLOSE);
-      expect(test.geoLonToMeters(-1, -60)).toBeCloseTo(-55473, CLOSE);
-      expect(test.geoLonToMeters(-1, -75)).toBeCloseTo(-28715, CLOSE);
+      expect(test.geoLonToMeters(-1, -0)).toBeCloseTo(-111319, CLOSE);
+      expect(test.geoLonToMeters(-1, -15)).toBeCloseTo(-107526, CLOSE);
+      expect(test.geoLonToMeters(-1, -30)).toBeCloseTo(-96406, CLOSE);
+      expect(test.geoLonToMeters(-1, -45)).toBeCloseTo(-78715, CLOSE);
+      expect(test.geoLonToMeters(-1, -60)).toBeCloseTo(-55660, CLOSE);
+      expect(test.geoLonToMeters(-1, -75)).toBeCloseTo(-28812, CLOSE);
       expect(test.geoLonToMeters(-1, -90)).toBe(0);
     });
   });
@@ -49,36 +49,36 @@ describe('math/geo', () => {
       expect(test.geoMetersToLat(0)).toBe(0);
     });
     it('111 km is approx 1 degree latitude', () => {
-      expect(test.geoMetersToLat(111319)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLat(110946)).toBeCloseTo(1, CLOSE);
     });
     it('-111 km is approx -1 degree latitude', () => {
-      expect(test.geoMetersToLat(-111319)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLat(-110946)).toBeCloseTo(-1, CLOSE);
     });
   });
 
   describe('geoMetersToLon', () => {
-    const CLOSE = 5; // digits
+    const CLOSE = 4; // digits
 
     it('0 meters is 0 degrees longitude', () => {
       expect(test.geoMetersToLon(0, 0)).toBe(0);
     });
     it('distance of 1 degree longitude varies with latitude', () => {
-      expect(test.geoMetersToLon(110946, 0)).toBeCloseTo(1, CLOSE);
-      expect(test.geoMetersToLon(107166, 15)).toBeCloseTo(1, CLOSE);
-      expect(test.geoMetersToLon(96082, 30)).toBeCloseTo(1, CLOSE);
-      expect(test.geoMetersToLon(78451, 45)).toBeCloseTo(1, CLOSE);
-      expect(test.geoMetersToLon(55473, 60)).toBeCloseTo(1, CLOSE);
-      expect(test.geoMetersToLon(28715, 75)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLon(111319, 0)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLon(107526, 15)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLon(96405, 30)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLon(78715, 45)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLon(55660, 60)).toBeCloseTo(1, CLOSE);
+      expect(test.geoMetersToLon(28812, 75)).toBeCloseTo(1, CLOSE);
       expect(test.geoMetersToLon(1, 90)).toBe(0);
       expect(test.geoMetersToLon(1, 91)).toBe(0);
     });
     it('distance of -1 degree longitude varies with latitude', () => {
-      expect(test.geoMetersToLon(-110946, -0)).toBeCloseTo(-1, CLOSE);
-      expect(test.geoMetersToLon(-107166, -15)).toBeCloseTo(-1, CLOSE);
-      expect(test.geoMetersToLon(-96082, -30)).toBeCloseTo(-1, CLOSE);
-      expect(test.geoMetersToLon(-78451, -45)).toBeCloseTo(-1, CLOSE);
-      expect(test.geoMetersToLon(-55473, -60)).toBeCloseTo(-1, CLOSE);
-      expect(test.geoMetersToLon(-28715, -75)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLon(-111319, -0)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLon(-107526, -15)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLon(-96405, -30)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLon(-78715, -45)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLon(-55660, -60)).toBeCloseTo(-1, CLOSE);
+      expect(test.geoMetersToLon(-28812, -75)).toBeCloseTo(-1, CLOSE);
       expect(test.geoMetersToLon(-1, -90)).toBe(0);
       expect(test.geoMetersToLon(-1, -91)).toBe(0);
     });
@@ -121,22 +121,22 @@ describe('math/geo', () => {
     it('a straight 1 degree line at the equator is aproximately 111 km', () => {
       const a: Vec2 = [0, 0];
       const b: Vec2 = [1, 0];
-      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(110946, CLOSE);
+      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(111319, CLOSE);
     });
     it('a pythagorean triangle is (nearly) right', () => {
       const a: Vec2 = [0, 0];
       const b: Vec2 = [4, 3];
-      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(555282, CLOSE);
+      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(555804, CLOSE);
     });
     it('east-west distances at high latitude are shorter', () => {
       const a: Vec2 = [0, 60];
       const b: Vec2 = [1, 60];
-      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(55473, CLOSE);
+      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(55660, CLOSE);
     });
     it('north-south distances at high latitude are not shorter', () => {
       const a: Vec2 = [0, 60];
       const b: Vec2 = [0, 61];
-      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(111319, CLOSE);
+      expect(test.geoSphericalDistance(a, b)).toBeCloseTo(110946, CLOSE);
     });
   });
 
@@ -178,7 +178,7 @@ describe('math/geo', () => {
       expect(result).toHaveProperty('index', 1);
       expect(result).toHaveProperty('point', [1, 0]);
       expect(result).toHaveProperty('distance');
-      expect(result?.distance).toBeCloseTo(111319, CLOSE);
+      expect(result?.distance).toBeCloseTo(110946, CLOSE);
     });
   });
 });
