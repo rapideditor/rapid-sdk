@@ -7,8 +7,8 @@ import { Vec2 } from './vector';
 
 // constants
 const TAU = 2 * Math.PI;
-const EQUATORIAL_RADIUS = 6356752.314245179;
-const POLAR_RADIUS = 6378137.0;
+const EQUATORIAL_RADIUS = 6378137.0;
+const POLAR_RADIUS = 6356752.314245179;
 
 /** Convert degrees latitude to meters.
  * @param dLat degrees latitude
