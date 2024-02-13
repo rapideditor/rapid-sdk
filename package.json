@@ -47,7 +47,7 @@
     "test": "lerna run test"
   },
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18"
   },
   "jest": {
     "collectCoverage": true,
