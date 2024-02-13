@@ -94,7 +94,6 @@ describe('math/tiler', () => {
           const result = t.getTiles(p);
           const tiles = result.tiles;
 
-          // prettier-ignore
           const expected = [
             [0,0,1], [1,0,1],
             [0,1,1], [1,1,1]
@@ -180,7 +179,6 @@ describe('math/tiler', () => {
           const result = t.getTiles(p);
           const tiles = result.tiles;
 
-          // prettier-ignore
           const expected = [
             [0,0,2], [1,0,2], [2,0,2], [3,0,2],
             [0,1,2], [1,1,2], [2,1,2], [3,1,2],
@@ -266,7 +264,6 @@ describe('math/tiler', () => {
           const tiles = result.tiles;
           expect(tiles).toBeArrayOfSize(4);
 
-          // prettier-ignore
           const expected = [
             [1,1,2], [2,1,2],
             [1,2,2], [2,2,2]
@@ -309,13 +306,11 @@ describe('math/tiler', () => {
           expect(tiles).toBeArrayOfSize(16);
 
           // note: tiles in view are returned before tiles in margin
-          // prettier-ignore
           const expectedVisible = [
             [1,1,2], [2,1,2],
             [1,2,2], [2,2,2]
           ].reverse();
 
-          // prettier-ignore
           const expectedMargin = [
             [0,0,2], [1,0,2], [2,0,2], [3,0,2],
             [0,1,2],                   [3,1,2],
@@ -364,7 +359,6 @@ describe('math/tiler', () => {
           const tiles = result.tiles;
           expect(tiles).toBeArrayOfSize(2);
 
-          // prettier-ignore
           const expected = [
             [2,1,2],
             [2,2,2]
@@ -407,13 +401,11 @@ describe('math/tiler', () => {
           expect(tiles).toBeArrayOfSize(12);
 
           // note: tiles in view are returned before tiles in margin
-          // prettier-ignore
           const expectedVisible = [
             [2,1,2],
             [2,2,2]
           ].reverse();
 
-          // prettier-ignore
           const expectedMargin = [
             [1,0,2], [2,0,2], [3,0,2],
             [1,1,2],          [3,1,2],
@@ -465,13 +457,11 @@ describe('math/tiler', () => {
           expect(tiles).toBeArrayOfSize(12);
 
           // note: tiles in view are returned before tiles in margin
-          // prettier-ignore
           const expectedVisible = [
             [65,63,7],
             [65,64,7]
           ].reverse();
 
-          // prettier-ignore
           const expectedMargin = [
             [63,62,7], [64,62,7], [65,62,7], [66,62,7],
                                              [66,63,7],
