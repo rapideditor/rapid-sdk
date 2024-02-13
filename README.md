@@ -32,12 +32,12 @@ We're not able to support external contributors at this time, but check back in 
 🧳 [@rapid-sdk/math](/packages/math)
 
 Includes:
-📦 Extent class for creating bounding boxes
-🌐 Geographic (spherical) math functions
-📈 Geometric (planar) math functions
-📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
-🀄️ Tiler class for splitting the world into rectangular tiles
-📐 Vector (coordinate) math functions
+* 📦 Extent class for creating bounding boxes
+* 🌐 Geographic (spherical) math functions
+* 📈 Geometric (planar) math functions
+* 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
+* 🀄️ Tiler class for splitting the world into rectangular tiles
+* 📐 Vector (coordinate) math functions
 
 
 ### util
