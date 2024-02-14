@@ -1,16 +1,19 @@
-import * as util from '../src/index';
+import { describe, it } from 'node:test';
+import { strict as assert } from 'node:assert';
+import * as test from '../built/util.mjs';
+
 
 describe('utilAes', () => {
   it('encrypting and decrypting nothing yields nothing', () => {
-    expect(util.utilAesEncrypt('')).toEqual('');
-    expect(util.utilAesDecrypt('')).toEqual('');
+    assert.equal(test.utilAesEncrypt(''), '');
+    assert.equal(test.utilAesDecrypt(''), '');
   });
 
   it('encrypts and decrypts with default key', () => {
     const text = 'Hello Rapid!';
     const encrypted = '5597506f958c53716d3dbd79';
-    expect(util.utilAesEncrypt(text)).toEqual(encrypted);
-    expect(util.utilAesDecrypt(encrypted)).toEqual(text);
+    assert.equal(test.utilAesEncrypt(text), encrypted);
+    assert.equal(test.utilAesDecrypt(encrypted), text);
   });
 
   it('encrypts and decrypts with a custom 16-bit key', () => {
@@ -20,8 +23,8 @@ describe('utilAes', () => {
     ];
     const text = 'Hello Rapid!';
     const encrypted = '9ff50e32b04fbd415b8dbcd0';
-    expect(util.utilAesEncrypt(text, key)).toEqual(encrypted);
-    expect(util.utilAesDecrypt(encrypted, key)).toEqual(text);
+    assert.equal(test.utilAesEncrypt(text, key), encrypted);
+    assert.equal(test.utilAesDecrypt(encrypted, key), text);
   });
 
   it('encrypts and decrypts with a custom 24-bit key', () => {
@@ -32,8 +35,8 @@ describe('utilAes', () => {
     ];
     const text = 'Hello Rapid!';
     const encrypted = '85fc05011fa7bfa1464db2ea';
-    expect(util.utilAesEncrypt(text, key)).toEqual(encrypted);
-    expect(util.utilAesDecrypt(encrypted, key)).toEqual(text);
+    assert.equal(test.utilAesEncrypt(text, key), encrypted);
+    assert.equal(test.utilAesDecrypt(encrypted, key), text);
   });
 
   it('encrypts and decrypts with a custom 32-bit key', () => {
@@ -45,7 +48,7 @@ describe('utilAes', () => {
     ];
     const text = 'Hello Rapid!';
     const encrypted = '13c21d3dc2515ee02d93b537';
-    expect(util.utilAesEncrypt(text, key)).toEqual(encrypted);
-    expect(util.utilAesDecrypt(encrypted, key)).toEqual(text);
+    assert.equal(test.utilAesEncrypt(text, key), encrypted);
+    assert.equal(test.utilAesDecrypt(encrypted, key), text);
   });
 });

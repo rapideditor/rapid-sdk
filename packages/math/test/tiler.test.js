@@ -1,17 +1,23 @@
-import { Tiler } from '../src/tiler';
-import { Projection } from '../src/projection';
+import { describe, it } from 'node:test';
+import { strict as assert } from 'node:assert';
+import { Projection, Tiler } from '../built/math.mjs';
+
+
+assert.closeTo = function(a, b, epsilon = 1e-6) {
+  if (Math.abs(a - b) > epsilon) {
+    assert.fail(`${a} is not close to ${b} within ${epsilon}`);
+  }
+}
 
 describe('math/tiler', () => {
   describe('constructor', () => {
     it('constructs a Tiler', () => {
       const t = new Tiler();
-      expect(t).toBeDefined();
+      assert.ok(t instanceof Tiler);
     });
   });
 
   describe('getTiles', () => {
-    const CLOSE = 6; // digits
-
     [256, 512, 1024].forEach((TS) => {
       describe('tileSize ' + TS, () => {
         const TAU = 2 * Math.PI;
@@ -29,45 +35,46 @@ describe('math/tiler', () => {
           //-180    +180
           //
           const k = (TS * Math.pow(2, 0)) / TAU; // z0
-          const t: Tiler = new Tiler().tileSize(TS) as Tiler;
-          const p: Projection = new Projection(HALFTS, HALFTS, k).dimensions([
-            [0, 0],
-            [TS, TS]
-          ]) as Projection; // entire world visible
+          const t = new Tiler().tileSize(TS);
+          const p = new Projection(HALFTS, HALFTS, k)
+            .dimensions([[0, 0], [TS, TS]]); // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
 
           it('gets a single tile at z0', () => {
-            expect(tiles).toBeArrayOfSize(1);
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 1);
           });
 
           it('tiles have an id property', () => {
-            expect(tiles[0].id).toBe('0,0,0');
+            assert.equal(tiles[0].id, '0,0,0');
           });
 
           it('tiles have an xyz property', () => {
-            expect(tiles[0].xyz).toStrictEqual([0, 0, 0]);
+            assert.deepEqual(tiles[0].xyz, [0, 0, 0]);
           });
 
           it('tiles that intersect viewport are visible', () => {
-            expect(tiles[0].isVisible).toBeTrue();
+            assert.equal(tiles[0].isVisible, true);
           });
 
           it('tiles have a pxExtent property', () => {
             const pxExtent = tiles[0].pxExtent;
-            expect(pxExtent.min[0]).toBe(0);
-            expect(pxExtent.min[1]).toBe(0);
-            expect(pxExtent.max[0]).toBe(TS);
-            expect(pxExtent.max[1]).toBe(TS);
+            assert.ok(pxExtent instanceof Object);
+            assert.equal(pxExtent.min[0], 0);
+            assert.equal(pxExtent.min[1], 0);
+            assert.equal(pxExtent.max[0], TS);
+            assert.equal(pxExtent.max[1], TS);
           });
 
           it('tiles have a wgs84Extent property', () => {
             const wgs84Extent = tiles[0].wgs84Extent;
-            expect(wgs84Extent.min[0]).toBeCloseTo(-180, CLOSE);
-            expect(wgs84Extent.min[1]).toBeCloseTo(-85.0511287798, CLOSE);
-            expect(wgs84Extent.max[0]).toBeCloseTo(180, CLOSE);
-            expect(wgs84Extent.max[1]).toBeCloseTo(85.0511287798, CLOSE);
+            assert.ok(wgs84Extent instanceof Object);
+            assert.closeTo(wgs84Extent.min[0], -180);
+            assert.closeTo(wgs84Extent.min[1], -85.0511287798);
+            assert.closeTo(wgs84Extent.max[0], 180);
+            assert.closeTo(wgs84Extent.max[1], 85.0511287798);
           });
         });
 
@@ -85,11 +92,9 @@ describe('math/tiler', () => {
           //-180      0     +180
           //
           const k = (TS * Math.pow(2, 1)) / TAU; // z1
-          const t: Tiler = new Tiler().tileSize(TS) as Tiler;
-          const p: Projection = new Projection(TS, TS, k).dimensions([
-            [0, 0],
-            [TWOTS, TWOTS]
-          ]) as Projection; // entire world visible
+          const t = new Tiler().tileSize(TS);
+          const p = new Projection(TS, TS, k)
+            .dimensions([[0, 0], [TWOTS, TWOTS]]); // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -100,24 +105,25 @@ describe('math/tiler', () => {
           ].reverse();
 
           it('gets 4 tiles at z1', () => {
-            expect(tiles).toBeArrayOfSize(4);
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 4);
           });
 
           it('tiles have an id property', () => {
             expected.forEach((xyz, i) => {
-              expect(tiles[i].id).toBe(xyz.join(','));
+              assert.equal(tiles[i].id, xyz.join(','));
             });
           });
 
           it('tiles have an xyz property', () => {
             expected.forEach((xyz, i) => {
-              expect(tiles[i].xyz).toStrictEqual(xyz);
+              assert.deepEqual(tiles[i].xyz, xyz);
             });
           });
 
           it('tiles that intersect viewport are visible', () => {
             expected.forEach((xyz, i) => {
-              expect(tiles[i].isVisible).toBeTrue();
+              assert.equal(tiles[i].isVisible, true);
             });
           });
 
@@ -126,10 +132,10 @@ describe('math/tiler', () => {
               const pxExtent = tiles[i].pxExtent;
               const x = xyz[0];
               const y = xyz[1];
-              expect(pxExtent.min[0]).toBe(x * TS);
-              expect(pxExtent.min[1]).toBe(y * TS);
-              expect(pxExtent.max[0]).toBe((x + 1) * TS);
-              expect(pxExtent.max[1]).toBe((y + 1) * TS);
+              assert.equal(pxExtent.min[0], x * TS);
+              assert.equal(pxExtent.min[1], y * TS);
+              assert.equal(pxExtent.max[0], (x + 1) * TS);
+              assert.equal(pxExtent.max[1], (y + 1) * TS);
             });
           });
 
@@ -140,10 +146,10 @@ describe('math/tiler', () => {
               const wgs84Extent = tiles[i].wgs84Extent;
               const x = xyz[0];
               const y = xyz[1];
-              expect(wgs84Extent.min[0]).toBeCloseTo(lons[x], CLOSE);
-              expect(wgs84Extent.min[1]).toBeCloseTo(lats[y + 1], CLOSE);
-              expect(wgs84Extent.max[0]).toBeCloseTo(lons[x + 1], CLOSE);
-              expect(wgs84Extent.max[1]).toBeCloseTo(lats[y], CLOSE);
+              assert.closeTo(wgs84Extent.min[0], lons[x]);
+              assert.closeTo(wgs84Extent.min[1], lats[y + 1]);
+              assert.closeTo(wgs84Extent.max[0], lons[x + 1]);
+              assert.closeTo(wgs84Extent.max[1], lats[y]);
             });
           });
         });
@@ -170,11 +176,9 @@ describe('math/tiler', () => {
           //-180     -90      0      +90    +180
           //
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t: Tiler = new Tiler().tileSize(TS) as Tiler;
-          const p = new Projection(TWOTS, TWOTS, k).dimensions([
-            [0, 0],
-            [FOURTS, FOURTS]
-          ]) as Projection; // entire world visible
+          const t = new Tiler().tileSize(TS);
+          const p = new Projection(TWOTS, TWOTS, k)
+            .dimensions([[0, 0], [FOURTS, FOURTS]]); // entire world visible
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
@@ -187,24 +191,25 @@ describe('math/tiler', () => {
           ].reverse();
 
           it('gets 16 tiles at z2', () => {
-            expect(tiles).toBeArrayOfSize(16);
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 16);
           });
 
           it('tiles have an id property', () => {
             expected.forEach((xyz, i) => {
-              expect(tiles[i].id).toBe(xyz.join(','));
+              assert.equal(tiles[i].id, xyz.join(','));
             });
           });
 
           it('tiles have an xyz property', () => {
             expected.forEach((xyz, i) => {
-              expect(tiles[i].xyz).toStrictEqual(xyz);
+              assert.deepEqual(tiles[i].xyz, xyz);
             });
           });
 
           it('tiles that intersect viewport are visible', () => {
             expected.forEach((xyz, i) => {
-              expect(tiles[i].isVisible).toBeTrue();
+              assert.equal(tiles[i].isVisible, true);
             });
           });
 
@@ -213,10 +218,10 @@ describe('math/tiler', () => {
               const pxExtent = tiles[i].pxExtent;
               const x = xyz[0];
               const y = xyz[1];
-              expect(pxExtent.min[0]).toBe(x * TS);
-              expect(pxExtent.min[1]).toBe(y * TS);
-              expect(pxExtent.max[0]).toBe((x + 1) * TS);
-              expect(pxExtent.max[1]).toBe((y + 1) * TS);
+              assert.equal(pxExtent.min[0], x * TS);
+              assert.equal(pxExtent.min[1], y * TS);
+              assert.equal(pxExtent.max[0], (x + 1) * TS);
+              assert.equal(pxExtent.max[1], (y + 1) * TS);
             });
           });
 
@@ -227,10 +232,10 @@ describe('math/tiler', () => {
               const wgs84Extent = tiles[i].wgs84Extent;
               const x = xyz[0];
               const y = xyz[1];
-              expect(wgs84Extent.min[0]).toBeCloseTo(lons[x], CLOSE);
-              expect(wgs84Extent.min[1]).toBeCloseTo(lats[y + 1], CLOSE);
-              expect(wgs84Extent.max[0]).toBeCloseTo(lons[x + 1], CLOSE);
-              expect(wgs84Extent.max[1]).toBeCloseTo(lats[y], CLOSE);
+              assert.closeTo(wgs84Extent.min[0], lons[x]);
+              assert.closeTo(wgs84Extent.min[1], lats[y + 1]);
+              assert.closeTo(wgs84Extent.max[0], lons[x + 1]);
+              assert.closeTo(wgs84Extent.max[1], lats[y]);
             });
           });
         });
@@ -254,15 +259,14 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t: Tiler = new Tiler().tileSize(TS) as Tiler;
-          const p = new Projection(HALFTS, HALFTS, k).dimensions([
-            [1, 1],
-            [TS - 1, TS - 1]
-          ]) as Projection;
+          const t = new Tiler().tileSize(TS);
+          const p = new Projection(HALFTS, HALFTS, k)
+            .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
-          expect(tiles).toBeArrayOfSize(4);
+          assert.ok(tiles instanceof Array);
+          assert.equal(tiles.length, 4);
 
           const expected = [
             [1,1,2], [2,1,2],
@@ -270,9 +274,9 @@ describe('math/tiler', () => {
           ].reverse();
 
           expected.forEach((xyz, i) => {
-            expect(tiles[i].id).toBe(xyz.join(','));
-            expect(tiles[i].xyz).toStrictEqual(xyz);
-            expect(tiles[i].isVisible).toBeTrue();
+            assert.equal(tiles[i].id, xyz.join(','));
+            assert.deepEqual(tiles[i].xyz, xyz);
+            assert.equal(tiles[i].isVisible, true);
           });
         });
 
@@ -295,15 +299,14 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t: Tiler = (new Tiler().tileSize(TS) as Tiler).margin(1) as Tiler;
-          const p = new Projection(HALFTS, HALFTS, k).dimensions([
-            [1, 1],
-            [TS - 1, TS - 1]
-          ]) as Projection;
+          const t = (new Tiler().tileSize(TS)).margin(1);
+          const p = new Projection(HALFTS, HALFTS, k)
+            .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
-          expect(tiles).toBeArrayOfSize(16);
+          assert.ok(tiles instanceof Array);
+          assert.equal(tiles.length, 16);
 
           // note: tiles in view are returned before tiles in margin
           const expectedVisible = [
@@ -319,14 +322,14 @@ describe('math/tiler', () => {
           ];
 
           expectedVisible.forEach((xyz, i) => {
-            expect(tiles[i].id).toBe(xyz.join(','));
-            expect(tiles[i].xyz).toStrictEqual(xyz);
-            expect(tiles[i].isVisible).toBeTrue();
+            assert.equal(tiles[i].id, xyz.join(','));
+            assert.deepEqual(tiles[i].xyz, xyz);
+            assert.equal(tiles[i].isVisible, true);
           });
           expectedMargin.forEach((xyz, i) => {
-            expect(tiles[i + 4].id).toBe(xyz.join(','));
-            expect(tiles[i + 4].xyz).toStrictEqual(xyz);
-            expect(tiles[i + 4].isVisible).toBeFalse();
+            assert.equal(tiles[i + 4].id, xyz.join(','));
+            assert.deepEqual(tiles[i + 4].xyz, xyz);
+            assert.equal(tiles[i + 4].isVisible, false);
           });
         });
 
@@ -349,15 +352,14 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = new Tiler().tileSize(TS) as Tiler;
-          const p = new Projection(0, HALFTS, k).dimensions([
-            [1, 1],
-            [TS - 1, TS - 1]
-          ]) as Projection;
+          const t = new Tiler().tileSize(TS);
+          const p = new Projection(0, HALFTS, k)
+            .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
-          expect(tiles).toBeArrayOfSize(2);
+          assert.ok(tiles instanceof Array);
+          assert.equal(tiles.length, 2);
 
           const expected = [
             [2,1,2],
@@ -365,9 +367,9 @@ describe('math/tiler', () => {
           ].reverse();
 
           expected.forEach((xyz, i) => {
-            expect(tiles[i].id).toBe(xyz.join(','));
-            expect(tiles[i].xyz).toStrictEqual(xyz);
-            expect(tiles[i].isVisible).toBeTrue();
+            assert.equal(tiles[i].id, xyz.join(','));
+            assert.deepEqual(tiles[i].xyz, xyz);
+            assert.equal(tiles[i].isVisible, true);
           });
         });
 
@@ -390,15 +392,14 @@ describe('math/tiler', () => {
           // |       |       |       |       |
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
-          const t = (new Tiler().tileSize(TS) as Tiler).margin(1) as Tiler;
-          const p = new Projection(0, HALFTS, k).dimensions([
-            [1, 1],
-            [TS - 1, TS - 1]
-          ]) as Projection;
+          const t = (new Tiler().tileSize(TS)).margin(1);
+          const p = new Projection(0, HALFTS, k)
+            .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
-          expect(tiles).toBeArrayOfSize(12);
+          assert.ok(tiles instanceof Array);
+          assert.equal(tiles.length, 12);
 
           // note: tiles in view are returned before tiles in margin
           const expectedVisible = [
@@ -414,14 +415,14 @@ describe('math/tiler', () => {
           ];
 
           expectedVisible.forEach((xyz, i) => {
-            expect(tiles[i].id).toBe(xyz.join(','));
-            expect(tiles[i].xyz).toStrictEqual(xyz);
-            expect(tiles[i].isVisible).toBeTrue();
+            assert.equal(tiles[i].id, xyz.join(','));
+            assert.deepEqual(tiles[i].xyz, xyz);
+            assert.equal(tiles[i].isVisible, true);
           });
           expectedMargin.forEach((xyz, i) => {
-            expect(tiles[i + 2].id).toBe(xyz.join(','));
-            expect(tiles[i + 2].xyz).toStrictEqual(xyz);
-            expect(tiles[i + 2].isVisible).toBeFalse();
+            assert.equal(tiles[i + 2].id, xyz.join(','));
+            assert.deepEqual(tiles[i + 2].xyz, xyz);
+            assert.equal(tiles[i + 2].isVisible, false);
           });
         });
 
@@ -444,17 +445,14 @@ describe('math/tiler', () => {
           // |         |         |         |         |
           // +---------+---------+---------+---------+
           const k = (TS * Math.pow(2, 7)) / TAU; // z7
-          const t = ((new Tiler().tileSize(TS) as Tiler).margin(1) as Tiler).skipNullIsland(
-            true
-          ) as Tiler;
-          const p = new Projection(-HALFTS, HALFTS, k).dimensions([
-            [1, 1],
-            [TS - 1, TS - 1]
-          ]) as Projection;
+          const t = ((new Tiler().tileSize(TS)).margin(1)).skipNullIsland(true);
+          const p = new Projection(-HALFTS, HALFTS, k)
+            .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
           const result = t.getTiles(p);
           const tiles = result.tiles;
-          expect(tiles).toBeArrayOfSize(12);
+          assert.ok(tiles instanceof Array);
+          assert.equal(tiles.length, 12);
 
           // note: tiles in view are returned before tiles in margin
           const expectedVisible = [
@@ -470,28 +468,26 @@ describe('math/tiler', () => {
           ];
 
           expectedVisible.forEach((xyz, i) => {
-            expect(tiles[i].id).toBe(xyz.join(','));
-            expect(tiles[i].xyz).toStrictEqual(xyz);
-            expect(tiles[i].isVisible).toBeTrue();
+            assert.equal(tiles[i].id, xyz.join(','));
+            assert.deepEqual(tiles[i].xyz, xyz);
+            assert.equal(tiles[i].isVisible, true);
           });
           expectedMargin.forEach((xyz, i) => {
-            expect(tiles[i + 2].id).toBe(xyz.join(','));
-            expect(tiles[i + 2].xyz).toStrictEqual(xyz);
-            expect(tiles[i + 2].isVisible).toBeFalse();
+            assert.equal(tiles[i + 2].id, xyz.join(','));
+            assert.deepEqual(tiles[i + 2].xyz, xyz);
+            assert.equal(tiles[i + 2].isVisible, false);
           });
         });
 
         describe('getGeoJSON', () => {
           it('gets GeoJSON', () => {
             const k = (TS * Math.pow(2, 0)) / TAU; // z0
-            const t = new Tiler().tileSize(TS) as Tiler;
-            const p = new Projection(HALFTS, HALFTS, k).dimensions([
-              [0, 0],
-              [TS, TS]
-            ]) as Projection;
+            const t = new Tiler().tileSize(TS);
+            const p = new Projection(HALFTS, HALFTS, k)
+              .dimensions([[0, 0], [TS, TS]]);
 
             const result = t.getTiles(p);
-            const gj = t.getGeoJSON(result);
+            const geojson = t.getGeoJSON(result);
             const tile = result.tiles[0];
 
             const expected = {
@@ -511,7 +507,7 @@ describe('math/tiler', () => {
               ]
             };
 
-            expect(gj).toMatchObject(expected);
+            assert.deepEqual(geojson, expected);
           });
         });
       });
@@ -529,7 +525,7 @@ describe('math/tiler', () => {
       // | 31,32,6 | 32,32,6 |
       // |         |         |
       // +---------+---------+
-      expect(Tiler.isNearNullIsland(31, 31, 6)).toBeFalse();
+      assert.equal(Tiler.isNearNullIsland(31, 31, 6), false);
     });
 
     it('is not near if z >= 7 and outside region', () => {
@@ -542,11 +538,11 @@ describe('math/tiler', () => {
       // | 63,64,7 | 64,64,7 |
       // |         |         |
       // +---------+---------+
-      expect(Tiler.isNearNullIsland(63, 65, 7)).toBeFalse();
-      expect(Tiler.isNearNullIsland(65, 63, 7)).toBeFalse();
+      assert.equal(Tiler.isNearNullIsland(63, 65, 7), false);
+      assert.equal(Tiler.isNearNullIsland(65, 63, 7), false);
 
-      expect(Tiler.isNearNullIsland(125, 129, 8)).toBeFalse();
-      expect(Tiler.isNearNullIsland(129, 125, 8)).toBeFalse();
+      assert.equal(Tiler.isNearNullIsland(125, 129, 8), false);
+      assert.equal(Tiler.isNearNullIsland(129, 125, 8), false);
     });
 
     it('is near if z >= 7 and inside region', () => {
@@ -559,47 +555,47 @@ describe('math/tiler', () => {
       // | 63,64,7 | 64,64,7 |
       // |         |         |
       // +---------+---------+
-      expect(Tiler.isNearNullIsland(63, 63, 7)).toBeTrue();
-      expect(Tiler.isNearNullIsland(63, 64, 7)).toBeTrue();
-      expect(Tiler.isNearNullIsland(64, 63, 7)).toBeTrue();
-      expect(Tiler.isNearNullIsland(64, 64, 7)).toBeTrue();
+      assert.equal(Tiler.isNearNullIsland(63, 63, 7), true);
+      assert.equal(Tiler.isNearNullIsland(63, 64, 7), true);
+      assert.equal(Tiler.isNearNullIsland(64, 63, 7), true);
+      assert.equal(Tiler.isNearNullIsland(64, 64, 7), true);
 
-      expect(Tiler.isNearNullIsland(126, 127, 8)).toBeTrue();
-      expect(Tiler.isNearNullIsland(127, 127, 8)).toBeTrue();
-      expect(Tiler.isNearNullIsland(128, 127, 8)).toBeTrue();
-      expect(Tiler.isNearNullIsland(129, 127, 8)).toBeTrue();
+      assert.equal(Tiler.isNearNullIsland(126, 127, 8), true);
+      assert.equal(Tiler.isNearNullIsland(127, 127, 8), true);
+      assert.equal(Tiler.isNearNullIsland(128, 127, 8), true);
+      assert.equal(Tiler.isNearNullIsland(129, 127, 8), true);
     });
   });
 
   describe('#tileSize', () => {
     it('sets/gets tileSize', () => {
-      const t = new Tiler().tileSize(512) as Tiler;
-      expect(t.tileSize()).toBe(512);
+      const t = new Tiler().tileSize(512);
+      assert.equal(t.tileSize(), 512);
     });
   });
 
   describe('#zoomRange', () => {
     it('sets/gets zoomRange', () => {
-      const t = new Tiler().zoomRange(10, 20) as Tiler;
-      expect(t.zoomRange()).toStrictEqual([10, 20]);
+      const t = new Tiler().zoomRange(10, 20);
+      assert.deepEqual(t.zoomRange(), [10, 20]);
     });
     it('max defaults to min', () => {
-      const t = new Tiler().zoomRange(10) as Tiler;
-      expect(t.zoomRange()).toStrictEqual([10, 10]);
+      const t = new Tiler().zoomRange(10);
+      assert.deepEqual(t.zoomRange(), [10, 10]);
     });
   });
 
   describe('#margin', () => {
     it('sets/gets margin', () => {
-      const t = new Tiler().margin(1) as Tiler;
-      expect(t.margin()).toBe(1);
+      const t = new Tiler().margin(1);
+      assert.equal(t.margin(), 1);
     });
   });
 
   describe('#skipNullIsland', () => {
     it('sets/gets skipNullIsland', () => {
-      const t = new Tiler().skipNullIsland(true) as Tiler;
-      expect(t.skipNullIsland()).toBeTrue();
+      const t = new Tiler().skipNullIsland(true);
+      assert.equal(t.skipNullIsland(), true);
     });
   });
 });

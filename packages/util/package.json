@@ -27,7 +27,7 @@
     "build": "run-p build:**",
     "build:js": "node ./esbuild.js",
     "build:types": "tsc",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors --config=../../package.json --roots=./packages/util"
+    "test": "c8 node --test"
   },
   "dependencies": {
     "aes-js": "^3.1.2",
