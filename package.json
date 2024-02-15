@@ -35,7 +35,7 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "all": "run-s clean build",
+    "all": "run-s clean build test",
     "build": "npm run build --workspaces",
     "build:js": "npm run build:js --workspaces",
     "build:types": "npm run build:types --workspaces",

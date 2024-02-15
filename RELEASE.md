@@ -7,7 +7,6 @@ git checkout main
 git pull origin
 npm install
 npm run all
-npm run test
 
 # Pick a version you want to push to all packages, see https://semver.org/
 export VERSION=A.B.C-pre.D
