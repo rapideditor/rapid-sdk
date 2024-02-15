@@ -99,6 +99,15 @@ describe('utilQsString', () => {
   it('with noencode param, skips special characters', () => {
     assert.equal(test.utilQsString({ map: '0/0/0' }, true), 'map=0/0/0');
   });
+  it('sorts "map" params in front of other params', () => {
+    const q = {
+      background: 'test',
+      map: '1/1/1',
+      map3d: '2/2/2',
+      poweruser: 'true'
+    }
+    assert.equal(test.utilQsString(q, true), 'map=1/1/1&map3d=2/2/2&background=test&poweruser=true');
+  });
 });
 
 describe('utilUnicodeCharsCount', () => {
