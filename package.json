@@ -4,7 +4,10 @@
   "private": true,
   "description": "Map editing made easy",
   "homepage": "https://github.com/rapideditor/rapid-sdk#readme",
-  "repository": "github:rapideditor/rapid-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rapideditor/rapid-sdk.git"
+  },
   "license": "ISC",
   "contributors": [
     "Ben Clark <clarkben@fb.com> (https://github.com/bonkles)",

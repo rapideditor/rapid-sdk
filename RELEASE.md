@@ -1,29 +1,28 @@
 ## Release Checklist
 
-Get the code, update dependencies, build everything, and make sure tests pass.
 ```bash
+
+# Get the code, update dependencies, build everything, and make sure tests pass.
 git checkout main
 git pull origin
 npm install
 npm run all
 npm run test
-```
 
-This command bumps the package versions everywhere, but without doing any of the git stuff.
-By default `npm version` likes to touch the root but not the workspaces.
+# Pick a version you want to push to all packages, see https://semver.org/
+export VERSION=A.B.C-pre.D
 
-```bash
-npm version A.B.C-pre.D --workspaces --include-workspace-root=true --git-tag-version=false
-```
+# This command bumps the package versions everywhere, but without doing any of the git stuff.
+# (By default, `npm` commands want to operate on the root but not the workspaces.)
+npm version $VERSION --workspaces --include-workspace-root=true --git-tag-version=false
 
-Commit all changes, add the tag yourself, then push code and tag to GitHub.
-```bash
-git add . && git commit -m 'vA.B.C-pre.D'
-git tag vA.B.C-pre.D
-git push origin main vA.B.C-pre.D
-```
+# Commit all changes, add the tag yourself, then push code and tag to GitHub.
+git add . && git commit -m "$VERSION"
+git tag $VERSION
+git push origin main $VERSION
 
-Publishing, to figure out
-```bash
-#npx lerna publish from-git      # lerna will publish all subpackages to npm
+# This command publishes the subpackages only, we don't publish the root at this time.
+# (`include-workspace-root` defaults to false, but we include it here anyway)
+npm publish --workspaces --include-workspace-root=false
+
 ```
