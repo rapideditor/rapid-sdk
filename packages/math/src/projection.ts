@@ -1,14 +1,8 @@
 /**
  * 📽 Projection module for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
  * @module
- * @description
- * The default projection wraps a [d3.geoMercatorRaw](https://github.com/d3/d3-geo#geoMercatorRaw) projection
- * but works in degrees instead of radians, and skips several features:
- * Antimeridian clipping, Spherical rotation, Resampling
  */
 
-import { geoMercatorRaw as d3_geoMercatorRaw } from 'd3-geo';
-import { zoomIdentity as d3_zoomIdentity } from 'd3-zoom';
 import { Vec2 } from './vector';
 
 /** An Object containing `x`, `y`, `k` numbers */
@@ -18,14 +12,14 @@ export interface Transform {
   k: number;
 }
 
+
 /** Class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates */
 export class Projection {
-  private _proj: any = d3_geoMercatorRaw; // note: D3 projections work in radians
-
   private _k: number;
   private _x: number;
   private _y: number;
   private _dimensions: Vec2[] = [[0, 0], [0, 0]];
+
 
   /** Constructs a new Projection
    * @description Default corresponds to the world at zoom 1 and centered on "Null Island" [0, 0].
@@ -43,8 +37,9 @@ export class Projection {
     this._k = k || 256 / Math.PI; // z1
   }
 
+
   /** Projects from given Lon/Lat (λ,φ) to Cartesian (x,y)
-   * @param p Lon/Lat (λ,φ)
+   * @param loc Lon/Lat (λ,φ)
    * @returns Cartesian (x,y)
    * @example ```
    * const p = new Projection();
@@ -53,13 +48,17 @@ export class Projection {
    * p.project([-180, 85.0511287798]);   // returns [-256, -256]
    * ```
    */
-  project(p: Vec2): Vec2 {
-    p = this._proj((p[0] * Math.PI) / 180, (p[1] * Math.PI) / 180); // deg2rad
-    return [p[0] * this._k + this._x, this._y - p[1] * this._k];
+  project(loc: Vec2): Vec2 {
+    const lambda = (loc[0] * Math.PI) / 180;  // deg2rad
+    const phi = (loc[1] * Math.PI) / 180;    // deg2rad
+    const mercX = lambda;
+    const mercY = Math.log(Math.tan(((Math.PI / 2) + phi) / 2));
+    return [mercX * this._k + this._x, this._y - mercY * this._k];
   }
 
+
   /** Inverse projects from given Cartesian (x,y) to Lon/Lat (λ,φ)
-   * @param p Cartesian (x,y)
+   * @param point Cartesian (x,y)
    * @returns Lon/Lat (λ,φ)
    * @example ```
    * const p = new Projection();
@@ -68,10 +67,14 @@ export class Projection {
    * p.invert([-256, -256]);   // returns [-180, 85.0511287798]
    * ```
    */
-  invert(p: Vec2): Vec2 {
-    p = this._proj.invert((p[0] - this._x) / this._k, (this._y - p[1]) / this._k);
-    return [(p[0] * 180) / Math.PI, (p[1] * 180) / Math.PI]; // rad2deg
+  invert(point: Vec2): Vec2 {
+    const mercX = (point[0] - this._x) / this._k;
+    const mercY = (this._y - point[1]) / this._k;
+    const lambda = mercX;
+    const phi = 2 * Math.atan(Math.exp(mercY)) - (Math.PI / 2);
+    return [(lambda * 180) / Math.PI, (phi * 180) / Math.PI]; // rad2deg
   }
+
 
   /** Sets/Gets the scale factor
    * @param val scale factor
@@ -87,6 +90,7 @@ export class Projection {
     this._k = +val;
     return this;
   }
+
 
   /** Sets/Gets the translation factor
    * @param val translation factor
@@ -104,6 +108,7 @@ export class Projection {
     return this;
   }
 
+
   /** Sets/Gets the current viewport dimensions
    * @param val viewport dimensions
    * @returns When argument is provided, sets the viewport min/max dimensions and returns `this` for method chaining.
@@ -119,6 +124,7 @@ export class Projection {
     return this;
   }
 
+
   /** Sets/Gets a transform object
    * @param val an object representing the current translation and scale
    * @returns When argument is provided, sets `x`,`y`,`k` from the Transform and returns `this` for method chaining.
@@ -130,7 +136,7 @@ export class Projection {
    * ```
    */
   transform(obj?: Transform): Transform | Projection {
-    if (obj === undefined) return d3_zoomIdentity.translate(this._x, this._y).scale(this._k);
+    if (obj === undefined) return { x: this._x, y: this._y, k: this._k };
     this._x = +obj.x;
     this._y = +obj.y;
     this._k = +obj.k;
