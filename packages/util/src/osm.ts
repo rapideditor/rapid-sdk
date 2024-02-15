@@ -43,37 +43,8 @@ export function utilCleanTags(tags) {
   }
 }
 
-/** Returns a selector to select entity ids for:
- * deep descendant entityIDs for any of those entities that are relations
- * @param ids
- * @param graph
- * @param skipMultipolgonMembers
- * @returns
- */
-export function utilDeepMemberSelector(ids: string[], graph, skipMultipolgonMembers: boolean) {
-  let idsSet = new Set(ids);
-  let seen = new Set<string>();
-  let returners = new Set<string>();
-  ids.forEach(collectDeepDescendants);
-  return utilEntitySelector(Array.from(returners));
 
-  function collectDeepDescendants(id: string) {
-    if (seen.has(id)) return;
-    seen.add(id);
-
-    if (!idsSet.has(id)) {
-      returners.add(id);
-    }
-
-    let entity = graph.hasEntity(id);
-    if (!entity || entity.type !== 'relation') return;
-    if (skipMultipolgonMembers && entity.isMultipolygon()) return;
-
-    (entity.members || []).forEach((member) => collectDeepDescendants(member.id)); // recurse
-  }
-}
-
-/** Returns a selector to select entity ids for:
+/** Returns an array of entityIDs for the given entity and any descendants
  * - entityIDs passed in
  * - deep descendant entityIDs for any of those entities that are relations
  * @param ids
@@ -96,45 +67,6 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
   }
 }
 
-/** Returns a selector to select entity ids for:
- * - entityIDs passed in
- * - shallow descendant entityIDs for any of those entities that are relations
- * @param ids
- * @param graph
- * @returns
- */
-export function utilEntityOrMemberSelector(ids: string[], graph) {
-  let seen = new Set(ids);
-  ids.forEach(collectShallowDescendants);
-  return utilEntitySelector(Array.from(seen));
-
-  function collectShallowDescendants(id: string) {
-    var entity = graph.hasEntity(id);
-    if (!entity || entity.type !== 'relation') return;
-
-    (entity.members || []).forEach((member) => seen.add(member.id));
-  }
-}
-
-/** Returns a selector to select entity ids for:
- * - entityIDs passed in
- * - deep descendant entityIDs for any of those entities that are relations
- * @param ids
- * @param graph
- * @returns
- */
-export function utilEntityOrDeepMemberSelector(ids: string[], graph) {
-  return utilEntitySelector(utilEntityAndDeepMemberIDs(ids, graph));
-}
-
-/** Generate a css selector for multiple entities
- * class1, class2 -> .class1,.class2
- * @param ids
- * @returns
- */
-export function utilEntitySelector(ids: string[]) {
-  return ids.length ? '.' + ids.join(',.') : 'nothing';
-}
 
 /**  Returns an Array that is the union of:
  * - nodes for any nodeIDs passed in
