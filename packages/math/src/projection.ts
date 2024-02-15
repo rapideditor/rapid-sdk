@@ -7,7 +7,7 @@
  * Antimeridian clipping, Spherical rotation, Resampling
  */
 
-import { geoMercatorRaw as d3_geoMercatorRaw, geoTransform as d3_geoTransform } from 'd3-geo';
+import { geoMercatorRaw as d3_geoMercatorRaw } from 'd3-geo';
 import { zoomIdentity as d3_zoomIdentity } from 'd3-zoom';
 import { Vec2 } from './vector';
 
@@ -25,10 +25,7 @@ export class Projection {
   private _k: number;
   private _x: number;
   private _y: number;
-  private _dimensions: Vec2[] = [
-    [0, 0],
-    [0, 0]
-  ];
+  private _dimensions: Vec2[] = [[0, 0], [0, 0]];
 
   /** Constructs a new Projection
    * @description Default corresponds to the world at zoom 1 and centered on "Null Island" [0, 0].
@@ -140,28 +137,4 @@ export class Projection {
     return this;
   }
 
-  /** Returns a d3.geoTransform stream that uses this Projection to project geometry points.
-   * @returns d3.geoTransform stream
-   * @example ```
-   * const proj = new Projection();
-   * let s = proj.getStream();
-   * let p;
-   *
-   * s.stream = {
-   *   point: (x, y) => {
-   *     p = [x, y];
-   *   }
-   * };
-   * s.point(-180, 85.0511287798);  // returns [256, 256]
-   * ```
-   */
-  getStream(): any {
-    const thiz = this;
-    return d3_geoTransform({
-      point: function (x: number, y: number): void {
-        const p: Vec2 = thiz.project([x, y]);
-        this.stream.point(p[0], p[1]);
-      }
-    }).stream;
-  }
 }

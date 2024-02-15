@@ -271,21 +271,4 @@ describe('math/projection', () => {
       assert.equal(t.k, 512 / Math.PI);
     });
   });
-
-//  describe('#getStream', () => {
-//    it('gets a d3 transform stream', () => {
-//      const proj = new Projection(20, 30);
-//      let s = proj.getStream()();
-//      let p;
-//
-//      s.stream = {
-//        point: (x, y) => {
-//          p = [x, y];
-//        }
-//      };
-//      s.point(-180, 85.0511287798);
-//      expect(p[0]).toBeCloseTo(-236, CLOSE);
-//      expect(p[1]).toBeCloseTo(-226, CLOSE);
-//    });
-//  });
 });
