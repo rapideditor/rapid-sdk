@@ -24,6 +24,7 @@ export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
   }
 }
 
+
 /** Adds two vectors
  * @param a
  * @param b
@@ -35,6 +36,7 @@ export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
 export function vecAdd(a: Vec2, b: Vec2): Vec2 {
   return [a[0] + b[0], a[1] + b[1]];
 }
+
 
 /** Subtract two vectors
  * @param a
@@ -48,6 +50,7 @@ export function vecSubtract(a: Vec2, b: Vec2): Vec2 {
   return [a[0] - b[0], a[1] - b[1]];
 }
 
+
 /** Scale a vector uniformly by factor
  * @param a vector
  * @param n scale factor
@@ -60,6 +63,7 @@ export function vecScale(a: Vec2, n: number): Vec2 {
   return [a[0] * n, a[1] * n];
 }
 
+
 /** Floor (round down) the coordinates of a vector
  * @param a target vector
  * @returns floored vector
@@ -70,6 +74,7 @@ export function vecScale(a: Vec2, n: number): Vec2 {
 export function vecFloor(a: Vec2): Vec2 {
   return [Math.floor(a[0]), Math.floor(a[1])];
 }
+
 
 /** Linear interpolate a point along a vector
  * @param a first point
@@ -84,6 +89,7 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 }
 
+
 /** Returns the length of a vector
  * @description http://jsperf.com/id-dist-optimization
  * @param a
@@ -94,21 +100,30 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
  * vecLength([4, 3]);           // returns 5
  * ```
  */
-export function vecLength(a: Vec2, b?: Vec2): number {
-  b = b || [0, 0];
+export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
   const x: number = a[0] - b[0];
   const y: number = a[1] - b[1];
   return Math.sqrt(x * x + y * y);
 }
 
-/** Length of vector raised to the power two
+
+/** Returns the length of a vector squared
+ * This is the same as `vecLength` but without the `Math.sqrt` step,
+ * thus avoiding an unnecessary calculation.
  * @param a
- * @param b
- * @returns
+ * @param b If not passed, defaults to [0,0].
+ * @returns vector length squared
+ * @example ```
+ * vecLengthSquare([0, 0], [4, 3]);   // returns 25
+ * vecLengthSquare([4, 3]);           // returns 25
+ * ```
  */
-export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]) {
-  return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]): number {
+  const x: number = a[0] - b[0];
+  const y: number = a[1] - b[1];
+  return x * x + y * y;
 }
+
 
 /** Normalize a vector (i.e. return a unit vector)
  * @param a target vector
@@ -125,6 +140,7 @@ export function vecNormalize(a: Vec2): Vec2 {
   return [0, 0];
 }
 
+
 /** Return the counterclockwise angle in the range (-pi, pi)
  * between the positive X axis and the line intersecting a and b.
  * @param a
@@ -137,6 +153,7 @@ export function vecNormalize(a: Vec2): Vec2 {
 export function vecAngle(a: Vec2, b: Vec2): number {
   return Math.atan2(b[1] - a[1], b[0] - a[0]);
 }
+
 
 /** Returns the dot product of two vectors
  * @param a
@@ -154,6 +171,7 @@ export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   return p[0] * q[0] + p[1] * q[1];
 }
 
+
 /** Normalized Dot Product - normalizes input vectors before returning dot product
  * @param a
  * @param b
@@ -169,6 +187,7 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   const q: Vec2 = vecNormalize(vecSubtract(b, origin));
   return vecDot(p, q);
 }
+
 
 /** Returns the 2D cross product of OA and OB vectors
  * @param a A
@@ -187,12 +206,14 @@ export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   return p[0] * q[1] - p[1] * q[0];
 }
 
+
 /** An Object containing `index`, `distance`, and `target` properties */
 export interface Edge {
   index: number; // index of segment along path
   distance: number; // distance from point to path
   target: Vec2; // point along path
 }
+
 
 /** Find closest orthogonal projection of point onto points array
  * @param a source point
