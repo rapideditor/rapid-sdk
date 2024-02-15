@@ -21,16 +21,18 @@ links:
 -->
 
 # 1.0.0-pre.2
-#### 2024-Feb-??
+#### 2024-Feb-??  (coming soon)
+* [#265] Include `map=` param before others in query strings
 * [#263] ⚠️ Remove some things not needed:
    * d3 projection streams
    * util functions for working with css classes
 * [#255] Simplify project, remove `prettier`, `jest`, `yarn`, `lerna`
 * [#254] Fix incorrect Earth radius constants, thanks [@k-yle]
 
-[#263]: https://github.com/rapideditor/rapid-sdk/issues/263
-[#255]: https://github.com/rapideditor/rapid-sdk/issues/255
 [#254]: https://github.com/rapideditor/rapid-sdk/issues/254
+[#255]: https://github.com/rapideditor/rapid-sdk/issues/255
+[#263]: https://github.com/rapideditor/rapid-sdk/issues/263
+[#265]: https://github.com/rapideditor/rapid-sdk/issues/265
 [@k-yle]: https://github.com/k-yle
 
 
