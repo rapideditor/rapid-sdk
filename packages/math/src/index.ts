@@ -3,9 +3,10 @@
  * @module
  */
 
-export * from './extent';
+export * from './Extent';
+export * from './Tiler';
+export * from './Viewport';
+
 export * from './geo';
 export * from './geom';
-export * from './tiler';
-export * from './viewport';
 export * from './vector';

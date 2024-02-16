@@ -5,8 +5,8 @@
  * See: https://developers.google.com/maps/documentation/javascript/coordinates
  */
 
-import { Extent } from './extent';
-import { Viewport } from './viewport';
+import { Extent } from './Extent';
+import { Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { Vec2, Vec3 } from './vector';
 

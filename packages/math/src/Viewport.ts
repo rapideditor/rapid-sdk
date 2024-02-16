@@ -3,7 +3,7 @@
  * @module
  */
 
-import { Extent } from './extent';
+import { Extent } from './Extent';
 import { Vec2 } from './vector';
 
 // constants
