@@ -6,7 +6,7 @@
  */
 
 import { Extent } from './extent';
-import { Projection } from './projection';
+import { Viewport } from './viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { Vec2, Vec3 } from './vector';
 
@@ -24,7 +24,7 @@ export interface Tile {
   isVisible: boolean;
 }
 
-/** An Object used to return information about the tiles covering a given projection and viewport */
+/** An Object used to return information about the tiles covering a given viewport */
 export interface TileResult {
   tiles: Tile[];
   // translate: Vec2;
@@ -55,8 +55,8 @@ export class Tiler {
    */
   constructor() {}
 
-  /** Returns a TileResult object which contains details about all the tiles covering the given projection and viewport
-   * @param projection
+  /** Returns a TileResult object which contains details about all the tiles covering the given viewport
+   * @param viewport
    * @returns tile result
    * @example ```
    * At zoom 0:
@@ -69,10 +69,9 @@ export class Tiler {
    * -180    +180
    *
    * const t0 = new Tiler();
-   * const p0 = new Projection(128, 128, 128 / Math.PI)  // z0
-   *     .dimensions([[0, 0], [256, 256]]);              // entire world visible
-   *
-   * let result = t0.getTiles(p0);
+   * const v0 = new Viewport(128, 128, 128 / Math.PI)  // z0
+   *   .dimensions([[0, 0], [256, 256]]);              // entire world visible
+   * const result = t0.getTiles(v0);
    *
    * At zoom 1:
    *
@@ -88,10 +87,9 @@ export class Tiler {
    * -180      0     +180
    *
    * const t1 = new Tiler();
-   * const p1 = new Projection(256, 256, 256 / Math.PI)  // z1
-   *     .dimensions([[0, 0], [512, 512]]);              // entire world visible
-   *
-   * let result = t1.getTiles(p1);
+   * const v1 = new Viewport(256, 256, 256 / Math.PI)  // z1
+   *   .dimensions([[0, 0], [512, 512]]);              // entire world visible
+   * const result = t1.getTiles(v1);
    *
    * At zoom 2:
    *
@@ -115,16 +113,15 @@ export class Tiler {
    * -180     -90      0      +90    +180
    *
    * const t2 = new Tiler();
-   * const p2 = new Projection(512, 512, 512 / Math.PI)  // z2
-   *     .dimensions([[0, 0], [1024, 1024]]);            // entire world visible
-   *
-   * let result = t2.getTiles(p2);
+   * const v2 = new Viewport(512, 512, 512 / Math.PI)  // z2
+   *   .dimensions([[0, 0], [1024, 1024]]);            // entire world visible
+   * const result = t2.getTiles(v2);
    *```
    */
-  getTiles(projection: Projection): TileResult {
-    const dimensions: Vec2[] = projection.dimensions() as Vec2[];
-    const translate: Vec2 = projection.translate() as Vec2;
-    const scale: number = projection.scale() as number;
+  getTiles(viewport: Viewport): TileResult {
+    const dimensions: Vec2[] = viewport.dimensions() as Vec2[];
+    const translate: Vec2 = viewport.translate() as Vec2;
+    const scale: number = viewport.scale() as number;
 
     const zFrac: number = geoScaleToZoom(scale, this._tileSize);
     const z: number = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
@@ -140,10 +137,10 @@ export class Tiler {
     const viewMax: Vec2 = [origin[0] + dimensions[1][0], origin[1] + dimensions[1][1]];
     const viewExtent: Extent = new Extent(viewMin, viewMax);
 
-    // a projection centered at Null Island, so we can invert back to lon/lat later
+    // a viewport centered at Null Island, so we can invert back to lon/lat later
     const worldOrigin: number = (Math.pow(2, z) / 2) * this._tileSize;
     const worldScale: number = geoZoomToScale(z, this._tileSize);
-    const worldProjection = new Projection(worldOrigin, worldOrigin, worldScale);
+    const worldViewport = new Viewport(worldOrigin, worldOrigin, worldScale);
 
     const cols: number[] = range(
       clamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
@@ -170,8 +167,8 @@ export class Tiler {
         const isVisible: boolean = viewExtent.intersects(tileExtent);
 
         // back to lon/lat
-        const wgs84Min: Vec2 = worldProjection.invert([tileMin[0], tileMax[1]]);
-        const wgs84Max: Vec2 = worldProjection.invert([tileMax[0], tileMin[1]]);
+        const wgs84Min: Vec2 = worldViewport.invert([tileMin[0], tileMax[1]]);
+        const wgs84Max: Vec2 = worldViewport.invert([tileMax[0], tileMin[1]]);
 
         const tile: Tile = {
           id: xyz.toString(),
@@ -202,14 +199,14 @@ export class Tiler {
    * @returns FeatureCollection containing a Feature for each rectangular tile
    * @example ```
    * const t = new Tiler();
-   * const p = new Projection(256, 256, 256 / Math.PI)  // z1
-   *     .dimensions([[0, 0], [512, 512]]);             // entire world visible
-   * let result = t.getTiles(p);
-   * let gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
+   * const v = new Viewport(256, 256, 256 / Math.PI)  // z1
+   *   .dimensions([[0, 0], [512, 512]]);             // entire world visible
+   * const result = t.getTiles(v);
+   * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
    * ```
    */
   getGeoJSON(tileResult: TileResult): Object {
-    let features = tileResult.tiles.map((tile) => {
+    const features = tileResult.tiles.map((tile) => {
       return {
         type: 'Feature',
         properties: {

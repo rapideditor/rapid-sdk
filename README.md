@@ -35,8 +35,8 @@ Includes:
 * 📦 Extent class for creating bounding boxes
 * 🌐 Geographic (spherical) math functions
 * 📈 Geometric (planar) math functions
-* 📽 Projection class for converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
 * 🀄️ Tiler class for splitting the world into rectangular tiles
+- 📺 Viewport class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
 * 📐 Vector (coordinate) math functions
 
 

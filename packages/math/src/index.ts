@@ -6,6 +6,6 @@
 export * from './extent';
 export * from './geo';
 export * from './geom';
-export * from './projection';
 export * from './tiler';
+export * from './viewport';
 export * from './vector';
