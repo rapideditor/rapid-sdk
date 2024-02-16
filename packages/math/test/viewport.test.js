@@ -58,7 +58,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], -128);
       });
 
-      it('Applies translation when projecting', () => {
+      it('Applies translation when projecting (at z0)', () => {
         const view = new Viewport(20, 30, 128 / Math.PI);
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
@@ -92,7 +92,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], -256);
       });
 
-      it('Applies translation when projecting', () => {
+      it('Applies translation when projecting (at z1)', () => {
         const view = new Viewport(20, 30);
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
@@ -126,7 +126,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], -512);
       });
 
-      it('Applies translation when projecting', () => {
+      it('Applies translation when projecting (at z2)', () => {
         const view = new Viewport(20, 30, 512 / Math.PI);
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
@@ -136,35 +136,35 @@ describe('math/viewport', () => {
     });
   });
 
-  describe('#invert', () => {
+  describe('#unproject', () => {
     describe('z0', () => {
-      it('Inverse projects [0, 0] -> [0, 0] (at z0)', () => {
+      it('Unprojects [0, 0] -> [0, 0] (at z0)', () => {
         const view = new Viewport(0, 0, 128 / Math.PI);
-        const loc = view.invert([0, 0]);
+        const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
         assert.closeTo(loc[1], 0);
       });
 
-      it('Inverse projects [128, 128] -> [180, -85.0511287798] (at z0)', () => {
+      it('Unprojects [128, 128] -> [180, -85.0511287798] (at z0)', () => {
         const view = new Viewport(0, 0, 128 / Math.PI);
-        const loc = view.invert([128, 128]);
+        const loc = view.unproject([128, 128]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
         assert.closeTo(loc[1], -85.0511287798);
       });
 
-      it('Inverse projects [-128, -128] -> [-180, 85.0511287798] (at z0)', () => {
+      it('Unprojects [-128, -128] -> [-180, 85.0511287798] (at z0)', () => {
         const view = new Viewport(0, 0, 128 / Math.PI);
-        const loc = view.invert([-128, -128]);
+        const loc = view.unproject([-128, -128]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies translation when inverse projecting', () => {
+      it('Applies translation when unprojecting at (z0)', () => {
         const view = new Viewport(20, 30, 128 / Math.PI);
-        const loc = view.invert([-108, -98]);
+        const loc = view.unproject([-108, -98]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
@@ -172,33 +172,33 @@ describe('math/viewport', () => {
     });
 
     describe('z1', () => {
-      it('Inverse projects [0, 0] -> [0, 0] (at z1)', () => {
+      it('Unprojects [0, 0] -> [0, 0] (at z1)', () => {
         const view = new Viewport();
-        const loc = view.invert([0, 0]);
+        const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
         assert.closeTo(loc[1], 0);
       });
 
-      it('Inverse projects [256, 256] -> [180, -85.0511287798] (at z1)', () => {
+      it('Unprojects [256, 256] -> [180, -85.0511287798] (at z1)', () => {
         const view = new Viewport();
-        const loc = view.invert([256, 256]);
+        const loc = view.unproject([256, 256]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
         assert.closeTo(loc[1], -85.0511287798);
       });
 
-      it('Inverse projects [-256, -256] -> [-180, 85.0511287798] (at z1)', () => {
+      it('Unprojects [-256, -256] -> [-180, 85.0511287798] (at z1)', () => {
         const view = new Viewport();
-        const loc = view.invert([-256, -256]);
+        const loc = view.unproject([-256, -256]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies translation when inverse projecting', () => {
+      it('Applies translation when unprojecting (at z1)', () => {
         const view = new Viewport(20, 30);
-        const loc = view.invert([-236, -226]);
+        const loc = view.unproject([-236, -226]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
@@ -206,33 +206,33 @@ describe('math/viewport', () => {
     });
 
     describe('z2', () => {
-      it('Inverse projects [0, 0] -> [0, 0] (at z2)', () => {
+      it('Unprojects [0, 0] -> [0, 0] (at z2)', () => {
         const view = new Viewport(0, 0, 512 / Math.PI);
-        const loc = view.invert([0, 0]);
+        const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
         assert.closeTo(loc[1], 0);
       });
 
-      it('Inverse projects [512, 512] -> [180, -85.0511287798] (at z2)', () => {
+      it('Unprojects [512, 512] -> [180, -85.0511287798] (at z2)', () => {
         const view = new Viewport(0, 0, 512 / Math.PI);
-        const loc = view.invert([512, 512]);
+        const loc = view.unproject([512, 512]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
         assert.closeTo(loc[1], -85.0511287798);
       });
 
-      it('Inverse projects [-512, -512] -> [-180, 85.0511287798] (at z2)', () => {
+      it('Unprojects [-512, -512] -> [-180, 85.0511287798] (at z2)', () => {
         const view = new Viewport(0, 0, 512 / Math.PI);
-        const loc = view.invert([-512, -512]);
+        const loc = view.unproject([-512, -512]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies translation when inverse projecting', () => {
+      it('Applies translation when unprojecting (at z2)', () => {
         const view = new Viewport(20, 30, 512 / Math.PI);
-        const loc = view.invert([-492, -482]);
+        const loc = view.unproject([-492, -482]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);

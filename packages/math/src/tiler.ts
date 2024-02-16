@@ -137,7 +137,7 @@ export class Tiler {
     const viewMax: Vec2 = [origin[0] + dimensions[1][0], origin[1] + dimensions[1][1]];
     const viewExtent: Extent = new Extent(viewMin, viewMax);
 
-    // a viewport centered at Null Island, so we can invert back to lon/lat later
+    // a viewport centered at Null Island, so we can unproject back to lon/lat later
     const worldOrigin: number = (Math.pow(2, z) / 2) * this._tileSize;
     const worldScale: number = geoZoomToScale(z, this._tileSize);
     const worldViewport = new Viewport(worldOrigin, worldOrigin, worldScale);
@@ -167,8 +167,8 @@ export class Tiler {
         const isVisible: boolean = viewExtent.intersects(tileExtent);
 
         // back to lon/lat
-        const wgs84Min: Vec2 = worldViewport.invert([tileMin[0], tileMax[1]]);
-        const wgs84Max: Vec2 = worldViewport.invert([tileMax[0], tileMin[1]]);
+        const wgs84Min: Vec2 = worldViewport.unproject([tileMin[0], tileMax[1]]);
+        const wgs84Max: Vec2 = worldViewport.unproject([tileMax[0], tileMin[1]]);
 
         const tile: Tile = {
           id: xyz.toString(),

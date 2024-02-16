@@ -46,7 +46,7 @@ export class Viewport {
   }
 
 
-  /** Projects from given Lon/Lat (λ,φ) to Cartesian (x,y)
+  /** Projects a coordinate from Lon/Lat (λ,φ) to Cartesian (x,y)
    * @param loc Lon/Lat (λ,φ)
    * @returns Cartesian (x,y)
    * @example ```
@@ -66,17 +66,17 @@ export class Viewport {
   }
 
 
-  /** Inverse projects from given Cartesian (x,y) to Lon/Lat (λ,φ)
+  /** Unprojects a coordinate from given Cartesian (x,y) to Lon/Lat (λ,φ)
    * @param point Cartesian (x,y)
    * @returns Lon/Lat (λ,φ)
    * @example ```
    * const view = new Viewport();
-   * view.invert([0, 0]);         // returns [0, 0]
-   * view.invert([256, 256]);     // returns [180, -85.0511287798]
-   * view.invert([-256, -256]);   // returns [-180, 85.0511287798]
+   * view.unproject([0, 0]);         // returns [0, 0]
+   * view.unproject([256, 256]);     // returns [180, -85.0511287798]
+   * view.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    * ```
    */
-  invert(point: Vec2): Vec2 {
+  unproject(point: Vec2): Vec2 {
     const t = this._transform;
     const mercX = (point[0] - t.x) / t.k;
     const mercY = (t.y - point[1]) / t.k;
