@@ -7,8 +7,10 @@ import { Vec2 } from './vector';
 
 // constants
 const TAU = 2 * Math.PI;
+const DEG2RAD = Math.PI / 180;
 const EQUATORIAL_RADIUS = 6378137.0;
 const POLAR_RADIUS = 6356752.314245179;
+
 
 /** Convert degrees latitude to meters.
  * @param dLat degrees latitude
@@ -21,6 +23,7 @@ export function geoLatToMeters(dLat: number): number {
   return dLat * ((TAU * POLAR_RADIUS) / 360);
 }
 
+
 /** Convert degrees longitude to meters at a given latitude
  * @param dLon longitude
  * @param atLat latitude
@@ -32,8 +35,9 @@ export function geoLatToMeters(dLat: number): number {
 export function geoLonToMeters(dLon: number, atLat: number): number {
   return Math.abs(atLat) >= 90
     ? 0
-    : dLon * ((TAU * EQUATORIAL_RADIUS) / 360) * Math.abs(Math.cos(atLat * (Math.PI / 180)));
+    : dLon * ((TAU * EQUATORIAL_RADIUS) / 360) * Math.abs(Math.cos(atLat * DEG2RAD));
 }
+
 
 /** Convert meters to degrees latitude
  * @param m meters
@@ -46,6 +50,7 @@ export function geoMetersToLat(m: number): number {
   return m / ((TAU * POLAR_RADIUS) / 360);
 }
 
+
 /** Convert meters to degrees longitude at a given latitude
  * @param m meters
  * @param atLat latitude
@@ -57,8 +62,9 @@ export function geoMetersToLat(m: number): number {
 export function geoMetersToLon(m: number, atLat: number): number {
   return Math.abs(atLat) >= 90
     ? 0
-    : m / ((TAU * EQUATORIAL_RADIUS) / 360) / Math.abs(Math.cos(atLat * (Math.PI / 180)));
+    : m / ((TAU * EQUATORIAL_RADIUS) / 360) / Math.abs(Math.cos(atLat * DEG2RAD));
 }
+
 
 /** Convert offset in meters (for example, imagery offset) to offset in tile pixels
  * @param m offset in meters
@@ -68,10 +74,10 @@ export function geoMetersToLon(m: number, atLat: number): number {
  * geoMetersToOffset([100, 100]);  // returns ≈[0.00064, -0.00064] pixels
  * ```
  */
-export function geoMetersToOffset(m: Vec2, tileSize?: number): Vec2 {
-  tileSize = tileSize || 256;
+export function geoMetersToOffset(m: Vec2, tileSize: number = 256): Vec2 {
   return [(m[0] * tileSize) / (TAU * EQUATORIAL_RADIUS), (-m[1] * tileSize) / (TAU * POLAR_RADIUS)];
 }
+
 
 /** Convert imagery offset in tile pixels to offset in meters
  * @param offset offset in tile pixels
@@ -81,13 +87,13 @@ export function geoMetersToOffset(m: Vec2, tileSize?: number): Vec2 {
  * geoOffsetToMeters([0.00064, -0.00064]);  // returns ≈[100, 100] meters
  * ```
  */
-export function geoOffsetToMeters(offset: Vec2, tileSize?: number): Vec2 {
-  tileSize = tileSize || 256;
+export function geoOffsetToMeters(offset: Vec2, tileSize: number = 256): Vec2 {
   return [
     (offset[0] * TAU * EQUATORIAL_RADIUS) / tileSize,
     (-offset[1] * TAU * POLAR_RADIUS) / tileSize
   ];
 }
+
 
 /** Equirectangular approximation of spherical distances on Earth
  * @param a
@@ -103,32 +109,33 @@ export function geoSphericalDistance(a: Vec2, b: Vec2): number {
   return Math.sqrt(x * x + y * y);
 }
 
+
 /** Projection scale factor to tile zoom level
  * @param k projection scale factor
- * @param tileSize tile size
+ * @param tileSize tile size (defaults to 256)
  * @returns tile zoom level
  * @example ```
  * geoScaleToZoom(5340353.7154);  // returns ≈17
  * ```
  */
-export function geoScaleToZoom(k: number, tileSize?: number): number {
-  tileSize = tileSize || 256;
+export function geoScaleToZoom(k: number, tileSize: number = 256): number {
   const log2ts: number = Math.log(tileSize) * Math.LOG2E;
   return Math.log(k * TAU) / Math.LN2 - log2ts;
 }
 
+
 /** Tile zoom to projection scale factor
  * @param z tile zoom level
- * @param tileSize tile size
+ * @param tileSize tile size (defaults to 256)
  * @returns projection scale factor
  * @example ```
  * geoZoomToScale(17);  // returns ≈5340353.7154
  * ```
  */
-export function geoZoomToScale(z: number, tileSize?: number): number {
-  tileSize = tileSize || 256;
+export function geoZoomToScale(z: number, tileSize: number = 256): number {
   return (tileSize * Math.pow(2, z)) / TAU;
 }
+
 
 /** An Object containing `index`, `distance`, and `point` properties*/
 export interface Closest {

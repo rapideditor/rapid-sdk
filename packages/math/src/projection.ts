@@ -5,6 +5,12 @@
 
 import { Vec2 } from './vector';
 
+// constants
+const DEG2RAD = Math.PI / 180;
+const RAD2DEG = 180 / Math.PI;
+const HALF_PI = Math.PI / 2;
+
+
 /** An Object containing `x`, `y`, `k` numbers */
 export interface Transform {
   x: number;
@@ -49,10 +55,10 @@ export class Projection {
    * ```
    */
   project(loc: Vec2): Vec2 {
-    const lambda = (loc[0] * Math.PI) / 180;  // deg2rad
-    const phi = (loc[1] * Math.PI) / 180;    // deg2rad
+    const lambda = loc[0] * DEG2RAD;
+    const phi = loc[1] * DEG2RAD;
     const mercX = lambda;
-    const mercY = Math.log(Math.tan(((Math.PI / 2) + phi) / 2));
+    const mercY = Math.log(Math.tan((HALF_PI + phi) / 2));
     return [mercX * this._k + this._x, this._y - mercY * this._k];
   }
 
@@ -71,8 +77,8 @@ export class Projection {
     const mercX = (point[0] - this._x) / this._k;
     const mercY = (this._y - point[1]) / this._k;
     const lambda = mercX;
-    const phi = 2 * Math.atan(Math.exp(mercY)) - (Math.PI / 2);
-    return [(lambda * 180) / Math.PI, (phi * 180) / Math.PI]; // rad2deg
+    const phi = 2 * Math.atan(Math.exp(mercY)) - HALF_PI;
+    return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
 
