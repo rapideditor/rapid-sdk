@@ -12,37 +12,39 @@ const RAD2DEG = 180 / Math.PI;
 const HALF_PI = Math.PI / 2;
 
 
-/** An Object containing `x`, `y`, `k` numbers */
+/** The parameters that define the viewport */
 export interface Transform {
   x: number;
   y: number;
   k: number;
+  r: number;
 }
 
 
 /** Class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates */
 export class Viewport {
-  private _dimensions: Extent;
   private _transform: Transform;
+  private _dimensions: Extent;
 
 
   /** Constructs a new Viewport
    * @description Default viewport corresponds to the world at zoom 1 and centered on "Null Island" [0, 0].
-   * @param x x coordinate value
-   * @param y y coordinate value
-   * @param k zoom level
+   * @param transform
+   * @param dimensions
    * @example ```
    * const view1 = new Viewport();
-   * const view2 = new Viewport(20, 30, 512 / Math.PI);
+   * const view2 = new Viewport({x: 20, y: 30, k: 512 / Math.PI });
    * ```
    */
-  constructor(x?: number, y?: number, k?: number) {
-    this._dimensions = new Extent([0, 0], [0, 0]);
+  constructor(transform?: any, dimensions?: Extent) {
     this._transform = {
-      x: x || 0,
-      y: y || 0,
-      k: k || 256 / Math.PI  // z1
+      x: transform?.x || 0,
+      y: transform?.y || 0,
+      k: transform?.k || 256 / Math.PI,  // z1
+      r: transform?.r || 0
     };
+
+    this._dimensions = dimensions ? new Extent(dimensions) : new Extent([0, 0], [0, 0]);
   }
 
 
@@ -57,12 +59,12 @@ export class Viewport {
    * ```
    */
   project(loc: Vec2): Vec2 {
+    const { x, y, k, r } = this._transform;
     const lambda = loc[0] * DEG2RAD;
     const phi = loc[1] * DEG2RAD;
     const mercX = lambda;
     const mercY = Math.log(Math.tan((HALF_PI + phi) / 2));
-    const t = this._transform;
-    return [mercX * t.k + t.x, t.y - mercY * t.k];
+    return [ mercX * k + x, y - mercY * k ];
   }
 
 
@@ -77,9 +79,9 @@ export class Viewport {
    * ```
    */
   unproject(point: Vec2): Vec2 {
-    const t = this._transform;
-    const mercX = (point[0] - t.x) / t.k;
-    const mercY = (t.y - point[1]) / t.k;
+    const { x, y, k, r } = this._transform;
+    const mercX = (point[0] - x) / k;
+    const mercY = (y - point[1]) / k;
     const lambda = mercX;
     const phi = 2 * Math.atan(Math.exp(mercY)) - HALF_PI;
     return [lambda * RAD2DEG, phi * RAD2DEG];
@@ -129,11 +131,9 @@ export class Viewport {
    * p.transform();   // gets transform - returns { x: 20, y: 30, k: 512 / Math.PI }
    * ```
    */
-  transform(obj?: Transform): Transform | Viewport {
+  transform(obj?: any): Transform | Viewport {
     if (obj === undefined) return Object.assign({}, this._transform);  // copy
-    if (obj.x !== undefined) this._transform.x = +obj.x;
-    if (obj.y !== undefined) this._transform.y = +obj.y;
-    if (obj.k !== undefined) this._transform.k = +obj.k;
+    Object.assign(this._transform, obj);
     return this;
   }
 

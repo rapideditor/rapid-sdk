@@ -36,10 +36,11 @@ describe('math/tiler', () => {
           //
           const k = (TS * Math.pow(2, 0)) / TAU; // z0
           const t = new Tiler().tileSize(TS);
-          const p = new Viewport(HALFTS, HALFTS, k)
+          const v = new Viewport()
+            .transform({ x: HALFTS, y: HALFTS, k: k })
             .dimensions([[0, 0], [TS, TS]]); // entire world visible
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
 
           it('gets a single tile at z0', () => {
@@ -93,10 +94,11 @@ describe('math/tiler', () => {
           //
           const k = (TS * Math.pow(2, 1)) / TAU; // z1
           const t = new Tiler().tileSize(TS);
-          const p = new Viewport(TS, TS, k)
+          const v = new Viewport()
+            .transform({ x: TS, y: TS, k: k })
             .dimensions([[0, 0], [TWOTS, TWOTS]]); // entire world visible
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
 
           const expected = [
@@ -177,10 +179,11 @@ describe('math/tiler', () => {
           //
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Viewport(TWOTS, TWOTS, k)
+          const v = new Viewport()
+            .transform({ x: TWOTS, y: TWOTS, k: k })
             .dimensions([[0, 0], [FOURTS, FOURTS]]); // entire world visible
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
 
           const expected = [
@@ -260,10 +263,11 @@ describe('math/tiler', () => {
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Viewport(HALFTS, HALFTS, k)
+          const v = new Viewport()
+            .transform({ x: HALFTS, y: HALFTS, k: k })
             .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
           assert.ok(tiles instanceof Array);
           assert.equal(tiles.length, 4);
@@ -300,10 +304,11 @@ describe('math/tiler', () => {
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = (new Tiler().tileSize(TS)).margin(1);
-          const p = new Viewport(HALFTS, HALFTS, k)
+          const v = new Viewport()
+            .transform({ x: HALFTS, y: HALFTS, k: k })
             .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
           assert.ok(tiles instanceof Array);
           assert.equal(tiles.length, 16);
@@ -353,10 +358,11 @@ describe('math/tiler', () => {
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
-          const p = new Viewport(0, HALFTS, k)
+          const v = new Viewport()
+            .transform({ x: 0, y: HALFTS, k: k })
             .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
           assert.ok(tiles instanceof Array);
           assert.equal(tiles.length, 2);
@@ -393,10 +399,11 @@ describe('math/tiler', () => {
           // +-------+-------+-------+-------+
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = (new Tiler().tileSize(TS)).margin(1);
-          const p = new Viewport(0, HALFTS, k)
+          const v = new Viewport()
+            .transform({ x: 0, y: HALFTS, k: k })
             .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
           assert.ok(tiles instanceof Array);
           assert.equal(tiles.length, 12);
@@ -446,10 +453,11 @@ describe('math/tiler', () => {
           // +---------+---------+---------+---------+
           const k = (TS * Math.pow(2, 7)) / TAU; // z7
           const t = ((new Tiler().tileSize(TS)).margin(1)).skipNullIsland(true);
-          const p = new Viewport(-HALFTS, HALFTS, k)
+          const v = new Viewport()
+            .transform({ x: -HALFTS, y: HALFTS, k: k })
             .dimensions([[1, 1], [TS - 1, TS - 1]]);
 
-          const result = t.getTiles(p);
+          const result = t.getTiles(v);
           const tiles = result.tiles;
           assert.ok(tiles instanceof Array);
           assert.equal(tiles.length, 12);
@@ -483,10 +491,11 @@ describe('math/tiler', () => {
           it('gets GeoJSON', () => {
             const k = (TS * Math.pow(2, 0)) / TAU; // z0
             const t = new Tiler().tileSize(TS);
-            const p = new Viewport(HALFTS, HALFTS, k)
+            const v = new Viewport()
+              .transform({ x: HALFTS, y: HALFTS, k: k })
               .dimensions([[0, 0], [TS, TS]]);
 
-            const result = t.getTiles(p);
+            const result = t.getTiles(v);
             const geojson = t.getGeoJSON(result);
             const tile = result.tiles[0];
 

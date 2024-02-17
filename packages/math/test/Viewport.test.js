@@ -22,7 +22,7 @@ describe('math/viewport', () => {
     });
 
     it('creates a Viewport with parameters', () => {
-      const view = new Viewport(20, 30, 512 / Math.PI);
+      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
       const tform = view.transform();
       assert.ok(view instanceof Viewport);
       assert.ok(tform instanceof Object);
@@ -35,7 +35,7 @@ describe('math/viewport', () => {
   describe('#project', () => {
     describe('z0', () => {
       it('Projects [0, 0] -> [0, 0] (at z0)', () => {
-        const view = new Viewport(0, 0, 128 / Math.PI);
+        const view = new Viewport({ k: 128 / Math.PI });
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -43,7 +43,7 @@ describe('math/viewport', () => {
       });
 
       it('Projects [180, -85.0511287798] -> [128, 128] (at z0)', () => {
-        const view = new Viewport(0, 0, 128 / Math.PI);
+        const view = new Viewport({ k: 128 / Math.PI });
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 128);
@@ -51,7 +51,7 @@ describe('math/viewport', () => {
       });
 
       it('Projects [-180, 85.0511287798] -> [-128, -128] (at z0)', () => {
-        const view = new Viewport(0, 0, 128 / Math.PI);
+        const view = new Viewport({ k: 128 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -128);
@@ -59,7 +59,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies translation when projecting (at z0)', () => {
-        const view = new Viewport(20, 30, 128 / Math.PI);
+        const view = new Viewport({ x: 20, y: 30, k: 128 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -108);
@@ -93,7 +93,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies translation when projecting (at z1)', () => {
-        const view = new Viewport(20, 30);
+        const view = new Viewport({ x: 20, y: 30 });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -236);
@@ -103,7 +103,7 @@ describe('math/viewport', () => {
 
     describe('z2', () => {
       it('Projects [0, 0] -> [0, 0] (at z2)', () => {
-        const view = new Viewport(0, 0, 512 / Math.PI);
+        const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -111,7 +111,7 @@ describe('math/viewport', () => {
       });
 
       it('Projects [180, -85.0511287798] -> [512, 512] (at z2)', () => {
-        const view = new Viewport(0, 0, 512 / Math.PI);
+        const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 512);
@@ -119,7 +119,7 @@ describe('math/viewport', () => {
       });
 
       it('Projects [-180, 85.0511287798] -> [-512, -512] (at z2)', () => {
-        const view = new Viewport(0, 0, 512 / Math.PI);
+        const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -512);
@@ -127,7 +127,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies translation when projecting (at z2)', () => {
-        const view = new Viewport(20, 30, 512 / Math.PI);
+        const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -492);
@@ -139,7 +139,7 @@ describe('math/viewport', () => {
   describe('#unproject', () => {
     describe('z0', () => {
       it('Unprojects [0, 0] -> [0, 0] (at z0)', () => {
-        const view = new Viewport(0, 0, 128 / Math.PI);
+        const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
@@ -147,7 +147,7 @@ describe('math/viewport', () => {
       });
 
       it('Unprojects [128, 128] -> [180, -85.0511287798] (at z0)', () => {
-        const view = new Viewport(0, 0, 128 / Math.PI);
+        const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([128, 128]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
@@ -155,7 +155,7 @@ describe('math/viewport', () => {
       });
 
       it('Unprojects [-128, -128] -> [-180, 85.0511287798] (at z0)', () => {
-        const view = new Viewport(0, 0, 128 / Math.PI);
+        const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([-128, -128]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -163,7 +163,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies translation when unprojecting at (z0)', () => {
-        const view = new Viewport(20, 30, 128 / Math.PI);
+        const view = new Viewport({ x: 20, y: 30, k: 128 / Math.PI });
         const loc = view.unproject([-108, -98]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -197,7 +197,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies translation when unprojecting (at z1)', () => {
-        const view = new Viewport(20, 30);
+        const view = new Viewport({ x: 20, y: 30 });
         const loc = view.unproject([-236, -226]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -207,7 +207,7 @@ describe('math/viewport', () => {
 
     describe('z2', () => {
       it('Unprojects [0, 0] -> [0, 0] (at z2)', () => {
-        const view = new Viewport(0, 0, 512 / Math.PI);
+        const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
@@ -215,7 +215,7 @@ describe('math/viewport', () => {
       });
 
       it('Unprojects [512, 512] -> [180, -85.0511287798] (at z2)', () => {
-        const view = new Viewport(0, 0, 512 / Math.PI);
+        const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([512, 512]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
@@ -223,7 +223,7 @@ describe('math/viewport', () => {
       });
 
       it('Unprojects [-512, -512] -> [-180, 85.0511287798] (at z2)', () => {
-        const view = new Viewport(0, 0, 512 / Math.PI);
+        const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([-512, -512]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -231,7 +231,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies translation when unprojecting (at z2)', () => {
-        const view = new Viewport(20, 30, 512 / Math.PI);
+        const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
         const loc = view.unproject([-492, -482]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -263,12 +263,13 @@ describe('math/viewport', () => {
 
   describe('#transform', () => {
     it('sets/gets transform', () => {
-      const view = new Viewport().transform({ x: 20, y: 30, k: 512 / Math.PI });
+      const view = new Viewport().transform({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
       const tform = view.transform();
       assert.ok(tform instanceof Object);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
       assert.equal(tform.k, 512 / Math.PI);
+      assert.equal(tform.r, Math.PI / 2);
     });
   });
 });

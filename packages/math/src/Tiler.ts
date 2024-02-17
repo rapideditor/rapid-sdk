@@ -6,7 +6,7 @@
  */
 
 import { Extent } from './Extent';
-import { Viewport } from './Viewport';
+import { Transform, Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { Vec2, Vec3 } from './vector';
 
@@ -39,6 +39,7 @@ function range(start: number, end: number): number[] {
   return Array.from(Array(1 + end - start).keys()).map((v) => start + v);
 }
 
+
 export class Tiler {
   private _tileSize: number = 256;
   private _zoomRange: Vec2 = [0, 24];
@@ -54,6 +55,7 @@ export class Tiler {
    * ```
    */
   constructor() {}
+
 
   /** Returns a TileResult object which contains details about all the tiles covering the given viewport
    * @param viewport
@@ -140,7 +142,7 @@ export class Tiler {
     // a viewport centered at Null Island, so we can unproject back to lon/lat later
     const worldOrigin: number = (Math.pow(2, z) / 2) * this._tileSize;
     const worldScale: number = geoZoomToScale(z, this._tileSize);
-    const worldViewport = new Viewport(worldOrigin, worldOrigin, worldScale);
+    const worldViewport = new Viewport({ x: worldOrigin, y: worldOrigin, k: worldScale });
 
     const cols: number[] = range(
       clamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
@@ -193,6 +195,7 @@ export class Tiler {
     };
   }
 
+
   /** Returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile
    * @description Useful for displaying a tile grid for debugging.
    * @param tileResult
@@ -226,6 +229,7 @@ export class Tiler {
     };
   }
 
+
   /** Sets/Gets the current tileSize
    * @param val tile size value
    * @returns When passed a numeric argument, sets the tile size and returns `this` for method chaining
@@ -240,6 +244,7 @@ export class Tiler {
     this._tileSize = val;
     return this;
   }
+
 
   /** Sets/Gets the current zoomRange
    * @param min
@@ -258,6 +263,7 @@ export class Tiler {
     return this;
   }
 
+
   /** Sets/Gets the current tile margin (number to extend the rows/columns beyond those covering the viewport)
    * @param val
    * @returns When an argument is passed, sets the tile margin and returns `this` for method chaining
@@ -272,6 +278,7 @@ export class Tiler {
     this._margin = +val;
     return this;
   }
+
 
   /** Sets/Gets the current skipNullIsland value
    * @description When loading data from a tiled service, it is common for invalid data to be located around "Null Island",
@@ -289,6 +296,7 @@ export class Tiler {
     this._skipNullIsland = val;
     return this;
   }
+
 
   /** Tests whether the given tile coordinate is near [0,0] (Null Island)
    * @description A tile is considered "near" if it >= z7 and around the center of the map
