@@ -265,7 +265,7 @@ describe('math/tiler', () => {
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
             .transform({ x: HALFTS, y: HALFTS, k: k })
-            .dimensions([[1, 1], [TS - 1, TS - 1]]);
+            .dimensions([[0, 0], [TS, TS]]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -306,7 +306,7 @@ describe('math/tiler', () => {
           const t = (new Tiler().tileSize(TS)).margin(1);
           const v = new Viewport()
             .transform({ x: HALFTS, y: HALFTS, k: k })
-            .dimensions([[1, 1], [TS - 1, TS - 1]]);
+            .dimensions([[0, 0], [TS, TS]]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -360,7 +360,7 @@ describe('math/tiler', () => {
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
             .transform({ x: 0, y: HALFTS, k: k })
-            .dimensions([[1, 1], [TS - 1, TS - 1]]);
+            .dimensions([[1, 0], [TS - 2, TS]]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -401,7 +401,7 @@ describe('math/tiler', () => {
           const t = (new Tiler().tileSize(TS)).margin(1);
           const v = new Viewport()
             .transform({ x: 0, y: HALFTS, k: k })
-            .dimensions([[1, 1], [TS - 1, TS - 1]]);
+            .dimensions([[1, 0], [TS - 2, TS]]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -455,7 +455,7 @@ describe('math/tiler', () => {
           const t = ((new Tiler().tileSize(TS)).margin(1)).skipNullIsland(true);
           const v = new Viewport()
             .transform({ x: -HALFTS, y: HALFTS, k: k })
-            .dimensions([[1, 1], [TS - 1, TS - 1]]);
+            .dimensions([[0, 0], [TS, TS]]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
