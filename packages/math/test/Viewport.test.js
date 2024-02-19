@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { Viewport } from '../built/math.mjs';
+import { Extent, Viewport } from '../built/math.mjs';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-6) {
@@ -21,14 +21,20 @@ describe('math/viewport', () => {
       assert.equal(tform.k, 256 / Math.PI); // z1
     });
 
-    it('creates a Viewport with parameters', () => {
-      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
+    it('creates a Viewport with a transform param', () => {
+      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
       const tform = view.transform();
       assert.ok(view instanceof Viewport);
       assert.ok(tform instanceof Object);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
       assert.equal(tform.k, 512 / Math.PI); // z2
+      assert.equal(tform.r, Math.PI / 2);
+    });
+
+    it('creates a Viewport with a dimensions param', () => {
+      const view = new Viewport(null, new Extent([0, 0], [800, 600]));
+      assert.deepEqual(view.dimensions(), [[0, 0], [800, 600]]);
     });
   });
 
