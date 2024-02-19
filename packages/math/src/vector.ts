@@ -203,7 +203,7 @@ export function vecNormalize(a: Vec2): Vec2 {
 }
 
 
-/** Return the counterclockwise angle in the range (-pi, pi)
+/** Return the counterclockwise angle in the range (-π, π)
  * between the positive X axis and the line intersecting a and b.
  * @param a
  * @param b

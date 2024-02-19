@@ -32,6 +32,13 @@ describe('math/viewport', () => {
       assert.equal(tform.r, Math.PI / 2);
     });
 
+    it('constrains rotation to values in 0..2π', () => {
+      const view1 = new Viewport({ r: 3 * Math.PI });
+      assert.closeTo(view1.rotate(), Math.PI);
+      const view2 = new Viewport({ r: -Math.PI });
+      assert.closeTo(view2.rotate(), Math.PI);
+    });
+
     it('creates a Viewport with a dimensions param', () => {
       const view = new Viewport(null, new Extent([0, 0], [800, 600]));
       assert.deepEqual(view.dimensions(), [[0, 0], [800, 600]]);
@@ -71,6 +78,14 @@ describe('math/viewport', () => {
         assert.closeTo(point[0], -108);
         assert.closeTo(point[1], -98);
       });
+
+      it('Applies rotation when projecting (at z0)', () => {
+        const view = new Viewport({ k: 128 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
+        const point = view.project([180, 0]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], 0);
+        assert.closeTo(point[1], 128);
+      });
     });
 
     describe('z1', () => {
@@ -105,6 +120,14 @@ describe('math/viewport', () => {
         assert.closeTo(point[0], -236);
         assert.closeTo(point[1], -226);
       });
+
+      it('Applies rotation when projecting (at z1)', () => {
+        const view = new Viewport({ r: Math.PI / 2 });  // quarter turn clockwise
+        const point = view.project([180, 0]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], 0);
+        assert.closeTo(point[1], 256);
+      });
     });
 
     describe('z2', () => {
@@ -138,6 +161,14 @@ describe('math/viewport', () => {
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -492);
         assert.closeTo(point[1], -482);
+      });
+
+      it('Applies rotation when projecting (at z2)', () => {
+        const view = new Viewport({ k: 512 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
+        const point = view.project([180, 0]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], 0);
+        assert.closeTo(point[1], 512);
       });
     });
   });
@@ -175,6 +206,14 @@ describe('math/viewport', () => {
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
+
+      it('Applies rotation when unprojecting at (z0)', () => {
+        const view = new Viewport({ k: 128 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
+        const loc = view.unproject([0, 128]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], 180);
+        assert.closeTo(loc[1], 0);
+      });
     });
 
     describe('z1', () => {
@@ -208,6 +247,14 @@ describe('math/viewport', () => {
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
+      });
+
+      it('Applies rotation when unprojecting at (z1)', () => {
+        const view = new Viewport({ r: Math.PI / 2 });  // quarter turn clockwise
+        const loc = view.unproject([0, 256]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], 180);
+        assert.closeTo(loc[1], 0);
       });
     });
 
@@ -243,6 +290,21 @@ describe('math/viewport', () => {
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
+
+      it('Applies rotation when unprojecting at (z2)', () => {
+        const view = new Viewport({ k: 512 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
+        const loc = view.unproject([0, 512]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], 180);
+        assert.closeTo(loc[1], 0);
+      });
+    });
+  });
+
+  describe('#translate', () => {
+    it('sets/gets translate', () => {
+      const view = new Viewport().translate([20, 30]);
+      assert.deepEqual(view.translate(), [20, 30]);
     });
   });
 
@@ -253,10 +315,18 @@ describe('math/viewport', () => {
     });
   });
 
-  describe('#translate', () => {
-    it('sets/gets translate', () => {
-      const view = new Viewport().translate([20, 30]);
-      assert.deepEqual(view.translate(), [20, 30]);
+  describe('#rotation', () => {
+    it('sets/gets rotation', () => {
+      const view = new Viewport().rotate(Math.PI);
+      assert.equal(view.rotate(), Math.PI);
+    });
+
+    it('constrains rotation to values in 0..2π', () => {
+      const view = new Viewport();
+      view.rotate(3 * Math.PI)
+      assert.closeTo(view.rotate(), Math.PI);
+      view.rotate(-Math.PI)
+      assert.closeTo(view.rotate(), Math.PI);
     });
   });
 
@@ -277,5 +347,25 @@ describe('math/viewport', () => {
       assert.equal(tform.k, 512 / Math.PI);
       assert.equal(tform.r, Math.PI / 2);
     });
+
+    it('ignores missing / invalid properties', () => {
+      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
+      view.transform({ x: 10, fake: 10 });
+      const tform = view.transform();
+      assert.ok(tform instanceof Object);
+      assert.equal(tform.x, 10);
+      assert.equal(tform.y, 30);
+      assert.equal(tform.k, 512 / Math.PI);
+      assert.equal(tform.r, Math.PI / 2);
+      assert.equal(tform.fake, undefined);
+    });
+
+    it('constrains rotation to values in 0..2π', () => {
+      const view1 = new Viewport().transform({ r: 3 * Math.PI });
+      assert.closeTo(view1.rotate(), Math.PI);
+      const view2 = new Viewport().transform({ r: -Math.PI });
+      assert.closeTo(view2.rotate(), Math.PI);
+    });
+
   });
 });
