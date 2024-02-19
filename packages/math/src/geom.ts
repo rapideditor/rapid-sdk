@@ -5,7 +5,8 @@
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
 import { Extent } from './Extent';
-import { Vec2, vecCross, vecDot, vecEqual, vecInterp, vecLength, vecSubtract } from './vector';
+import { Vec2, vecCross, vecDot, vecEqual, vecInterp, vecLength, vecRotate, vecSubtract } from './vector';
+
 
 /** Test whether two given coordinates describe the same edge
  * @param a
@@ -20,6 +21,7 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
   return (a[0] === b[0] && a[1] === b[1]) || (a[0] === b[1] && a[1] === b[0]);
 }
 
+
 /** Rotate all points counterclockwise around a pivot point by given angle (in radians), without modifying the input points array
  * @param points target points
  * @param angle angle in radians
@@ -28,18 +30,17 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
  * @example ```
  * const points = [[1, 0], [1, 1]];
  * const around = [0, 0];
- * geomRotatePoints(points, Math.Pi, around);   // returns [[-1, 0], [-1, -1]]
+ * geomRotatePoints(points, Math.PI, around);   // returns [[-1, 0], [-1, -1]]
  * ```
  */
 export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): Vec2[] {
-  return points.map((point: Vec2) => {
-    const radial: Vec2 = vecSubtract(point, around);
-    return [
-      radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
-      radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
-    ];
-  });
+  const result: Vec2[] = new Array(points.length);  // prealloc
+  for (let i = 0; i < points.length; i++) {
+    result[i] = vecRotate(points[i], angle, around);
+  }
+  return result;
 }
+
 
 /** Return the intersection point of 2 line segments
  * @description From https://github.com/pgkelley4/line-segments-intersect
@@ -82,6 +83,7 @@ export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
   return null;
 }
 
+
 /** Return all intersection points of 2 paths
  * @param path1
  * @param path2
@@ -112,6 +114,7 @@ export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
   return intersections;
 }
 
+
 /** Return true if paths intersect, false if not
  * @param path1
  * @param path2
@@ -140,6 +143,7 @@ export function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean 
   }
   return false;
 }
+
 
 /** Return true if point is contained in polygon, false otherwise
  * @description From https://github.com/substack/point-in-polygon
@@ -174,6 +178,7 @@ export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
   return inside;
 }
 
+
 /** Return true if every point of inner polygon is contained within outer polygon, false otherwise
  * @description From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
@@ -197,6 +202,7 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
   });
 }
 
+
 /** Return true if any part of inner polygon intersects outer polygon, false otherwise
  * @param outer
  * @param inner
@@ -215,11 +221,7 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
  * eomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict test - points and segments)
  * ```
  */
-export function geomPolygonIntersectsPolygon(
-  outer: Vec2[],
-  inner: Vec2[],
-  checkSegments?: boolean
-): boolean {
+export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], checkSegments?: boolean): boolean {
   function testPoints(outer: Vec2[], inner: Vec2[]): boolean {
     return inner.some((point: Vec2) => {
       return geomPointInPolygon(point, outer);
@@ -229,6 +231,7 @@ export function geomPolygonIntersectsPolygon(
   return testPoints(outer, inner) || (!!checkSegments && geomPathHasIntersections(outer, inner));
 }
 
+
 /** Smallest Surrounding Rectangle. An Object containing `poly` and `angle` properties. */
 export interface SSR {
   /** the smallest surrounding rectangle polygon */
@@ -236,6 +239,7 @@ export interface SSR {
   /** angle offset from x axis */
   angle: number;
 }
+
 
 /** Return the Smallest Surrounding Rectangle for a given set of points
  * @description
@@ -291,6 +295,7 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR | null 
   };
 }
 
+
 /** Return the length of the given path
  * @param path
  * @returns length
@@ -309,6 +314,7 @@ export function geomPathLength(path: Vec2[]): number {
   }
   return length;
 }
+
 
 /** If the given point is at the edge of the padded viewport, return a vector that will nudge the viewport in that direction
  * @param point

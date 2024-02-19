@@ -47,11 +47,39 @@ describe('math/vector', () => {
     });
   });
 
-  describe('vecFloor', () => {
+  describe('vecRotate', () => {
+    it('rotates vectors', () => {
+      const result = test.vecRotate([1, 1], Math.PI, [0, 0]);
+      assert.closeTo(result[0], -1);
+      assert.closeTo(result[1], -1);
+    });
+  });
+
+  describe('vecRound', () => {
     it('rounds vectors', () => {
-      assert.deepEqual(test.vecFloor([0.1, 1]), [0, 1]);
-      assert.deepEqual(test.vecFloor([0, 1]), [0, 1]);
-      assert.deepEqual(test.vecFloor([0, 1.1]), [0, 1]);
+      assert.deepEqual(test.vecRound([0.1, 1.5]), [0, 2]);
+      assert.deepEqual(test.vecRound([-0.1, -1.5]), [-0, -1]);
+    });
+  });
+
+  describe('vecFloor', () => {
+    it('rounds vectors down', () => {
+      assert.deepEqual(test.vecFloor([0.1, 1.5]), [0, 1]);
+      assert.deepEqual(test.vecFloor([-0.1, -1.5]), [-1, -2]);
+    });
+  });
+
+  describe('vecCeil', () => {
+    it('rounds vectors up', () => {
+      assert.deepEqual(test.vecCeil([0.1, 1.5]), [1, 2]);
+      assert.deepEqual(test.vecCeil([-0.1, -1.5]), [-0, -1]);
+    });
+  });
+
+  describe('vecTrunc', () => {
+    it('truncates vectors', () => {
+      assert.deepEqual(test.vecTrunc([0.1, 1.5]), [0, 1]);
+      assert.deepEqual(test.vecTrunc([-0.1, -1.5]), [-0, -1]);
     });
   });
 

@@ -64,15 +64,77 @@ export function vecScale(a: Vec2, n: number): Vec2 {
 }
 
 
-/** Floor (round down) the coordinates of a vector
- * @param a target vector
- * @returns floored vector
+/** Rotate a vector counterclockwise around a pivot point
+ * @param a        vector to rotate
+ * @param angle    angle in radians
+ * @param around   pivot point
+ * @returns rotated vector
  * @example ```
- * vecFloor([0, 1.01]);   // returns [0, 1]
+ * vecRotate([1, 1], Math.PI, [0, 0]);   // returns [-1, -1]
+ * ```
+ */
+export function vecRotate(a: Vec2, angle: number, around: Vec2): Vec2 {
+  const radial: Vec2 = vecSubtract(a, around);
+  return [
+    radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
+    radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
+  ];
+}
+
+
+/** Round the coordinates of a vector
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
+ * @param   a target vector
+ * @returns vector rounded
+ * @example ```
+ * vecRound([0.1, 1.5]);     // returns [0, 2]
+ * vecRound([-0.1, -1.5]);   // returns [-0, -1]
+ * ```
+ */
+export function vecRound(a: Vec2): Vec2 {
+  return [Math.round(a[0]), Math.round(a[1])];
+}
+
+
+/** Floor (round down) the coordinates of a vector
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
+ * @param   a target vector
+ * @returns vector rounded down
+ * @example ```
+ * vecFloor([0.1, 1.5]);     // returns [0, 1]
+ * vecFloor([-0.1, -1.5]);   // returns [-1, -2]
  * ```
  */
 export function vecFloor(a: Vec2): Vec2 {
   return [Math.floor(a[0]), Math.floor(a[1])];
+}
+
+
+/** Ceiling (round up) the coordinates of a vector
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil
+ * @param    a target vector
+ * @returns  vector rounded up
+ * @example ```
+ * vecCeil([0.1, 1.5]);     // returns [1, 2]
+ * vecCeil([-0.1, -1.5]);   // returns [-0, -1]
+ * ```
+ */
+export function vecCeil(a: Vec2): Vec2 {
+  return [Math.ceil(a[0]), Math.ceil(a[1])];
+}
+
+
+/** Truncate (remove fractional part) the coordinates of a vector
+ * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
+ * @param    a target vector
+ * @returns  vector truncated
+ * @example ```
+ * vecTrunc([0.1, 1.5]);     // returns [0, 1]
+ * vecTrunc([-0.1, -1.5]);   // returns [-0, -1]
+ * ```
+ */
+export function vecTrunc(a: Vec2): Vec2 {
+  return [Math.trunc(a[0]), Math.trunc(a[1])];
 }
 
 
