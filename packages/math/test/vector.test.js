@@ -49,9 +49,9 @@ describe('math/vector', () => {
 
   describe('vecRotate', () => {
     it('rotates vectors', () => {
-      const result = test.vecRotate([1, 1], Math.PI, [0, 0]);
+      const result = test.vecRotate([1, 1], Math.PI / 2, [0, 0]);
       assert.closeTo(result[0], -1);
-      assert.closeTo(result[1], -1);
+      assert.closeTo(result[1], 1);
     });
   });
 
