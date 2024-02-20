@@ -330,13 +330,6 @@ describe('math/viewport', () => {
     });
   });
 
-  describe('#dimensions', () => {
-    it('sets/gets dimensions', () => {
-      const view = new Viewport().dimensions([[0, 0], [800, 600]]);
-      assert.deepEqual(view.dimensions(), [[0, 0], [800, 600]]);
-    });
-  });
-
   describe('#transform', () => {
     it('sets/gets transform', () => {
       const view = new Viewport().transform({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
@@ -366,6 +359,33 @@ describe('math/viewport', () => {
       const view2 = new Viewport().transform({ r: -Math.PI });
       assert.closeTo(view2.rotate(), Math.PI);
     });
-
   });
+
+  describe('#dimensions', () => {
+    it('sets/gets dimensions', () => {
+      const view = new Viewport().dimensions([[0, 0], [800, 600]]);
+      assert.deepEqual(view.dimensions(), [[0, 0], [800, 600]]);
+    });
+  });
+
+  describe('#extent', () => {
+    it('returns dimensions when viewport is not rotated', () => {
+      const view = new Viewport().dimensions([[0, 0], [800, 600]]);
+      const result = view.extent();
+      assert.ok(result instanceof Extent);
+      assert.deepEqual(result.min, [0, 0]);
+      assert.deepEqual(result.max, [800, 600]);
+    });
+
+    it('returns visible extent when viewport is rotated', () => {
+      const view = new Viewport()
+        .dimensions([[0, 0], [800, 600]])
+        .transform({ r: Math.PI / 2 });   // quarter turn clockwise
+      const result = view.extent();
+      assert.ok(result instanceof Extent);
+      assert.deepEqual(result.min, [100, -100]);
+      assert.deepEqual(result.max, [700, 700]);
+    });
+  });
+
 });

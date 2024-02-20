@@ -4,6 +4,7 @@
  */
 
 import { Extent } from './Extent';
+import { geomRotatePoints } from './geom';
 import { Vec2, vecRotate } from './vector';
 
 // constants
@@ -188,6 +189,34 @@ export class Viewport {
     this._dimensions.min = val[0];
     this._dimensions.max = val[1];
     return this;
+  }
+
+
+  /** Gets the viewport's visible extent
+   * This is different from the dimensions when the viewport is rotated
+   * @returns Extent in screen coordinates
+   * @example ```
+   * const view = new Viewport()
+   *   .dimensions([[0, 0], [800, 600]])
+   *   .transform({ r: Math.PI / 2 });   // quarter turn clockwise
+   * const extent = view.extent();       // returns an Extent around [[100, -100], [700, 700]]
+   * ```
+   */
+  extent(): Extent {
+    const dimensions: Extent = this._dimensions;
+    const r: number = this._transform.r;
+    if (!r) {
+      return new Extent(dimensions);  // copy
+    } else {
+      const extent = new Extent();
+      const rotated: Vec2[] = geomRotatePoints(dimensions.polygon(), r, dimensions.center());
+      for (let i = 0; i < rotated.length - 1; i++) {  // skip last point, it repeats
+        const point: Vec2 = rotated[i];
+        extent.min = [Math.min(point[0], extent.min[0]), Math.min(point[1], extent.min[1])];
+        extent.max = [Math.max(point[0], extent.max[0]), Math.max(point[1], extent.max[1])];
+      }
+      return extent;
+    }
   }
 
 }
