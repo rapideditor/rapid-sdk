@@ -113,7 +113,7 @@ describe('math/viewport', () => {
 
     describe('z1', () => {
       it('Projects [0°, 0°] -> [0, 0] (at z1)', () => {
-        const view = new Viewport();
+        const view = new Viewport({ k: 256 / Math.PI });
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -121,23 +121,39 @@ describe('math/viewport', () => {
       });
 
       it('Projects [180°, -85.0511287798°] -> [256, 256] (at z1)', () => {
-        const view = new Viewport();
+        const view = new Viewport({ k: 256 / Math.PI });
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 256);
         assert.closeTo(point[1], 256);
       });
 
+      it('Projects out of bounds [270°, -95°] -> [384, 256] (at z1)', () => {
+        const view = new Viewport({ k: 256 / Math.PI });
+        const point = view.project([270, -95]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], 384);
+        assert.closeTo(point[1], 256);
+      });
+
       it('Projects [-180°, 85.0511287798°] -> [-256, -256] (at z1)', () => {
-        const view = new Viewport();
+        const view = new Viewport({ k: 256 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -256);
         assert.closeTo(point[1], -256);
       });
 
+      it('Projects out of bounds [-270°, 95°] -> [-384, -256] (at z1)', () => {
+        const view = new Viewport({ k: 256 / Math.PI });
+        const point = view.project([-270, 95]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], -384);
+        assert.closeTo(point[1], -256);
+      });
+
       it('Applies translation when projecting (at z1)', () => {
-        const view = new Viewport({ x: 20, y: 30 });
+        const view = new Viewport({ x: 20, y: 30, k: 256 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -236);
@@ -145,7 +161,7 @@ describe('math/viewport', () => {
       });
 
       it('Applies rotation when projecting (at z1)', () => {
-        const view = new Viewport({ r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ k: 256 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
         const point = view.project([180, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -170,11 +186,27 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 512);
       });
 
+      it('Projects out of bounds [270°, -95°] -> [768, 512] (at z2)', () => {
+        const view = new Viewport({ k: 512 / Math.PI });
+        const point = view.project([270, -95]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], 768);
+        assert.closeTo(point[1], 512);
+      });
+
       it('Projects [-180°, 85.0511287798°] -> [-512, -512] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -512);
+        assert.closeTo(point[1], -512);
+      });
+
+      it('Projects out of bounds [-270°, 95°] -> [-768, -512] (at z2)', () => {
+        const view = new Viewport({ k: 512 / Math.PI });
+        const point = view.project([-270, 95]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], -768);
         assert.closeTo(point[1], -512);
       });
 
@@ -214,6 +246,14 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], -85.0511287798);
       });
 
+      it('Unprojects out of bounds [192, Infinity] -> [270°, -85.0511287798°] (at z0)', () => {
+        const view = new Viewport({ k: 128 / Math.PI });
+        const loc = view.unproject([192, Infinity]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], 270);
+        assert.closeTo(loc[1], -85.0511287798);
+      });
+
       it('Unprojects [-128, -128] -> [-180°, 85.0511287798°] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([-128, -128]);
@@ -222,7 +262,15 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies translation when unprojecting at (z0)', () => {
+      it('Unprojects out of bounds [-192, -Infinity] -> [-270°, 85.0511287798°] (at z0)', () => {
+        const view = new Viewport({ k: 128 / Math.PI });
+        const loc = view.unproject([-192, -Infinity]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], -270);
+        assert.closeTo(loc[1], 85.0511287798);
+      });
+
+      it('Applies translation when unprojecting (at z0)', () => {
         const view = new Viewport({ x: 20, y: 30, k: 128 / Math.PI });
         const loc = view.unproject([-108, -98]);
         assert.ok(loc instanceof Array);
@@ -230,7 +278,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies rotation when unprojecting at (z0)', () => {
+      it('Applies rotation when unprojecting (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
         const loc = view.unproject([0, 128]);
         assert.ok(loc instanceof Array);
@@ -241,7 +289,7 @@ describe('math/viewport', () => {
 
     describe('z1', () => {
       it('Unprojects [0, 0] -> [0°, 0°] (at z1)', () => {
-        const view = new Viewport();
+        const view = new Viewport({ k: 256 / Math.PI });
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
@@ -249,31 +297,47 @@ describe('math/viewport', () => {
       });
 
       it('Unprojects [256, 256] -> [180°, -85.0511287798°] (at z1)', () => {
-        const view = new Viewport();
+        const view = new Viewport({ k: 256 / Math.PI });
         const loc = view.unproject([256, 256]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
         assert.closeTo(loc[1], -85.0511287798);
       });
 
+      it('Unprojects out of bounds [384, Infinity] -> [270°, -85.0511287798°] (at z1)', () => {
+        const view = new Viewport({ k: 256 / Math.PI });
+        const loc = view.unproject([384, Infinity]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], 270);
+        assert.closeTo(loc[1], -85.0511287798);
+      });
+
       it('Unprojects [-256, -256] -> [-180°, 85.0511287798°] (at z1)', () => {
-        const view = new Viewport();
+        const view = new Viewport({ k: 256 / Math.PI });
         const loc = view.unproject([-256, -256]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
 
+      it('Unprojects out of bounds [-384, -Infinity] -> [-270°, 85.0511287798°] (at z1)', () => {
+        const view = new Viewport({ k: 256 / Math.PI });
+        const loc = view.unproject([-384, -Infinity]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], -270);
+        assert.closeTo(loc[1], 85.0511287798);
+      });
+
       it('Applies translation when unprojecting (at z1)', () => {
-        const view = new Viewport({ x: 20, y: 30 });
+        const view = new Viewport({ x: 20, y: 30, k: 256 / Math.PI });
         const loc = view.unproject([-236, -226]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies rotation when unprojecting at (z1)', () => {
-        const view = new Viewport({ r: Math.PI / 2 });  // quarter turn clockwise
+      it('Applies rotation when unprojecting (at z1)', () => {
+        const view = new Viewport({ k: 256 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
         const loc = view.unproject([0, 256]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
@@ -298,11 +362,27 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], -85.0511287798);
       });
 
+      it('Unprojects out of bounds [768, Infinity] -> [270°, -85.0511287798°] (at z2)', () => {
+        const view = new Viewport({ k: 512 / Math.PI });
+        const loc = view.unproject([768, Infinity]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], 270);
+        assert.closeTo(loc[1], -85.0511287798);
+      });
+
       it('Unprojects [-512, -512] -> [-180°, 85.0511287798°] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([-512, -512]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
+        assert.closeTo(loc[1], 85.0511287798);
+      });
+
+      it('Unprojects out of bounds [-768, -Infinity] -> [-270°, 85.0511287798°] (at z2)', () => {
+        const view = new Viewport({ k: 512 / Math.PI });
+        const loc = view.unproject([-768, -Infinity]);
+        assert.ok(loc instanceof Array);
+        assert.closeTo(loc[0], -270);
         assert.closeTo(loc[1], 85.0511287798);
       });
 
@@ -314,7 +394,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], 85.0511287798);
       });
 
-      it('Applies rotation when unprojecting at (z2)', () => {
+      it('Applies rotation when unprojecting (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI, r: Math.PI / 2 });  // quarter turn clockwise
         const loc = view.unproject([0, 512]);
         assert.ok(loc instanceof Array);

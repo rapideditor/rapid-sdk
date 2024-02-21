@@ -20,6 +20,8 @@ const MAXZOOM = 24;
 const MINK = geoZoomToScale(MINZOOM, TILESIZE);
 const MAXK = geoZoomToScale(MAXZOOM, TILESIZE);
 
+const MAXPHI = 2 * Math.atan(Math.exp(Math.PI)) - HALF_PI;  // 85.0511287798 in radians
+const MINPHI = -MAXPHI;
 
 function clamp(num: number, min: number, max: number): number {
   return Math.max(min, Math.min(num, max));
@@ -80,9 +82,10 @@ export class Viewport {
   project(loc: Vec2): Vec2 {
     const { x, y, k, r } = this._transform;
     const lambda: number = loc[0] * DEG2RAD;
-    const phi: number = clamp(loc[1], -85.0511287798, 85.0511287798) * DEG2RAD;
-    const mercator: Vec2 = [lambda, Math.log(Math.tan((HALF_PI + phi) / 2))];
-    const point: Vec2 = [mercator[0] * k + x, y - mercator[1] * k];
+    const phi: number = clamp(loc[1] * DEG2RAD, MINPHI, MAXPHI);
+    const mercatorX: number = lambda
+    const mercatorY: number = Math.log(Math.tan((HALF_PI + phi) / 2));
+    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
     if (r) {
       return vecRotate(point, r, this._dimensions.center());
     } else {
@@ -106,9 +109,10 @@ export class Viewport {
     if (r) {
       point = vecRotate(point, -r, this._dimensions.center());
     }
-    const mercator: Vec2 = [(point[0] - x) / k, (y - point[1]) / k];
-    const lambda: number = mercator[0];
-    const phi: number = 2 * Math.atan(Math.exp(mercator[1])) - HALF_PI;
+    const mercatorX: number = (point[0] - x) / k;
+    const mercatorY: number = clamp((y - point[1]) / k, -Math.PI, Math.PI);
+    const lambda: number = mercatorX;
+    const phi: number = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
     return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
