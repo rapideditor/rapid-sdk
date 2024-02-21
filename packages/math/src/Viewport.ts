@@ -4,6 +4,7 @@
  */
 
 import { Extent } from './Extent';
+import { geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
 import { Vec2, vecRotate } from './vector';
 
@@ -13,11 +14,20 @@ const DEG2RAD = Math.PI / 180;
 const RAD2DEG = 180 / Math.PI;
 const HALF_PI = Math.PI / 2;
 
-function wrap(n, max) {
-  if (n < 0) {
-    n += Math.ceil(-n / max) * max;
-  }
-  return n % max;
+const TILESIZE = 256;
+const MINZOOM = 0;
+const MAXZOOM = 24;
+const MINK = geoZoomToScale(MINZOOM, TILESIZE);
+const MAXK = geoZoomToScale(MAXZOOM, TILESIZE);
+
+
+function clamp(num: number, min: number, max: number): number {
+  return Math.max(min, Math.min(num, max));
+}
+
+function wrap(num: number, min: number, max: number): number {
+  const d = max - min;
+  return ((num - min) % d + d) % d + min;
 }
 
 
@@ -49,8 +59,8 @@ export class Viewport {
     this._transform = {
       x: transform?.x || 0,
       y: transform?.y || 0,
-      k: transform?.k || 256 / Math.PI,  // z1
-      r: wrap(transform?.r || 0, TAU)    // constrain to values in 0..2π
+      k: clamp(transform?.k || 256 / Math.PI, MINK, MAXK),   // constrain to z0..z24, default z1
+      r: wrap(transform?.r || 0, 0, TAU)                     // constrain to 0..2π
     };
 
     this._dimensions = dimensions ? new Extent(dimensions) : new Extent([0, 0], [0, 0]);
@@ -70,19 +80,19 @@ export class Viewport {
   project(loc: Vec2): Vec2 {
     const { x, y, k, r } = this._transform;
     const lambda: number = loc[0] * DEG2RAD;
-    const phi: number = loc[1] * DEG2RAD;
+    const phi: number = clamp(loc[1], -85.0511287798, 85.0511287798) * DEG2RAD;
     const mercator: Vec2 = [lambda, Math.log(Math.tan((HALF_PI + phi) / 2))];
-    const screen: Vec2 = [mercator[0] * k + x, y - mercator[1] * k];
+    const point: Vec2 = [mercator[0] * k + x, y - mercator[1] * k];
     if (r) {
-      return vecRotate(screen, r, this._dimensions.center());
+      return vecRotate(point, r, this._dimensions.center());
     } else {
-      return screen;
+      return point;
     }
   }
 
 
   /** Unprojects a coordinate from given Cartesian (x,y) to Lon/Lat (λ,φ)
-   * @param screen Cartesian (x,y)
+   * @param point Cartesian (x,y)
    * @returns Lon/Lat (λ,φ)
    * @example ```
    * const view = new Viewport();
@@ -91,14 +101,14 @@ export class Viewport {
    * view.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    * ```
    */
-  unproject(screen: Vec2): Vec2 {
+  unproject(point: Vec2): Vec2 {
     const { x, y, k, r } = this._transform;
     if (r) {
-      screen = vecRotate(screen, -r, this._dimensions.center());
+      point = vecRotate(point, -r, this._dimensions.center());
     }
-    const mercator = [(screen[0] - x) / k, (y - screen[1]) / k];
-    const lambda = mercator[0];
-    const phi = 2 * Math.atan(Math.exp(mercator[1])) - HALF_PI;
+    const mercator: Vec2 = [(point[0] - x) / k, (y - point[1]) / k];
+    const lambda: number = mercator[0];
+    const phi: number = 2 * Math.atan(Math.exp(mercator[1])) - HALF_PI;
     return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
@@ -131,7 +141,7 @@ export class Viewport {
    */
   scale(val?: number): number | Viewport {
     if (val === undefined) return this._transform.k;
-    this._transform.k = +val;
+    this._transform.k = clamp(+val, MINK, MAXK);   // constrain to z0..z24
     return this;
   }
 
@@ -148,7 +158,7 @@ export class Viewport {
    */
   rotate(val?: number): number | Viewport {
     if (val === undefined) return this._transform.r;
-    this._transform.r = wrap(+val, TAU);  // constrain to values in 0..2π
+    this._transform.r = wrap(+val, 0, TAU);   // constrain to 0..2π
     return this;
   }
 
@@ -168,8 +178,8 @@ export class Viewport {
 
     if (obj.x)  this._transform.x = +obj.x;
     if (obj.y)  this._transform.y = +obj.y;
-    if (obj.k)  this._transform.k = +obj.k;
-    if (obj.r)  this._transform.r = wrap(+obj.r, TAU);  // constrain to values in 0..2π
+    if (obj.k)  this._transform.k = clamp(+obj.k, MINK, MAXK);  // constrain to z0..z24
+    if (obj.r)  this._transform.r = wrap(+obj.r, 0, TAU);       // constrain to 0..2π
 
     return this;
   }
@@ -192,31 +202,25 @@ export class Viewport {
   }
 
 
-  /** Gets the viewport's visible extent
-   * This is different from the dimensions when the viewport is rotated
-   * @returns Extent in screen coordinates
+  /** Gets the viewport's visible extent in WGS84 coordinates (lon/lat)
+   * @returns Extent in WGS84 coordinates (lon,lat)
    * @example ```
    * const view = new Viewport()
-   *   .dimensions([[0, 0], [800, 600]])
-   *   .transform({ r: Math.PI / 2 });   // quarter turn clockwise
-   * const extent = view.extent();       // returns an Extent around [[100, -100], [700, 700]]
+   *   .transform({ x: 150, y: 100, k: geoZoomToScale(1) })
+   *   .dimensions([[0, 0], [300, 200]]);
+   * const result = view.extent();
    * ```
    */
   extent(): Extent {
-    const dimensions: Extent = this._dimensions;
-    const r: number = this._transform.r;
-    if (!r) {
-      return new Extent(dimensions);  // copy
-    } else {
-      const extent = new Extent();
-      const rotated: Vec2[] = geomRotatePoints(dimensions.polygon(), r, dimensions.center());
-      for (let i = 0; i < rotated.length - 1; i++) {  // skip last point, it repeats
-        const point: Vec2 = rotated[i];
-        extent.min = [Math.min(point[0], extent.min[0]), Math.min(point[1], extent.min[1])];
-        extent.max = [Math.max(point[0], extent.max[0]), Math.max(point[1], extent.max[1])];
-      }
-      return extent;
+    const polygon = this._dimensions.polygon();
+    const extent = new Extent();
+
+    for (let i = 0; i < polygon.length - 1; i++) {  // skip last point, it's first point repeated
+      const loc: Vec2 = this.unproject(polygon[i]);
+      extent.min = [Math.min(loc[0], extent.min[0]), Math.min(loc[1], extent.min[1])];
+      extent.max = [Math.max(loc[0], extent.max[0]), Math.max(loc[1], extent.max[1])];
     }
+    return extent;
   }
 
 }

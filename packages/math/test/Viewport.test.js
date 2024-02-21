@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { Extent, Viewport } from '../built/math.mjs';
+import { Extent, Viewport, geoZoomToScale } from '../built/math.mjs';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-6) {
@@ -32,6 +32,13 @@ describe('math/viewport', () => {
       assert.equal(tform.r, Math.PI / 2);
     });
 
+    it('constrains scale to values in z0..z24', () => {
+      const view1 = new Viewport({ k: geoZoomToScale(-1) });
+      assert.closeTo(view1.scale(), geoZoomToScale(0));
+      const view2 = new Viewport({ k: geoZoomToScale(25) });
+      assert.closeTo(view2.scale(), geoZoomToScale(24));
+    });
+
     it('constrains rotation to values in 0..2π', () => {
       const view1 = new Viewport({ r: 3 * Math.PI });
       assert.closeTo(view1.rotate(), Math.PI);
@@ -47,7 +54,7 @@ describe('math/viewport', () => {
 
   describe('#project', () => {
     describe('z0', () => {
-      it('Projects [0, 0] -> [0, 0] (at z0)', () => {
+      it('Projects [0°, 0°] -> [0, 0] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
@@ -55,7 +62,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 0);
       });
 
-      it('Projects [180, -85.0511287798] -> [128, 128] (at z0)', () => {
+      it('Projects [180°, -85.0511287798°] -> [128, 128] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
@@ -63,11 +70,27 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 128);
       });
 
-      it('Projects [-180, 85.0511287798] -> [-128, -128] (at z0)', () => {
+      it('Projects out of bounds [270°, -95°] -> [192, 128] (at z0)', () => {
+        const view = new Viewport({ k: 128 / Math.PI });
+        const point = view.project([270, -95]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], 192);
+        assert.closeTo(point[1], 128);
+      });
+
+      it('Projects [-180°, 85.0511287798°] -> [-128, -128] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -128);
+        assert.closeTo(point[1], -128);
+      });
+
+      it('Projects out of bounds [-270°, 95°] -> [-192, -128] (at z0)', () => {
+        const view = new Viewport({ k: 128 / Math.PI });
+        const point = view.project([-270, 95]);
+        assert.ok(point instanceof Array);
+        assert.closeTo(point[0], -192);
         assert.closeTo(point[1], -128);
       });
 
@@ -89,7 +112,7 @@ describe('math/viewport', () => {
     });
 
     describe('z1', () => {
-      it('Projects [0, 0] -> [0, 0] (at z1)', () => {
+      it('Projects [0°, 0°] -> [0, 0] (at z1)', () => {
         const view = new Viewport();
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
@@ -97,7 +120,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 0);
       });
 
-      it('Projects [180, -85.0511287798] -> [256, 256] (at z1)', () => {
+      it('Projects [180°, -85.0511287798°] -> [256, 256] (at z1)', () => {
         const view = new Viewport();
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
@@ -105,7 +128,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 256);
       });
 
-      it('Projects [-180, 85.0511287798] -> [-256, -256] (at z1)', () => {
+      it('Projects [-180°, 85.0511287798°] -> [-256, -256] (at z1)', () => {
         const view = new Viewport();
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
@@ -131,7 +154,7 @@ describe('math/viewport', () => {
     });
 
     describe('z2', () => {
-      it('Projects [0, 0] -> [0, 0] (at z2)', () => {
+      it('Projects [0°, 0°] -> [0, 0] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
@@ -139,7 +162,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 0);
       });
 
-      it('Projects [180, -85.0511287798] -> [512, 512] (at z2)', () => {
+      it('Projects [180°, -85.0511287798°] -> [512, 512] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
@@ -147,7 +170,7 @@ describe('math/viewport', () => {
         assert.closeTo(point[1], 512);
       });
 
-      it('Projects [-180, 85.0511287798] -> [-512, -512] (at z2)', () => {
+      it('Projects [-180°, 85.0511287798°] -> [-512, -512] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
@@ -175,7 +198,7 @@ describe('math/viewport', () => {
 
   describe('#unproject', () => {
     describe('z0', () => {
-      it('Unprojects [0, 0] -> [0, 0] (at z0)', () => {
+      it('Unprojects [0, 0] -> [0°, 0°] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
@@ -183,7 +206,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], 0);
       });
 
-      it('Unprojects [128, 128] -> [180, -85.0511287798] (at z0)', () => {
+      it('Unprojects [128, 128] -> [180°, -85.0511287798°] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([128, 128]);
         assert.ok(loc instanceof Array);
@@ -191,7 +214,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], -85.0511287798);
       });
 
-      it('Unprojects [-128, -128] -> [-180, 85.0511287798] (at z0)', () => {
+      it('Unprojects [-128, -128] -> [-180°, 85.0511287798°] (at z0)', () => {
         const view = new Viewport({ k: 128 / Math.PI });
         const loc = view.unproject([-128, -128]);
         assert.ok(loc instanceof Array);
@@ -217,7 +240,7 @@ describe('math/viewport', () => {
     });
 
     describe('z1', () => {
-      it('Unprojects [0, 0] -> [0, 0] (at z1)', () => {
+      it('Unprojects [0, 0] -> [0°, 0°] (at z1)', () => {
         const view = new Viewport();
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
@@ -225,7 +248,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], 0);
       });
 
-      it('Unprojects [256, 256] -> [180, -85.0511287798] (at z1)', () => {
+      it('Unprojects [256, 256] -> [180°, -85.0511287798°] (at z1)', () => {
         const view = new Viewport();
         const loc = view.unproject([256, 256]);
         assert.ok(loc instanceof Array);
@@ -233,7 +256,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], -85.0511287798);
       });
 
-      it('Unprojects [-256, -256] -> [-180, 85.0511287798] (at z1)', () => {
+      it('Unprojects [-256, -256] -> [-180°, 85.0511287798°] (at z1)', () => {
         const view = new Viewport();
         const loc = view.unproject([-256, -256]);
         assert.ok(loc instanceof Array);
@@ -259,7 +282,7 @@ describe('math/viewport', () => {
     });
 
     describe('z2', () => {
-      it('Unprojects [0, 0] -> [0, 0] (at z2)', () => {
+      it('Unprojects [0, 0] -> [0°, 0°] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
@@ -267,7 +290,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], 0);
       });
 
-      it('Unprojects [512, 512] -> [180, -85.0511287798] (at z2)', () => {
+      it('Unprojects [512, 512] -> [180°, -85.0511287798°] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([512, 512]);
         assert.ok(loc instanceof Array);
@@ -275,7 +298,7 @@ describe('math/viewport', () => {
         assert.closeTo(loc[1], -85.0511287798);
       });
 
-      it('Unprojects [-512, -512] -> [-180, 85.0511287798] (at z2)', () => {
+      it('Unprojects [-512, -512] -> [-180°, 85.0511287798°] (at z2)', () => {
         const view = new Viewport({ k: 512 / Math.PI });
         const loc = view.unproject([-512, -512]);
         assert.ok(loc instanceof Array);
@@ -312,6 +335,13 @@ describe('math/viewport', () => {
     it('sets/gets scale', () => {
       const view = new Viewport().scale(512 / Math.PI);
       assert.equal(view.scale(), 512 / Math.PI);
+    });
+
+    it('constrains scale to values in z0..z24', () => {
+      const view1 = new Viewport().scale(geoZoomToScale(-1));
+      assert.closeTo(view1.scale(), geoZoomToScale(0));
+      const view2 = new Viewport().scale(geoZoomToScale(25));
+      assert.closeTo(view2.scale(), geoZoomToScale(24));
     });
   });
 
@@ -353,6 +383,13 @@ describe('math/viewport', () => {
       assert.equal(tform.fake, undefined);
     });
 
+    it('constrains scale to values in z0..z24', () => {
+      const view1 = new Viewport().transform({ k: geoZoomToScale(-1) });
+      assert.closeTo(view1.scale(), geoZoomToScale(0));
+      const view2 = new Viewport().transform({ k: geoZoomToScale(25) });
+      assert.closeTo(view2.scale(), geoZoomToScale(24));
+    });
+
     it('constrains rotation to values in 0..2π', () => {
       const view1 = new Viewport().transform({ r: 3 * Math.PI });
       assert.closeTo(view1.rotate(), Math.PI);
@@ -369,22 +406,58 @@ describe('math/viewport', () => {
   });
 
   describe('#extent', () => {
-    it('returns dimensions when viewport is not rotated', () => {
-      const view = new Viewport().dimensions([[0, 0], [800, 600]]);
+    it('returns visible Extent (lon,lat) when viewport is not rotated', () => {
+      // Test at zoom 1
+      //
+      //  +--------+--------+  +85.0511°
+      //  | 0,0,1  |  1,0,1 |                 ^
+      //  |        |        |                 N
+      //  |  +===========+  |               W + E
+      //  |  ‖     |     ‖  |                 S
+      //  +--‖-----+-----‖--+   0°
+      //  |  ‖     |     ‖  |
+      //  |  +===========+  |
+      //  |        |        |
+      //  | 0,1,1  |  1,1,1 |
+      //  +--------+--------+  -85.0511°
+      //-180°      0°     +180°
+      //
+      const view = new Viewport()
+        .transform({ x: 150, y: 100, k: geoZoomToScale(1) })
+        .dimensions([[0, 0], [300, 200]]);
       const result = view.extent();
       assert.ok(result instanceof Extent);
-      assert.deepEqual(result.min, [0, 0]);
-      assert.deepEqual(result.max, [800, 600]);
+      assert.closeTo(result.min[0], -105.46875);
+      assert.closeTo(result.min[1], -57.326521);
+      assert.closeTo(result.max[0], 105.46875);
+      assert.closeTo(result.max[1], 57.326521);
     });
 
-    it('returns visible extent when viewport is rotated', () => {
+    it('returns visible Extent (lon,lat) when viewport is rotated', () => {
+      // Test at zoom 1
+      //
+      //  +--------+--------+  -180°
+      //  | 0,1,1  |  0,0,1 |
+      //  |        |        |                 W
+      //  |  +===========+  |               S + N >
+      //  |  ‖     |     ‖  |                 E
+      //  +--‖-----+-----‖--+   0°
+      //  |  ‖     |     ‖  |
+      //  |  +===========+  |
+      //  |        |        |
+      //  | 1,1,1  |  1,0,1 |
+      //  +--------+--------+  +180°
+      //-85.0511°  0°  +85.0511°
+      //
       const view = new Viewport()
-        .dimensions([[0, 0], [800, 600]])
-        .transform({ r: Math.PI / 2 });   // quarter turn clockwise
+        .transform({ x: 150, y: 100, k: geoZoomToScale(1), r: Math.PI / 2 }) // quarter turn clockwise
+        .dimensions([[0, 0], [300, 200]]);
       const result = view.extent();
       assert.ok(result instanceof Extent);
-      assert.deepEqual(result.min, [100, -100]);
-      assert.deepEqual(result.max, [700, 700]);
+      assert.closeTo(result.min[0], -70.3125);
+      assert.closeTo(result.min[1], -71.965387);
+      assert.closeTo(result.max[0], 70.3125);
+      assert.closeTo(result.max[1], 71.965387);
     });
   });
 
