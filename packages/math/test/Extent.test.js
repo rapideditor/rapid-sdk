@@ -128,31 +128,73 @@ describe('math/extent', () => {
   });
 
   describe('#extend', () => {
-    it('does not modify self', () => {
+    it('does not modify self or other', () => {
       const a = new Extent([0, 0], [0, 0]);
       const b = new Extent([1, 1]);
-      a.extend(b);
+      const c = a.extend(b);
       assert.notEqual(a, b);
-      assert.deepEqual(a.max, [0, 0]);
+      assert.notEqual(a, c);
+      assert.notEqual(b, c);
+      assert.deepEqual(a.max, [0, 0]);  // 'a' unchanged
+      assert.deepEqual(b.min, [1, 1]);  // 'b' unchanged
     });
 
-    it('returns the minimal extent containing self and the given point', () => {
+    it('returns the minimal extent containing self and the given Vec2', () => {
       const a = new Extent();
-      const b = a.extend(new Extent([0, 0]));
+      assert.deepEqual(a.min, [Infinity, Infinity]);
+      assert.deepEqual(a.max, [-Infinity, -Infinity]);
+
+      const b = a.extend([0, 0]);
       assert.deepEqual(b.min, [0, 0]);
       assert.deepEqual(b.max, [0, 0]);
 
-      const c = b.extend(new Extent([5, 10]));
+      const c = b.extend([5, 10]);
       assert.deepEqual(c.min, [0, 0]);
       assert.deepEqual(c.max, [5, 10]);
     });
 
-    it('returns the minimal extent containing self and the given extent', () => {
+    it('returns the minimal extent containing self and the given Extent', () => {
       const a = new Extent([0, 0], [5, 10]);
       const b = new Extent([4, -1], [5, 10]);
       const c = a.extend(b);
       assert.deepEqual(c.min, [0, -1]);
       assert.deepEqual(c.max, [5, 10]);
+    });
+  });
+
+
+  describe('#extendSelf', () => {
+    it('modifies self, but not other', () => {
+      const a = new Extent([0, 0], [0, 0]);
+      const b = new Extent([1, 1]);
+      const c = a.extendSelf(b);
+      assert.notEqual(a, b);
+      assert.equal(a, c);      // a === c
+      assert.notEqual(b, c);
+      assert.deepEqual(a.max, [1, 1]);  // 'a' changed
+      assert.deepEqual(b.min, [1, 1]);  // 'b' unchanged
+    });
+
+    it('returns the minimal extent containing self and the given Vec2', () => {
+      const a = new Extent();
+      assert.deepEqual(a.min, [Infinity, Infinity]);
+      assert.deepEqual(a.max, [-Infinity, -Infinity]);
+
+      a.extendSelf([0, 0]);
+      assert.deepEqual(a.min, [0, 0]);
+      assert.deepEqual(a.max, [0, 0]);
+
+      a.extendSelf([5, 10]);
+      assert.deepEqual(a.min, [0, 0]);
+      assert.deepEqual(a.max, [5, 10]);
+    });
+
+    it('returns the minimal extent containing self and the given Extent', () => {
+      const a = new Extent([0, 0], [5, 10]);
+      const b = new Extent([4, -1], [5, 10]);
+      a.extendSelf(b);
+      assert.deepEqual(a.min, [0, -1]);
+      assert.deepEqual(a.max, [5, 10]);
     });
   });
 

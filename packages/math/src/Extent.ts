@@ -229,11 +229,40 @@ export class Extent {
    * const c = a.extend(b);   // returns new Extent { min: [ 0, -1 ], max: [ 5, 10 ] }
    * ```
    */
-  extend(other: Extent): Extent {
-    return new Extent(
-      [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
-      [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
-    );
+  extend(other: Extent | Vec2): Extent {
+    if (other instanceof Extent) {
+      return new Extent(
+        [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])],
+        [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])]
+      );
+    } else {
+      return new Extent(
+        [Math.min(other[0], this.min[0]), Math.min(other[1], this.min[1])],
+        [Math.max(other[0], this.max[0]), Math.max(other[1], this.max[1])]
+      );
+    }
+  }
+
+  /** Extend the bounds of an extent, modifying self
+   * This is like `extend` but modifies self, instead of returning a `new Extent`
+   * This option is slightly more performant for situations where you don't mind mutating the Extent.
+   * @param other
+   * @returns this Extent
+   * @example ```
+   * const a = new Extent([0, 0], [5, 10]);
+   * const b = new Extent([4, -1], [5, 10]);
+   * const c = a.extendSelf(b);   // a is extended, { min: [ 0, -1 ], max: [ 5, 10 ] }, b unchanged
+   * ```
+   */
+  extendSelf(other: Extent | Vec2): Extent {
+    if (other instanceof Extent) {
+      this.min = [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])];
+      this.max = [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])];
+    } else {
+      this.min = [Math.min(other[0], this.min[0]), Math.min(other[1], this.min[1])];
+      this.max = [Math.max(other[0], this.max[0]), Math.max(other[1], this.max[1])];
+    }
+    return this;
   }
 
   /** Returns a new Extent representing the current extent

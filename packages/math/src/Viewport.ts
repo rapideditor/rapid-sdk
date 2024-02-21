@@ -220,9 +220,7 @@ export class Viewport {
     const extent = new Extent();
 
     for (let i = 0; i < polygon.length - 1; i++) {  // skip last point, it's first point repeated
-      const loc: Vec2 = this.unproject(polygon[i]);
-      extent.min = [Math.min(loc[0], extent.min[0]), Math.min(loc[1], extent.min[1])];
-      extent.max = [Math.max(loc[0], extent.max[0]), Math.max(loc[1], extent.max[1])];
+      extent.extendSelf(this.unproject(polygon[i]));
     }
     return extent;
   }
