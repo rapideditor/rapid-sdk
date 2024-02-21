@@ -71,8 +71,9 @@ export class Tiler {
    * -180    +180
    *
    * const t0 = new Tiler();
-   * const v0 = new Viewport(128, 128, 128 / Math.PI)  // z0
-   *   .dimensions([[0, 0], [256, 256]]);              // entire world visible
+   * const v0 = new Viewport()
+   *   .transform({ x: 128, y: 128, k: 128 / Math.PI })  // z0
+   *   .dimensions([[0, 0], [256, 256]]);                // entire world visible
    * const result = t0.getTiles(v0);
    *
    * At zoom 1:
@@ -89,8 +90,9 @@ export class Tiler {
    * -180      0     +180
    *
    * const t1 = new Tiler();
-   * const v1 = new Viewport(256, 256, 256 / Math.PI)  // z1
-   *   .dimensions([[0, 0], [512, 512]]);              // entire world visible
+   * const v1 = new Viewport()
+   *   .transform({ x: 256, y: 256, k: 256 / Math.PI })  // z1
+   *   .dimensions([[0, 0], [512, 512]]);                // entire world visible
    * const result = t1.getTiles(v1);
    *
    * At zoom 2:
@@ -115,8 +117,9 @@ export class Tiler {
    * -180     -90      0      +90    +180
    *
    * const t2 = new Tiler();
-   * const v2 = new Viewport(512, 512, 512 / Math.PI)  // z2
-   *   .dimensions([[0, 0], [1024, 1024]]);            // entire world visible
+   * const v2 = new Viewport()
+   *   .transform({ x: 512, y: 512, k: 512 / Math.PI })  // z2
+   *   .dimensions([[0, 0], [1024, 1024]]);              // entire world visible
    * const result = t2.getTiles(v2);
    *```
    */
