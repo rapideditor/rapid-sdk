@@ -180,10 +180,10 @@ export class Viewport {
   transform(obj?: any): Transform | Viewport {
     if (obj === undefined) return Object.assign({}, this._transform);  // copy
 
-    if (obj.x)  this._transform.x = +obj.x;
-    if (obj.y)  this._transform.y = +obj.y;
-    if (obj.k)  this._transform.k = clamp(+obj.k, MINK, MAXK);  // constrain to z0..z24
-    if (obj.r)  this._transform.r = wrap(+obj.r, 0, TAU);       // constrain to 0..2π
+    if (obj.x !== undefined)  this._transform.x = +obj.x;
+    if (obj.y !== undefined)  this._transform.y = +obj.y;
+    if (obj.k !== undefined)  this._transform.k = clamp(+obj.k, MINK, MAXK);  // constrain to z0..z24
+    if (obj.r !== undefined)  this._transform.r = wrap(+obj.r, 0, TAU);       // constrain to 0..2π
 
     return this;
   }
