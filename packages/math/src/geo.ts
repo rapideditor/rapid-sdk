@@ -3,13 +3,8 @@
  * @module
  */
 
+import { TAU, DEG2RAD, POLAR_RADIUS, EQUATORIAL_RADIUS } from './constants';
 import { Vec2 } from './vector';
-
-// constants
-const TAU = 2 * Math.PI;
-const DEG2RAD = Math.PI / 180;
-const EQUATORIAL_RADIUS = 6378137.0;
-const POLAR_RADIUS = 6356752.314245179;
 
 
 /** Convert degrees latitude to meters.
@@ -75,7 +70,10 @@ export function geoMetersToLon(m: number, atLat: number): number {
  * ```
  */
 export function geoMetersToOffset(m: Vec2, tileSize: number = 256): Vec2 {
-  return [(m[0] * tileSize) / (TAU * EQUATORIAL_RADIUS), (-m[1] * tileSize) / (TAU * POLAR_RADIUS)];
+  return [
+    (m[0] * tileSize) / (TAU * EQUATORIAL_RADIUS),
+    (-m[1] * tileSize) / (TAU * POLAR_RADIUS)
+  ];
 }
 
 

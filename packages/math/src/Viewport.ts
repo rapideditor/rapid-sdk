@@ -3,34 +3,12 @@
  * @module
  */
 
+import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MIN_K, MAX_K, MIN_PHI, MAX_PHI } from './constants';
 import { Extent } from './Extent';
+import { numClamp, numWrap } from './number';
 import { geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
 import { Vec2, vecRotate } from './vector';
-
-// constants
-const TAU = 2 * Math.PI;
-const DEG2RAD = Math.PI / 180;
-const RAD2DEG = 180 / Math.PI;
-const HALF_PI = Math.PI / 2;
-
-const TILESIZE = 256;
-const MINZOOM = 0;
-const MAXZOOM = 24;
-const MINK = geoZoomToScale(MINZOOM, TILESIZE);
-const MAXK = geoZoomToScale(MAXZOOM, TILESIZE);
-
-const MAXPHI = 2 * Math.atan(Math.exp(Math.PI)) - HALF_PI;  // 85.0511287798 in radians
-const MINPHI = -MAXPHI;
-
-function clamp(num: number, min: number, max: number): number {
-  return Math.max(min, Math.min(num, max));
-}
-
-function wrap(num: number, min: number, max: number): number {
-  const d = max - min;
-  return ((num - min) % d + d) % d + min;
-}
 
 
 /** The parameters that define the viewport */
@@ -61,8 +39,8 @@ export class Viewport {
     this._transform = {
       x: transform?.x || 0,
       y: transform?.y || 0,
-      k: clamp(transform?.k || 256 / Math.PI, MINK, MAXK),   // constrain to z0..z24, default z1
-      r: wrap(transform?.r || 0, 0, TAU)                     // constrain to 0..2π
+      k: numClamp(transform?.k || 256 / Math.PI, MIN_K, MAX_K),   // constrain to z0..z24, default z1
+      r: numWrap(transform?.r || 0, 0, TAU)                       // constrain to 0..2π
     };
 
     this._dimensions = dimensions ? new Extent(dimensions) : new Extent([0, 0], [0, 0]);
@@ -82,7 +60,7 @@ export class Viewport {
   project(loc: Vec2): Vec2 {
     const { x, y, k, r } = this._transform;
     const lambda: number = loc[0] * DEG2RAD;
-    const phi: number = clamp(loc[1] * DEG2RAD, MINPHI, MAXPHI);
+    const phi: number = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
     const mercatorX: number = lambda
     const mercatorY: number = Math.log(Math.tan((HALF_PI + phi) / 2));
     const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
@@ -110,7 +88,7 @@ export class Viewport {
       point = vecRotate(point, -r, this._dimensions.center());
     }
     const mercatorX: number = (point[0] - x) / k;
-    const mercatorY: number = clamp((y - point[1]) / k, -Math.PI, Math.PI);
+    const mercatorY: number = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
     const lambda: number = mercatorX;
     const phi: number = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
     return [lambda * RAD2DEG, phi * RAD2DEG];
@@ -145,7 +123,7 @@ export class Viewport {
    */
   scale(val?: number): number | Viewport {
     if (val === undefined) return this._transform.k;
-    this._transform.k = clamp(+val, MINK, MAXK);   // constrain to z0..z24
+    this._transform.k = numClamp(+val, MIN_K, MAX_K);   // constrain to z0..z24
     return this;
   }
 
@@ -162,7 +140,7 @@ export class Viewport {
    */
   rotate(val?: number): number | Viewport {
     if (val === undefined) return this._transform.r;
-    this._transform.r = wrap(+val, 0, TAU);   // constrain to 0..2π
+    this._transform.r = numWrap(+val, 0, TAU);   // constrain to 0..2π
     return this;
   }
 
@@ -182,8 +160,8 @@ export class Viewport {
 
     if (obj.x !== undefined)  this._transform.x = +obj.x;
     if (obj.y !== undefined)  this._transform.y = +obj.y;
-    if (obj.k !== undefined)  this._transform.k = clamp(+obj.k, MINK, MAXK);  // constrain to z0..z24
-    if (obj.r !== undefined)  this._transform.r = wrap(+obj.r, 0, TAU);       // constrain to 0..2π
+    if (obj.k !== undefined)  this._transform.k = numClamp(+obj.k, MIN_K, MAX_K);  // constrain to z0..z24
+    if (obj.r !== undefined)  this._transform.r = numWrap(+obj.r, 0, TAU);         // constrain to 0..2π
 
     return this;
   }

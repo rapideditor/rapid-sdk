@@ -20,12 +20,16 @@ import { Extent } from '@rapid-sdk/math';
 
 ## Packages
 
-- 📦 Extent class for creating bounding boxes
+- ⭐️ Math Constants
 - 🌐 Geographic (spherical) math functions
 - 📈 Geometric (planar) math functions
+- 🔢 Number math functions
+- 📐 Vector math functions
+
+- 📦 Extent class for creating bounding boxes
 - 🀄️ Tiler class for splitting the world into rectangular tiles
 - 📺 Viewport class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
-- 📐 Vector (coordinate) math functions
+
 
 
 ## Contributing

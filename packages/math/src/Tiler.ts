@@ -8,7 +8,9 @@
 import { Extent } from './Extent';
 import { Transform, Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
+import { numClamp } from './number';
 import { Vec2, Vec3 } from './vector';
+
 
 /** Contains essential information about a tile */
 export interface Tile {
@@ -31,9 +33,6 @@ export interface TileResult {
   // scale: number;
 }
 
-function clamp(num: number, min: number, max: number): number {
-  return Math.max(min, Math.min(num, max));
-}
 
 function range(start: number, end: number): number[] {
   return Array.from(Array(1 + end - start).keys()).map((v) => start + v);
@@ -129,7 +128,7 @@ export class Tiler {
     const scale: number = viewport.scale() as number;
 
     const zFrac: number = geoScaleToZoom(scale, this._tileSize);
-    const z: number = clamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
+    const z: number = numClamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
     const minTile: number = 0;
     const maxTile: number = Math.pow(2, z) - 1;
 
@@ -148,12 +147,12 @@ export class Tiler {
     const worldViewport = new Viewport({ x: worldOrigin, y: worldOrigin, k: worldScale });
 
     const cols: number[] = range(
-      clamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
-      clamp(Math.floor(viewMax[0] / k) + this._margin, minTile, maxTile)
+      numClamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
+      numClamp(Math.floor(viewMax[0] / k) + this._margin, minTile, maxTile)
     );
     const rows: number[] = range(
-      clamp(Math.floor(viewMin[1] / k) - this._margin, minTile, maxTile),
-      clamp(Math.floor(viewMax[1] / k) + this._margin, minTile, maxTile)
+      numClamp(Math.floor(viewMin[1] / k) - this._margin, minTile, maxTile),
+      numClamp(Math.floor(viewMax[1] / k) + this._margin, minTile, maxTile)
     );
 
     let tiles: Tile[] = [];
