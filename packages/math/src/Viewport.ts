@@ -57,14 +57,14 @@ export class Viewport {
    * view.project([-180, 85.0511287798]);   // returns [-256, -256]
    * ```
    */
-  project(loc: Vec2): Vec2 {
+  project(loc: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
     const lambda: number = loc[0] * DEG2RAD;
     const phi: number = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
     const mercatorX: number = lambda
     const mercatorY: number = Math.log(Math.tan((HALF_PI + phi) / 2));
     const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
-    if (r) {
+    if (includeRotation && r) {
       return vecRotate(point, r, this._dimensions.center());
     } else {
       return point;
@@ -82,9 +82,9 @@ export class Viewport {
    * view.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    * ```
    */
-  unproject(point: Vec2): Vec2 {
+  unproject(point: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
-    if (r) {
+    if (includeRotation && r) {
       point = vecRotate(point, -r, this._dimensions.center());
     }
     const mercatorX: number = (point[0] - x) / k;
@@ -198,7 +198,7 @@ export class Viewport {
     const extent = new Extent();
 
     for (let i = 0; i < polygon.length - 1; i++) {  // skip last point, it's first point repeated
-      extent.extendSelf(this.unproject(polygon[i]));
+      extent.extendSelf(this.unproject(polygon[i], true));
     }
     return extent;
   }
