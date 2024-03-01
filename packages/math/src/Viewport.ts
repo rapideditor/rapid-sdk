@@ -8,7 +8,7 @@ import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
 import { geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
-import { Vec2, vecRotate } from './vector';
+import { Vec2, vecRotate, vecSubtract } from './vector';
 
 
 /** The parameters that define the viewport */
@@ -20,7 +20,37 @@ export interface Transform {
 }
 
 
-/** Class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates */
+/** `Viewport` is a class for managing the state of the viewer
+ *   and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
+ *
+ *  Original geographic coordinate data is in WGS84 (Lon,Lat)
+ *  and "projected" into screen space (x,y) using the Web Mercator projection
+ *  see: https://en.wikipedia.org/wiki/Web_Mercator_projection
+ *
+ *  The parameters of this projection are stored in `_transform`
+ *   `x`,`y` - translation, (from top-left Mercator coordinate 0,0, to top-left screen coordinate)
+ *   `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
+ *   `r`     - rotation, optionally applied post-projection to change the map bearing away from north-up
+ *
+ *  The viewport (what a user can see) is defined by:
+ *  A rectangular Extent A-B-C-D (stored in `_dimensions`), representing the user's screen.
+ *  By default, the origin of the screen space is top-left coordinate 'A' [0,0].
+ *  When a rotation is applied, the visible extent extends to E-F-G-H and top-left coordinate 'E'.
+ *
+   *        |  E__
+   *        |r/   ''--..__
+   *        |/           r''--..__
+   *  [0,0] A=======================B__
+   *       /‖                       ‖  ''F         N
+   *      /r‖                       ‖   /      W._/
+   *     /  ‖           +           ‖  /         /'-E
+   *    /   ‖                       ‖r/         S
+   *   H__  ‖                       ‖/
+   *      ''D=======================C [w,h]
+   *           ''--..__r           /|
+   *                   ''--,,__   /r|
+   *                           ''G  |
+ */
 export class Viewport {
   private _transform: Transform;
   private _dimensions: Extent;
@@ -44,6 +74,8 @@ export class Viewport {
     };
 
     this._dimensions = dimensions ? new Extent(dimensions) : new Extent([0, 0], [0, 0]);
+
+
   }
 
 
@@ -184,17 +216,66 @@ export class Viewport {
   }
 
 
-  /** Gets the viewport's visible extent in WGS84 coordinates (lon/lat)
-   * @returns Extent in WGS84 coordinates (lon,lat)
-   * @example ```
-   * const view = new Viewport()
-   *   .transform({ x: 150, y: 100, k: geoZoomToScale(1) })
-   *   .dimensions([[0, 0], [300, 200]]);
-   * const result = view.extent();
-   * ```
+  /** Gets the viewport's visible extent as a polygon in screen coords wound counterclockwise
+   * see https://math.stackexchange.com/questions/1628657/dimensions-of-a-rectangle-containing-a-rotated-rectangle
+   *
+   *        |  E__
+   *        |r/   ''--..__
+   *        |/           r''--..__
+   *  [0,0] A=======================B__
+   *       /‖                       ‖  ''F         N
+   *      /r‖                       ‖   /      W._/
+   *     /  ‖           +           ‖  /         /'-E
+   *    /   ‖                       ‖r/         S
+   *   H__  ‖                       ‖/
+   *      ''D=======================C [w,h]
+   *           ''--..__r           /|
+   *                   ''--,,__   /r|
+   *                           ''G  |
    */
+  polygon(): Vec2[] {
+    const r = this._transform.r;
+    if (r) {
+      const A: Vec2 = this._dimensions.min;
+      const B: Vec2 = [this._dimensions.max[0], this._dimensions.min[1]];
+      const C: Vec2 = this._dimensions.max;
+      const D: Vec2 = [this._dimensions.min[0], this._dimensions.max[1]];
+
+      const [w, h] = vecSubtract(this._dimensions.max, this._dimensions.min);
+      const AE: number = Math.abs(w * Math.sin(r));
+      const CF: number = Math.abs(h * Math.cos(r));
+
+      const E: Vec2 = [A[0] + (AE * Math.sin(r)), A[1] - (AE * Math.cos(r))];
+      const F: Vec2 = [C[0] + (CF * Math.sin(r)), C[1] - (CF * Math.cos(r))];
+      const G: Vec2 = [C[0] + (AE * -Math.sin(r)), C[1] - (AE * -Math.cos(r))];
+      const H: Vec2 = [A[0] + (CF * -Math.sin(r)), A[1] - (CF * -Math.cos(r))];
+
+      return [E, H, G, F, E];
+
+    } else {
+      return this._dimensions.polygon();
+    }
+  }
+
+
+  // needs better name
+  realDimensions(): Vec2 {
+    const [w, h] = vecSubtract(this._dimensions.max, this._dimensions.min);
+    const r = this._transform.r;
+
+    if (r) {
+      const w2 = Math.abs(w * Math.cos(r)) + Math.abs(h * Math.sin(r));
+      const h2 = Math.abs(h * Math.cos(r)) + Math.abs(w * Math.sin(r));
+      return [ Math.max(w, w2), Math.max(h, h2) ];
+    } else {
+      return [w, h];
+    }
+  }
+
+
+  // real extent
   extent(): Extent {
-    const polygon = this._dimensions.polygon();
+    const polygon = this.polygon();
     const extent = new Extent();
 
     for (let i = 0; i < polygon.length - 1; i++) {  // skip last point, it's first point repeated

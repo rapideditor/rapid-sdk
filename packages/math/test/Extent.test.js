@@ -96,7 +96,7 @@ describe('math/extent', () => {
   });
 
   describe('#polygon', () => {
-    it('returns the extent as a polygon', () => {
+    it('returns the extent as a polygon wound counterclockwise', () => {
       const e = new Extent([0, 0], [5, 10]);
       const result = e.polygon();
       assert.ok(result instanceof Array);
