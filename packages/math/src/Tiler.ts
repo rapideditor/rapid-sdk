@@ -72,7 +72,7 @@ export class Tiler {
    * const t0 = new Tiler();
    * const v0 = new Viewport()
    *   .transform({ x: 128, y: 128, k: 128 / Math.PI })  // z0
-   *   .dimensions([[0, 0], [256, 256]]);                // entire world visible
+   *   .dimensions([256, 256]);                          // entire world visible
    * const result = t0.getTiles(v0);
    *
    * At zoom 1:
@@ -91,7 +91,7 @@ export class Tiler {
    * const t1 = new Tiler();
    * const v1 = new Viewport()
    *   .transform({ x: 256, y: 256, k: 256 / Math.PI })  // z1
-   *   .dimensions([[0, 0], [512, 512]]);                // entire world visible
+   *   .dimensions([512, 512]);                          // entire world visible
    * const result = t1.getTiles(v1);
    *
    * At zoom 2:
@@ -118,12 +118,12 @@ export class Tiler {
    * const t2 = new Tiler();
    * const v2 = new Viewport()
    *   .transform({ x: 512, y: 512, k: 512 / Math.PI })  // z2
-   *   .dimensions([[0, 0], [1024, 1024]]);              // entire world visible
+   *   .dimensions([1024, 1024]);                        // entire world visible
    * const result = t2.getTiles(v2);
    *```
    */
   getTiles(viewport: Viewport): TileResult {
-    const dimensions: Vec2[] = viewport.dimensions() as Vec2[];
+    const [w, h]: Vec2 = viewport.realDimensions() as Vec2;
     const translate: Vec2 = viewport.translate() as Vec2;
     const scale: number = viewport.scale() as number;
 
@@ -137,8 +137,8 @@ export class Tiler {
 
     // perform calculations in "world" pixel coordinates, where origin is top left viewport pixel
     const origin: Vec2 = [scale * Math.PI - translate[0], scale * Math.PI - translate[1]];
-    const viewMin: Vec2 = [origin[0] + dimensions[0][0], origin[1] + dimensions[0][1]];
-    const viewMax: Vec2 = [origin[0] + dimensions[1][0], origin[1] + dimensions[1][1]];
+    const viewMin: Vec2 = [origin[0], origin[1]];
+    const viewMax: Vec2 = [origin[0] + w, origin[1] + h];
     const viewExtent: Extent = new Extent(viewMin, viewMax);
 
     // a viewport centered at Null Island, so we can unproject back to lon/lat later
@@ -205,7 +205,7 @@ export class Tiler {
    * @example ```
    * const t = new Tiler();
    * const v = new Viewport(256, 256, 256 / Math.PI)  // z1
-   *   .dimensions([[0, 0], [512, 512]]);             // entire world visible
+   *   .dimensions([512, 512]);                       // entire world visible
    * const result = t.getTiles(v);
    * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
    * ```

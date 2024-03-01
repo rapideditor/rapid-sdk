@@ -8,7 +8,7 @@ import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
 import { geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
-import { Vec2, vecRotate, vecSubtract } from './vector';
+import { Vec2, vecRotate, vecScale, vecSubtract } from './vector';
 
 
 /** The parameters that define the viewport */
@@ -40,20 +40,20 @@ export interface Transform {
    *        |  E__
    *        |r/   ''--..__
    *        |/           r''--..__
-   *  [0,0] A=======================B__
-   *       /‖                       ‖  ''F         N
+   *  [0,0] A=======================D__
+   *       /‖                       ‖  ''H         N
    *      /r‖                       ‖   /      W._/
    *     /  ‖           +           ‖  /         /'-E
    *    /   ‖                       ‖r/         S
-   *   H__  ‖                       ‖/
-   *      ''D=======================C [w,h]
+   *   D__  ‖                       ‖/
+   *      ''B=======================C [w,h]
    *           ''--..__r           /|
    *                   ''--,,__   /r|
    *                           ''G  |
  */
 export class Viewport {
   private _transform: Transform;
-  private _dimensions: Extent;
+  private _dimensions: Vec2;
 
 
   /** Constructs a new Viewport
@@ -65,7 +65,7 @@ export class Viewport {
    * const view2 = new Viewport({x: 20, y: 30, k: 512 / Math.PI });
    * ```
    */
-  constructor(transform?: any, dimensions?: Extent) {
+  constructor(transform?: any, dimensions?: Vec2) {
     this._transform = {
       x: transform?.x || 0,
       y: transform?.y || 0,
@@ -73,9 +73,7 @@ export class Viewport {
       r: numWrap(transform?.r || 0, 0, TAU)                       // constrain to 0..2π
     };
 
-    this._dimensions = dimensions ? new Extent(dimensions) : new Extent([0, 0], [0, 0]);
-
-
+    this._dimensions = dimensions || [0, 0];
   }
 
 
@@ -97,7 +95,8 @@ export class Viewport {
     const mercatorY: number = Math.log(Math.tan((HALF_PI + phi) / 2));
     const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
     if (includeRotation && r) {
-      return vecRotate(point, r, this._dimensions.center());
+      const center = vecScale(this._dimensions, 0.5);
+      return vecRotate(point, r, center);
     } else {
       return point;
     }
@@ -117,7 +116,8 @@ export class Viewport {
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
     if (includeRotation && r) {
-      point = vecRotate(point, -r, this._dimensions.center());
+      const center = vecScale(this._dimensions, 0.5);
+      point = vecRotate(point, -r, center);
     }
     const mercatorX: number = (point[0] - x) / k;
     const mercatorY: number = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
@@ -204,14 +204,14 @@ export class Viewport {
    * @returns When argument is provided, sets the viewport min/max dimensions and returns `this` for method chaining.
    * Returns the viewport min/max dimensions otherwise
    * @example ```
-   * const view = new Viewport().dimensions([[0, 0], [800, 600]]);    // sets viewport dimensions
-   * p.dimensions();   // gets viewport dimensions - returns [[0, 0], [800, 600]]
+   * const view = new Viewport().dimensions([800, 600]);    // sets viewport dimensions
+   * p.dimensions();   // gets viewport dimensions - returns [800, 600]
    * ```
    */
-  dimensions(val?: Vec2[]): Vec2[] | Viewport {
-    if (val === undefined) return [this._dimensions.min, this._dimensions.max];
-    this._dimensions.min = val[0];
-    this._dimensions.max = val[1];
+  dimensions(val?: Vec2): Vec2 | Viewport {
+    if (val === undefined) return this._dimensions;
+    this._dimensions[0] = +val[0];
+    this._dimensions[1] = +val[1];
     return this;
   }
 
@@ -222,50 +222,57 @@ export class Viewport {
    *        |  E__
    *        |r/   ''--..__
    *        |/           r''--..__
-   *  [0,0] A=======================B__
-   *       /‖                       ‖  ''F         N
+   *  [0,0] A=======================D__
+   *       /‖                       ‖  ''H         N
    *      /r‖                       ‖   /      W._/
    *     /  ‖           +           ‖  /         /'-E
    *    /   ‖                       ‖r/         S
-   *   H__  ‖                       ‖/
-   *      ''D=======================C [w,h]
+   *   F__  ‖                       ‖/
+   *      ''B=======================C [w,h]
    *           ''--..__r           /|
    *                   ''--,,__   /r|
    *                           ''G  |
    */
   polygon(): Vec2[] {
+    const [w, h] = this._dimensions;
     const r = this._transform.r;
+
     if (r) {
-      const A: Vec2 = this._dimensions.min;
-      const B: Vec2 = [this._dimensions.max[0], this._dimensions.min[1]];
-      const C: Vec2 = this._dimensions.max;
-      const D: Vec2 = [this._dimensions.min[0], this._dimensions.max[1]];
+      const sinr = Math.abs(Math.sin(r));
+      const cosr = Math.abs(Math.cos(r));
 
-      const [w, h] = vecSubtract(this._dimensions.max, this._dimensions.min);
-      const AE: number = Math.abs(w * Math.sin(r));
-      const CF: number = Math.abs(h * Math.cos(r));
+      const ae: number = w * sinr;
+      const af: number = h * cosr;
 
-      const E: Vec2 = [A[0] + (AE * Math.sin(r)), A[1] - (AE * Math.cos(r))];
-      const F: Vec2 = [C[0] + (CF * Math.sin(r)), C[1] - (CF * Math.cos(r))];
-      const G: Vec2 = [C[0] + (AE * -Math.sin(r)), C[1] - (AE * -Math.cos(r))];
-      const H: Vec2 = [A[0] + (CF * -Math.sin(r)), A[1] - (CF * -Math.cos(r))];
+      const ex: number = ae * sinr;
+      const ey: number = ae * cosr;
+      const fx: number = af * sinr;
+      const fy: number = af * cosr;
 
-      return [E, H, G, F, E];
+      const E: Vec2 = [ex, -ey];
+      const F: Vec2 = [-fx, fy];
+      const G: Vec2 = [w - ex, h + ey];
+      const H: Vec2 = [w + fx, h - fy];
 
+      return [E, F, G, H, E];
     } else {
-      return this._dimensions.polygon();
+      return [[0, 0], [0, h], [w, h], [0, w], [0, 0]];
     }
   }
 
 
   // needs better name
   realDimensions(): Vec2 {
-    const [w, h] = vecSubtract(this._dimensions.max, this._dimensions.min);
+    const [w, h] = this._dimensions;
     const r = this._transform.r;
 
     if (r) {
-      const w2 = Math.abs(w * Math.cos(r)) + Math.abs(h * Math.sin(r));
-      const h2 = Math.abs(h * Math.cos(r)) + Math.abs(w * Math.sin(r));
+      const sinr = Math.abs(Math.sin(r));
+      const cosr = Math.abs(Math.cos(r));
+
+      const w2 = w * cosr + h * sinr;    // ed + fb
+      const h2 = h * cosr + w * sinr;    // af + ae
+
       return [ Math.max(w, w2), Math.max(h, h2) ];
     } else {
       return [w, h];

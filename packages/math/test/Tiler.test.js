@@ -38,7 +38,7 @@ describe('math/tiler', () => {
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
             .transform({ x: HALFTS, y: HALFTS, k: k })
-            .dimensions([[0, 0], [TS, TS]]); // entire world visible
+            .dimensions([TS, TS]); // entire world visible
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -96,7 +96,7 @@ describe('math/tiler', () => {
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
             .transform({ x: TS, y: TS, k: k })
-            .dimensions([[0, 0], [TWOTS, TWOTS]]); // entire world visible
+            .dimensions([TWOTS, TWOTS]); // entire world visible
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -181,7 +181,7 @@ describe('math/tiler', () => {
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
             .transform({ x: TWOTS, y: TWOTS, k: k })
-            .dimensions([[0, 0], [FOURTS, FOURTS]]); // entire world visible
+            .dimensions([FOURTS, FOURTS]); // entire world visible
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -265,7 +265,7 @@ describe('math/tiler', () => {
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
             .transform({ x: HALFTS, y: HALFTS, k: k })
-            .dimensions([[0, 0], [TS, TS]]);
+            .dimensions([TS, TS]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -306,7 +306,7 @@ describe('math/tiler', () => {
           const t = (new Tiler().tileSize(TS)).margin(1);
           const v = new Viewport()
             .transform({ x: HALFTS, y: HALFTS, k: k })
-            .dimensions([[0, 0], [TS, TS]]);
+            .dimensions([TS, TS]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -359,8 +359,8 @@ describe('math/tiler', () => {
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = new Tiler().tileSize(TS);
           const v = new Viewport()
-            .transform({ x: 0, y: HALFTS, k: k })
-            .dimensions([[1, 0], [TS - 2, TS]]);
+            .transform({ x: -1, y: HALFTS, k: k })
+            .dimensions([TS - 2, TS]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -400,8 +400,8 @@ describe('math/tiler', () => {
           const k = (TS * Math.pow(2, 2)) / TAU; // z2
           const t = (new Tiler().tileSize(TS)).margin(1);
           const v = new Viewport()
-            .transform({ x: 0, y: HALFTS, k: k })
-            .dimensions([[1, 0], [TS - 2, TS]]);
+            .transform({ x: -1, y: HALFTS, k: k })
+            .dimensions([TS - 2, TS]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -455,7 +455,7 @@ describe('math/tiler', () => {
           const t = ((new Tiler().tileSize(TS)).margin(1)).skipNullIsland(true);
           const v = new Viewport()
             .transform({ x: -HALFTS, y: HALFTS, k: k })
-            .dimensions([[0, 0], [TS, TS]]);
+            .dimensions([TS, TS]);
 
           const result = t.getTiles(v);
           const tiles = result.tiles;
@@ -493,7 +493,7 @@ describe('math/tiler', () => {
             const t = new Tiler().tileSize(TS);
             const v = new Viewport()
               .transform({ x: HALFTS, y: HALFTS, k: k })
-              .dimensions([[0, 0], [TS, TS]]);
+              .dimensions([TS, TS]);
 
             const result = t.getTiles(v);
             const geojson = t.getGeoJSON(result);

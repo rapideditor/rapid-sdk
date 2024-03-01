@@ -47,8 +47,8 @@ describe('math/viewport', () => {
     });
 
     it('creates a Viewport with a dimensions param', () => {
-      const view = new Viewport(null, new Extent([0, 0], [800, 600]));
-      assert.deepEqual(view.dimensions(), [[0, 0], [800, 600]]);
+      const view = new Viewport(null, [800, 600]);
+      assert.deepEqual(view.dimensions(), [800, 600]);
     });
   });
 
@@ -266,8 +266,8 @@ describe('math/viewport', () => {
 
   describe('#dimensions', () => {
     it('sets/gets dimensions', () => {
-      const view = new Viewport().dimensions([[0, 0], [800, 600]]);
-      assert.deepEqual(view.dimensions(), [[0, 0], [800, 600]]);
+      const view = new Viewport().dimensions([800, 600]);
+      assert.deepEqual(view.dimensions(), [800, 600]);
     });
   });
 
@@ -290,7 +290,7 @@ describe('math/viewport', () => {
       //
       const view = new Viewport()
         .transform({ x: 150, y: 100, k: geoZoomToScale(1) })
-        .dimensions([[0, 0], [300, 200]]);
+        .dimensions([300, 200]);
       const result = view.extent();
       assert.ok(result instanceof Extent);
       assert.closeTo(result.min[0], -105.46875);
@@ -317,7 +317,7 @@ describe('math/viewport', () => {
       //
       const view = new Viewport()
         .transform({ x: 150, y: 100, k: geoZoomToScale(1), r: Math.PI / 2 }) // quarter turn clockwise
-        .dimensions([[0, 0], [300, 200]]);
+        .dimensions([300, 200]);
       const result = view.extent();
       assert.ok(result instanceof Extent);
       assert.closeTo(result.min[0], -70.3125);
