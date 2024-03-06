@@ -123,7 +123,7 @@ export class Tiler {
    *```
    */
   getTiles(viewport: Viewport): TileResult {
-    const [w, h]: Vec2 = viewport.realDimensions() as Vec2;
+    const [w, h]: Vec2 = viewport.visibleDimensions() as Vec2;
     const translate: Vec2 = viewport.translate() as Vec2;
     const scale: number = viewport.scale() as number;
 

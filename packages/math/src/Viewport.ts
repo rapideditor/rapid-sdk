@@ -8,7 +8,7 @@ import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
 import { geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
-import { Vec2, vecRotate, vecScale, vecSubtract } from './vector';
+import { Vec2, vecRotate, vecScale, vecSubtract, vecCeil } from './vector';
 
 
 /** The parameters that define the viewport */
@@ -37,19 +37,19 @@ export interface Transform {
  *  By default, the origin of the screen space is top-left coordinate 'A' [0,0].
  *  When a rotation is applied, the visible extent extends to E-F-G-H and top-left coordinate 'E'.
  *
-   *        |  E__
-   *        |r/   ''--..__
-   *        |/           r''--..__
-   *  [0,0] A=======================D__
-   *       /‖                       ‖  ''H         N
-   *      /r‖                       ‖   /      W._/
-   *     /  ‖           +           ‖  /         /'-E
-   *    /   ‖                       ‖r/         S
-   *   D__  ‖                       ‖/
-   *      ''B=======================C [w,h]
-   *           ''--..__r           /|
-   *                   ''--,,__   /r|
-   *                           ''G  |
+ *        |  E__
+ *        |r/   ''--..__
+ *        |/           r''--..__
+ *  [0,0] A=======================D__
+ *       /‖                       ‖  ''H         N
+ *      /r‖                       ‖   /      W._/
+ *     /  ‖           +           ‖  /         /'-E
+ *    /   ‖                       ‖r/         S
+ *   D__  ‖                       ‖/
+ *      ''B=======================C [w,h]
+ *           ''--..__r           /|
+ *                   ''--,,__   /r|
+ *                           ''G  |
  */
 export class Viewport {
   private _transform: Transform;
@@ -89,11 +89,13 @@ export class Viewport {
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
-    const lambda: number = loc[0] * DEG2RAD;
-    const phi: number = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const mercatorX: number = lambda
-    const mercatorY: number = Math.log(Math.tan((HALF_PI + phi) / 2));
+
+    const lambda = loc[0] * DEG2RAD;
+    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
+    const mercatorX = lambda
+    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
     const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
+
     if (includeRotation && r) {
       const center = vecScale(this._dimensions, 0.5);
       return vecRotate(point, r, center);
@@ -115,14 +117,17 @@ export class Viewport {
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
+
     if (includeRotation && r) {
       const center = vecScale(this._dimensions, 0.5);
       point = vecRotate(point, -r, center);
     }
-    const mercatorX: number = (point[0] - x) / k;
-    const mercatorY: number = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-    const lambda: number = mercatorX;
-    const phi: number = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
+
+    const mercatorX = (point[0] - x) / k;
+    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
+    const lambda = mercatorX;
+    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
+
     return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
@@ -132,8 +137,8 @@ export class Viewport {
    * @returns When argument is provided, sets the `x`,`y` translation values and returns `this` for method chaining.
    * Returns the `x`,`y` translation values otherwise
    * @example ```
-   * const p = new Viewport().translate([20, 30]);    // sets translation
-   * p.translate();   // gets translation - returns [20, 30]
+   * const view = new Viewport().translate([20, 30]);    // sets translation
+   * view.translate();   // gets translation - returns [20, 30]
    * ```
    */
   translate(val?: Vec2): Vec2 | Viewport {
@@ -150,7 +155,7 @@ export class Viewport {
    * Returns the scale factor otherwise
    * @example ```
    * const view = new Viewport().scale(512 / Math.PI);   // sets scale
-   * p.scale();   // gets scale - returns 512 / Math.PI;
+   * view.scale();   // gets scale - returns 512 / Math.PI;
    * ```
    */
   scale(val?: number): number | Viewport {
@@ -167,7 +172,7 @@ export class Viewport {
    * Returns the rotation factor otherwise
    * @example ```
    * const view = new Viewport().rotate(Math.PI / 2);   // sets rotation
-   * p.rotate();   // gets rotation - returns Math.PI / 2;
+   * view.rotate();   // gets rotation - returns Math.PI / 2;
    * ```
    */
   rotate(val?: number): number | Viewport {
@@ -184,7 +189,7 @@ export class Viewport {
    * @example ```
    * const t = { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 };
    * const view = new Viewport().transform(t);    // sets `x`,`y`,`k` from given Transform object
-   * p.transform();   // gets transform - returns { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 }
+   * view.transform();   // gets transform - returns { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 }
    * ```
    */
   transform(obj?: any): Transform | Viewport {
@@ -199,25 +204,38 @@ export class Viewport {
   }
 
 
-  /** Sets/Gets the current viewport dimensions
+  /** Sets/Gets the screen dimensions
    * @param val viewport dimensions
-   * @returns When argument is provided, sets the viewport min/max dimensions and returns `this` for method chaining.
-   * Returns the viewport min/max dimensions otherwise
+   * @returns When argument is provided, sets the viewport max dimensions and returns `this` for method chaining.
+   * Returns the viewport max dimensions otherwise
    * @example ```
-   * const view = new Viewport().dimensions([800, 600]);    // sets viewport dimensions
-   * p.dimensions();   // gets viewport dimensions - returns [800, 600]
+   * const view = new Viewport().dimensions([800, 600]);  // sets viewport dimensions
+   * view.dimensions();   // returns [800, 600]
    * ```
    */
   dimensions(val?: Vec2): Vec2 | Viewport {
     if (val === undefined) return this._dimensions;
-    this._dimensions[0] = +val[0];
-    this._dimensions[1] = +val[1];
+    this._dimensions = vecCeil([+val[0], +val[1]]);
     return this;
   }
 
 
-  /** Gets the viewport's visible extent as a polygon in screen coords wound counterclockwise
-   * see https://math.stackexchange.com/questions/1628657/dimensions-of-a-rectangle-containing-a-rotated-rectangle
+  /** Returns the screen center coordinate
+   * @returns viewport screen center coordinate
+   * @example ```
+   * const view = new Viewport().dimensions([800, 600]);
+   * view.center();   // returns [400, 300]
+   * ```
+   */
+  center(): Vec2 {
+    return vecScale(this._dimensions, 0.5);
+  }
+
+
+  /** Returns the viewport's visible polygon in screen coords wound counterclockwise.
+   *  We construct a rotated rectangle that contains the original screen rectangle.
+   *  The rotated rectangle has the same center point as the original screen rectangle.
+   *  see https://math.stackexchange.com/questions/1628657/dimensions-of-a-rectangle-containing-a-rotated-rectangle
    *
    *        |  E__
    *        |r/   ''--..__
@@ -227,13 +245,13 @@ export class Viewport {
    *      /r‖                       ‖   /      W._/
    *     /  ‖           +           ‖  /         /'-E
    *    /   ‖                       ‖r/         S
-   *   F__  ‖                       ‖/
+   *   D__  ‖                       ‖/
    *      ''B=======================C [w,h]
    *           ''--..__r           /|
    *                   ''--,,__   /r|
    *                           ''G  |
    */
-  polygon(): Vec2[] {
+  visiblePolygon(): Vec2[] {
     const [w, h] = this._dimensions;
     const r = this._transform.r;
 
@@ -241,13 +259,13 @@ export class Viewport {
       const sinr = Math.abs(Math.sin(r));
       const cosr = Math.abs(Math.cos(r));
 
-      const ae: number = w * sinr;
-      const af: number = h * cosr;
+      const ae = w * sinr;
+      const af = h * cosr;
 
-      const ex: number = ae * sinr;
-      const ey: number = ae * cosr;
-      const fx: number = af * sinr;
-      const fy: number = af * cosr;
+      const ex = ae * sinr;
+      const ey = ae * cosr;
+      const fx = af * sinr;
+      const fy = af * cosr;
 
       const E: Vec2 = [ex, -ey];
       const F: Vec2 = [-fx, fy];
@@ -261,8 +279,7 @@ export class Viewport {
   }
 
 
-  // needs better name
-  realDimensions(): Vec2 {
+  visibleDimensions(): Vec2 {
     const [w, h] = this._dimensions;
     const r = this._transform.r;
 
@@ -273,16 +290,22 @@ export class Viewport {
       const w2 = w * cosr + h * sinr;    // ed + fb
       const h2 = h * cosr + w * sinr;    // af + ae
 
-      return [ Math.max(w, w2), Math.max(h, h2) ];
+      return vecCeil([w2, h2]);
     } else {
       return [w, h];
     }
   }
 
 
-  // real extent
+  /** Gets the visible center coordinate
+   */
+  visibleCenter(): Vec2 {
+    return vecScale(this.visibleDimensions(), 0.5);
+  }
+
+
   extent(): Extent {
-    const polygon = this.polygon();
+    const polygon = this.visiblePolygon();
     const extent = new Extent();
 
     for (let i = 0; i < polygon.length - 1; i++) {  // skip last point, it's first point repeated
