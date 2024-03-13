@@ -45,7 +45,7 @@ export interface Transform {
  *      /r‖                       ‖   /      W._/
  *     /  ‖           +           ‖  /         /'-E
  *    /   ‖                       ‖r/         S
- *   D__  ‖                       ‖/
+ *   F__  ‖                       ‖/
  *      ''B=======================C [w,h]
  *           ''--..__r           /|
  *                   ''--,,__   /r|
@@ -70,7 +70,7 @@ export class Viewport {
       x: transform?.x || 0,
       y: transform?.y || 0,
       k: numClamp(transform?.k || 256 / Math.PI, MIN_K, MAX_K),   // constrain to z0..z24, default z1
-      r: numWrap(transform?.r || 0, 0, TAU)                       // constrain to 0..2π
+      r: numWrap(transform?.r || 0, 0, TAU)                       // wrap to 0..2π
     };
 
     this._dimensions = dimensions || [0, 0];
@@ -97,8 +97,7 @@ export class Viewport {
     const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
 
     if (includeRotation && r) {
-      const center = vecScale(this._dimensions, 0.5);
-      return vecRotate(point, r, center);
+      return vecRotate(point, r, this.center());
     } else {
       return point;
     }
@@ -119,8 +118,7 @@ export class Viewport {
     const { x, y, k, r } = this._transform;
 
     if (includeRotation && r) {
-      const center = vecScale(this._dimensions, 0.5);
-      point = vecRotate(point, -r, center);
+      point = vecRotate(point, -r, this.center());
     }
 
     const mercatorX = (point[0] - x) / k;
@@ -177,7 +175,7 @@ export class Viewport {
    */
   rotate(val?: number): number | Viewport {
     if (val === undefined) return this._transform.r;
-    this._transform.r = numWrap(+val, 0, TAU);   // constrain to 0..2π
+    this._transform.r = numWrap(+val, 0, TAU);   // wrap to 0..2π
     return this;
   }
 
@@ -198,7 +196,7 @@ export class Viewport {
     if (obj.x !== undefined)  this._transform.x = +obj.x;
     if (obj.y !== undefined)  this._transform.y = +obj.y;
     if (obj.k !== undefined)  this._transform.k = numClamp(+obj.k, MIN_K, MAX_K);  // constrain to z0..z24
-    if (obj.r !== undefined)  this._transform.r = numWrap(+obj.r, 0, TAU);         // constrain to 0..2π
+    if (obj.r !== undefined)  this._transform.r = numWrap(+obj.r, 0, TAU);         // wrap to 0..2π
 
     return this;
   }
@@ -232,10 +230,11 @@ export class Viewport {
   }
 
 
-  /** Returns the viewport's visible polygon in screen coords wound counterclockwise.
+  /** Returns the viewport's visible polygon (wound counterclockwise)
    *  We construct a rotated rectangle that contains the original screen rectangle.
    *  The rotated rectangle has the same center point as the original screen rectangle.
    *  see https://math.stackexchange.com/questions/1628657/dimensions-of-a-rectangle-containing-a-rotated-rectangle
+   *  The first coordinate in the rotated rectangle is the rotated origin (E)
    *
    *        |  E__
    *        |r/   ''--..__
@@ -245,7 +244,7 @@ export class Viewport {
    *      /r‖                       ‖   /      W._/
    *     /  ‖           +           ‖  /         /'-E
    *    /   ‖                       ‖r/         S
-   *   D__  ‖                       ‖/
+   *   F__  ‖                       ‖/
    *      ''B=======================C [w,h]
    *           ''--..__r           /|
    *                   ''--,,__   /r|
@@ -253,7 +252,7 @@ export class Viewport {
    */
   visiblePolygon(): Vec2[] {
     const [w, h] = this._dimensions;
-    const r = this._transform.r;
+    const r = numWrap(this._transform.r, 0, TAU);  // just in case, wrap to 0..2π
 
     if (r) {
       const sinr = Math.abs(Math.sin(r));
@@ -267,18 +266,41 @@ export class Viewport {
       const fx = af * sinr;
       const fy = af * cosr;
 
-      const E: Vec2 = [ex, -ey];
-      const F: Vec2 = [-fx, fy];
-      const G: Vec2 = [w - ex, h + ey];
-      const H: Vec2 = [w + fx, h - fy];
+      let E, F, G, H;
 
+      if (r > 0 && r <= HALF_PI) {   // ex = 0..w, fy = h..0
+        E = [ex, -ey];
+        F = [-fx, fy];
+        G = [w - ex, h + ey];
+        H = [w + fx, h - fy];
+      } else if (r > HALF_PI && r <= Math.PI) {   // ex = w..0, fy = 0..h
+        E = [w + fx, fy];
+        F = [w - ex, -ey];
+        G = [-fx, h - fy];
+        H = [ex, h + ey];
+      } else if (r > Math.PI && r <= 3 * HALF_PI) {  // ex = 0..w, fy = h..0
+        E = [w - ex, h + ey];
+        F = [w + fx, h - fy];
+        G = [ex, -ey];
+        H = [-fx, fy];
+      } else {   // ex = w..0, fy = 0..h
+        E = [-fx, h - fy];
+        F = [ex, h + ey];
+        G = [w + fx, fy];
+        H = [w - ex, -ey];
+      }
+      //console.log(`ex: ${ex}, ey: ${ey}, fx: ${fx}, fy: ${fy}`);
+      //console.log(`E: ${E}, F: ${F}, G: ${G}, H: ${H}`);
       return [E, F, G, H, E];
+
     } else {
-      return [[0, 0], [0, h], [w, h], [0, w], [0, 0]];
+      return [[0, 0], [0, h], [w, h], [w, 0], [0, 0]];
     }
   }
 
 
+  /** Gets the visible dimensions
+   */
   visibleDimensions(): Vec2 {
     const [w, h] = this._dimensions;
     const r = this._transform.r;
@@ -297,21 +319,13 @@ export class Viewport {
   }
 
 
-  /** Gets the visible center coordinate
+  /** Gets the visible Extent
    */
-  visibleCenter(): Vec2 {
-    return vecScale(this.visibleDimensions(), 0.5);
-  }
-
-
-  extent(): Extent {
+  visibleExtent(): Extent {
     const polygon = this.visiblePolygon();
-    const extent = new Extent();
-
-    for (let i = 0; i < polygon.length - 1; i++) {  // skip last point, it's first point repeated
-      extent.extendSelf(this.unproject(polygon[i], true));
-    }
-    return extent;
+    const min = this.unproject(polygon[1], true);  // bottom-left
+    const max = this.unproject(polygon[3], true);  // top-right
+    return new Extent(min, max);
   }
 
 }

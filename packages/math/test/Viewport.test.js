@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { Extent, Viewport, geoZoomToScale } from '../built/math.mjs';
+import { DEG2RAD, Extent, Viewport, geoZoomToScale } from '../built/math.mjs';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-6) {
@@ -271,60 +271,171 @@ describe('math/viewport', () => {
     });
   });
 
-  describe('#extent', () => {
-    it('returns visible Extent (lon,lat) when viewport is not rotated', () => {
-      // Test at zoom 1
-      //
-      //  +--------+--------+  +85.0511°
-      //  | 0,0,1  |  1,0,1 |                 ^
-      //  |        |        |                 N
-      //  |  +===========+  |               W + E
-      //  |  ‖     |     ‖  |                 S
-      //  +--‖-----+-----‖--+   0°
-      //  |  ‖     |     ‖  |
-      //  |  +===========+  |
-      //  |        |        |
-      //  | 0,1,1  |  1,1,1 |
-      //  +--------+--------+  -85.0511°
-      //-180°      0°     +180°
-      //
-      const view = new Viewport()
-        .transform({ x: 150, y: 100, k: geoZoomToScale(1) })
-        .dimensions([300, 200]);
-      const result = view.extent();
-      assert.ok(result instanceof Extent);
-      assert.closeTo(result.min[0], -105.46875);
-      assert.closeTo(result.min[1], -57.326521);
-      assert.closeTo(result.max[0], 105.46875);
-      assert.closeTo(result.max[1], 57.326521);
+  describe('#center', () => {
+    it('gets center', () => {
+      const view = new Viewport().dimensions([800, 600]);
+      assert.deepEqual(view.center(), [400, 300]);
     });
+  });
 
-    it('returns visible Extent (lon,lat) when viewport is rotated', () => {
-      // Test at zoom 1
-      //
-      //  +--------+--------+  -180°
-      //  | 0,1,1  |  0,0,1 |
-      //  |        |        |                 W
-      //  |  +===========+  |               S + N >
-      //  |  ‖     |     ‖  |                 E
-      //  +--‖-----+-----‖--+   0°
-      //  |  ‖     |     ‖  |
-      //  |  +===========+  |
-      //  |        |        |
-      //  | 1,1,1  |  1,0,1 |
-      //  +--------+--------+  +180°
-      //-85.0511°  0°  +85.0511°
-      //
-      const view = new Viewport()
-        .transform({ x: 150, y: 100, k: geoZoomToScale(1), r: Math.PI / 2 }) // quarter turn clockwise
-        .dimensions([300, 200]);
-      const result = view.extent();
-      assert.ok(result instanceof Extent);
-      assert.closeTo(result.min[0], -70.3125);
-      assert.closeTo(result.min[1], -71.965387);
-      assert.closeTo(result.max[0], 70.3125);
-      assert.closeTo(result.max[1], 71.965387);
-    });
+  describe('#visiblePolygon', () => {
+    //
+    //        |  E__
+    //        |r/   ''--..__
+    //        |/           r''--..__
+    //  [0,0] A=======================D__
+    //       /‖                       ‖  ''H         N
+    //      /r‖                       ‖   /      W._/
+    //     /  ‖           +           ‖  /         /'-E
+    //    /   ‖                       ‖r/         S
+    //   F__  ‖                       ‖/
+    //      ''B=======================C [w,h]
+    //           ''--..__r           /|
+    //                   ''--,,__   /r|
+    //                           ''G  |
+    //
+    //  Here we are testing the coordinates of the extended viewport, [E, F, G, H, E]
+    //
+    const tests = {
+      '0':    [[0, 0], [0, 300], [400, 300], [400, 0], [0, 0]],
+      '45':   [[200, -200], [-150, 150], [200, 500], [550, 150], [200, -200]],
+      '90':   [[400, 0], [0, 0], [0, 300], [400, 300], [400, 0]],
+      '135':  [[550, 150], [200, -200], [-150, 150], [200, 500], [550, 150]],
+      '180':  [[400, 300], [400, 0], [0, 0], [0, 300], [400, 300]],
+      '225':  [[200, 500], [550, 150], [200, -200], [-150, 150], [200, 500]],
+      '270':  [[0, 300], [400, 300], [400, 0], [0, 0], [0, 300]],
+      '315':  [[-150, 150], [200, 500], [550, 150], [200, -200], [-150, 150]],
+      '360':  [[0, 0], [0, 300], [400, 300], [400, 0], [0, 0]],
+      '-315': [[200, -200], [-150, 150], [200, 500], [550, 150], [200, -200]],
+      '-270': [[400, 0], [0, 0], [0, 300], [400, 300], [400, 0]],
+      '-225': [[550, 150], [200, -200], [-150, 150], [200, 500], [550, 150]],
+      '-180': [[400, 300], [400, 0], [0, 0], [0, 300], [400, 300]],
+      '-135': [[200, 500], [550, 150], [200, -200], [-150, 150], [200, 500]],
+      '-90':  [[0, 300], [400, 300], [400, 0], [0, 0], [0, 300]],
+      '-45':  [[-150, 150], [200, 500], [550, 150], [200, -200], [-150, 150]]
+    };
+
+    for (const [degrees, expected] of Object.entries(tests)) {
+      it(`returns visible polygon when viewport is rotated ${degrees}°`, () => {
+        const view = new Viewport()
+          .transform({ x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD })
+          .dimensions([400, 300]);
+
+        const result = view.visiblePolygon();
+        assert.ok(result instanceof Array);
+        assert.equal(result.length, 5);
+        for (let i = 0; i < 5; i++) {
+          assert.closeTo(result[i][0], expected[i][0]);
+          assert.closeTo(result[i][1], expected[i][1]);
+        }
+      });
+    }
+  });
+
+  describe('#visibleDimensions', () => {
+    //
+    //        |  E__
+    //        |r/   ''--..__
+    //        |/           r''--..__
+    //  [0,0] A=======================D__
+    //       /‖                       ‖  ''H         N
+    //      /r‖                       ‖   /      W._/
+    //     /  ‖           +           ‖  /         /'-E
+    //    /   ‖                       ‖r/         S
+    //   F__  ‖                       ‖/
+    //      ''B=======================C [w,h]
+    //           ''--..__r           /|
+    //                   ''--,,__   /r|
+    //                           ''G  |
+    //
+    //  Here we are testing the dimensions of the extended viewport, [w2,h2], or [EDH, HCG]
+    //
+    const tests = {
+      '0':    [400, 300],
+      '45':   [500, 500],
+      '90':   [300, 400],
+      '135':  [500, 500],
+      '180':  [400, 300],
+      '225':  [500, 500],
+      '270':  [300, 400],
+      '315':  [500, 500],
+      '360':  [400, 300],
+      '-315': [500, 500],
+      '-270': [300, 400],
+      '-225': [500, 500],
+      '-180': [400, 300],
+      '-135': [500, 500],
+      '-90':  [300, 400],
+      '-45':  [500, 500]
+    };
+
+    for (const [degrees, expected] of Object.entries(tests)) {
+      it(`returns visible dimensions when viewport is rotated ${degrees}°`, () => {
+        const view = new Viewport()
+          .transform({ x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD })
+          .dimensions([400, 300]);
+
+        const result = view.visibleDimensions();
+        assert.ok(result instanceof Array);
+        assert.equal(result[0][0], expected[0][0]);
+        assert.equal(result[1][1], expected[0][1]);
+      });
+    }
+  });
+
+
+  describe('#visibleExtent', () => {
+    //
+    //        |  E__
+    //        |r/   ''--..__
+    //        |/           r''--..__
+    //  [0,0] A=======================D__
+    //       /‖                       ‖  ''H         N
+    //      /r‖                       ‖   /      W._/
+    //     /  ‖           +           ‖  /         /'-E
+    //    /   ‖                       ‖r/         S
+    //   F__  ‖                       ‖/
+    //      ''B=======================C [w,h]
+    //           ''--..__r           /|
+    //                   ''--,,__   /r|
+    //                           ''G  |
+    //
+    //  Here we are testing the [lon,lat] extent of the extended viewport, where [E, F, G, H]
+    //  define the north-up coordinate system (F is bottom-left, H is top-right)
+    //
+    const tests = {
+      '0':    [[-140.625, -71.965387], [140.625, 71.965387]],
+      '45':   [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '90':   [[-105.46875, -80.178713], [105.46875, 80.178713]],
+      '135':  [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '180':  [[-140.625, -71.965387], [140.625, 71.965387]],
+      '225':  [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '270':  [[-105.46875, -80.178713], [105.46875, 80.178713]],
+      '315':  [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '360':  [[-140.625, -71.965387], [140.625, 71.965387]],
+      '-315': [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '-270': [[-105.46875, -80.178713], [105.46875, 80.178713]],
+      '-225': [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '-180': [[-140.625, -71.965387], [140.625, 71.965387]],
+      '-135': [[-174.014559, -84.506965], [174.014559, 84.506965]],
+      '-90':  [[-105.46875, -80.178713], [105.46875, 80.178713]],
+      '-45':  [[-174.014559, -84.506965], [174.014559, 84.506965]]
+    };
+
+    for (const [degrees, expected] of Object.entries(tests)) {
+      it(`returns visible dimensions when viewport is rotated ${degrees}°`, () => {
+        const view = new Viewport()
+          .transform({ x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD })
+          .dimensions([400, 300]);
+
+        const result = view.visibleExtent();
+        assert.ok(result instanceof Extent);
+        assert.closeTo(result.min[0], expected[0][0]);
+        assert.closeTo(result.min[1], expected[0][1]);
+        assert.closeTo(result.max[0], expected[1][0]);
+        assert.closeTo(result.max[1], expected[1][1]);
+      });
+    }
   });
 
 });
