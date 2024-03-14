@@ -6,7 +6,7 @@
 import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MIN_K, MAX_K, MIN_PHI, MAX_PHI } from './constants';
 import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
-import { geoZoomToScale } from './geo';
+import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
 import { Vec2, vecRotate, vecScale, vecSubtract, vecCeil } from './vector';
 
@@ -57,7 +57,7 @@ export class Viewport {
 
 
   /** Constructs a new Viewport
-   * @description Default viewport corresponds to the world at zoom 1 and centered on "Null Island" [0, 0].
+   * @description Default viewport corresponds to the world at zoom 1 with origin at "Null Island" [0, 0].
    * @param transform
    * @param dimensions
    * @example ```
@@ -163,11 +163,30 @@ export class Viewport {
   }
 
 
-  /** Sets/Gets the rotation factor
+  /** Sets/Gets the zoom
+   *  Zoom is related to scale
+   * @param val zoom
+   * @param tileSize tile size (defaults to 256)
+   * @returns When argument is provided, sets the zoom and returns `this` for method chaining.
+   * Returns the zoom otherwise
+   * @example ```
+   * const view = new Viewport().zoom(2);   // sets zoom
+   * view.zoom();   // gets zoom, returns 2
+   * ```
+   */
+  zoom(val?: number, tileSize?: number): number | Viewport {
+    if (val === undefined) return geoScaleToZoom(this._transform.k, tileSize);
+    const k = geoZoomToScale(+val, tileSize);
+    this._transform.k = numClamp(k, MIN_K, MAX_K);   // constrain to z0..z24
+    return this;
+  }
+
+
+  /** Sets/Gets the map rotation (bearing)
    * 0 is no rotation, which results in a map with North facing up.
    * @param val rotation factor in radians (clockwise)
-   * @returns When argument is provided, sets the rotation factor and returns `this` for method chaining.
-   * Returns the rotation factor otherwise
+   * @returns When argument is provided, sets the rotation and returns `this` for method chaining.
+   * Returns the rotation otherwise
    * @example ```
    * const view = new Viewport().rotate(Math.PI / 2);   // sets rotation
    * view.rotate();   // gets rotation - returns Math.PI / 2;
@@ -218,8 +237,8 @@ export class Viewport {
   }
 
 
-  /** Returns the screen center coordinate
-   * @returns viewport screen center coordinate
+  /** Returns the screen center coordinate in [x, y]
+   * @returns viewport screen center coordinate in [x, y]
    * @example ```
    * const view = new Viewport().dimensions([800, 600]);
    * view.center();   // returns [400, 300]
@@ -227,6 +246,18 @@ export class Viewport {
    */
   center(): Vec2 {
     return vecScale(this._dimensions, 0.5);
+  }
+
+
+  /** Returns the screen center coordinate in [lon, lat]
+   * @returns viewport screen center coordinate in [lon, lat]
+   * @example ```
+   * const view = new Viewport().dimensions([800, 600]).translate([400, 300]);
+   * view.centerLoc();   // returns [0, 0]  ("Null Island")
+   * ```
+   */
+  centerLoc(): Vec2 {
+    return this.unproject(this.center());
   }
 
 

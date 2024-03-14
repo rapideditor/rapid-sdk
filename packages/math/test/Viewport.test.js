@@ -211,6 +211,20 @@ describe('math/viewport', () => {
     });
   });
 
+  describe('#zoom', () => {
+    it('sets/gets zoom', () => {
+      const view = new Viewport().zoom(2);
+      assert.equal(view.zoom(), 2);
+    });
+
+    it('constrains scale to values in z0..z24', () => {
+      const view1 = new Viewport().zoom(-1);
+      assert.closeTo(view1.zoom(), 0);
+      const view2 = new Viewport().zoom(25);
+      assert.closeTo(view2.zoom(), 24);
+    });
+  });
+
   describe('#rotation', () => {
     it('sets/gets rotation', () => {
       const view = new Viewport().rotate(Math.PI);
@@ -275,6 +289,13 @@ describe('math/viewport', () => {
     it('gets center', () => {
       const view = new Viewport().dimensions([800, 600]);
       assert.deepEqual(view.center(), [400, 300]);
+    });
+  });
+
+  describe('#centerLoc', () => {
+    it('gets centerLoc', () => {
+      const view = new Viewport().dimensions([800, 600]).translate([400, 300]);
+      assert.deepEqual(view.centerLoc(), [0, 0]);
     });
   });
 
