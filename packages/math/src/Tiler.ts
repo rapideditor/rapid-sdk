@@ -9,7 +9,7 @@ import { Extent } from './Extent';
 import { Transform, Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { numClamp } from './number';
-import { Vec2, Vec3 } from './vector';
+import { Vec2, Vec3, vecAdd, vecRotate } from './vector';
 
 
 /** Contains essential information about a tile */
@@ -123,61 +123,65 @@ export class Tiler {
    *```
    */
   getTiles(viewport: Viewport): TileResult {
-    const [w, h]: Vec2 = viewport.visibleDimensions() as Vec2;
-    const translate: Vec2 = viewport.translate() as Vec2;
-    const scale: number = viewport.scale() as number;
+    const t = viewport.transform() as Transform;
+    const polygon = viewport.visiblePolygon();
+    const [w, h] = viewport.visibleDimensions();
 
-    const zFrac: number = geoScaleToZoom(scale, this._tileSize);
-    const z: number = numClamp(Math.round(zFrac), this._zoomRange[0], this._zoomRange[1]);
-    const minTile: number = 0;
-    const maxTile: number = Math.pow(2, z) - 1;
+    // If there is a rotation, origin won't be at [0,0].
+    // Un-rotate the origin back to where it would be on a north-aligned tile grid.
+    let origin = polygon[0];
+    if (t.r) {
+      origin = vecRotate(origin, -t.r, viewport.center());
+    }
 
-    const log2ts: number = Math.log(this._tileSize) * Math.LOG2E;
-    const k: number = Math.pow(2, zFrac - z + log2ts);
+    // Perform calculations in pixel coordinates, where origin is top-left viewport pixel
+    const viewMin: Vec2 = [t.k * Math.PI - t.x + origin[0], t.k * Math.PI - t.y + origin[1]];
+    const viewMax: Vec2 = vecAdd(viewMin, [w, h]);
+    const viewExtent = new Extent(viewMin, viewMax);
 
-    // perform calculations in "world" pixel coordinates, where origin is top left viewport pixel
-    const origin: Vec2 = [scale * Math.PI - translate[0], scale * Math.PI - translate[1]];
-    const viewMin: Vec2 = [origin[0], origin[1]];
-    const viewMax: Vec2 = [origin[0] + w, origin[1] + h];
-    const viewExtent: Extent = new Extent(viewMin, viewMax);
+    // Pick the zoom we will tile at
+    const zOrig = geoScaleToZoom(t.k, this._tileSize);
+    const z = numClamp(Math.round(zOrig), this._zoomRange[0], this._zoomRange[1]);
+    const minTile = 0;
+    const maxTile = Math.pow(2, z) - 1;
+    const log2ts = Math.log(this._tileSize) * Math.LOG2E;
+    const tilek = Math.pow(2, zOrig - z + log2ts);
 
-    // a viewport centered at Null Island, so we can unproject back to lon/lat later
-    const worldOrigin: number = (Math.pow(2, z) / 2) * this._tileSize;
-    const worldScale: number = geoZoomToScale(z, this._tileSize);
+    const cols = range(
+      numClamp(Math.floor(viewMin[0] / tilek) - this._margin, minTile, maxTile),
+      numClamp(Math.floor(viewMax[0] / tilek) + this._margin, minTile, maxTile)
+    );
+    const rows = range(
+      numClamp(Math.floor(viewMin[1] / tilek) - this._margin, minTile, maxTile),
+      numClamp(Math.floor(viewMax[1] / tilek) + this._margin, minTile, maxTile)
+    );
+
+    // A viewport based on tile coordinates and centered at Null Island,
+    // so we can unproject back to lon/lat later
+    const worldOrigin = (Math.pow(2, z) / 2) * this._tileSize;
+    const worldScale = geoZoomToScale(z, this._tileSize);
     const worldViewport = new Viewport({ x: worldOrigin, y: worldOrigin, k: worldScale });
 
-    const cols: number[] = range(
-      numClamp(Math.floor(viewMin[0] / k) - this._margin, minTile, maxTile),
-      numClamp(Math.floor(viewMax[0] / k) + this._margin, minTile, maxTile)
-    );
-    const rows: number[] = range(
-      numClamp(Math.floor(viewMin[1] / k) - this._margin, minTile, maxTile),
-      numClamp(Math.floor(viewMax[1] / k) + this._margin, minTile, maxTile)
-    );
-
-    let tiles: Tile[] = [];
-    for (let i: number = 0; i < rows.length; i++) {
-      const y: number = rows[i];
-      for (let j: number = 0; j < cols.length; j++) {
-        const x: number = cols[j];
-
-        const xyz: Vec3 = [x, y, z];
+    const tiles: Tile[] = [];
+    for (const y of rows) {
+      for (const x of cols) {
         if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
+        const xyz: Vec3 = [x, y, z];
 
-        // still world pixel coordinates
-        const tileMin: Vec2 = [x * this._tileSize, y * this._tileSize];
-        const tileMax: Vec2 = [(x + 1) * this._tileSize, (y + 1) * this._tileSize];
-        const tileExtent: Extent = new Extent(tileMin, tileMax);
-        const isVisible: boolean = viewExtent.intersects(tileExtent);
+        // still in pixel coordinates
+        const pxMin: Vec2 = [x * this._tileSize, y * this._tileSize];
+        const pxMax: Vec2 = [(x + 1) * this._tileSize, (y + 1) * this._tileSize];
+        const pxExtent = new Extent(pxMin, pxMax);
+        const isVisible = viewExtent.intersects(pxExtent);
 
         // back to lon/lat
-        const wgs84Min: Vec2 = worldViewport.unproject([tileMin[0], tileMax[1]]);
-        const wgs84Max: Vec2 = worldViewport.unproject([tileMax[0], tileMin[1]]);
+        const wgs84Min = worldViewport.unproject([pxMin[0], pxMax[1]]);
+        const wgs84Max = worldViewport.unproject([pxMax[0], pxMin[1]]);
 
         const tile: Tile = {
           id: xyz.toString(),
           xyz: xyz,
-          pxExtent: new Extent(tileMin, tileMax),
+          pxExtent: pxExtent,
           wgs84Extent: new Extent(wgs84Min, wgs84Max),
           isVisible: isVisible
         };
@@ -326,10 +330,10 @@ export class Tiler {
    */
   static isNearNullIsland(x: number, y: number, z: number): boolean {
     if (z >= 7) {
-      const center: number = Math.pow(2, z - 1);
-      const width: number = Math.pow(2, z - 6);
-      const min: number = center - width / 2;
-      const max: number = center + width / 2 - 1;
+      const center = Math.pow(2, z - 1);
+      const width = Math.pow(2, z - 6);
+      const min = center - width / 2;
+      const max = center + width / 2 - 1;
       return x >= min && x <= max && y >= min && y <= max;
     }
     return false;
