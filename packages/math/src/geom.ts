@@ -218,7 +218,7 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
  * const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
  * const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
  * geomPolygonIntersectsPolygon(outer, inner, false);   // returns false (lax test - points only)
- * eomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict test - points and segments)
+ * geomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict test - points and segments)
  * ```
  */
 export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], checkSegments?: boolean): boolean {
