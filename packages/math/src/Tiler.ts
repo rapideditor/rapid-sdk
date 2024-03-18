@@ -8,6 +8,7 @@
 import { Extent } from './Extent';
 import { Transform, Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
+import { geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
 import { numClamp } from './number';
 import { Vec2, Vec3, vecAdd, vecRotate } from './vector';
 
@@ -123,60 +124,122 @@ export class Tiler {
    *```
    */
   getTiles(viewport: Viewport): TileResult {
-    const t = viewport.transform() as Transform;
-    const polygon = viewport.visiblePolygon();
-    const [w, h] = viewport.visibleDimensions();
 
-    // If there is a rotation, origin won't be at [0,0].
-    // Un-rotate the origin back to where it would be on a north-aligned tile grid.
-    let origin = polygon[0];
+    // The map may be rotated, but the tiles will need to align to north-up,
+    // so the region we are tiling is the [E, F, G, H] one.
+    // [sx,sy] is [0,0] in screen coordinates, but we need to make [vx,vy] the origin.
+    //
+    //    visible
+    //    [vx,vy] E__
+    //           /   ''--..__
+    // screen   /           r''--..__
+    // [sx,sy] A═══════════════════════D__
+    //        /║                       ║  ''H         N
+    //       /r║                       ║   /      W._/
+    //      /  ║           +           ║  /         /'-E
+    //     /   ║                       ║r/         S
+    //    F__  ║                       ║/
+    //       ''B═══════════════════════C  [sw,sh]
+    //            ''--..__r           /
+    //                    ''--..__   /
+    //                            ''G  [vw,vh]
+
+    const ts = this._tileSize;     // tile size in pizels
+    const ms = this._margin * ts;  // margin size in pixels
+    const t = viewport.transform() as Transform;
+    const [sw, sh] = viewport.dimensions() as Vec2;
+    const [vw, vh] = viewport.visibleDimensions() as Vec2;
+    let visiblePolygon = viewport.visiblePolygon() as Vec2[];
+    let screenPolygon = [[0, 0], [0, sh], [sw, sh], [sw, 0], [0, 0]] as Vec2[];
+
+    // Consumers can optionally request extra rows/columns of tiles from a "margin".
+    // This can be useful for stitching together geometries that appear on adjacent tiles.
+    // We add these margin pixels to the un-rotated polygon.
+    let marginPolygon = _addMargin(screenPolygon, ms);
+
+    // Un-rotate the polygons back to where they would be on a north-aligned grid.
     if (t.r) {
-      origin = vecRotate(origin, -t.r, viewport.center());
+      const center = viewport.center();
+      screenPolygon = geomRotatePoints(screenPolygon, -t.r, center);
+      marginPolygon = geomRotatePoints(marginPolygon, -t.r, center);
+      visiblePolygon = geomRotatePoints(visiblePolygon, -t.r, center);
+    }
+    if (ms) {  // now that visible is un-rotated, we can apply margin to it if needed.
+      visiblePolygon = _addMargin(visiblePolygon, ms);
     }
 
-    // Perform calculations in pixel coordinates, where origin is top-left viewport pixel
-    const viewMin: Vec2 = [t.k * Math.PI - t.x + origin[0], t.k * Math.PI - t.y + origin[1]];
-    const viewMax: Vec2 = vecAdd(viewMin, [w, h]);
-    const viewExtent = new Extent(viewMin, viewMax);
+    // Perform calculations in world pixels.  These are kind of like the Mercator
+    // coordinates from the Viewport code, except without `1/π` baked into the scale.
+    // This coordinate system moves [0,0] to the top left corner of the world.
+    const viewk: number = t.k * Math.PI;
+    const origin: Vec2 = [viewk - t.x, viewk - t.y];
 
-    // Pick the zoom we will tile at
-    const zOrig = geoScaleToZoom(t.k, this._tileSize);
+    // Convert all polygons to this world pixel coordinate system.
+    for (let i = 0; i < 5; i++) {
+      visiblePolygon[i] = vecAdd(origin, visiblePolygon[i]);
+      screenPolygon[i] = vecAdd(origin, screenPolygon[i]);
+      marginPolygon[i] = vecAdd(origin, marginPolygon[i]);
+    }
+
+    const viewMin = visiblePolygon[0];  // point E
+    const viewMax = visiblePolygon[2];  // point G
+
+    // Pick the zoom `z` we will tile at.  It will be whatever integer is closest to
+    // the zoom of the viewport, and within the ranges allowed by the tiler.
+    const zOrig = geoScaleToZoom(t.k, ts);
     const z = numClamp(Math.round(zOrig), this._zoomRange[0], this._zoomRange[1]);
-    const minTile = 0;
-    const maxTile = Math.pow(2, z) - 1;
-    const log2ts = Math.log(this._tileSize) * Math.LOG2E;
+    const min = 0;
+    const max = Math.pow(2, z) - 1;
+    const log2ts = Math.log(ts) * Math.LOG2E;
+
+    // tilek contains the difference between the visible zoom and the tile zoom
     const tilek = Math.pow(2, zOrig - z + log2ts);
 
     const cols = range(
-      numClamp(Math.floor(viewMin[0] / tilek) - this._margin, minTile, maxTile),
-      numClamp(Math.floor(viewMax[0] / tilek) + this._margin, minTile, maxTile)
+      numClamp(Math.floor(viewMin[0] / tilek), min, max),
+      numClamp(Math.floor(viewMax[0] / tilek), min, max)
     );
     const rows = range(
-      numClamp(Math.floor(viewMin[1] / tilek) - this._margin, minTile, maxTile),
-      numClamp(Math.floor(viewMax[1] / tilek) + this._margin, minTile, maxTile)
+      numClamp(Math.floor(viewMin[1] / tilek), min, max),
+      numClamp(Math.floor(viewMax[1] / tilek), min, max)
     );
 
-    // A viewport based on tile coordinates and centered at Null Island,
+    // Create a viewport based on tile coordinates and centered at Null Island,
     // so we can unproject back to lon/lat later
-    const worldOrigin = (Math.pow(2, z) / 2) * this._tileSize;
-    const worldScale = geoZoomToScale(z, this._tileSize);
-    const worldViewport = new Viewport({ x: worldOrigin, y: worldOrigin, k: worldScale });
+    const tileOrigin = (Math.pow(2, z) / 2) * ts;
+    const tileScale = geoZoomToScale(z, ts);
+    const tileViewport = new Viewport({ x: tileOrigin, y: tileOrigin, k: tileScale });
 
     const tiles: Tile[] = [];
     for (const y of rows) {
       for (const x of cols) {
         if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
-        const xyz: Vec3 = [x, y, z];
 
-        // still in pixel coordinates
-        const pxMin: Vec2 = [x * this._tileSize, y * this._tileSize];
-        const pxMax: Vec2 = [(x + 1) * this._tileSize, (y + 1) * this._tileSize];
+        // the tile bounds in pixels coordinates
+        const pxMin: Vec2 = [x * tilek, y * tilek];
+        const pxMax: Vec2 = [(x + 1) * tilek, (y + 1) * tilek];
         const pxExtent = new Extent(pxMin, pxMax);
-        const isVisible = viewExtent.intersects(pxExtent);
+        const pxPolygon = pxExtent.polygon();
+
+        // If it's not even in the margin, we can exclude this tile from the resultset
+        // Test both ways, maybe the tile covers the margin, maybe the margin covers the tile?
+        const isIncluded =
+          geomPolygonIntersectsPolygon(marginPolygon, pxPolygon, false) ||    // false = fast test
+          geomPolygonIntersectsPolygon(pxPolygon, marginPolygon, false);
+        if (!isIncluded) continue;    // no need to include this tile in the result
+
+        // Within the margin but not on screen?
+        const isVisible =
+          geomPolygonIntersectsPolygon(screenPolygon, pxPolygon, false) ||
+          geomPolygonIntersectsPolygon(pxPolygon, screenPolygon, false);
 
         // back to lon/lat
-        const wgs84Min = worldViewport.unproject([pxMin[0], pxMax[1]]);
-        const wgs84Max = worldViewport.unproject([pxMax[0], pxMin[1]]);
+        const tileMin: Vec2 = [x * ts, y * ts];
+        const tileMax: Vec2 = [(x + 1) * ts, (y + 1) * ts];
+        const wgs84Min = tileViewport.unproject([tileMin[0], tileMax[1]]);
+        const wgs84Max = tileViewport.unproject([tileMax[0], tileMin[1]]);
+
+        const xyz: Vec3 = [x, y, z];
 
         const tile: Tile = {
           id: xyz.toString(),
@@ -199,6 +262,18 @@ export class Tiler {
       // translate: origin,
       // scale: k
     };
+
+
+    // add margin pixels to the given polygon
+    function _addMargin(poly: Vec2[], m: number): Vec2[] {
+      return [
+        [poly[0][0] - m, poly[0][1] - m],
+        [poly[1][0] - m, poly[1][1] + m],
+        [poly[2][0] + m, poly[2][1] + m],
+        [poly[3][0] + m, poly[3][1] - m],
+        [poly[4][0] - m, poly[4][1] - m]
+      ];
+    }
   }
 
 
