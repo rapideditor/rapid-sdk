@@ -26,8 +26,9 @@ import { Extent } from '@rapid-sdk/math';
 - 🔢 Number math functions
 - 📐 Vector math functions
 
-- 📦 Extent class for creating bounding boxes
+- 📦 Extent class for working with bounding boxes
 - 🀄️ Tiler class for splitting the world into rectangular tiles
+- 🕹️ Transform class for managing translation, scale, rotation
 - 📺 Viewport class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
 
 

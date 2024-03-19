@@ -5,6 +5,7 @@
 
 export * from './Extent';
 export * from './Tiler';
+export * from './Transform';
 export * from './Viewport';
 
 export * from './constants';

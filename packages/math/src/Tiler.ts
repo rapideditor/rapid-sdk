@@ -6,7 +6,8 @@
  */
 
 import { Extent } from './Extent';
-import { Transform, Viewport } from './Viewport';
+import { Transform } from './Transform';
+import { Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
 import { numClamp } from './number';
@@ -30,8 +31,6 @@ export interface Tile {
 /** An Object used to return information about the tiles covering a given viewport */
 export interface TileResult {
   tiles: Tile[];
-  // translate: Vec2;
-  // scale: number;
 }
 
 
@@ -71,9 +70,9 @@ export class Tiler {
    * -180    +180
    *
    * const t0 = new Tiler();
-   * const v0 = new Viewport()
-   *   .transform({ x: 128, y: 128, k: 128 / Math.PI })  // z0
-   *   .dimensions([256, 256]);                          // entire world visible
+   * const v0 = new Viewport();
+   * v0.transform = { x: 128, y: 128, k: 128 / Math.PI };  // z0
+   * v0.dimensions = [256, 256];                           // entire world visible
    * const result = t0.getTiles(v0);
    *
    * At zoom 1:
@@ -90,9 +89,9 @@ export class Tiler {
    * -180      0     +180
    *
    * const t1 = new Tiler();
-   * const v1 = new Viewport()
-   *   .transform({ x: 256, y: 256, k: 256 / Math.PI })  // z1
-   *   .dimensions([512, 512]);                          // entire world visible
+   * const v1 = new Viewport();
+   * v1.transform = { x: 256, y: 256, k: 256 / Math.PI };  // z1
+   * v1.dimensions = [512, 512];                           // entire world visible
    * const result = t1.getTiles(v1);
    *
    * At zoom 2:
@@ -117,9 +116,9 @@ export class Tiler {
    * -180     -90      0      +90    +180
    *
    * const t2 = new Tiler();
-   * const v2 = new Viewport()
-   *   .transform({ x: 512, y: 512, k: 512 / Math.PI })  // z2
-   *   .dimensions([1024, 1024]);                        // entire world visible
+   * const v2 = new Viewport();
+   * v2.transform = { x: 512, y: 512, k: 512 / Math.PI };  // z2
+   * v2.dimensions = [1024, 1024];                         // entire world visible
    * const result = t2.getTiles(v2);
    *```
    */
@@ -146,8 +145,8 @@ export class Tiler {
 
     const ts = this._tileSize;     // tile size in pizels
     const ms = this._margin * ts;  // margin size in pixels
-    const t = viewport.transform() as Transform;
-    const [sw, sh] = viewport.dimensions() as Vec2;
+    const t = viewport.transform;
+    const [sw, sh] = viewport.dimensions;
     const [vw, vh] = viewport.visibleDimensions() as Vec2;
     let visiblePolygon = viewport.visiblePolygon() as Vec2[];
     let screenPolygon = [[0, 0], [0, sh], [sw, sh], [sw, 0], [0, 0]] as Vec2[];
@@ -259,8 +258,6 @@ export class Tiler {
 
     return {
       tiles: tiles
-      // translate: origin,
-      // scale: k
     };
 
 
@@ -283,8 +280,9 @@ export class Tiler {
    * @returns FeatureCollection containing a Feature for each rectangular tile
    * @example ```
    * const t = new Tiler();
-   * const v = new Viewport(256, 256, 256 / Math.PI)  // z1
-   *   .dimensions([512, 512]);                       // entire world visible
+   * const v = new Viewport();
+   * v.transform = { x: 256, y: 256, k: 256 / Math.PI };  // z1
+   * v.dimensions = [512, 512];                           // entire world visible
    * const result = t.getTiles(v);
    * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
    * ```

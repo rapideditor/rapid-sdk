@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { DEG2RAD, Extent, Viewport, geoZoomToScale } from '../built/math.mjs';
+import { DEG2RAD, Extent, Transform, Viewport, geoZoomToScale } from '../built/math.mjs';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-6) {
@@ -13,42 +13,29 @@ describe('math/viewport', () => {
   describe('constructor', () => {
     it('creates a default Viewport', () => {
       const view = new Viewport();
-      const tform = view.transform();
+      const tform = view.transform;
       assert.ok(view instanceof Viewport);
-      assert.ok(tform instanceof Object);
+      assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 0);
       assert.equal(tform.y, 0);
       assert.equal(tform.k, 256 / Math.PI); // z1
     });
 
-    it('creates a Viewport with a transform param', () => {
-      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
-      const tform = view.transform();
+    it('creates a Viewport with a Transform-like param', () => {
+      const view = new Viewport({ x: '20', y: '30', k: 512 / Math.PI, r: Math.PI / 2 });
+      const tform = view.transform;
       assert.ok(view instanceof Viewport);
-      assert.ok(tform instanceof Object);
+      assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
       assert.equal(tform.k, 512 / Math.PI); // z2
       assert.equal(tform.r, Math.PI / 2);
-    });
-
-    it('constrains scale to values in z0..z24', () => {
-      const view1 = new Viewport({ k: geoZoomToScale(-1) });
-      assert.closeTo(view1.scale(), geoZoomToScale(0));
-      const view2 = new Viewport({ k: geoZoomToScale(25) });
-      assert.closeTo(view2.scale(), geoZoomToScale(24));
-    });
-
-    it('constrains rotation to values in 0..2π', () => {
-      const view1 = new Viewport({ r: 3 * Math.PI });
-      assert.closeTo(view1.rotate(), Math.PI);
-      const view2 = new Viewport({ r: -Math.PI });
-      assert.closeTo(view2.rotate(), Math.PI);
+      assert.equal(tform.v, 2);
     });
 
     it('creates a Viewport with a dimensions param', () => {
       const view = new Viewport(null, [800, 600]);
-      assert.deepEqual(view.dimensions(), [800, 600]);
+      assert.deepEqual(view.dimensions, [800, 600]);
     });
   });
 
@@ -190,61 +177,12 @@ describe('math/viewport', () => {
   });
 
 
-  describe('#translate', () => {
-    it('sets/gets translate', () => {
-      const view = new Viewport().translate([20, 30]);
-      assert.deepEqual(view.translate(), [20, 30]);
-    });
-  });
-
-  describe('#scale', () => {
-    it('sets/gets scale', () => {
-      const view = new Viewport().scale(512 / Math.PI);
-      assert.equal(view.scale(), 512 / Math.PI);
-    });
-
-    it('constrains scale to values in z0..z24', () => {
-      const view1 = new Viewport().scale(geoZoomToScale(-1));
-      assert.closeTo(view1.scale(), geoZoomToScale(0));
-      const view2 = new Viewport().scale(geoZoomToScale(25));
-      assert.closeTo(view2.scale(), geoZoomToScale(24));
-    });
-  });
-
-  describe('#zoom', () => {
-    it('sets/gets zoom', () => {
-      const view = new Viewport().zoom(2);
-      assert.equal(view.zoom(), 2);
-    });
-
-    it('constrains scale to values in z0..z24', () => {
-      const view1 = new Viewport().zoom(-1);
-      assert.closeTo(view1.zoom(), 0);
-      const view2 = new Viewport().zoom(25);
-      assert.closeTo(view2.zoom(), 24);
-    });
-  });
-
-  describe('#rotation', () => {
-    it('sets/gets rotation', () => {
-      const view = new Viewport().rotate(Math.PI);
-      assert.equal(view.rotate(), Math.PI);
-    });
-
-    it('constrains rotation to values in 0..2π', () => {
-      const view = new Viewport();
-      view.rotate(3 * Math.PI)
-      assert.closeTo(view.rotate(), Math.PI);
-      view.rotate(-Math.PI)
-      assert.closeTo(view.rotate(), Math.PI);
-    });
-  });
-
   describe('#transform', () => {
     it('sets/gets transform', () => {
-      const view = new Viewport().transform({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
-      const tform = view.transform();
-      assert.ok(tform instanceof Object);
+      const view = new Viewport();
+      view.transform = { x: '20', y: '30', k: 512 / Math.PI, r: Math.PI / 2 };
+      const tform = view.transform;
+      assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
       assert.equal(tform.k, 512 / Math.PI);
@@ -253,9 +191,9 @@ describe('math/viewport', () => {
 
     it('ignores missing / invalid properties', () => {
       const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
-      view.transform({ x: 10, fake: 10 });
-      const tform = view.transform();
-      assert.ok(tform instanceof Object);
+      view.transform = { x: 10, fake: 10 };
+      const tform = view.transform;
+      assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 10);
       assert.equal(tform.y, 30);
       assert.equal(tform.k, 512 / Math.PI);
@@ -263,41 +201,57 @@ describe('math/viewport', () => {
       assert.equal(tform.fake, undefined);
     });
 
-    it('constrains scale to values in z0..z24', () => {
-      const view1 = new Viewport().transform({ k: geoZoomToScale(-1) });
-      assert.closeTo(view1.scale(), geoZoomToScale(0));
-      const view2 = new Viewport().transform({ k: geoZoomToScale(25) });
-      assert.closeTo(view2.scale(), geoZoomToScale(24));
-    });
-
-    it('constrains rotation to values in 0..2π', () => {
-      const view1 = new Viewport().transform({ r: 3 * Math.PI });
-      assert.closeTo(view1.rotate(), Math.PI);
-      const view2 = new Viewport().transform({ r: -Math.PI });
-      assert.closeTo(view2.rotate(), Math.PI);
+    it('increments version only on actual change', () => {
+      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
+      const v0 = view.v;
+      view.transform = { r: Math.PI / 2 };
+      assert.equal(view.v, v0 + 1);  // increment once
+      view.transform = { r: Math.PI / 2 };
+      assert.equal(view.v, v0 + 1);  // no increment
     });
   });
+
 
   describe('#dimensions', () => {
     it('sets/gets dimensions', () => {
-      const view = new Viewport().dimensions([800, 600]);
-      assert.deepEqual(view.dimensions(), [800, 600]);
+      const view = new Viewport()
+      view.dimensions = [800, 600];
+      assert.deepEqual(view.dimensions, [800, 600]);
+    });
+
+    it('rounds up fractional dimensions', () => {
+      const view = new Viewport()
+      view.dimensions = [800.3, 600.6];
+      assert.deepEqual(view.dimensions, [801, 601]);
+    });
+
+    it('increments version only on actual change', () => {
+      const view = new Viewport()
+      const v0 = view.v;
+      view.dimensions = [800, 600];
+      assert.equal(view.v, v0 + 1);  // increment once
+      view.dimensions = [800, 600];
+      assert.equal(view.v, v0 + 1);  // no increment
     });
   });
 
+
   describe('#center', () => {
     it('gets center', () => {
-      const view = new Viewport().dimensions([800, 600]);
+      const view = new Viewport();
+      view.dimensions = [800, 600];
       assert.deepEqual(view.center(), [400, 300]);
     });
   });
 
+
   describe('#centerLoc', () => {
     it('gets centerLoc', () => {
-      const view = new Viewport().dimensions([800, 600]).translate([400, 300]);
+      const view = new Viewport({ x: 400, y: 300 }, [800, 600]);
       assert.deepEqual(view.centerLoc(), [0, 0]);
     });
   });
+
 
   describe('#visiblePolygon', () => {
     //
@@ -338,9 +292,9 @@ describe('math/viewport', () => {
 
     for (const [degrees, expected] of Object.entries(tests)) {
       it(`returns visible polygon when viewport is rotated ${degrees}°`, () => {
-        const view = new Viewport()
-          .transform({ x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD })
-          .dimensions([400, 300]);
+        const view = new Viewport();
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD };
+        view.dimensions = [400, 300];
 
         const result = view.visiblePolygon();
         assert.ok(result instanceof Array);
@@ -392,9 +346,9 @@ describe('math/viewport', () => {
 
     for (const [degrees, expected] of Object.entries(tests)) {
       it(`returns visible dimensions when viewport is rotated ${degrees}°`, () => {
-        const view = new Viewport()
-          .transform({ x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD })
-          .dimensions([400, 300]);
+        const view = new Viewport();
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD };
+        view.dimensions = [400, 300];
 
         const result = view.visibleDimensions();
         assert.ok(result instanceof Array);
@@ -445,9 +399,9 @@ describe('math/viewport', () => {
 
     for (const [degrees, expected] of Object.entries(tests)) {
       it(`returns visible dimensions when viewport is rotated ${degrees}°`, () => {
-        const view = new Viewport()
-          .transform({ x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD })
-          .dimensions([400, 300]);
+        const view = new Viewport();
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD };
+        view.dimensions = [400, 300];
 
         const result = view.visibleExtent();
         assert.ok(result instanceof Extent);

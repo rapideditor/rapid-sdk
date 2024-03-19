@@ -8,16 +8,8 @@ import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { geomRotatePoints } from './geom';
+import { Transform } from './Transform';
 import { Vec2, vecRotate, vecScale, vecSubtract, vecCeil } from './vector';
-
-
-/** The parameters that define the viewport */
-export interface Transform {
-  x: number;
-  y: number;
-  k: number;
-  r: number;
-}
 
 
 /** `Viewport` is a class for managing the state of the viewer
@@ -28,7 +20,7 @@ export interface Transform {
  *  see: https://en.wikipedia.org/wiki/Web_Mercator_projection
  *
  *  The parameters of this projection are stored in `_transform`
- *   `x`,`y` - translation, (from top-left Mercator coordinate 0,0, to top-left screen coordinate)
+ *   `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
  *   `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
  *   `r`     - rotation, optionally applied post-projection to change the map bearing away from north-up
  *
@@ -52,8 +44,9 @@ export interface Transform {
  *                           ''G  |
  */
 export class Viewport {
-  private _transform: Transform;
-  private _dimensions: Vec2;
+  private _transform: Transform = new Transform();
+  private _dimensions: Vec2 = [0, 0];
+  private _v: number = 1;
 
 
   /** Constructs a new Viewport
@@ -62,18 +55,22 @@ export class Viewport {
    * @param dimensions
    * @example ```
    * const view1 = new Viewport();
-   * const view2 = new Viewport({x: 20, y: 30, k: 512 / Math.PI });
+   * const view2 = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
    * ```
    */
   constructor(transform?: any, dimensions?: Vec2) {
-    this._transform = {
-      x: transform?.x || 0,
-      y: transform?.y || 0,
-      k: numClamp(transform?.k || 256 / Math.PI, MIN_K, MAX_K),   // constrain to z0..z24, default z1
-      r: numWrap(transform?.r || 0, 0, TAU)                       // wrap to 0..2π
-    };
+    if (transform) this.transform = transform;
+    if (dimensions) this.dimensions = dimensions;
+  }
 
-    this._dimensions = dimensions || [0, 0];
+
+  /** version
+   */
+  get v(): number {
+    return this._v + this._transform.v;
+  }
+  set v(val: number) {
+    this._v = val - this._transform.v;
   }
 
 
@@ -81,10 +78,10 @@ export class Viewport {
    * @param loc Lon/Lat (λ,φ)
    * @returns Cartesian (x,y)
    * @example ```
-   * const view = new Viewport();
-   * view.project([0, 0]);                  // returns [0, 0]
-   * view.project([180, -85.0511287798]);   // returns [256, 256]
-   * view.project([-180, 85.0511287798]);   // returns [-256, -256]
+   * const v = new Viewport();
+   * v.project([0, 0]);                  // returns [0, 0]
+   * v.project([180, -85.0511287798]);   // returns [256, 256]
+   * v.project([-180, 85.0511287798]);   // returns [-256, -256]
    * ```
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
@@ -108,10 +105,10 @@ export class Viewport {
    * @param point Cartesian (x,y)
    * @returns Lon/Lat (λ,φ)
    * @example ```
-   * const view = new Viewport();
-   * view.unproject([0, 0]);         // returns [0, 0]
-   * view.unproject([256, 256]);     // returns [180, -85.0511287798]
-   * view.unproject([-256, -256]);   // returns [-180, 85.0511287798]
+   * const v = new Viewport();
+   * v.unproject([0, 0]);         // returns [0, 0]
+   * v.unproject([256, 256]);     // returns [180, -85.0511287798]
+   * v.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    * ```
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
@@ -130,94 +127,22 @@ export class Viewport {
   }
 
 
-  /** Sets/Gets the translation factor
-   * @param val translation factor
-   * @returns When argument is provided, sets the `x`,`y` translation values and returns `this` for method chaining.
-   * Returns the `x`,`y` translation values otherwise
-   * @example ```
-   * const view = new Viewport().translate([20, 30]);    // sets translation
-   * view.translate();   // gets translation - returns [20, 30]
-   * ```
-   */
-  translate(val?: Vec2): Vec2 | Viewport {
-    if (val === undefined) return [this._transform.x, this._transform.y];
-    this._transform.x = +val[0];
-    this._transform.y = +val[1];
-    return this;
-  }
-
-
-  /** Sets/Gets the scale factor
-   * @param val scale factor
-   * @returns When argument is provided, sets the scale factor and returns `this` for method chaining.
-   * Returns the scale factor otherwise
-   * @example ```
-   * const view = new Viewport().scale(512 / Math.PI);   // sets scale
-   * view.scale();   // gets scale - returns 512 / Math.PI;
-   * ```
-   */
-  scale(val?: number): number | Viewport {
-    if (val === undefined) return this._transform.k;
-    this._transform.k = numClamp(+val, MIN_K, MAX_K);   // constrain to z0..z24
-    return this;
-  }
-
-
-  /** Sets/Gets the zoom
-   *  Zoom is related to scale
-   * @param val zoom
-   * @param tileSize tile size (defaults to 256)
-   * @returns When argument is provided, sets the zoom and returns `this` for method chaining.
-   * Returns the zoom otherwise
-   * @example ```
-   * const view = new Viewport().zoom(2);   // sets zoom
-   * view.zoom();   // gets zoom, returns 2
-   * ```
-   */
-  zoom(val?: number, tileSize?: number): number | Viewport {
-    if (val === undefined) return geoScaleToZoom(this._transform.k, tileSize);
-    const k = geoZoomToScale(+val, tileSize);
-    this._transform.k = numClamp(k, MIN_K, MAX_K);   // constrain to z0..z24
-    return this;
-  }
-
-
-  /** Sets/Gets the map rotation (bearing)
-   * 0 is no rotation, which results in a map with North facing up.
-   * @param val rotation factor in radians (clockwise)
-   * @returns When argument is provided, sets the rotation and returns `this` for method chaining.
-   * Returns the rotation otherwise
-   * @example ```
-   * const view = new Viewport().rotate(Math.PI / 2);   // sets rotation
-   * view.rotate();   // gets rotation - returns Math.PI / 2;
-   * ```
-   */
-  rotate(val?: number): number | Viewport {
-    if (val === undefined) return this._transform.r;
-    this._transform.r = numWrap(+val, 0, TAU);   // wrap to 0..2π
-    return this;
-  }
-
-
   /** Sets/Gets a transform object
-   * @param val an object representing the current translation and scale
+   * @param other a Transform-like object containing the new Transform properties
    * @returns When argument is provided, sets `x`,`y`,`k`,`r` from the Transform and returns `this` for method chaining.
    * Returns a Transform object containing the current `x`,`y`,`k`,`r` values otherwise
    * @example ```
    * const t = { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 };
-   * const view = new Viewport().transform(t);    // sets `x`,`y`,`k` from given Transform object
-   * view.transform();   // gets transform - returns { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 }
+   * const v = new Viewport();
+   * v.transform = t;    // sets transform `x`,`y`,`k`,`r` from given Object
+   * v.transform;        // gets transform
    * ```
    */
-  transform(obj?: any): Transform | Viewport {
-    if (obj === undefined) return Object.assign({}, this._transform);  // copy
-
-    if (obj.x !== undefined)  this._transform.x = +obj.x;
-    if (obj.y !== undefined)  this._transform.y = +obj.y;
-    if (obj.k !== undefined)  this._transform.k = numClamp(+obj.k, MIN_K, MAX_K);  // constrain to z0..z24
-    if (obj.r !== undefined)  this._transform.r = numWrap(+obj.r, 0, TAU);         // wrap to 0..2π
-
-    return this;
+  get transform(): Transform {
+    return this._transform;
+  }
+  set transform(val: any) {
+    this._transform.props = val;
   }
 
 
@@ -226,22 +151,29 @@ export class Viewport {
    * @returns When argument is provided, sets the viewport max dimensions and returns `this` for method chaining.
    * Returns the viewport max dimensions otherwise
    * @example ```
-   * const view = new Viewport().dimensions([800, 600]);  // sets viewport dimensions
-   * view.dimensions();   // returns [800, 600]
+   * const v = new Viewport();
+   * v.dimensions = [800, 600];  // sets dimensions
+   * v.dimensions;               // gets dimensions, returns [800, 600]
    * ```
    */
-  dimensions(val?: Vec2): Vec2 | Viewport {
-    if (val === undefined) return this._dimensions;
-    this._dimensions = vecCeil([+val[0], +val[1]]);
-    return this;
+  get dimensions(): Vec2 {
+    return this._dimensions;
+  }
+  set dimensions(val: Vec2) {
+    const [w, h] = vecCeil([+val[0], +val[1]]);
+    if (!isNaN(w) && isFinite(w) && !isNaN(h) && isFinite(h) && (this._dimensions[0] !== w || this._dimensions[1] !== h)) {
+      this._dimensions = [w, h];
+      this.v++;
+    }
   }
 
 
   /** Returns the screen center coordinate in [x, y]
    * @returns viewport screen center coordinate in [x, y]
    * @example ```
-   * const view = new Viewport().dimensions([800, 600]);
-   * view.center();   // returns [400, 300]
+   * const v = new Viewport()
+   * v.dimensions = [800, 600];
+   * v.center();   // returns [400, 300]
    * ```
    */
   center(): Vec2 {
@@ -252,8 +184,10 @@ export class Viewport {
   /** Returns the screen center coordinate in [lon, lat]
    * @returns viewport screen center coordinate in [lon, lat]
    * @example ```
-   * const view = new Viewport().dimensions([800, 600]).translate([400, 300]);
-   * view.centerLoc();   // returns [0, 0]  ("Null Island")
+   * const v = new Viewport();
+   * v.dimensions = [800, 600]
+   * v.transform = { x: 400, y: 300 };
+   * v.centerLoc();   // returns [0, 0]  ("Null Island")
    * ```
    */
   centerLoc(): Vec2 {
