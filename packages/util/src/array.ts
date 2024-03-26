@@ -1,9 +1,12 @@
+type ArrayOrSet = Array<unknown> | Set<unknown>;
+
+
 /** Checks if provided arguments have same elements at the same indices
  * @param a
  * @param b
  * @returns Returns true if a and b have the same elements at the same indices, false otherwise
  */
-export function utilArrayIdentical(a, b) {
+export function utilArrayIdentical(a: Array<unknown>, b: Array<unknown>): boolean {
   // an array is always identical to itself
   if (a === b) return true;
 
@@ -14,6 +17,7 @@ export function utilArrayIdentical(a, b) {
   }
   return true;
 }
+
 
 /** (a \ b) Create a set that contains those elements of set a that are not in set b.
  * @description This operation is also sometimes called minus (-)
@@ -27,10 +31,11 @@ export function utilArrayIdentical(a, b) {
  * utilArrayDifference(b, a)  // returns: [4]
  * ```
  */
-export function utilArrayDifference(a, b) {
-  let other = new Set(b);
-  return Array.from(new Set(a)).filter((val) => !other.has(val));
+export function utilArrayDifference(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
+  const other = new Set(b);
+  return Array.from(new Set(a)).filter(val => !other.has(val));
 }
+
 
 /** (a ∩ b) Create a set that contains those elements of set a that are also in set b.
  * @description This operation is known as intersection
@@ -43,10 +48,11 @@ export function utilArrayDifference(a, b) {
  * utilArrayIntersection(a, b)  // returns: [2,3]
  * ```
  */
-export function utilArrayIntersection(a, b) {
-  let other = new Set(b);
-  return Array.from(new Set(a)).filter((val) => other.has(val));
+export function utilArrayIntersection(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
+  const other = new Set(b);
+  return Array.from(new Set(a)).filter(val => other.has(val));
 }
+
 
 /** (a ∪ b) Create a set that contains the elements of both set a and set b
  * @description This operation is known as union
@@ -59,11 +65,12 @@ export function utilArrayIntersection(a, b) {
  * utilArrayUnion(a, b)  // returns: [1,2,3,4]
  * ```
  */
-export function utilArrayUnion(a, b) {
-  let result = new Set(a);
-  b.forEach((val) => result.add(val));
+export function utilArrayUnion(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
+  const result = new Set(a);
+  b.forEach(val => result.add(val));
   return Array.from(result);
 }
+
 
 /** Returns an array with all the duplicates removed
  * @param a
@@ -73,9 +80,10 @@ export function utilArrayUnion(a, b) {
  * utilArrayUniq(a) // returns: [1,2,3]
  * ```
  */
-export function utilArrayUniq(a) {
+export function utilArrayUniq(a: ArrayOrSet): Array<unknown> {
   return Array.from(new Set(a));
 }
+
 
 /** Splits array into chunks of given chunk size
  * @param a target array
@@ -86,14 +94,15 @@ export function utilArrayUniq(a) {
  * utilArrayChunk(a, 3);  // returns: [[1,2,3],[4,5,6],[7]];
  * ```
  */
-export function utilArrayChunk(a, chunkSize) {
+export function utilArrayChunk(a: Array<unknown>, chunkSize: number): Array<Array<unknown>> {
   if (!chunkSize || chunkSize < 0) return [a.slice()];
 
-  let result = new Array(Math.ceil(a.length / chunkSize));
+  const result = new Array(Math.ceil(a.length / chunkSize));
   return Array.from(result, (item, i) => {
     return a.slice(i * chunkSize, i * chunkSize + chunkSize);
   });
 }
+
 
 /** Flattens two level array into a single level
  * @param a target two level array
@@ -103,9 +112,10 @@ export function utilArrayChunk(a, chunkSize) {
  * utilArrayFlatten(a); // returns: [1,2,3,4,5,6,7];
  * ```
  */
-export function utilArrayFlatten(a) {
+export function utilArrayFlatten(a: Array<Array<unknown>>): Array<unknown> {
   return a.reduce((acc, val) => acc.concat(val), []);
 }
+
 
 /** Groups the items of the Array according to the given key
  * @param a target items
@@ -134,13 +144,14 @@ export function utilArrayFlatten(a) {
  * }
  * ```
  */
-export function utilArrayGroupBy(a, key) {
+export function utilArrayGroupBy(a, key): object {
   return a.reduce((acc, item) => {
-    let group = typeof key === 'function' ? key(item) : item[key];
+    const group = typeof key === 'function' ? key(item) : item[key];
     (acc[group] = acc[group] || []).push(item);
     return acc;
   }, {});
 }
+
 
 /** Returns an Array with all the duplicates removed
  * where uniqueness determined by the given key
@@ -171,10 +182,10 @@ export function utilArrayGroupBy(a, key) {
  * }
  * ```
  */
-export function utilArrayUniqBy(a, key) {
-  let seen = new Set();
+export function utilArrayUniqBy(a, key): Array<unknown> {
+  const seen = new Set();
   return a.reduce((acc, item) => {
-    let val = typeof key === 'function' ? key(item) : item[key];
+    const val = typeof key === 'function' ? key(item) : item[key];
     if (val && !seen.has(val)) {
       seen.add(val);
       acc.push(item);

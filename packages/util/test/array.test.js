@@ -25,7 +25,7 @@ assert.sameMembers = function(a, b) {
       return;
     }
   }
-}
+};
 
 
 describe('utilArrayIdentical', () => {
@@ -59,7 +59,7 @@ describe('utilArrayIdentical', () => {
 
     const c = [{ foo: 'bar' }];
     const d = [{ foo: 'bar' }];
-    assert.equal(test.utilArrayIdentical(a, b), false);
+    assert.equal(test.utilArrayIdentical(c, d), false);
   });
 });
 

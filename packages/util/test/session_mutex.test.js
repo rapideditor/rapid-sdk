@@ -3,34 +3,6 @@ import { strict as assert } from 'node:assert';
 import * as test from '../built/util.mjs';
 
 
-function MockDocument() {
-  this._cookies = new Map();
-  this.__defineGetter__('cookie', () => {
-    const items = [];
-    for (const [k, v] of this._cookies) {
-      items.push(v !== undefined ? `${k}=${v}` : k);
-    }
-    return items.join(';');
-  });
-
-  this.__defineSetter__('cookie', (s) => {
-    const items = s.split(';');
-    for (const item of items) {
-      const [k, v] = item.split('=');
-      this._cookies.set(k.trim(), (v !== undefined ? v.trim() : undefined));
-    }
-    return s;
-  });
-}
-
-if (!global.document) {  // mock document.cookie for Node
-  global.document = new MockDocument();
-}
-if (!global.window) {
-  global.window = globalThis;
-}
-
-
 describe('utilSessionMutex', () => {
   let a, b;
 

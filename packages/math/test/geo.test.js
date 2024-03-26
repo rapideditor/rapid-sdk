@@ -7,7 +7,7 @@ assert.closeTo = function(a, b, epsilon = 1e-6) {
   if (Math.abs(a - b) > epsilon) {
     assert.fail(`${a} is not close to ${b} within ${epsilon}`);
   }
-}
+};
 
 describe('math/geo', () => {
   describe('geoLatToMeters', () => {

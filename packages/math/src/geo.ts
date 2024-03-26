@@ -151,11 +151,11 @@ export interface Closest {
  * @returns closest info if exists, null otherwise
  */
 export function geoSphericalClosestPoint(points: Vec2[], a: Vec2): Closest | null {
-  let minDistance: number = Infinity;
+  let minDistance = Infinity;
   let idx: number | undefined;
 
-  for (let i: number = 0; i < points.length; i++) {
-    let distance: number = geoSphericalDistance(points[i], a);
+  for (let i = 0; i < points.length; i++) {
+    const distance = geoSphericalDistance(points[i], a);
     if (distance < minDistance) {
       minDistance = distance;
       idx = i;

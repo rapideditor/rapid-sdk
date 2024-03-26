@@ -25,11 +25,12 @@
   "main": "./built/math.mjs",
   "module": "./built/math.mjs",
   "scripts": {
-    "all": "run-s clean build test",
+    "all": "run-s clean build lint test",
     "clean": "shx rm -rf ./built",
     "build": "run-p build:**",
     "build:js": "node ./esbuild.js",
     "build:types": "tsc",
+    "lint": "eslint .",
     "test": "c8 node --test"
   },
   "dependencies": {

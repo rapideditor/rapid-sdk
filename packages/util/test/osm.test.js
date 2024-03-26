@@ -13,7 +13,7 @@ assert.arrayContains = function(choices, val) {
     if (Object.is(val, choice)) return;  // found one
   }
   assert.fail(`${val} is not one of ${choices}`);
-}
+};
 
 
 describe('utilCleanTags', () => {
@@ -186,10 +186,10 @@ describe('utilGetAllNodes', () => {
     const c = { id: 'c', type: 'node' };
     const d = { id: 'd', type: 'node' };
     const e = { id: 'e', type: 'node' };
-    const w1 = { id: 'w1', nodes: ['a', 'b', 'a'], type: 'way' };
-    const w2 = { id: 'w2', nodes: ['c', 'b', 'a', 'c'], type: 'way' };
-    const r = { id: 'r', members: [{ id: 'w1' }, { id: 'd' }] };
-    const graph = {
+    const w11 = { id: 'w11', nodes: ['a', 'b', 'a'], type: 'way' };
+    const w12 = { id: 'w12', nodes: ['c', 'b', 'a', 'c'], type: 'way' };
+    const r = { id: 'r', members: [{ id: 'w11' }, { id: 'd' }] };
+    const graph2 = {
       hasEntity: (id) =>
         ({
           a: a,
@@ -197,12 +197,12 @@ describe('utilGetAllNodes', () => {
           c: c,
           d: d,
           e: e,
-          w1: w1,
-          w2: w2,
+          w11: w11,
+          w12: w12,
           r: r
         }[id])
     };
-    const result = test.utilGetAllNodes(['r', 'w2', 'e'], graph);
+    const result = test.utilGetAllNodes(['r', 'w12', 'e'], graph2);
     assert.arrayContains(result, a);
     assert.arrayContains(result, b);
     assert.arrayContains(result, c);
@@ -213,17 +213,17 @@ describe('utilGetAllNodes', () => {
 
   it('handles recursive relations', () => {
     const n = { id: 'n', type: 'node' };
-    const r1 = { id: 'r1', members: [{ id: 'r2' }], type: 'relation' };
-    const r2 = { id: 'r2', members: [{ id: 'r1' }, { id: 'n' }], type: 'relation' };
-    const graph = {
+    const r11 = { id: 'r11', members: [{ id: 'r12' }], type: 'relation' };
+    const r12 = { id: 'r12', members: [{ id: 'r11' }, { id: 'n' }], type: 'relation' };
+    const graph2 = {
       hasEntity: (id) =>
         ({
           n: n,
-          r1: r1,
-          r2: r2
+          r11: r11,
+          r12: r12
         }[id])
     };
-    const result = test.utilGetAllNodes(['r1'], graph);
+    const result = test.utilGetAllNodes(['r11'], graph2);
     assert.arrayContains(result, n);
     assert.equal(result.length, 1);
   });
@@ -235,6 +235,7 @@ describe('utilGetAllNodes', () => {
 
   it('handles degenerate relations', () => {});
 });
+
 
 describe('utilTagDiff', () => {
   const oldTags = { a: 'one', b: 'two', c: 'three' };

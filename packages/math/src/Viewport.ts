@@ -3,13 +3,11 @@
  * @module
  */
 
-import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MIN_K, MAX_K, MIN_PHI, MAX_PHI } from './constants';
+import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MIN_PHI, MAX_PHI } from './constants';
 import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
-import { geoScaleToZoom, geoZoomToScale } from './geo';
-import { geomRotatePoints } from './geom';
-import { Transform } from './Transform';
-import { Vec2, vecRotate, vecScale, vecSubtract, vecCeil } from './vector';
+import { Transform, TransformProps } from './Transform';
+import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
 
 
 /** `Viewport` is a class for managing the state of the viewer
@@ -44,9 +42,9 @@ import { Vec2, vecRotate, vecScale, vecSubtract, vecCeil } from './vector';
  *                           ''G  |
  */
 export class Viewport {
-  private _transform: Transform = new Transform();
+  private _transform = new Transform();
   private _dimensions: Vec2 = [0, 0];
-  private _v: number = 1;
+  private _v = 1;
 
 
   /** Constructs a new Viewport
@@ -58,7 +56,7 @@ export class Viewport {
    * const view2 = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
    * ```
    */
-  constructor(transform?: any, dimensions?: Vec2) {
+  constructor(transform?: Partial<TransformProps>, dimensions?: Vec2) {
     if (transform) this.transform = transform;
     if (dimensions) this.dimensions = dimensions;
   }
@@ -89,7 +87,7 @@ export class Viewport {
 
     const lambda = loc[0] * DEG2RAD;
     const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const mercatorX = lambda
+    const mercatorX = lambda;
     const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
     const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
 
@@ -141,7 +139,7 @@ export class Viewport {
   get transform(): Transform {
     return this._transform;
   }
-  set transform(val: any) {
+  set transform(val: Partial<TransformProps>) {
     this._transform.props = val;
   }
 

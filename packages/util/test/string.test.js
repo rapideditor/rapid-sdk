@@ -13,7 +13,7 @@ assert.equalOneOf = function(val, choices) {
     if (Object.is(val, choice)) return;  // found one
   }
   assert.fail(`${val} is not one of ${choices}`);
-}
+};
 
 
 describe('utilEditDistance', () => {
@@ -105,7 +105,7 @@ describe('utilQsString', () => {
       map: '1/1/1',
       map3d: '2/2/2',
       poweruser: 'true'
-    }
+    };
     assert.equal(test.utilQsString(q, true), 'map=1/1/1&map3d=2/2/2&background=test&poweruser=true');
   });
 });
@@ -223,10 +223,14 @@ describe('utilSortString', () => {
 
   testCases(test.utilSortString('en'));
   testCases(test.utilSortString());
+
+  /* Ok to reassign `Intl` here - we are testing whether this works in legacy environments */
+  /* eslint-disable no-global-assign */
   const _Intl = Intl;
   Intl = undefined;
   testCases(test.utilSortString('en'));
   Intl = {};
   testCases(test.utilSortString('en'));
   Intl = _Intl;
+  /* eslint-enable no-global-assign */
 });

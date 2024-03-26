@@ -7,7 +7,7 @@ assert.closeTo = function(a, b, epsilon = 1e-6) {
   if (Math.abs(a - b) > epsilon) {
     assert.fail(`${a} is not close to ${b} within ${epsilon}`);
   }
-}
+};
 
 describe('math/viewport', () => {
   describe('constructor', () => {
@@ -214,19 +214,19 @@ describe('math/viewport', () => {
 
   describe('#dimensions', () => {
     it('sets/gets dimensions', () => {
-      const view = new Viewport()
+      const view = new Viewport();
       view.dimensions = [800, 600];
       assert.deepEqual(view.dimensions, [800, 600]);
     });
 
     it('rounds up fractional dimensions', () => {
-      const view = new Viewport()
+      const view = new Viewport();
       view.dimensions = [800.3, 600.6];
       assert.deepEqual(view.dimensions, [801, 601]);
     });
 
     it('increments version only on actual change', () => {
-      const view = new Viewport()
+      const view = new Viewport();
       const v0 = view.v;
       view.dimensions = [800, 600];
       assert.equal(view.v, v0 + 1);  // increment once
@@ -290,10 +290,11 @@ describe('math/viewport', () => {
       '-45':  [[-150, 150], [200, 500], [550, 150], [200, -200], [-150, 150]]
     };
 
-    for (const [degrees, expected] of Object.entries(tests)) {
-      it(`returns visible polygon when viewport is rotated ${degrees}°`, () => {
+    for (const [key, expected] of Object.entries(tests)) {
+      it(`returns visible polygon when viewport is rotated ${key}°`, () => {
+        const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD };
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visiblePolygon();
@@ -344,10 +345,11 @@ describe('math/viewport', () => {
       '-45':  [500, 500]
     };
 
-    for (const [degrees, expected] of Object.entries(tests)) {
-      it(`returns visible dimensions when viewport is rotated ${degrees}°`, () => {
+    for (const [key, expected] of Object.entries(tests)) {
+      it(`returns visible dimensions when viewport is rotated ${key}°`, () => {
+        const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD };
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visibleDimensions();
@@ -397,10 +399,11 @@ describe('math/viewport', () => {
       '-45':  [[-174.014559, -84.506965], [174.014559, 84.506965]]
     };
 
-    for (const [degrees, expected] of Object.entries(tests)) {
-      it(`returns visible dimensions when viewport is rotated ${degrees}°`, () => {
+    for (const [key, expected] of Object.entries(tests)) {
+      it(`returns visible dimensions when viewport is rotated ${key}°`, () => {
+        const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: Number.parseInt(degrees) * DEG2RAD };
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visibleExtent();

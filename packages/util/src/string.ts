@@ -8,13 +8,13 @@ import { remove as removeDiacritics } from 'diacritics';
  * @param b
  * @returns levenshtein distance
  */
-export function utilEditDistance(a, b) {
+export function utilEditDistance(a: string, b: string): number {
   a = removeDiacritics(a.toLowerCase());
   b = removeDiacritics(b.toLowerCase());
   if (a.length === 0) return b.length;
   if (b.length === 0) return a.length;
 
-  let matrix: number[][] = [];
+  const matrix: number[][] = [];
   for (let i = 0; i <= b.length; i++) {
     matrix[i] = [i];
   }
@@ -46,7 +46,7 @@ export function utilEditDistance(a, b) {
  * @param str
  * @returns
  */
-export function utilHashcode(str) {
+export function utilHashcode(str: string): number {
   let hash = 0;
   if (str.length === 0) return hash;
 
@@ -64,7 +64,7 @@ export function utilHashcode(str) {
  * @param noencode
  * @returns query string
  */
-export function utilQsString(obj, noencode) {
+export function utilQsString(obj: object, noencode: boolean): string {
   // encode everything except special characters used in certain hash parameters:
   // "/" in map states, ":", ",", {" and "}" in background
   function softEncode(s) {
@@ -93,7 +93,7 @@ export function utilQsString(obj, noencode) {
  * @param str
  * @returns object
  */
-export function utilStringQs(str) {
+export function utilStringQs(str: string): object {
   let i = 0; // advance past any leading '?' or '#' characters
   while (i < str.length && (str[i] === '?' || str[i] === '#')) i++;
   str = str.slice(i);
@@ -113,7 +113,7 @@ export function utilStringQs(str) {
  * @param str target string
  * @returns length
  */
-export function utilUnicodeCharsCount(str) {
+export function utilUnicodeCharsCount(str: string): number {
   // Native ES2015 implementations of `Array.from` split strings into unicode characters
   return Array.from(str).length;
 }
@@ -125,7 +125,7 @@ export function utilUnicodeCharsCount(str) {
  * @param limit length in unicode characters
  * @returns
  */
-export function utilUnicodeCharsTruncated(str, limit) {
+export function utilUnicodeCharsTruncated(str: string, limit: number): string {
   return Array.from(str).slice(0, limit).join('');
 }
 
@@ -135,7 +135,7 @@ export function utilUnicodeCharsTruncated(str, limit) {
  * @param str
  * @returns
  */
-export function utilSafeString(str) {
+export function utilSafeString(str: string): string {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '_');
 }
 
@@ -145,7 +145,7 @@ export function utilSafeString(str) {
  * @param val
  * @returns
  */
-export function utilUniqueString(val) {
+export function utilUniqueString(val: string): string {
   return 'rapideditor-' + utilSafeString(val.toString()) + '-' + new Date().getTime().toString();
 }
 

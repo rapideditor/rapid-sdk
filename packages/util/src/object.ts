@@ -3,11 +3,11 @@
  * @param omitKeys - keys to omit
  * @returns
  */
-export function utilObjectOmit(obj, omitKeys) {
-  return Object.keys(obj).reduce((result, key) => {
-    if (omitKeys.indexOf(key) === -1) {
-      result[key] = obj[key]; // keep
-    }
-    return result;
-  }, {});
+export function utilObjectOmit(obj: object, omitKeys: string[]): object {
+  const result = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (omitKeys.includes(k)) continue;
+    result[k] = v;  // keep
+  }
+  return result;
 }

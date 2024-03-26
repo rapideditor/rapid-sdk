@@ -6,12 +6,11 @@
  */
 
 import { Extent } from './Extent';
-import { Transform } from './Transform';
 import { Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
 import { numClamp } from './number';
-import { Vec2, Vec3, vecAdd, vecRotate } from './vector';
+import { Vec2, Vec3, vecAdd } from './vector';
 
 
 /** Contains essential information about a tile */
@@ -28,6 +27,7 @@ export interface Tile {
   isVisible: boolean;
 }
 
+
 /** An Object used to return information about the tiles covering a given viewport */
 export interface TileResult {
   tiles: Tile[];
@@ -40,10 +40,10 @@ function range(start: number, end: number): number[] {
 
 
 export class Tiler {
-  private _tileSize: number = 256;
+  private _tileSize = 256;
   private _zoomRange: Vec2 = [0, 24];
-  private _margin: number = 0;
-  private _skipNullIsland: boolean = false;
+  private _margin = 0;
+  private _skipNullIsland = false;
 
   /** Constructs a new Tiler
    * @description By default, the tiler uses a 256px tilesize, a zoomRange of 0-24,
@@ -145,9 +145,8 @@ export class Tiler {
 
     const ts = this._tileSize;     // tile size in pizels
     const ms = this._margin * ts;  // margin size in pixels
-    const t = viewport.transform;
+    const t = viewport.transform.props;
     const [sw, sh] = viewport.dimensions;
-    const [vw, vh] = viewport.visibleDimensions() as Vec2;
     let visiblePolygon = viewport.visiblePolygon() as Vec2[];
     let screenPolygon = [[0, 0], [0, sh], [sw, sh], [sw, 0], [0, 0]] as Vec2[];
 
@@ -287,7 +286,7 @@ export class Tiler {
    * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
    * ```
    */
-  getGeoJSON(tileResult: TileResult): Object {
+  getGeoJSON(tileResult: TileResult): object {
     const features = tileResult.tiles.map((tile) => {
       return {
         type: 'Feature',

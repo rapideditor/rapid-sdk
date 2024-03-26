@@ -26,13 +26,15 @@
   ],
   "devDependencies": {
     "@types/geojson": "^7946.0.14",
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.11.30",
     "c8": "^9.1.0",
-    "esbuild": "^0.20.1",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.4",
-    "typedoc": "^0.25.9",
-    "typescript": "^5.3.3"
+    "typedoc": "^0.25.12",
+    "typescript": "^5.4.3",
+    "typescript-eslint": "^7.4.0"
   },
   "scripts": {
     "all": "run-s clean build test",
@@ -41,9 +43,10 @@
     "build:types": "npm run build:types --workspaces",
     "clean": "npm run clean --workspaces",
     "docs": "typedoc",
+    "lint": "npm run lint --workspaces",
     "test": "npm run test --workspaces"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18.18"
   }
 }

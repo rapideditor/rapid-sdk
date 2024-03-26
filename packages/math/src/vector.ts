@@ -74,7 +74,7 @@ export function vecScale(a: Vec2, n: number): Vec2 {
  * ```
  */
 export function vecRotate(a: Vec2, angle: number, around: Vec2): Vec2 {
-  const radial: Vec2 = vecSubtract(a, around);
+  const radial = vecSubtract(a, around);
   return [
     radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
     radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
@@ -163,8 +163,8 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
  * ```
  */
 export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
-  const x: number = a[0] - b[0];
-  const y: number = a[1] - b[1];
+  const x = a[0] - b[0];
+  const y = a[1] - b[1];
   return Math.sqrt(x * x + y * y);
 }
 
@@ -181,8 +181,8 @@ export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
  * ```
  */
 export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]): number {
-  const x: number = a[0] - b[0];
-  const y: number = a[1] - b[1];
+  const x = a[0] - b[0];
+  const y = a[1] - b[1];
   return x * x + y * y;
 }
 
@@ -195,11 +195,12 @@ export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]): number {
  * ```
  */
 export function vecNormalize(a: Vec2): Vec2 {
-  const length: number = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+  const length = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
   if (length !== 0) {
     return vecScale(a, 1 / length);
+  } else {
+    return [0, 0];
   }
-  return [0, 0];
 }
 
 
@@ -245,8 +246,8 @@ export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
  */
 export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
-  const p: Vec2 = vecNormalize(vecSubtract(a, origin));
-  const q: Vec2 = vecNormalize(vecSubtract(b, origin));
+  const p = vecNormalize(vecSubtract(a, origin));
+  const q = vecNormalize(vecSubtract(b, origin));
   return vecDot(p, q);
 }
 
@@ -263,8 +264,8 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
  */
 export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
-  const p: Vec2 = vecSubtract(a, origin);
-  const q: Vec2 = vecSubtract(b, origin);
+  const p = vecSubtract(a, origin);
+  const q = vecSubtract(b, origin);
   return p[0] * q[1] - p[1] * q[0];
 }
 
@@ -296,15 +297,15 @@ export interface Edge {
  * ```
  */
 export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
-  let min: number = Infinity;
+  let min = Infinity;
   let idx: number | undefined;
   let target: Vec2 | undefined;
 
-  for (let i: number = 0; i < points.length - 1; i++) {
+  for (let i = 0; i < points.length - 1; i++) {
     const o: Vec2 = points[i];
     const s: Vec2 = vecSubtract(points[i + 1], o);
     const v: Vec2 = vecSubtract(a, o);
-    const proj: number = vecDot(v, s) / vecDot(s, s);
+    const proj = vecDot(v, s) / vecDot(s, s);
     let p: Vec2;
 
     if (proj < 0) {
@@ -315,7 +316,7 @@ export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
       p = [o[0] + proj * s[0], o[1] + proj * s[1]];
     }
 
-    let dist: number = vecLength(p, a);
+    const dist = vecLength(p, a);
     if (dist < min) {
       min = dist;
       idx = i + 1;

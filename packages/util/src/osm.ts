@@ -5,32 +5,30 @@ import { utilArrayUnion } from './array';
  * @param tags
  * @returns
  */
-export function utilCleanTags(tags) {
-  let out = {};
-  for (const k in tags) {
+export function utilCleanTags(tags: object): object {
+  const result = {};
+  for (const [k,v] of Object.entries(tags)) {
     if (!k) continue;
-    const v = tags[k];
     if (v !== undefined) {
-      out[k] = cleanValue(k, v);
+      result[k] = _cleanValue(k, v);
     }
   }
 
-  return out;
+  return result;
 
-  function cleanValue(k, v) {
-    function keepSpaces(k) {
-      return /_hours|_times|:conditional$/.test(k);
-    }
-    function skip(k) {
-      return /^(description|note|fixme)$/.test(k);
-    }
-
-    if (skip(k)) return v;
+  function _keepSpaces(k) {
+    return /_hours|_times|:conditional$/.test(k);
+  }
+  function _skip(k) {
+    return /^(description|note|fixme)$/.test(k);
+  }
+  function _cleanValue(k, v) {
+    if (_skip(k)) return v;
 
     let cleaned = v
       .split(';')
-      .map((str) => str.trim())
-      .join(keepSpaces(k) ? '; ' : ';');
+      .map(str => str.trim())
+      .join(_keepSpaces(k) ? '; ' : ';');
 
     // The code below is not intended to validate websites and emails.
     // It is only intended to prevent obvious copy-paste errors. (#2323)
@@ -44,14 +42,14 @@ export function utilCleanTags(tags) {
 }
 
 
-/** Returns an array of entityIDs for the given entity and any descendants
+/** Returns an Array of entityIDs for the given entity and any descendants
  * - entityIDs passed in
  * - deep descendant entityIDs for any of those entities that are relations
  * @param ids
  * @param graph
  * @returns
  */
-export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
+export function utilEntityAndDeepMemberIDs(ids: string[], graph): string[] {
   const seen = new Set<string>();
   ids.forEach(collectDeepDescendants);
   return Array.from(seen);
@@ -60,7 +58,7 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
     if (seen.has(id)) return;
     seen.add(id);
 
-    let entity = graph.hasEntity(id);
+    const entity = graph.hasEntity(id);
     if (!entity || entity.type !== 'relation') return;
 
     (entity.members || []).forEach((member) => collectDeepDescendants(member.id)); // recurse
@@ -76,9 +74,9 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph) {
  * @param graph
  * @returns
  */
-export function utilGetAllNodes(ids: string[], graph) {
+export function utilGetAllNodes(ids: string[], graph): object[] {
   const seen = new Set<string>();
-  const nodes = new Set();
+  const nodes = new Set<object>();
 
   ids.forEach(collectNodes);
   return Array.from(nodes);
@@ -87,7 +85,7 @@ export function utilGetAllNodes(ids: string[], graph) {
     if (seen.has(id)) return;
     seen.add(id);
 
-    let entity = graph.hasEntity(id);
+    const entity = graph.hasEntity(id);
     if (!entity) return;
 
     if (entity.type === 'node') {
@@ -100,23 +98,25 @@ export function utilGetAllNodes(ids: string[], graph) {
   }
 }
 
-type TagDiff = {
+
+/** Contains results for diffing old and new tags */
+export interface TagDiff {
   type: string;
   key: string;
-  oldVal: any;
-  newVal: any;
+  oldVal: string | null;
+  newVal: string | null;
   display: string;
-};
+}
 
 /** Performs tag diff between old and new tags
  * @param oldTags
  * @param newTags
  * @returns the resulting diff
  */
-export function utilTagDiff(oldTags, newTags) {
-  let tagDiff: TagDiff[] = [];
+export function utilTagDiff(oldTags: object, newTags: object): TagDiff[] {
+  const tagDiff: TagDiff[] = [];
   const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort() as string[];
-  keys.forEach((k) => {
+  keys.forEach(k => {
     const oldVal = oldTags[k];
     const newVal = newTags[k];
 
@@ -142,9 +142,9 @@ export function utilTagDiff(oldTags, newTags) {
   return tagDiff;
 }
 
-export function utilTagText(entity) {
-  const obj = (entity && entity.tags) || {};
+export function utilTagText(entity): string {
+  const obj = entity?.tags ?? {};
   return Object.keys(obj)
-    .map((k) => `${k}=${obj[k]}`)
+    .map(k => `${k}=${obj[k]}`)
     .join(', ');
 }

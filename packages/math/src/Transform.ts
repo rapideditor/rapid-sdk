@@ -8,6 +8,18 @@ import { numClamp, numWrap } from './number';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { Vec2 } from './vector';
 
+/** Contains the properties that define the transform */
+export interface TransformProps {
+  /** translation in x direction from origin */
+  x: number;
+  /** translation in y direction from origin */
+  y: number;
+  /** scale factor */
+  k: number;
+  /** rotation, in radians */
+  r: number;
+}
+
 
 /** `Transform` is a class for dealing with transform data
  *   `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
@@ -16,11 +28,11 @@ import { Vec2 } from './vector';
  */
 
 export class Transform {
-  public x: number = 0;
-  public y: number = 0;
-  public k: number = 256 / Math.PI;  // z1
-  public r: number = 0;
-  private _v: number = 1;
+  public x = 0;
+  public y = 0;
+  public k = 256 / Math.PI;  // z1
+  public r = 0;
+  private _v = 1;
 
 
   /** Constructs a new Transform
@@ -59,7 +71,6 @@ export class Transform {
     return this.k;
   }
   set scale(val: number) {
-    const k = numClamp(+val, MIN_K, MAX_K);   // constrain to z0..z24
     this.props = { k: val };
   }
 
@@ -87,10 +98,10 @@ export class Transform {
 
   /**
    */
-  get props(): Object {
+  get props(): Required<TransformProps> {
     return { x: this.x, y: this.y, k: this.k, r: this.r };
   }
-  set props(val: any) {
+  set props(val: Partial<TransformProps>) {
     let changed = false;
 
     if (val.x !== undefined && val.x !== null) {
