@@ -21,8 +21,14 @@ links:
 -->
 
 # 1.0.0-pre.2
-#### 2024-Feb-??  (coming soon)
+#### 2024-Mar-27
+* [#273] Add `eslint`, `typescript-eslint` to the project
+  * ⚠️  Also, narrow several of the types (we were using `any` a lot)
+* [#269] Add package of numerical math functions and constants
+* [#268] Add `Extent.extendSelf(other)` as a mutable version of `Extent.extend(other)`
+* [#266] Rename `Projection`->`Viewport`, Extract several things to `Transform` class
 * [#265] Include `map=` param before others in query strings
+* [#264] Support map rotation in `Transform`, `Viewport`, `Tiler`
 * [#263] ⚠️ Remove some things not needed:
    * d3 projection streams
    * util functions for working with css classes
@@ -32,7 +38,12 @@ links:
 [#254]: https://github.com/rapideditor/rapid-sdk/issues/254
 [#255]: https://github.com/rapideditor/rapid-sdk/issues/255
 [#263]: https://github.com/rapideditor/rapid-sdk/issues/263
+[#264]: https://github.com/rapideditor/rapid-sdk/issues/264
 [#265]: https://github.com/rapideditor/rapid-sdk/issues/265
+[#266]: https://github.com/rapideditor/rapid-sdk/issues/266
+[#268]: https://github.com/rapideditor/rapid-sdk/issues/268
+[#269]: https://github.com/rapideditor/rapid-sdk/issues/269
+[#273]: https://github.com/rapideditor/rapid-sdk/issues/273
 [@k-yle]: https://github.com/k-yle
 
 
