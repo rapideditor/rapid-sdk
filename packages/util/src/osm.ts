@@ -20,7 +20,7 @@ export function utilCleanTags(tags: object): object {
     return /_hours|_times|:conditional$/.test(k);
   }
   function _skip(k) {
-    return /^(description|note|fixme)$/.test(k);
+    return /^(description|note|fixme|inscription)$/.test(k);
   }
   function _cleanValue(k, v) {
     if (_skip(k)) return v;

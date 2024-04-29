@@ -75,11 +75,12 @@ describe('utilCleanTags', () => {
     });
   });
 
-  it('does not clean description, note, fixme', () => {
+  it('does not clean description, note, fixme, inscription', () => {
     const t = {
       description: '   value',
       note: 'value  ',
-      fixme: '   value  '
+      fixme: '   value  ',
+      inscription: ' value1 ; value2 '
     };
     const result = test.utilCleanTags(t);
     assert.deepEqual(result, t);
