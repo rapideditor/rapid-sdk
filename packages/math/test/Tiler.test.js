@@ -280,9 +280,10 @@ describe('math/tiler', () => {
             ].reverse();
 
             expected.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
           });
 
@@ -329,14 +330,16 @@ describe('math/tiler', () => {
             ];
 
             expectedVisible.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
             expectedMargin.forEach((xyz, i) => {
-              assert.equal(tiles[i + 4].id, xyz.join(','));
-              assert.deepEqual(tiles[i + 4].xyz, xyz);
-              assert.equal(tiles[i + 4].isVisible, false);
+              const tile = tiles[i + 4];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
             });
           });
 
@@ -376,9 +379,10 @@ describe('math/tiler', () => {
             ].reverse();
 
             expected.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
           });
 
@@ -425,14 +429,16 @@ describe('math/tiler', () => {
             ];
 
             expectedVisible.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
             expectedMargin.forEach((xyz, i) => {
-              assert.equal(tiles[i + 2].id, xyz.join(','));
-              assert.deepEqual(tiles[i + 2].xyz, xyz);
-              assert.equal(tiles[i + 2].isVisible, false);
+              const tile = tiles[i + 2];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
             });
           });
 
@@ -470,9 +476,10 @@ describe('math/tiler', () => {
             ];
 
             expected.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
           });
 
@@ -518,14 +525,16 @@ describe('math/tiler', () => {
             ];
 
             expectedVisible.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
             expectedMargin.forEach((xyz, i) => {
-              assert.equal(tiles[i + 1].id, xyz.join(','));
-              assert.deepEqual(tiles[i + 1].xyz, xyz);
-              assert.equal(tiles[i + 1].isVisible, false);
+              const tile = tiles[i + 1];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
             });
           });
         });
@@ -569,9 +578,10 @@ describe('math/tiler', () => {
             ].reverse();
 
             expected.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
           });
 
@@ -621,14 +631,16 @@ describe('math/tiler', () => {
             ];
 
             expectedVisible.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
             expectedMargin.forEach((xyz, i) => {
-              assert.equal(tiles[i + 4].id, xyz.join(','));
-              assert.deepEqual(tiles[i + 4].xyz, xyz);
-              assert.equal(tiles[i + 4].isVisible, false);
+              const tile = tiles[i + 4];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
             });
           });
 
@@ -649,7 +661,7 @@ describe('math/tiler', () => {
             //       / 0,3,2 /    ''-+..__   / 3,2,2 /
             //      +__     / 1,3,2 /     ''+-..__  /
             //         ''--+.__    / 2,3,2 /      '+
-            //                 ''-+..__   / 3,3,2  /
+            //                 ''-+..__   / 3,3,2 /
             //                         ''+-..__  /
             //                                 '+
             //
@@ -670,9 +682,10 @@ describe('math/tiler', () => {
             ].reverse();
 
             expected.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
           });
 
@@ -693,7 +706,7 @@ describe('math/tiler', () => {
             //       / 0,3,2 /    ''-+..__   / 3,2,2 /
             //      +__     / 1,3,2 /     ''+-..__  /
             //         ''--+.__    / 2,3,2 /      '+
-            //                 ''-+..__   / 3,3,2  /
+            //                 ''-+..__   / 3,3,2 /
             //                         ''+-..__  /
             //                                 '+
             //
@@ -722,16 +735,331 @@ describe('math/tiler', () => {
             ];
 
             expectedVisible.forEach((xyz, i) => {
-              assert.equal(tiles[i].id, xyz.join(','));
-              assert.deepEqual(tiles[i].xyz, xyz);
-              assert.equal(tiles[i].isVisible, true);
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
             });
             expectedMargin.forEach((xyz, i) => {
-              assert.equal(tiles[i + 3].id, xyz.join(','));
-              assert.deepEqual(tiles[i + 3].xyz, xyz);
-              assert.equal(tiles[i + 3].isVisible, false);
+              const tile = tiles[i + 3];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
             });
           });
+
+
+          it('gets tiles in 1 tile viewport, rotated, viewport contained in tile', () => {
+            //
+            //        N         +__
+            //    W._/         /   ''--+.__
+            //      /'-E      / 0,0,2 /    ''-+..__
+            //     S         +__     / 1,0,2 /     ''+-..__
+            //              /   ''--+.__    / 2,0,2 /      '+
+            //             / 0,1,2 /    ''-+..__   / 3,0,2 /
+            //            +__     / 1,1,2 /     ''+-..__  /
+            //           /   ''--+.__    / 2,1,2 /      '+
+            //          / 0,2,2 /╔══╗''-+..__   / 3,1,2 /
+            //         +__     / ╚══╝  /     ''+-..__  /
+            //        /   ''--+._1,2,2/ 2,2,2 /      '+
+            //       / 0,3,2 /    ''-+..__   / 3,2,2 /
+            //      +__     / 1,3,2 /     ''+-..__  /
+            //         ''--+.__    / 2,3,2 /      '+
+            //                 ''-+..__   / 3,3,2 /
+            //                         ''+-..__  /
+            //                                 '+
+            //
+            const k = (TS * Math.pow(2, 2)) / TAU; // z2
+            const t = new Tiler().tileSize(TS);
+            const v = new Viewport();
+            v.transform = { x: HALFTS, y: -HALFTS, k: k, r: Math.PI / 4 };
+            v.dimensions = [5, 5];  // very small
+
+            const result = t.getTiles(v);
+            const tiles = result.tiles;
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 1);
+
+            const expected = [
+              [1,2,2]
+            ];
+
+            expected.forEach((xyz, i) => {
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
+            });
+          });
+
+
+          it('gets tiles in 1 tile viewport + 1 tile margin, rotated, viewport contained in tile', () => {
+            //
+            //        N         +__
+            //    W._/         /   ''--+.__
+            //      /'-E      / 0,0,2 /    ''-+..__
+            //     S         +__     / 1,0,2 /     ''+-..__
+            //              /   ''--+.__    / 2,0,2 /      '+
+            //             / 0,1,2 /    ''-+..__   / 3,0,2 /
+            //            +__     / 1,1,2 /     ''+-..__  /
+            //           /   ''--+.__    / 2,1,2 /      '+
+            //          / 0,2,2 /╔══╗''-+..__   / 3,1,2 /
+            //         +__     / ╚══╝  /     ''+-..__  /
+            //        /   ''--+._1,2,2/ 2,2,2 /      '+
+            //       / 0,3,2 /    ''-+..__   / 3,2,2 /
+            //      +__     / 1,3,2 /     ''+-..__  /
+            //         ''--+.__    / 2,3,2 /      '+
+            //                 ''-+..__   / 3,3,2 /
+            //                         ''+-..__  /
+            //                                 '+
+            //
+            const k = (TS * Math.pow(2, 2)) / TAU; // z2
+            const t = new Tiler().tileSize(TS).margin(1);
+            const v = new Viewport();
+            v.transform = { x: HALFTS, y: -HALFTS, k: k, r: Math.PI / 4 };
+            v.dimensions = [5, 5];  // very small
+
+            const result = t.getTiles(v);
+            const tiles = result.tiles;
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 9);
+
+            // note: tiles in view are returned before tiles in margin
+            const expectedVisible = [
+              [1,2,2]
+            ];
+
+            const expectedMargin = [
+              [0,1,2], [1,1,2], [2,1,2],
+              [0,2,2],          [2,2,2],
+              [0,3,2], [1,3,2], [2,3,2]
+            ];
+
+            expectedVisible.forEach((xyz, i) => {
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
+            });
+            expectedMargin.forEach((xyz, i) => {
+              const tile = tiles[i+1];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
+            });
+          });
+
+
+          it('gets tiles in 9 tile viewport, rotated, tile corners contained in viewport', () => {
+            //
+            //        N         +__
+            //    W._/         /   ''--+.__
+            //      /'-E      / 0,0,2 /    ''-+..__
+            //     S         +__     / 1,0,2 /     ''+-..__
+            //              /   ''--+.__    / 2,0,2 /      '+
+            //             / 0,1,2 /    ''-+..__   / 3,0,2 /
+            //            +__     / 1,1,2 / 2,1,2'+-..__  /
+            //           /   ''--+._╔═══════════╗/      '+
+            //          / 0,2,2 /   ║''-+..__   ║ 3,1,2 /
+            //         +__     / 1,2║2 /     ''+║..__  /
+            //        /   ''--+.__  ║ / 2,2,2 / ║    '+
+            //       / 0,3,2 /    ''║+..__   / 3║2,2 /
+            //      +__     / 1,3,2 ║ 2,3,2'+-..║_  /
+            //         ''--+._     /╚═══════════╝ '+
+            //                 ''-+..__   / 3,3,2 /
+            //                         ''+-..__  /
+            //                                 '+
+            //
+            const k = (TS * Math.pow(2, 2)) / TAU; // z2
+            const t = new Tiler().tileSize(TS);
+            const v = new Viewport();
+            v.transform = { x: HALFTS, y: HALFTS, k: k, r: Math.PI / 4 };
+            v.dimensions = [TWOTS, TWOTS];
+
+            const result = t.getTiles(v);
+            const tiles = result.tiles;
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 9);
+
+            const expected = [
+              [1,1,2], [2,1,2], [3,1,2],
+              [1,2,2], [2,2,2], [3,2,2],
+              [1,3,2], [2,3,2], [3,3,2]
+            ].reverse();
+
+            expected.forEach((xyz, i) => {
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
+            });
+          });
+
+
+          it('gets tiles in 9 tile viewport + 1 tile margin, rotated, tile corners contained in viewport', () => {
+            //
+            //        N         +__
+            //    W._/         /   ''--+.__
+            //      /'-E      / 0,0,2 /    ''-+..__
+            //     S         +__     / 1,0,2 /     ''+-..__
+            //              /   ''--+.__    / 2,0,2 /      '+
+            //             / 0,1,2 /    ''-+..__   / 3,0,2 /
+            //            +__     / 1,1,2 / 2,1,2'+-..__  /
+            //           /   ''--+._╔═══════════╗/      '+
+            //          / 0,2,2 /   ║''-+..__   ║ 3,1,2 /
+            //         +__     / 1,2║2 /     ''+║..__  /
+            //        /   ''--+.__  ║ / 2,2,2 / ║    '+
+            //       / 0,3,2 /    ''║+..__   / 3║2,2 /
+            //      +__     / 1,3,2 ║ 2,3,2'+-..║_  /
+            //         ''--+._     /╚═══════════╝ '+
+            //                 ''-+..__   / 3,3,2 /
+            //                         ''+-..__  /
+            //                                 '+
+            //
+            const k = (TS * Math.pow(2, 2)) / TAU; // z2
+            const t = new Tiler().tileSize(TS).margin(1);
+            const v = new Viewport();
+            v.transform = { x: HALFTS, y: HALFTS, k: k, r: Math.PI / 4 };
+            v.dimensions = [TWOTS, TWOTS];
+
+            const result = t.getTiles(v);
+            const tiles = result.tiles;
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 15);
+
+            // note: tiles in view are returned before tiles in margin
+            const expectedVisible = [
+              [1,1,2], [2,1,2], [3,1,2],
+              [1,2,2], [2,2,2], [3,2,2],
+              [1,3,2], [2,3,2], [3,3,2]
+            ].reverse();
+
+            const expectedMargin = [
+                       [1,0,2], [2,0,2], [3,0,2],
+              [0,1,2],
+              [0,2,2],
+              [0,3,2]
+            ];
+
+            expectedVisible.forEach((xyz, i) => {
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
+            });
+            expectedMargin.forEach((xyz, i) => {
+              const tile = tiles[i + 9];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
+            });
+          });
+
+          it('gets tiles in 5 tile viewport, rotated, tile corners outside of viewport', () => {
+            //
+            //        N         +__
+            //    W._/         /   ''--+.__
+            //      /'-E      / 0,0,2 /    ''-+..__
+            //     S         +__     / 1,0,2 /     ''+-..__
+            //              /   ''--+.__    / 2,0,2 /      '+
+            //             / 0,1,2 /    ''-+..__   / 3,0,2 /
+            //            +__     / 1,1,2 /     ''+-..__  /
+            //           /   ''--+.__    / 2,1,2 /      '+
+            //          / 0,2,2 /    ''-+..__   / 3,1,2 /
+            //         +__     / 1,2,2╔═══════╗+-..__  /
+            //        /   ''--+.__    ║ 2,2,2 ║      '+
+            //       / 0,3,2 /    ''-+╚═══════╝3,2,2 /
+            //      +__     / 1,3,2 /     ''+-..__  /
+            //         ''--+.__    / 2,3,2 /      '+
+            //                 ''-+..__   / 3,3,2  /
+            //                         ''+-..__  /
+            //                                 '+
+            //
+            const k = (TS * Math.pow(2, 2)) / TAU; // z2
+            const t = new Tiler().tileSize(TS);
+            const v = new Viewport();
+            v.transform = { x: 0, y: 0, k: k, r: Math.PI / 4 };
+            v.dimensions = [TS, TS];
+
+            const result = t.getTiles(v);
+            const tiles = result.tiles;
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 5);
+
+            const expected = [
+                       [2,1,2],
+              [1,2,2], [2,2,2], [3,2,2],  // do we include 2,2,2? - rapid-sdk#281
+                       [2,3,2]
+            ].reverse();
+
+            expected.forEach((xyz, i) => {
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
+            });
+          });
+
+
+          it('gets tiles in 5 tile viewport + 1 tile margin, rotated, tile corners outside of viewport', () => {
+            //
+            //        N         +__
+            //    W._/         /   ''--+.__
+            //      /'-E      / 0,0,2 /    ''-+..__
+            //     S         +__     / 1,0,2 /     ''+-..__
+            //              /   ''--+.__    / 2,0,2 /      '+
+            //             / 0,1,2 /    ''-+..__   / 3,0,2 /
+            //            +__     / 1,1,2 /     ''+-..__  /
+            //           /   ''--+.__    / 2,1,2 /      '+
+            //          / 0,2,2 /    ''-+..__   / 3,1,2 /
+            //         +__     / 1,2,2╔═══════╗+-..__  /
+            //        /   ''--+.__    ║ 2,2,2 ║      '+
+            //       / 0,3,2 /    ''-+╚═══════╝3,2,2 /
+            //      +__     / 1,3,2 /     ''+-..__  /
+            //         ''--+.__    / 2,3,2 /      '+
+            //                 ''-+..__   / 3,3,2  /
+            //                         ''+-..__  /
+            //                                 '+
+            //
+            const k = (TS * Math.pow(2, 2)) / TAU; // z2
+            const t = new Tiler().tileSize(TS).margin(1);
+            const v = new Viewport();
+            v.transform = { x: 0, y: 0, k: k, r: Math.PI / 4 };
+            v.dimensions = [TS, TS];
+
+            const result = t.getTiles(v);
+            const tiles = result.tiles;
+            assert.ok(tiles instanceof Array);
+            assert.equal(tiles.length, 15);
+
+            // note: tiles in view are returned before tiles in margin
+            const expectedVisible = [
+                       [2,1,2],
+              [1,2,2], [2,2,2], [3,2,2],  // do we include 2,2,2? - rapid-sdk#281
+                       [2,3,2]
+            ].reverse();
+
+            const expectedMargin = [
+                       [1,0,2], [2,0,2], [3,0,2],
+              [0,1,2], [1,1,2],          [3,1,2],
+              [0,2,2],
+              [0,3,2], [1,3,2],          [3,3,2]
+            ];
+
+            expectedVisible.forEach((xyz, i) => {
+              const tile = tiles[i];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, true);
+            });
+            expectedMargin.forEach((xyz, i) => {
+              const tile = tiles[i + 5];
+              assert.equal(tile.id, xyz.join(','));
+              assert.deepEqual(tile.xyz, xyz);
+              assert.equal(tile.isVisible, false);
+            });
+          });
+
         });
 
 
@@ -778,14 +1106,16 @@ describe('math/tiler', () => {
           ];
 
           expectedVisible.forEach((xyz, i) => {
-            assert.equal(tiles[i].id, xyz.join(','));
-            assert.deepEqual(tiles[i].xyz, xyz);
-            assert.equal(tiles[i].isVisible, true);
+            const tile = tiles[i];
+            assert.equal(tile.id, xyz.join(','));
+            assert.deepEqual(tile.xyz, xyz);
+            assert.equal(tile.isVisible, true);
           });
           expectedMargin.forEach((xyz, i) => {
-            assert.equal(tiles[i + 2].id, xyz.join(','));
-            assert.deepEqual(tiles[i + 2].xyz, xyz);
-            assert.equal(tiles[i + 2].isVisible, false);
+            const tile = tiles[i + 2];
+            assert.equal(tile.id, xyz.join(','));
+            assert.deepEqual(tile.xyz, xyz);
+            assert.equal(tile.isVisible, false);
           });
         });
 

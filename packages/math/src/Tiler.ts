@@ -8,7 +8,7 @@
 import { Extent } from './Extent';
 import { Viewport } from './Viewport';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
-import { geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
+import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
 import { numClamp } from './number';
 import { Vec2, Vec3, vecAdd } from './vector';
 
@@ -219,17 +219,27 @@ export class Tiler {
         const pxExtent = new Extent(pxMin, pxMax);
         const pxPolygon = pxExtent.polygon();
 
-        // If it's not even in the margin, we can exclude this tile from the resultset
+        // If it's not even in the margin, we can exclude this tile from the resultset.
         // Test both ways, maybe the tile covers the margin, maybe the margin covers the tile?
-        const isIncluded =
+        let isIncluded =
           geomPolygonIntersectsPolygon(marginPolygon, pxPolygon, false) ||    // false = fast test
           geomPolygonIntersectsPolygon(pxPolygon, marginPolygon, false);
+
+        // Note, for rotated viewports, we need the strict test,
+        // because the tile corners may be rotated out of the viewport - see rapid-sdk#281
+        if (!isIncluded && t.r !== 0) {
+          isIncluded = geomPathHasIntersections(marginPolygon, pxPolygon);
+        }
         if (!isIncluded) continue;    // no need to include this tile in the result
 
         // Within the margin but not on screen?
-        const isVisible =
+        let isVisible =
           geomPolygonIntersectsPolygon(screenPolygon, pxPolygon, false) ||
           geomPolygonIntersectsPolygon(pxPolygon, screenPolygon, false);
+
+        if (!isVisible && t.r !== 0) {
+          isVisible = geomPathHasIntersections(screenPolygon, pxPolygon);
+        }
 
         // back to lon/lat
         const tileMin: Vec2 = [x * ts, y * ts];
