@@ -1,6 +1,6 @@
 {
   "name": "@rapid-sdk/util",
-  "version": "1.0.0-pre.2",
+  "version": "1.0.0-pre.3",
   "description": "Collection of rapid-sdk utility libraries",
   "homepage": "https://github.com/rapideditor/rapid-sdk/tree/main/packages/util#readme",
   "repository": {
