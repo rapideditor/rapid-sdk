@@ -20,6 +20,17 @@ links:
 [@user]: https://github.com/user
 -->
 
+# 1.0.0-pre.3
+#### 2024-Sep-03
+* [#275] ⚠️  Remove no longer used `geomViewportNudge`
+* [#276] Do not remove spaces in inscription after ';' sign
+* [#281] Fix tile coverage calculation for rotated viewports
+
+[#275]: https://github.com/rapideditor/rapid-sdk/issues/275
+[#276]: https://github.com/rapideditor/rapid-sdk/issues/276
+[#281]: https://github.com/rapideditor/rapid-sdk/issues/281
+
+
 # 1.0.0-pre.2
 #### 2024-Mar-27
 * [#273] Add `eslint`, `typescript-eslint` to the project
