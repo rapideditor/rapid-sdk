@@ -1,5 +1,7 @@
 {
-    "entryPoints": [ "." ],
-    "entryPointStrategy": "packages",
-    "out": "docs"
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "rapid-sdk",
+  "entryPoints": ["packages/*"],
+  "entryPointStrategy": "packages",
+  "out": "docs"
 }

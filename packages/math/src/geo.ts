@@ -10,9 +10,8 @@ import { Vec2 } from './vector';
 /** Convert degrees latitude to meters.
  * @param dLat degrees latitude
  * @returns meters
- * @example ```
+ * @example
  * geoLatToMeters(1);  // returns ≈111319
- * ```
  */
 export function geoLatToMeters(dLat: number): number {
   return dLat * ((TAU * POLAR_RADIUS) / 360);
@@ -23,9 +22,8 @@ export function geoLatToMeters(dLat: number): number {
  * @param dLon longitude
  * @param atLat latitude
  * @returns meters
- * @example ```
+ * @example
  * geoLonToMeters(1, 0);  // returns ≈110946 at equator
- * ```
  */
 export function geoLonToMeters(dLon: number, atLat: number): number {
   return Math.abs(atLat) >= 90
@@ -37,9 +35,8 @@ export function geoLonToMeters(dLon: number, atLat: number): number {
 /** Convert meters to degrees latitude
  * @param m meters
  * @returns degrees latitude
- * @example ```
+ * @example
  * geoMetersToLat(111319);  // returns ≈1°
- * ```
  */
 export function geoMetersToLat(m: number): number {
   return m / ((TAU * POLAR_RADIUS) / 360);
@@ -50,9 +47,8 @@ export function geoMetersToLat(m: number): number {
  * @param m meters
  * @param atLat latitude
  * @returns degrees longitude
- * @example ```
+ * @example
  * geoMetersToLon(110946, 0);  // returns ≈1° at equator
- * ```
  */
 export function geoMetersToLon(m: number, atLat: number): number {
   return Math.abs(atLat) >= 90
@@ -65,9 +61,8 @@ export function geoMetersToLon(m: number, atLat: number): number {
  * @param m offset in meters
  * @param tileSize tile size (defaults to 256)
  * @returns offset in tile pixels
- * @example ```
+ * @example
  * geoMetersToOffset([100, 100]);  // returns ≈[0.00064, -0.00064] pixels
- * ```
  */
 export function geoMetersToOffset(m: Vec2, tileSize: number = 256): Vec2 {
   return [
@@ -81,9 +76,8 @@ export function geoMetersToOffset(m: Vec2, tileSize: number = 256): Vec2 {
  * @param offset offset in tile pixels
  * @param tileSize tile size (defaults to 256)
  * @returns offset in meters
- * @example ```
+ * @example
  * geoOffsetToMeters([0.00064, -0.00064]);  // returns ≈[100, 100] meters
- * ```
  */
 export function geoOffsetToMeters(offset: Vec2, tileSize: number = 256): Vec2 {
   return [
@@ -97,9 +91,8 @@ export function geoOffsetToMeters(offset: Vec2, tileSize: number = 256): Vec2 {
  * @param a
  * @param b
  * @returns distance in meters
- * @example ```
+ * @example
  * geoSphericalDistance([0, 0], [1, 0]);  // returns ≈110946 meters
- * ```
  */
 export function geoSphericalDistance(a: Vec2, b: Vec2): number {
   const x: number = geoLonToMeters(a[0] - b[0], (a[1] + b[1]) / 2);
@@ -112,9 +105,8 @@ export function geoSphericalDistance(a: Vec2, b: Vec2): number {
  * @param k projection scale factor
  * @param tileSize tile size (defaults to 256)
  * @returns tile zoom level
- * @example ```
+ * @example
  * geoScaleToZoom(5340353.7154);  // returns ≈17
- * ```
  */
 export function geoScaleToZoom(k: number, tileSize: number = 256): number {
   const log2ts: number = Math.log(tileSize) * Math.LOG2E;
@@ -126,9 +118,8 @@ export function geoScaleToZoom(k: number, tileSize: number = 256): number {
  * @param z tile zoom level
  * @param tileSize tile size (defaults to 256)
  * @returns projection scale factor
- * @example ```
+ * @example
  * geoZoomToScale(17);  // returns ≈5340353.7154
- * ```
  */
 export function geoZoomToScale(z: number, tileSize: number = 256): number {
   return (tileSize * Math.pow(2, z)) / TAU;

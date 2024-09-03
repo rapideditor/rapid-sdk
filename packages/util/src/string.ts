@@ -2,7 +2,7 @@ import { remove as removeDiacritics } from 'diacritics';
 
 
 /** Calculates Levenshtein distance between two strings
- * @description See: https://en.wikipedia.org/wiki/Levenshtein_distance
+ * @remarks See: https://en.wikipedia.org/wiki/Levenshtein_distance
  * First converts the strings to lowercase and replaces diacritic marks with ascii equivalents.
  * @param a
  * @param b
@@ -41,7 +41,7 @@ export function utilEditDistance(a: string, b: string): number {
 
 
 /** Returns hash code of a string
- * @description https://stackoverflow.com/questions/194846/is-there-any-kind-of-hash-code-function-in-javascript
+ * @remarks https://stackoverflow.com/questions/194846/is-there-any-kind-of-hash-code-function-in-javascript
  * https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
  * @param str
  * @returns
@@ -109,7 +109,7 @@ export function utilStringQs(str: string): object {
 
 
 /** Returns the length of `str` in unicode characters
- * @description `String.length()` since a single unicode character can be composed of multiple JavaScript UTF-16 code units
+ * @remarks `String.length()` since a single unicode character can be composed of multiple JavaScript UTF-16 code units
  * @param str target string
  * @returns length
  */
@@ -120,7 +120,7 @@ export function utilUnicodeCharsCount(str: string): number {
 
 
 /** Returns a new string representing `str` cut from its start to `limit`
- * @description Note that this runs the risk of splitting graphemes
+ * @remarks Note that this runs the risk of splitting graphemes
  * @param str target string
  * @param limit length in unicode characters
  * @returns
@@ -131,7 +131,7 @@ export function utilUnicodeCharsTruncated(str: string, limit: number): string {
 
 
 /** Returns version of `str` with all runs of special characters replaced by `_`
- * @description Suitable for HTML ids, classes, selectors, etc.
+ * @remarks Suitable for HTML ids, classes, selectors, etc.
  * @param str
  * @returns
  */
@@ -141,7 +141,7 @@ export function utilSafeString(str: string): string {
 
 
 /** Returns string based on `val` that is highly unlikely to collide with an id used previously or that's present elsewhere in the document
- * @descirption Useful for preventing browser-provided autofills or when embedding on pages with unknown elements
+ * @remarks Useful for preventing browser-provided autofills or when embedding on pages with unknown elements
  * @param val
  * @returns
  */

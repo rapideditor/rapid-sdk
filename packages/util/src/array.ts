@@ -20,16 +20,15 @@ export function utilArrayIdentical(a: Array<unknown>, b: Array<unknown>): boolea
 
 
 /** (a \ b) Create a set that contains those elements of set a that are not in set b.
- * @description This operation is also sometimes called minus (-)
+ * @remarks This operation is also sometimes called minus (-)
  * @param a
  * @param b
  * @returns result of a \ b
- * @example ```
+ * @example
  * let a = [1,2,3];
  * let b = [4,3,2];
  * utilArrayDifference(a, b)  // returns: [1]
  * utilArrayDifference(b, a)  // returns: [4]
- * ```
  */
 export function utilArrayDifference(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
   const other = new Set(b);
@@ -38,15 +37,14 @@ export function utilArrayDifference(a: ArrayOrSet, b: ArrayOrSet): Array<unknown
 
 
 /** (a ∩ b) Create a set that contains those elements of set a that are also in set b.
- * @description This operation is known as intersection
+ * @remarks This operation is known as intersection
  * @param a
  * @param b
  * @returns result of a ∩ b
- * @example ```
+ * @example
  * let a = [1,2,3];
  * let b = [4,3,2];
  * utilArrayIntersection(a, b)  // returns: [2,3]
- * ```
  */
 export function utilArrayIntersection(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
   const other = new Set(b);
@@ -55,15 +53,14 @@ export function utilArrayIntersection(a: ArrayOrSet, b: ArrayOrSet): Array<unkno
 
 
 /** (a ∪ b) Create a set that contains the elements of both set a and set b
- * @description This operation is known as union
+ * @remarks This operation is known as union
  * @param a
  * @param b
  * @returns result of a ∩ b
- * @example ```
+ * @example
  * let a = [1,2,3];
  * let b = [4,3,2];
  * utilArrayUnion(a, b)  // returns: [1,2,3,4]
- * ```
  */
 export function utilArrayUnion(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
   const result = new Set(a);
@@ -75,10 +72,9 @@ export function utilArrayUnion(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
 /** Returns an array with all the duplicates removed
  * @param a
  * @returns array with unique elements
- * @example ```
+ * @example
  * let a = [1,1,2,3,3];
  * utilArrayUniq(a) // returns: [1,2,3]
- * ```
  */
 export function utilArrayUniq(a: ArrayOrSet): Array<unknown> {
   return Array.from(new Set(a));
@@ -89,10 +85,9 @@ export function utilArrayUniq(a: ArrayOrSet): Array<unknown> {
  * @param a target array
  * @param chunkSize size of chunk
  * @returns
- * @example ```
+ * @example
  * let a = [1,2,3,4,5,6,7];
  * utilArrayChunk(a, 3);  // returns: [[1,2,3],[4,5,6],[7]];
- * ```
  */
 export function utilArrayChunk(a: Array<unknown>, chunkSize: number): Array<Array<unknown>> {
   if (!chunkSize || chunkSize < 0) return [a.slice()];
@@ -107,10 +102,9 @@ export function utilArrayChunk(a: Array<unknown>, chunkSize: number): Array<Arra
 /** Flattens two level array into a single level
  * @param a target two level array
  * @returns resulting single level array
- * @example ```
+ * @example
  * let a = [[1,2,3],[4,5,6],[7]];
  * utilArrayFlatten(a); // returns: [1,2,3,4,5,6,7];
- * ```
  */
 export function utilArrayFlatten(a: Array<Array<unknown>>): Array<unknown> {
   return a.reduce((acc, val) => acc.concat(val), []);
@@ -120,8 +114,8 @@ export function utilArrayFlatten(a: Array<Array<unknown>>): Array<unknown> {
 /** Groups the items of the Array according to the given key
  * @param a target items
  * @param key property or a key function
- * @returns grpped items
- * @example ```
+ * @returns grouped items
+ * @example
  * let pets = [
  *   { type: 'Dog', name: 'Spot' },
  *   { type: 'Cat', name: 'Tiger' },
@@ -142,7 +136,6 @@ export function utilArrayFlatten(a: Array<Array<unknown>>): Array<unknown> {
  *   4: [{type: 'Dog', name: 'Spot'}],
  *   5: [{type: 'Cat', name: 'Tiger'}, {type: 'Dog', name: 'Rover'}]
  * }
- * ```
  */
 export function utilArrayGroupBy(a, key): object {
   return a.reduce((acc, item) => {
@@ -158,7 +151,7 @@ export function utilArrayGroupBy(a, key): object {
  * @param a
  * @param key property or a key function
  * @returns
- * @example ```
+ * @example
  * let pets = [
  *   { type: 'Dog', name: 'Spot' },
  *   { type: 'Cat', name: 'Tiger' },
@@ -180,7 +173,6 @@ export function utilArrayGroupBy(a, key): object {
  *   { type: 'Cat', name: 'Tiger' },
  *   { type: 'Cat', name: 'Leo' }
  * }
- * ```
  */
 export function utilArrayUniqBy(a, key): Array<unknown> {
   const seen = new Set();

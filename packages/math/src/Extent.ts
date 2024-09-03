@@ -15,7 +15,8 @@ export interface BBox {
 }
 
 /** Extent class for creating bounding boxes
- * @description All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
+ * @remarks
+ * All of the Extent methods are designed to be used in an immutable programming style, and return new Extents instead of modifying the original object.
  */
 export class Extent {
   /** Minimum corner coordinate for the extent */
@@ -25,15 +26,14 @@ export class Extent {
   public max: Vec2 = [-Infinity, -Infinity];
 
   /** Constructs a new Extent
-   * @param otherOrMin
+   * @param other
    * @param max
    * @returns
-   * @example ```
+   * @example
    * const e1 = new Extent();                // construct an initially empty extent
    * const e2 = new Extent([0, 0]);          // construct as a point (min and max both [0, 0])
    * const e3 = new Extent([0, 0], [5, 5]);  // construct as a point with given min and max
    * const e4 = new Extent(e3);              // copy an Extent to a new Extent
-   * ```
    */
   constructor(other?: Extent | Vec2, max?: Vec2) {
     let min;
@@ -58,13 +58,12 @@ export class Extent {
   /** Test whether extent equals to another extent
    * @param other
    * @returns True if equal, false if unequal
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [10, 10]);
    * const b = new Extent([0, 0], [10, 10]);
    * const c = new Extent([0, 0], [12, 12]);
    * a.equals(b);   // returns true
    * a.equals(c);   // returns false
-   * ```
    */
   equals(other: Extent): boolean {
     return (
@@ -77,9 +76,8 @@ export class Extent {
 
   /** Returns the area of an extent
    * @returns area
-   * @example ```
+   * @example
    * new Extent([0, 0], [5, 10]).area();  // returns 50
-   * ```
    */
   area(): number {
     return Math.abs((this.max[0] - this.min[0]) * (this.max[1] - this.min[1]));
@@ -87,9 +85,8 @@ export class Extent {
 
   /** Returns the center point of an extent
    * @returns Center point of the extent
-   * @example ```
+   * @example
    * new Extent([0, 0], [5, 10]).center();  // returns [2.5, 5]
-   * ```
    */
   center(): Vec2 {
     return [(this.min[0] + this.max[0]) / 2, (this.min[1] + this.max[1]) / 2];
@@ -97,9 +94,8 @@ export class Extent {
 
   /** Returns an array rectangle as `[minX, minY, maxX, maxY]`
    * @returns rectangle
-   * @example ```
+   * @example
    * new Extent([0, 0], [5, 10]).rectangle();  // returns [0, 0, 5, 10]
-   * ```
    */
   rectangle(): number[] {
     return [this.min[0], this.min[1], this.max[0], this.max[1]];
@@ -107,9 +103,8 @@ export class Extent {
 
   /** Returns a string representation of this extent's rectangle formatted as `"minX,minY,maxX,maxY"`
    * @returns rectangle
-   * @example ```
+   * @example
    * new Extent([0, 0], [5, 10]).toParam();  // returns '0,0,5,10'
-   * ```
    */
   toParam(): string {
     return this.rectangle().join(',');
@@ -117,9 +112,8 @@ export class Extent {
 
   /** Returns an Object with `minX`, `minY`, `maxX`, `maxY` properties.
    * @returns bbox
-   * @example ```
+   * @example
    * new Extent([0, 0], [5, 10]).bbox();  // returns { minX: 0, minY: 0, maxX: 5, maxY: 10 };
-   * ```
    */
   bbox(): BBox {
     return { minX: this.min[0], minY: this.min[1], maxX: this.max[0], maxY: this.max[1] };
@@ -127,9 +121,8 @@ export class Extent {
 
   /** Returns a polygon representing the extent wound clockwise.
    * @returns Polygon array
-   * @example ```
+   * @example
    * new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [0, 10], [5, 10], [5, 0], [0, 0]]
-   * ```
    */
   polygon(): Vec2[] {
     return [
@@ -144,12 +137,11 @@ export class Extent {
   /** Test whether this extent contains another extent
    * @param other
    * @returns True if this extent contains other, false if not
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [5, 5]);
    * const b = new Extent([1, 1], [2, 2]);
    * a.contains(b);   // returns true
    * b.contains(a);   // returns false
-   * ```
    */
   contains(other: Extent): boolean {
     return (
@@ -163,12 +155,11 @@ export class Extent {
   /** Test whether this extent intersects another extent
    * @param other
    * @returns True if this extent intersects other, false if not
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [5, 5]);
    * const b = new Extent([1, 1], [6, 6]);
    * a.intersects(b);   // returns true
    * b.intersects(a);   // returns true
-   * ```
    */
   intersects(other: Extent): boolean {
     return (
@@ -182,12 +173,11 @@ export class Extent {
   /** Returns a new Extent representing the intersection of this and other extents
    * @param other
    * @returns new Extent containing the intersection of this and other
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [5, 5]);
    * const b = new Extent([1, 1], [6, 6]);
    * a.intersection(b);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
    * b.intersection(a);   // returns new Extent { min: [ 1, 1 ], max: [ 5, 5 ] }
-   * ```
    */
   intersection(other: Extent): Extent {
     if (!this.intersects(other)) return new Extent();
@@ -200,12 +190,11 @@ export class Extent {
   /** Returns the percent of other extent contained within this extent, by area
    * @param other
    * @returns percent of other extent contained within this extent
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [4, 1]);
    * const b = new Extent([3, 0], [4, 2]);
    * a.percentContainedIn(b);   // returns 0.25
    * b.percentContainedIn(a);   // returns 0.5
-   * ```
    */
   percentContainedIn(other: Extent): number {
     const a1 = this.intersection(other).area();
@@ -223,11 +212,10 @@ export class Extent {
   /** Extend the bounds of an extent, returning a new Extent
    * @param other
    * @returns new Extent
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [5, 10]);
    * const b = new Extent([4, -1], [5, 10]);
    * const c = a.extend(b);   // returns new Extent { min: [ 0, -1 ], max: [ 5, 10 ] }
-   * ```
    */
   extend(other: Extent | Vec2): Extent {
     if (other instanceof Extent) {
@@ -248,11 +236,10 @@ export class Extent {
    * This option is slightly more performant for situations where you don't mind mutating the Extent.
    * @param other
    * @returns this Extent
-   * @example ```
+   * @example
    * const a = new Extent([0, 0], [5, 10]);
    * const b = new Extent([4, -1], [5, 10]);
    * const c = a.extendSelf(b);   // a is extended, { min: [ 0, -1 ], max: [ 5, 10 ] }, b unchanged
-   * ```
    */
   extendSelf(other: Extent | Vec2): Extent {
     if (other instanceof Extent) {

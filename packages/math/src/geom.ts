@@ -12,10 +12,9 @@ import { Vec2, vecCross, vecInterp, vecLength, vecRotate, vecSubtract } from './
  * @param a
  * @param b
  * @returns `true` if equal, `false` if unequal.
- * @example ```
+ * @example
  * geomEdgeEqual([1, 2], [1, 2]);   // returns true
  * geomEdgeEqual([1, 2], [2, 1]);   // returns true
- * ```
  */
 export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
   return (a[0] === b[0] && a[1] === b[1]) || (a[0] === b[1] && a[1] === b[0]);
@@ -27,11 +26,10 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
  * @param angle angle in radians
  * @param around pivot point
  * @returns rotated points
- * @example ```
+ * @example
  * const points = [[1, 0], [1, 1]];
  * const around = [0, 0];
  * geomRotatePoints(points, Math.PI, around);   // returns [[-1, 0], [-1, -1]]
- * ```
  */
 export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): Vec2[] {
   const result: Vec2[] = new Array(points.length);  // prealloc
@@ -43,12 +41,12 @@ export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): V
 
 
 /** Return the intersection point of 2 line segments
- * @description From https://github.com/pgkelley4/line-segments-intersect
+ * @remarks From https://github.com/pgkelley4/line-segments-intersect
  * This uses the vector cross product approach http://stackoverflow.com/a/565282/786339
  * @param a
  * @param b
  * @returns intersection point if exists, null otherwise
- * @example ```
+ * @example
  *         b0
  *         |
  *   a0 ---*--- a1
@@ -57,7 +55,6 @@ export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): V
  * const a = [[0, 0], [10, 0]];
  * const b = [[5, 5], [5, -5]];
  * geomLineIntersection(a, b);   // returns [5, 0]
- * ```
  */
 export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
   if (a.length !== 2 || b.length !== 2) return null;
@@ -88,7 +85,7 @@ export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
  * @param path1
  * @param path2
  * @returns intersection points
- * @example ```
+ * @example
  *        b0
  *        | \
  *  a0 ---*--*--- a1
@@ -97,7 +94,6 @@ export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
  * const a = [[0, 0], [10, 0]];
  * const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
  * geomPathIntersections(a, b);   // returns [[5, 0], [7.5, 0]]
- * ```
  */
 export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
   const intersections: Vec2[] = [];
@@ -119,7 +115,7 @@ export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
  * @param path1
  * @param path2
  * @returns
- * @example ```
+ * @example
  *        b0
  *        | \
  *  a0 ---*--*--- a1
@@ -128,7 +124,6 @@ export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
  * const a = [[0, 0], [10, 0]];
  * const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
  * geomPathHasIntersections(a, b);   // returns true
- * ```
  */
 export function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean {
   for (let i = 0; i < path1.length - 1; i++) {
@@ -146,19 +141,18 @@ export function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean 
 
 
 /** Return true if point is contained in polygon, false otherwise
- * @description From https://github.com/substack/point-in-polygon
+ * @remarks From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  * @param point
  * @param polygon
  * @returns
- * @example ```
+ * @example
  *  p1 --- p2
  *  |   *   |
  *  p0 --- p3
  * const poly = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
  * const point = [0.5, 0.5];
  * geomPointInPolygon(point, poly);   // returns true
- * ```
  */
 export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
   const [x, y] = point;
@@ -177,12 +171,12 @@ export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
 
 
 /** Return true if every point of inner polygon is contained within outer polygon, false otherwise
- * @description From https://github.com/substack/point-in-polygon
+ * @remarks From https://github.com/substack/point-in-polygon
  * ray-casting algorithm based on http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
  * @param outer
  * @param inner
  * @returns
- * @example ```
+ * @example
  *  o1 -------- o2
  *  |  i1 -- i2  |
  *  |  |      |  |
@@ -191,7 +185,6 @@ export function geomPointInPolygon(point: Vec2, polygon: Vec2[]): boolean {
  * const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
  * const inner = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
  * geomPolygonContainsPolygon(outer, inner);   // returns true
- * ```
  */
 export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolean {
   return inner.every((point: Vec2) => {
@@ -205,7 +198,7 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
  * @param inner
  * @param checkSegments if true test each segment (stricter but slower).
  * @returns
- * @example ```
+ * @example
  *      i1 -- i2
  *  o1 -+------+-- o2
  *  |   |      |   |
@@ -216,7 +209,6 @@ export function geomPolygonContainsPolygon(outer: Vec2[], inner: Vec2[]): boolea
  * const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
  * geomPolygonIntersectsPolygon(outer, inner, false);   // returns false (lax test - points only)
  * geomPolygonIntersectsPolygon(outer, inner, true);    // returns true (strict test - points and segments)
- * ```
  */
 export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], checkSegments?: boolean): boolean {
   function testPoints(outer2: Vec2[], inner2: Vec2[]): boolean {
@@ -239,12 +231,12 @@ export interface SSR {
 
 
 /** Return the Smallest Surrounding Rectangle for a given set of points
- * @description
+ * @remarks
  * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
  * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
  * @param points
  * @returns rectangle if exists, null otherwise
- * @example ```
+ * @example
  * +-- p1 ------ p3
  * |              |
  * p0 ------ p2 --+
@@ -252,7 +244,6 @@ export interface SSR {
  * const ssr = geomGetSmallestSurroundingRectangle(points);
  * // ssr.poly == [[0, -1], [0, 1], [15, 1], [15, -1], [0, -1]]
  * // ssr.angle == 0
- * ```
  */
 export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR | null {
   const hull: Vec2[] | null = d3_polygonHull(points);
@@ -296,13 +287,12 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR | null 
 /** Return the length of the given path
  * @param path
  * @returns length
- * @example ```
+ * @example
  *          p2
  *         /
  * p0 -- p1
  * const path = [[0, 0], [1, 0], [5, 3]];
  * geomPathLength(path);  // returns 6
- * ```
  */
 export function geomPathLength(path: Vec2[]): number {
   let length = 0;

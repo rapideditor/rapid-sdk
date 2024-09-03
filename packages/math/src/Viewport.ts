@@ -18,15 +18,15 @@ import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
  *  see: https://en.wikipedia.org/wiki/Web_Mercator_projection
  *
  *  The parameters of this projection are stored in `_transform`
- *   `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
- *   `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
- *   `r`     - rotation, optionally applied post-projection to change the map bearing away from north-up
+ *  -  `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
+ *  -  `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
+ *  -  `r`     - rotation, optionally applied post-projection to change the map bearing away from north-up
  *
  *  The viewport (what a user can see) is defined by:
  *  A rectangular Extent A-B-C-D (stored in `_dimensions`), representing the user's screen.
  *  By default, the origin of the screen space is top-left coordinate 'A' [0,0].
  *  When a rotation is applied, the visible extent extends to E-F-G-H and top-left coordinate 'E'.
- *
+ *  ```
  *        |  E__
  *        |r/   ''--..__
  *        |/           r''--..__
@@ -40,6 +40,7 @@ import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
  *           ''--..__r           /|
  *                   ''--..__   /r|
  *                           ''G  |
+ * ```
  */
 export class Viewport {
   private _transform = new Transform();
@@ -48,13 +49,12 @@ export class Viewport {
 
 
   /** Constructs a new Viewport
-   * @description Default viewport corresponds to the world at zoom 1 with origin at "Null Island" [0, 0].
+   * @remarks Default viewport corresponds to the world at zoom 1 with origin at "Null Island" [0, 0].
    * @param transform
    * @param dimensions
-   * @example ```
+   * @example
    * const view1 = new Viewport();
    * const view2 = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
-   * ```
    */
   constructor(transform?: Partial<TransformProps>, dimensions?: Vec2) {
     if (transform) this.transform = transform;
@@ -75,12 +75,11 @@ export class Viewport {
   /** Projects a coordinate from Lon/Lat (λ,φ) to Cartesian (x,y)
    * @param loc Lon/Lat (λ,φ)
    * @returns Cartesian (x,y)
-   * @example ```
+   * @example
    * const v = new Viewport();
    * v.project([0, 0]);                  // returns [0, 0]
    * v.project([180, -85.0511287798]);   // returns [256, 256]
    * v.project([-180, 85.0511287798]);   // returns [-256, -256]
-   * ```
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
@@ -102,12 +101,11 @@ export class Viewport {
   /** Unprojects a coordinate from given Cartesian (x,y) to Lon/Lat (λ,φ)
    * @param point Cartesian (x,y)
    * @returns Lon/Lat (λ,φ)
-   * @example ```
+   * @example
    * const v = new Viewport();
    * v.unproject([0, 0]);         // returns [0, 0]
    * v.unproject([256, 256]);     // returns [180, -85.0511287798]
    * v.unproject([-256, -256]);   // returns [-180, 85.0511287798]
-   * ```
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
@@ -126,21 +124,20 @@ export class Viewport {
 
 
   /** Sets/Gets a transform object
-   * @param other a Transform-like object containing the new Transform properties
+   * @param val a Transform-like object containing the new Transform properties
    * @returns When argument is provided, sets `x`,`y`,`k`,`r` from the Transform and returns `this` for method chaining.
    * Returns a Transform object containing the current `x`,`y`,`k`,`r` values otherwise
-   * @example ```
+   * @example
    * const t = { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 };
    * const v = new Viewport();
    * v.transform = t;    // sets transform `x`,`y`,`k`,`r` from given Object
    * v.transform;        // gets transform
-   * ```
    */
-  get transform(): Transform {
-    return this._transform;
-  }
   set transform(val: Partial<TransformProps>) {
     this._transform.props = val;
+  }
+  get transform(): Transform {
+    return this._transform;
   }
 
 
@@ -148,15 +145,11 @@ export class Viewport {
    * @param val viewport dimensions
    * @returns When argument is provided, sets the viewport max dimensions and returns `this` for method chaining.
    * Returns the viewport max dimensions otherwise
-   * @example ```
+   * @example
    * const v = new Viewport();
    * v.dimensions = [800, 600];  // sets dimensions
    * v.dimensions;               // gets dimensions, returns [800, 600]
-   * ```
    */
-  get dimensions(): Vec2 {
-    return this._dimensions;
-  }
   set dimensions(val: Vec2) {
     const [w, h] = vecCeil([+val[0], +val[1]]);
     if (!isNaN(w) && isFinite(w) && !isNaN(h) && isFinite(h) && (this._dimensions[0] !== w || this._dimensions[1] !== h)) {
@@ -164,15 +157,17 @@ export class Viewport {
       this.v++;
     }
   }
+  get dimensions(): Vec2 {
+    return this._dimensions;
+  }
 
 
   /** Returns the screen center coordinate in [x, y]
    * @returns viewport screen center coordinate in [x, y]
-   * @example ```
+   * @example
    * const v = new Viewport()
    * v.dimensions = [800, 600];
    * v.center();   // returns [400, 300]
-   * ```
    */
   center(): Vec2 {
     return vecScale(this._dimensions, 0.5);
@@ -181,12 +176,11 @@ export class Viewport {
 
   /** Returns the screen center coordinate in [lon, lat]
    * @returns viewport screen center coordinate in [lon, lat]
-   * @example ```
+   * @example
    * const v = new Viewport();
    * v.dimensions = [800, 600]
    * v.transform = { x: 400, y: 300 };
    * v.centerLoc();   // returns [0, 0]  ("Null Island")
-   * ```
    */
   centerLoc(): Vec2 {
     return this.unproject(this.center());
@@ -198,7 +192,7 @@ export class Viewport {
    *  The rotated rectangle has the same center point as the original screen rectangle.
    *  see https://math.stackexchange.com/questions/1628657/dimensions-of-a-rectangle-containing-a-rotated-rectangle
    *  The first coordinate in the rotated rectangle is the rotated origin (E)
-   *
+   *  ```
    *        |  E__
    *        |r/   ''--..__
    *        |/           r''--..__
@@ -212,6 +206,7 @@ export class Viewport {
    *           ''--..__r           /|
    *                   ''--..__   /r|
    *                           ''G  |
+   *  ```
    */
   visiblePolygon(): Vec2[] {
     const [w, h] = this._dimensions;

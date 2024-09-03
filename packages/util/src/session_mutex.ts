@@ -1,5 +1,5 @@
 /** A per-domain session mutex backed by a cookie and dead man's switch
- * @description If the session crashes, the mutex will auto-release after 5 seconds.
+ * @remarks If the session crashes, the mutex will auto-release after 5 seconds.
  * @param name string name
  * @returns object that complies with utilSessionMutexType
  */

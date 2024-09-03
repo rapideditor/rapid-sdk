@@ -1,7 +1,7 @@
 /**
  * 🀄️ Tiler class for splitting the world into rectangular tiles
  * @module
- * @description
+ * @remarks
  * See: https://developers.google.com/maps/documentation/javascript/coordinates
  */
 
@@ -46,12 +46,11 @@ export class Tiler {
   private _skipNullIsland = false;
 
   /** Constructs a new Tiler
-   * @description By default, the tiler uses a 256px tilesize, a zoomRange of 0-24,
+   * @remarks By default, the tiler uses a 256px tilesize, a zoomRange of 0-24,
    * fetches no margin tiles beyond the viewport, and includes data around "Null Island".
    * (These defaults can be changed at any time by using accessor methods.)
-   * @example ```
+   * @example
    * const t = new Tiler();
-   * ```
    */
   constructor() {}
 
@@ -59,7 +58,8 @@ export class Tiler {
   /** Returns a TileResult object which contains details about all the tiles covering the given viewport
    * @param viewport
    * @returns tile result
-   * @example ```
+   * @example
+   * ```
    * At zoom 0:
    *
    *   +-------+  +85.0511
@@ -120,7 +120,7 @@ export class Tiler {
    * v2.transform = { x: 512, y: 512, k: 512 / Math.PI };  // z2
    * v2.dimensions = [1024, 1024];                         // entire world visible
    * const result = t2.getTiles(v2);
-   *```
+   * ```
    */
   getTiles(viewport: Viewport): TileResult {
 
@@ -284,17 +284,16 @@ export class Tiler {
 
 
   /** Returns a GeoJSON FeatureCollection containing a Feature for each rectangular tile
-   * @description Useful for displaying a tile grid for debugging.
+   * @remarks Useful for displaying a tile grid for debugging.
    * @param tileResult
    * @returns FeatureCollection containing a Feature for each rectangular tile
-   * @example ```
+   * @example
    * const t = new Tiler();
    * const v = new Viewport();
    * v.transform = { x: 256, y: 256, k: 256 / Math.PI };  // z1
    * v.dimensions = [512, 512];                           // entire world visible
    * const result = t.getTiles(v);
    * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
-   * ```
    */
   getGeoJSON(tileResult: TileResult): object {
     const features = tileResult.tiles.map((tile) => {
@@ -322,10 +321,9 @@ export class Tiler {
    * @param val tile size value
    * @returns When passed a numeric argument, sets the tile size and returns `this` for method chaining
    * Returns the tile size otherwise
-   * @example ```
+   * @example
    * const t = new Tiler().tileSize(512);   // sets tile size
    * t.tileSize();   // gets tile size - returns 512
-   * ```
    */
   tileSize(val?: number): number | Tiler {
     if (val === undefined) return this._tileSize;
@@ -339,10 +337,9 @@ export class Tiler {
    * @param max
    * @returns When arguments are passed, sets the min/max zoom range and returns `this` for method chaining
    * Returns the min/max zoom range otherwise
-   * @example ```
+   * @example
    * const t = new Tiler().zoomRange(10, 20);   // sets min/max zoom range
    * t.zoomRange();   // gets min/max zoom range - returns [10, 20]
-   * ```
    */
   zoomRange(min?: number, max?: number): Vec2 | Tiler {
     if (min === undefined) return this._zoomRange;
@@ -356,10 +353,9 @@ export class Tiler {
    * @param val
    * @returns When an argument is passed, sets the tile margin and returns `this` for method chaining
    * Returns the tile margin otherwise
-   * @example ```
+   * @example
    * const t = new Tiler().margin(1);   // sets tile margin
    * t.margin();   // gets tile margin - returns 1
-   * ```
    */
   margin(val?: number): number | Tiler {
     if (val === undefined) return this._margin;
@@ -369,15 +365,14 @@ export class Tiler {
 
 
   /** Sets/Gets the current skipNullIsland value
-   * @description When loading data from a tiled service, it is common for invalid data to be located around "Null Island",
+   * @remarks When loading data from a tiled service, it is common for invalid data to be located around "Null Island",
    * therefore it can be useful to skip loading these tiles
    * @param val
    * @returns When an argument is passed, sets the `skipNullIsland` value and returns `this` for method chaining
    * Returns the `skipNullIsland` value otherwise
-   * @example ```
+   * @example
    * const t = new Tiler().skipNullIsland(true);   // sets skipNullIsland value
    * t.skipNullIsland();   // gets skipNullIsland value - returns true
-   * ```
    */
   skipNullIsland(val?: boolean): boolean | Tiler {
     if (val === undefined) return this._skipNullIsland;
@@ -387,13 +382,14 @@ export class Tiler {
 
 
   /** Tests whether the given tile coordinate is near [0,0] (Null Island)
-   * @description A tile is considered "near" if it >= z7 and around the center of the map
+   * @remarks A tile is considered "near" if it >= z7 and around the center of the map
    * within these or descendent tiles (roughly within about 2.8° of [0,0]).
    * @param x
    * @param y
    * @param z
    * @returns true if near null island, false otherwise
-   * @example ```
+   * @example
+   * ```
    * +---------+---------+
    * |         |         |
    * | 63,63,7 | 64,63,7 |

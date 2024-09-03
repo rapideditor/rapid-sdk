@@ -11,10 +11,9 @@ export type Vec3 = [number, number, number];
  * @param b
  * @param epsilon if provideed, equality is done within epsilon
  * @returns true if equal, false otherwise
- * @example ```
+ * @example
  * vecEqual([1, 2], [1, 2]);                         // returns true
  * vecEqual([1, 2], [1.0000001, 2.0000001], 1e-5);   // returns true
- * ```
  */
 export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
   if (epsilon) {
@@ -29,9 +28,8 @@ export function vecEqual(a: Vec2, b: Vec2, epsilon?: number): boolean {
  * @param a
  * @param b
  * @returns sum of two vectors
- * @example ```
+ * @example
  * vecAdd([1, 2], [3, 4]);   // returns [4, 6]
- * ```
  */
 export function vecAdd(a: Vec2, b: Vec2): Vec2 {
   return [a[0] + b[0], a[1] + b[1]];
@@ -42,9 +40,8 @@ export function vecAdd(a: Vec2, b: Vec2): Vec2 {
  * @param a
  * @param b
  * @returns difference of `a - b`
- * @example ```
+ * @example
  * vecSubtract([1, 2], [3, 4]);   // returns [-2, -2]
- * ```
  */
 export function vecSubtract(a: Vec2, b: Vec2): Vec2 {
   return [a[0] - b[0], a[1] - b[1]];
@@ -55,9 +52,8 @@ export function vecSubtract(a: Vec2, b: Vec2): Vec2 {
  * @param a vector
  * @param n scale factor
  * @returns scaled vector
- * @example ```
+ * @example
  * vecScale([1, 2], 2);   // returns [2, 4]
- * ```
  */
 export function vecScale(a: Vec2, n: number): Vec2 {
   return [a[0] * n, a[1] * n];
@@ -69,9 +65,8 @@ export function vecScale(a: Vec2, n: number): Vec2 {
  * @param angle    angle in radians
  * @param around   pivot point
  * @returns rotated vector
- * @example ```
+ * @example
  * vecRotate([1, 1], Math.PI, [0, 0]);   // returns [-1, -1]
- * ```
  */
 export function vecRotate(a: Vec2, angle: number, around: Vec2): Vec2 {
   const radial = vecSubtract(a, around);
@@ -86,10 +81,9 @@ export function vecRotate(a: Vec2, angle: number, around: Vec2): Vec2 {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round
  * @param   a target vector
  * @returns vector rounded
- * @example ```
+ * @example
  * vecRound([0.1, 1.5]);     // returns [0, 2]
  * vecRound([-0.1, -1.5]);   // returns [-0, -1]
- * ```
  */
 export function vecRound(a: Vec2): Vec2 {
   return [Math.round(a[0]), Math.round(a[1])];
@@ -100,10 +94,9 @@ export function vecRound(a: Vec2): Vec2 {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
  * @param   a target vector
  * @returns vector rounded down
- * @example ```
+ * @example
  * vecFloor([0.1, 1.5]);     // returns [0, 1]
  * vecFloor([-0.1, -1.5]);   // returns [-1, -2]
- * ```
  */
 export function vecFloor(a: Vec2): Vec2 {
   return [Math.floor(a[0]), Math.floor(a[1])];
@@ -114,10 +107,9 @@ export function vecFloor(a: Vec2): Vec2 {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil
  * @param    a target vector
  * @returns  vector rounded up
- * @example ```
+ * @example
  * vecCeil([0.1, 1.5]);     // returns [1, 2]
  * vecCeil([-0.1, -1.5]);   // returns [-0, -1]
- * ```
  */
 export function vecCeil(a: Vec2): Vec2 {
   return [Math.ceil(a[0]), Math.ceil(a[1])];
@@ -128,10 +120,9 @@ export function vecCeil(a: Vec2): Vec2 {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
  * @param    a target vector
  * @returns  vector truncated
- * @example ```
+ * @example
  * vecTrunc([0.1, 1.5]);     // returns [0, 1]
  * vecTrunc([-0.1, -1.5]);   // returns [-0, -1]
- * ```
  */
 export function vecTrunc(a: Vec2): Vec2 {
   return [Math.trunc(a[0]), Math.trunc(a[1])];
@@ -143,9 +134,8 @@ export function vecTrunc(a: Vec2): Vec2 {
  * @param b second point
  * @param t interpolation factor
  * @returns interpolated point
- * @example ```
+ * @example
  * vecInterp([0, 0], [10, 10], 0.5);   // returns [5, 5]
- * ```
  */
 export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
@@ -153,14 +143,13 @@ export function vecInterp(a: Vec2, b: Vec2, t: number): Vec2 {
 
 
 /** Returns the length of a vector
- * @description http://jsperf.com/id-dist-optimization
+ * @remarks http://jsperf.com/id-dist-optimization
  * @param a
  * @param b If not passed, defaults to [0,0].
  * @returns vector length
- * @example ```
+ * @example
  * vecLength([0, 0], [4, 3]);   // returns 5
  * vecLength([4, 3]);           // returns 5
- * ```
  */
 export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
   const x = a[0] - b[0];
@@ -175,10 +164,9 @@ export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
  * @param a
  * @param b If not passed, defaults to [0,0].
  * @returns vector length squared
- * @example ```
+ * @example
  * vecLengthSquare([0, 0], [4, 3]);   // returns 25
  * vecLengthSquare([4, 3]);           // returns 25
- * ```
  */
 export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]): number {
   const x = a[0] - b[0];
@@ -190,9 +178,8 @@ export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]): number {
 /** Normalize a vector (i.e. return a unit vector)
  * @param a target vector
  * @returns unit vector
- * @example ```
+ * @example
  * vecNormalize([5, 0]);   // returns [1, 0]
- * ```
  */
 export function vecNormalize(a: Vec2): Vec2 {
   const length = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
@@ -209,9 +196,8 @@ export function vecNormalize(a: Vec2): Vec2 {
  * @param a
  * @param b
  * @returns resulting angle
- * @example ```
+ * @example
  * vecAngle([0, 0], [-1, 0]);   // returns π
- * ```
  */
 export function vecAngle(a: Vec2, b: Vec2): number {
   return Math.atan2(b[1] - a[1], b[0] - a[0]);
@@ -223,9 +209,8 @@ export function vecAngle(a: Vec2, b: Vec2): number {
  * @param b
  * @param origin If not passed, defaults to [0,0]
  * @returns dot product result
- * @example ```
+ * @example
  * vecDot([2, 0], [2, 0]);   // returns 4
- * ```
  */
 export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
@@ -240,9 +225,8 @@ export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
  * @param b
  * @param origin If not passed, defaults to [0,0]
  * @returns normalized dot product result
- * @example ```
+ * @example
  * vecNormalizedDot([2, 0], [2, 0]);   // returns 1
- * ```
  */
 export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
@@ -258,9 +242,8 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
  * @param origin If not passed, defaults to [0,0]
  * @returns magnitude of Z vector - A positive value, if OAB makes a counter-clockwise turn,
  * negative for clockwise turn, and zero if the points are collinear.
- * @example ```
+ * @example
  * vecCross([2, 0], [0, 2]);   // returns 4
- * ```
  */
 export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
   origin = origin || [0, 0];
@@ -283,7 +266,7 @@ export interface Edge {
  * @param points target points
  * @returns Edge object containing info about the projected point,
  * or `null` if `points` is a degenerate path (0- or 1- point).
- * @example ```
+ * @example
  *      c
  *      |
  *  a --*--- b
@@ -294,7 +277,6 @@ export interface Edge {
  * const b = [5, 0];
  * const c = [2, 1];
  * vecProject(c, [a, b]);   // returns Edge { index: 1, distance: 1, target: [2, 0] }
- * ```
  */
 export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
   let min = Infinity;
