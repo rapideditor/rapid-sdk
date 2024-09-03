@@ -311,26 +311,3 @@ export function geomPathLength(path: Vec2[]): number {
   }
   return length;
 }
-
-
-/** If the given point is at the edge of the padded viewport, return a vector that will nudge the viewport in that direction
- * @param point
- * @param dimensions
- * @returns
- */
-export function geomViewportNudge(point: Vec2, dimensions: Vec2): Vec2 | null {
-  const pad: number[] = [80, 20, 50, 20]; // top, right, bottom, left
-  let x = 0;
-  let y = 0;
-
-  if (point[0] > dimensions[0] - pad[1]) x = -10;
-  if (point[0] < pad[3]) x = 10;
-  if (point[1] > dimensions[1] - pad[2]) y = -10;
-  if (point[1] < pad[0]) y = 10;
-
-  if (x || y) {
-    return [x, y];
-  } else {
-    return null;
-  }
-}

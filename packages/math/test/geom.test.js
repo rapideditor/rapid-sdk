@@ -303,35 +303,4 @@ describe('math/geom', () => {
     });
   });
 
-  describe('geomViewportNudge', () => {
-    const dimensions = [1000, 1000];
-
-    it('returns null if the point is not at the edge', () => {
-      assert.equal(test.geomViewportNudge([500, 500], dimensions), null);
-    });
-    it('nudges top edge', () => {
-      assert.deepEqual(test.geomViewportNudge([500, 5], dimensions), [0, 10]);
-    });
-    it('nudges top-right corner', () => {
-      assert.deepEqual(test.geomViewportNudge([995, 5], dimensions), [-10, 10]);
-    });
-    it('nudges right edge', () => {
-      assert.deepEqual(test.geomViewportNudge([995, 500], dimensions), [-10, 0]);
-    });
-    it('nudges bottom-right corner', () => {
-      assert.deepEqual(test.geomViewportNudge([995, 995], dimensions), [-10, -10]);
-    });
-    it('nudges bottom edge', () => {
-      assert.deepEqual(test.geomViewportNudge([500, 995], dimensions), [0, -10]);
-    });
-    it('nudges bottom-left corner', () => {
-      assert.deepEqual(test.geomViewportNudge([5, 995], dimensions), [10, -10]);
-    });
-    it('nudges left edge', () => {
-      assert.deepEqual(test.geomViewportNudge([5, 500], dimensions), [10, 0]);
-    });
-    it('nudges top-left corner', () => {
-      assert.deepEqual(test.geomViewportNudge([5, 5], dimensions), [10, 10]);
-    });
-  });
 });
