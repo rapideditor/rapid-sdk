@@ -1,12 +1,9 @@
-type ArrayOrSet = Array<unknown> | Set<unknown>;
-
-
 /** Checks if provided arguments have same elements at the same indices
  * @param a
  * @param b
  * @returns Returns true if a and b have the same elements at the same indices, false otherwise
  */
-export function utilArrayIdentical(a: Array<unknown>, b: Array<unknown>): boolean {
+export function utilArrayIdentical<T>(a: Array<T>, b: Array<T>): boolean {
   // an array is always identical to itself
   if (a === b) return true;
 
@@ -30,7 +27,7 @@ export function utilArrayIdentical(a: Array<unknown>, b: Array<unknown>): boolea
  * utilArrayDifference(a, b)  // returns: [1]
  * utilArrayDifference(b, a)  // returns: [4]
  */
-export function utilArrayDifference(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
+export function utilArrayDifference<T>(a: Iterable<T>, b: Iterable<T>): Array<T> {
   const other = new Set(b);
   return Array.from(new Set(a)).filter(val => !other.has(val));
 }
@@ -46,7 +43,7 @@ export function utilArrayDifference(a: ArrayOrSet, b: ArrayOrSet): Array<unknown
  * let b = [4,3,2];
  * utilArrayIntersection(a, b)  // returns: [2,3]
  */
-export function utilArrayIntersection(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
+export function utilArrayIntersection<T>(a: Iterable<T>, b: Iterable<T>): Array<T> {
   const other = new Set(b);
   return Array.from(new Set(a)).filter(val => other.has(val));
 }
@@ -62,7 +59,7 @@ export function utilArrayIntersection(a: ArrayOrSet, b: ArrayOrSet): Array<unkno
  * let b = [4,3,2];
  * utilArrayUnion(a, b)  // returns: [1,2,3,4]
  */
-export function utilArrayUnion(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
+export function utilArrayUnion<T>(a: Iterable<T>, b: Array<T> | Set<T>): Array<T> {
   const result = new Set(a);
   b.forEach(val => result.add(val));
   return Array.from(result);
@@ -76,7 +73,7 @@ export function utilArrayUnion(a: ArrayOrSet, b: ArrayOrSet): Array<unknown> {
  * let a = [1,1,2,3,3];
  * utilArrayUniq(a) // returns: [1,2,3]
  */
-export function utilArrayUniq(a: ArrayOrSet): Array<unknown> {
+export function utilArrayUniq<T>(a: Iterable<T>): Array<T> {
   return Array.from(new Set(a));
 }
 
@@ -89,7 +86,7 @@ export function utilArrayUniq(a: ArrayOrSet): Array<unknown> {
  * let a = [1,2,3,4,5,6,7];
  * utilArrayChunk(a, 3);  // returns: [[1,2,3],[4,5,6],[7]];
  */
-export function utilArrayChunk(a: Array<unknown>, chunkSize: number): Array<Array<unknown>> {
+export function utilArrayChunk<T>(a: Array<T>, chunkSize: number): Array<Array<T>> {
   if (!chunkSize || chunkSize < 0) return [a.slice()];
 
   const result = new Array(Math.ceil(a.length / chunkSize));
@@ -106,7 +103,7 @@ export function utilArrayChunk(a: Array<unknown>, chunkSize: number): Array<Arra
  * let a = [[1,2,3],[4,5,6],[7]];
  * utilArrayFlatten(a); // returns: [1,2,3,4,5,6,7];
  */
-export function utilArrayFlatten(a: Array<Array<unknown>>): Array<unknown> {
+export function utilArrayFlatten<T>(a: Array<Array<T>>): Array<T> {
   return a.reduce((acc, val) => acc.concat(val), []);
 }
 
@@ -137,9 +134,9 @@ export function utilArrayFlatten(a: Array<Array<unknown>>): Array<unknown> {
  *   5: [{type: 'Cat', name: 'Tiger'}, {type: 'Dog', name: 'Rover'}]
  * }
  */
-export function utilArrayGroupBy(a, key): object {
+export function utilArrayGroupBy<T>(a: T[], key: keyof T | ((item: T) => string)): Record<string, T[]> {
   return a.reduce((acc, item) => {
-    const group = typeof key === 'function' ? key(item) : item[key];
+    const group = typeof key === 'function' ? key(item) : (item[key] as string);
     (acc[group] = acc[group] || []).push(item);
     return acc;
   }, {});
@@ -174,9 +171,9 @@ export function utilArrayGroupBy(a, key): object {
  *   { type: 'Cat', name: 'Leo' }
  * }
  */
-export function utilArrayUniqBy(a, key): Array<unknown> {
+export function utilArrayUniqBy<T>(a: T[], key: keyof T | ((item: T) => string)): Array<T> {
   const seen = new Set();
-  return a.reduce((acc, item) => {
+  return a.reduce<T[]>((acc, item) => {
     const val = typeof key === 'function' ? key(item) : item[key];
     if (val && !seen.has(val)) {
       seen.add(val);
