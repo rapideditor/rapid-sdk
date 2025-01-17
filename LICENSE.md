@@ -1,6 +1,6 @@
 ## ISC License
 
-Copyright (c) rapid-sdk contributors
+Copyright (c) 2025, rapid-sdk contributors
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
