@@ -17,6 +17,14 @@ import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
  *  and "projected" into screen space (x,y) using the Web Mercator projection
  *  see: https://en.wikipedia.org/wiki/Web_Mercator_projection
  *
+ *  Some nomenclature on the coordinates that this code uses:
+ *  - "WGS84 coordinates" - These are Lon/Lat (λ,φ)
+ *  - "world coordinates" - These are Mercator projected into Cartesian (x,y) but not transformed
+ *     - origin puts [0,0] at Null Island and they are in radians
+ *      (these are different from Google Maps "world coordinates" as our code inherits from D3.js)
+ *  - "screen coordinates" - These are the Cartesian coordinates with view transform applied
+ *     - origin puts [0,0] at top left of screen and they are in pixels
+ *
  *  The parameters of this projection are stored in `_transform`
  *  -  `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
  *  -  `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
@@ -74,6 +82,7 @@ export class Viewport {
 
   /** Projects a coordinate from Lon/Lat (λ,φ) to Cartesian (x,y)
    * @param loc Lon/Lat (λ,φ)
+   * @param includeRotation - if true, consider rotation when working with the screen coordinate
    * @returns Cartesian (x,y)
    * @example
    * const v = new Viewport();
@@ -82,24 +91,26 @@ export class Viewport {
    * v.project([-180, 85.0511287798]);   // returns [-256, -256]
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
-    const { x, y, k, r } = this._transform;
-
-    const lambda = loc[0] * DEG2RAD;
-    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const mercatorX = lambda;
-    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
-    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
-
-    if (includeRotation && r) {
-      return vecRotate(point, r, this.center());
-    } else {
-      return point;
-    }
+    return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
+//    const { x, y, k, r } = this._transform;
+//
+//    const lambda = loc[0] * DEG2RAD;
+//    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
+//    const mercatorX = lambda;
+//    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
+//    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
+//
+//    if (includeRotation && r) {
+//      return vecRotate(point, r, this.center());
+//    } else {
+//      return point;
+//    }
   }
 
 
   /** Unprojects a coordinate from given Cartesian (x,y) to Lon/Lat (λ,φ)
    * @param point Cartesian (x,y)
+   * @param includeRotation - if true, consider rotation when working with the screen coordinate
    * @returns Lon/Lat (λ,φ)
    * @example
    * const v = new Viewport();
@@ -108,18 +119,75 @@ export class Viewport {
    * v.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
+    return this.worldToWgs84(this.screenToWorld(point, includeRotation));
+//    const { x, y, k, r } = this._transform;
+//
+//    if (includeRotation && r) {
+//      point = vecRotate(point, -r, this.center());
+//    }
+//
+//    const mercatorX = (point[0] - x) / k;
+//    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
+//    const lambda = mercatorX;
+//    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
+//
+//    return [lambda * RAD2DEG, phi * RAD2DEG];
+  }
+
+
+  /** Converts from Lon/Lat (λ,φ) WGS84 coordinate to Cartesian (x,y) world coordinate
+   * @param    loc - The WGS84 coordinate Lon/Lat (λ,φ)
+   * @returns  The world coordinate (x,y)
+   */
+  wgs84ToWorld(loc: Vec2): Vec2 {
+    const lambda = loc[0] * DEG2RAD;
+    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
+    const worldX = lambda;
+    const worldY = Math.log(Math.tan((HALF_PI + phi) / 2));
+    return [worldX, worldY];
+  }
+
+  /** Converts from Cartesian (x,y) world coordinate to Lon/Lat (λ,φ) WGS84 coordinate
+   * @param    world - The world coordinate (x,y)
+   * @returns  The WGS84 coordinate Lon/Lat (λ,φ)
+   */
+  worldToWgs84(world: Vec2): Vec2 {
+    const lambda = world[0];
+    const phi = 2 * Math.atan(Math.exp(world[1])) - HALF_PI;
+    return [lambda * RAD2DEG, phi * RAD2DEG];
+  }
+
+  /** Converts from world coordinate to screen coordinate applying view transform
+   * @param    world  - the world coordinate (x,y)
+   * @param    includeRotation - if true, consider rotation when working with the screen coordinate
+   * @returns  The screen coordinate (x,y)
+   */
+  worldToScreen(world: Vec2, includeRotation?: boolean): Vec2 {
+    const { x, y, k, r } = this._transform;
+    const point: Vec2 = [world[0] * k + x, y - world[1] * k];
+
+    if (includeRotation && r) {
+      return vecRotate(point, r, this.center());
+    } else {
+      return point;
+    }
+  }
+
+  /** Converts from screen coordinate to world coordinate applying view transform
+   * @param    point  - the screen coordinate (x,y)
+   * @param    includeRotation - if true, consider rotation when working with the screen coordinate
+   * @returns  The world coordinate (x,y)
+   */
+  screenToWorld(point: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
 
     if (includeRotation && r) {
       point = vecRotate(point, -r, this.center());
     }
 
-    const mercatorX = (point[0] - x) / k;
-    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-    const lambda = mercatorX;
-    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
-
-    return [lambda * RAD2DEG, phi * RAD2DEG];
+    const worldX = (point[0] - x) / k;
+    const worldY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
+    return [worldX, worldY];
   }
 
 
@@ -188,6 +256,7 @@ export class Viewport {
 
 
   /** Returns the viewport's visible polygon (wound counterclockwise)
+   *  (in "screen" coordinates)
    *  We construct a rotated rectangle that contains the original screen rectangle.
    *  The rotated rectangle has the same center point as the original screen rectangle.
    *  see https://math.stackexchange.com/questions/1628657/dimensions-of-a-rectangle-containing-a-rotated-rectangle
@@ -277,12 +346,21 @@ export class Viewport {
   }
 
 
-  /** Gets the visible Extent
+  /** Gets the visible Extent (in WGS84 coordinates)
    */
   visibleExtent(): Extent {
     const polygon = this.visiblePolygon();
     const min = this.unproject(polygon[1], true);  // bottom-left
     const max = this.unproject(polygon[3], true);  // top-right
+    return new Extent(min, max);
+  }
+
+  /** Gets the visible Extent (in world coordinates)
+   */
+  visibleWorldExtent(): Extent {
+    const polygon = this.visiblePolygon();
+    const min = this.screenToWorld(polygon[0], true);  // top-left
+    const max = this.screenToWorld(polygon[2], true);  // bottom-right
     return new Extent(min, max);
   }
 
