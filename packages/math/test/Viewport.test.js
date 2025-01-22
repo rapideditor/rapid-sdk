@@ -3,7 +3,7 @@ import { strict as assert } from 'node:assert';
 import { DEG2RAD, Extent, Transform, Viewport, geoZoomToScale } from '../built/math.mjs';
 
 
-assert.closeTo = function(a, b, epsilon = 1e-6) {
+assert.closeTo = function(a, b, epsilon = 1e-9) {
   if (Math.abs(a - b) > epsilon) {
     assert.fail(`${a} is not close to ${b} within ${epsilon}`);
   }
@@ -175,6 +175,115 @@ describe('math/viewport', () => {
       });
     }
   });
+
+
+  describe('#wgs84ToWorld', () => {
+    const view = new Viewport();
+
+    it(`Projects [0°, 0°] -> [128, 128]`, () => {
+      const point = view.wgs84ToWorld([0, 0]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 128);
+      assert.closeTo(point[1], 128);
+    });
+
+    it(`Projects [-180°, 85.0511287798°] -> [0, 0]`, () => {
+      const point = view.wgs84ToWorld([-180, 85.0511287798]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 0);
+      assert.closeTo(point[1], 0);
+    });
+
+    it(`Projects [-180°, -85.0511287798°] -> [0, 256]`, () => {
+      const point = view.wgs84ToWorld([-180, -85.0511287798]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 0);
+      assert.closeTo(point[1], 256);
+    });
+
+    it(`Projects [180°, 85.0511287798°] -> [256, 0]`, () => {
+      const point = view.wgs84ToWorld([180, 85.0511287798]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 256);
+      assert.closeTo(point[1], 0);
+    });
+
+    it(`Projects [180°, -85.0511287798°] -> [256, 256]`, () => {
+      const point = view.wgs84ToWorld([180, 85.0511287798]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 256);
+      assert.closeTo(point[1], 0);
+    });
+
+    it(`Projects out of bounds [-270°, 95°] -> [-64, 0]`, () => {
+      const point = view.wgs84ToWorld([-270, 95]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], -64);   // wrap x
+      assert.closeTo(point[1], 0);     // clamp y
+    });
+
+    it(`Projects out of bounds [270°, -95°] -> [320, 256]`, () => {
+      const point = view.wgs84ToWorld([270, -95]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 320);   // wrap x
+      assert.closeTo(point[1], 256);   // clamp y
+    });
+  });
+
+
+  describe('#worldToWgs84', () => {
+    const view = new Viewport();
+
+    it(`Unprojects [128, 128] -> [0°, 0°]`, () => {
+      const point = view.worldToWgs84([128, 128]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 0);
+      assert.closeTo(point[1], 0);
+    });
+
+    it(`Unprojects [0, 0] -> [-180°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([0, 0]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], -180);
+      assert.closeTo(point[1], 85.0511287798);
+    });
+
+    it(`Unprojects [0, 256] -> [-180°, -85.0511287798°]`, () => {
+      const point = view.worldToWgs84([0, 256]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], -180);
+      assert.closeTo(point[1], -85.0511287798);
+    });
+
+    it(`Unprojects [256, 0] -> [180°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([256, 0]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 180);
+      assert.closeTo(point[1], 85.0511287798);
+    });
+
+    it(`Unprojects [256, 256] -> [180°, -85.0511287798°]`, () => {
+      const point = view.worldToWgs84([256, 256]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 180);
+      assert.closeTo(point[1], -85.0511287798);
+    });
+
+    it(`Unprojects out of bounds [-64, -64] -> [-270°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([-64, -64]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], -270);           // wrap x
+      assert.closeTo(point[1], 85.0511287798);  // clamp y
+    });
+
+    it(`Unprojects out of bounds [320, 320] -> [270°, -85.0511287798°] -> `, () => {
+      const point = view.worldToWgs84([320, 320]);
+      assert.ok(point instanceof Array);
+      assert.closeTo(point[0], 270);             // wrap x
+      assert.closeTo(point[1], -85.0511287798);  // clamp y
+    });
+  });
+
 
 
   describe('#transform', () => {
@@ -381,32 +490,87 @@ describe('math/viewport', () => {
     //  define the north-up coordinate system (F is bottom-left, H is top-right)
     //
     const tests = {
-      '0':    [[-140.625, -71.965387], [140.625, 71.965387]],
-      '45':   [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '90':   [[-105.46875, -80.178713], [105.46875, 80.178713]],
-      '135':  [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '180':  [[-140.625, -71.965387], [140.625, 71.965387]],
-      '225':  [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '270':  [[-105.46875, -80.178713], [105.46875, 80.178713]],
-      '315':  [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '360':  [[-140.625, -71.965387], [140.625, 71.965387]],
-      '-315': [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '-270': [[-105.46875, -80.178713], [105.46875, 80.178713]],
-      '-225': [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '-180': [[-140.625, -71.965387], [140.625, 71.965387]],
-      '-135': [[-174.014559, -84.506965], [174.014559, 84.506965]],
-      '-90':  [[-105.46875, -80.178713], [105.46875, 80.178713]],
-      '-45':  [[-174.014559, -84.506965], [174.014559, 84.506965]]
+      '0':    [[-140.6250000000000, -71.96538769913127], [140.6250000000000, 71.96538769913127]],
+      '45':   [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '90':   [[-105.4687500000000, -80.17871349622823], [105.4687500000000, 80.17871349622823]],
+      '135':  [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '180':  [[-140.6250000000000, -71.96538769913127], [140.6250000000000, 71.96538769913127]],
+      '225':  [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '270':  [[-105.4687500000000, -80.17871349622823], [105.4687500000000, 80.17871349622823]],
+      '315':  [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '360':  [[-140.6250000000000, -71.96538769913127], [140.6250000000000, 71.96538769913127]],
+      '-315': [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '-270': [[-105.4687500000000, -80.17871349622823], [105.4687500000000, 80.17871349622823]],
+      '-225': [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '-180': [[-140.6250000000000, -71.96538769913127], [140.6250000000000, 71.96538769913127]],
+      '-135': [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]],
+      '-90':  [[-105.4687500000000, -80.17871349622823], [105.4687500000000, 80.17871349622823]],
+      '-45':  [[-174.0145594326269, -84.50696580103363], [174.0145594326269, 84.50696580103363]]
     };
 
     for (const [key, expected] of Object.entries(tests)) {
-      it(`returns visible dimensions when viewport is rotated ${key}°`, () => {
+      it(`returns visible extent when viewport is rotated ${key}°`, () => {
         const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
         view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visibleExtent();
+        assert.ok(result instanceof Extent);
+        assert.closeTo(result.min[0], expected[0][0]);
+        assert.closeTo(result.min[1], expected[0][1]);
+        assert.closeTo(result.max[0], expected[1][0]);
+        assert.closeTo(result.max[1], expected[1][1]);
+      });
+    }
+  });
+
+  describe('#visibleWorldExtent', () => {
+    //
+    //        |  E__
+    //        |r/   ''--..__
+    //        |/           r''--..__
+    //  [0,0] A═══════════════════════D__
+    //       /║                       ║  ''H         N
+    //      /r║                       ║   /      W._/
+    //     /  ║           +           ║  /         /'-E
+    //    /   ║                       ║r/         S
+    //   F__  ║                       ║/
+    //      ''B═══════════════════════C [w,h]
+    //           ''--..__r           /|
+    //                   ''--..__   /r|
+    //                           ''G  |
+    //
+    //  Here we are testing the [lon,lat] extent of the extended viewport, where [E, F, G, H]
+    //  define the north-up coordinate system (F is bottom-left, H is top-right)
+    //
+    const tests = {
+      '0':    [[-100, -75], [100, 125]],
+      '45':   [[-123.74368670764582, -98.74368670764582], [123.74368670764582, 148.74368670764582]],
+      '90':   [[-75, -50], [75, 100]],
+      '135':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
+      '180':  [[-100, -75], [100, 125]],
+      '225':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
+      '270':  [[-75, -50], [75, 100]],
+      '315':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
+      '360':  [[-100, -75], [100, 125]],
+      '-315': [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
+      '-270': [[-75, -50], [75, 100]],
+      '-225': [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
+      '-180': [[-100, -75], [100, 125]],
+      '-135': [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
+      '-90':  [[-75, -50], [75, 100]],
+      '-45':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]]
+    };
+
+    for (const [key, expected] of Object.entries(tests)) {
+      it(`returns visible world extent when viewport is rotated ${key}°`, () => {
+        const degrees = Number.parseInt(key, 10);
+        const view = new Viewport();
+        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
+        view.dimensions = [400, 300];
+
+        const result = view.visibleWorldExtent();
         assert.ok(result instanceof Extent);
         assert.closeTo(result.min[0], expected[0][0]);
         assert.closeTo(result.min[1], expected[0][1]);
