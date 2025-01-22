@@ -91,20 +91,20 @@ export class Viewport {
    * v.project([-180, 85.0511287798]);   // returns [-256, -256]
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
-    return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
-//    const { x, y, k, r } = this._transform;
-//
-//    const lambda = loc[0] * DEG2RAD;
-//    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-//    const mercatorX = lambda;
-//    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
-//    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
-//
-//    if (includeRotation && r) {
-//      return vecRotate(point, r, this.center());
-//    } else {
-//      return point;
-//    }
+    // return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
+    const { x, y, k, r } = this._transform;
+
+    const lambda = loc[0] * DEG2RAD;
+    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
+    const mercatorX = lambda;
+    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
+    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
+
+    if (includeRotation && r) {
+      return vecRotate(point, r, this.center());
+    } else {
+      return point;
+    }
   }
 
 
@@ -119,43 +119,48 @@ export class Viewport {
    * v.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
-    return this.worldToWgs84(this.screenToWorld(point, includeRotation));
-//    const { x, y, k, r } = this._transform;
-//
-//    if (includeRotation && r) {
-//      point = vecRotate(point, -r, this.center());
-//    }
-//
-//    const mercatorX = (point[0] - x) / k;
-//    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-//    const lambda = mercatorX;
-//    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
-//
-//    return [lambda * RAD2DEG, phi * RAD2DEG];
+    // return this.worldToWgs84(this.screenToWorld(point, includeRotation));
+    const { x, y, k, r } = this._transform;
+
+    if (includeRotation && r) {
+      point = vecRotate(point, -r, this.center());
+    }
+
+    const mercatorX = (point[0] - x) / k;
+    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
+    const lambda = mercatorX;
+    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
+
+    return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
 
   /** Converts from Lon/Lat (λ,φ) WGS84 coordinate to Cartesian (x,y) world coordinate
+   * @see https://gis.stackexchange.com/questions/66247/what-is-the-formula-for-calculating-world-coordinates-for-a-given-latlng-in-goog
    * @param    loc - The WGS84 coordinate Lon/Lat (λ,φ)
    * @returns  The world coordinate (x,y)
    */
   wgs84ToWorld(loc: Vec2): Vec2 {
-    const lambda = loc[0] * DEG2RAD;
+    const x = (loc[0] + 180) / 360 * 256;
     const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const worldX = lambda;
-    const worldY = Math.log(Math.tan((HALF_PI + phi) / 2));
-    return [worldX, worldY];
+    const y = ((1 - Math.log(Math.tan(phi) + 1 / Math.cos(phi)) / Math.PI) / 2) * 256;
+    return [x, y];
   }
 
+
   /** Converts from Cartesian (x,y) world coordinate to Lon/Lat (λ,φ) WGS84 coordinate
+   * @see https://gis.stackexchange.com/questions/66247/what-is-the-formula-for-calculating-world-coordinates-for-a-given-latlng-in-goog
    * @param    world - The world coordinate (x,y)
    * @returns  The WGS84 coordinate Lon/Lat (λ,φ)
    */
   worldToWgs84(world: Vec2): Vec2 {
-    const lambda = world[0];
-    const phi = 2 * Math.atan(Math.exp(world[1])) - HALF_PI;
-    return [lambda * RAD2DEG, phi * RAD2DEG];
+    const lon = (world[0] / 256) * 360 - 180;
+    const n = Math.PI - TAU * (world[1] / 256);
+    const phi = Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+    const lat = numClamp(phi, MIN_PHI, MAX_PHI) * RAD2DEG;
+    return [lon, lat];
   }
+
 
   /** Converts from world coordinate to screen coordinate applying view transform
    * @param    world  - the world coordinate (x,y)
@@ -164,7 +169,10 @@ export class Viewport {
    */
   worldToScreen(world: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
-    const point: Vec2 = [world[0] * k + x, y - world[1] * k];
+    const z = this._transform.zoom;
+    const k2 = Math.pow(2, z);
+    const point: Vec2 = [world[0] * k2 + x, world[1] * k2 + y];
+//    const point: Vec2 = [world[0] * k + x, y - world[1] * k];
 
     if (includeRotation && r) {
       return vecRotate(point, r, this.center());
@@ -173,6 +181,7 @@ export class Viewport {
     }
   }
 
+
   /** Converts from screen coordinate to world coordinate applying view transform
    * @param    point  - the screen coordinate (x,y)
    * @param    includeRotation - if true, consider rotation when working with the screen coordinate
@@ -180,14 +189,16 @@ export class Viewport {
    */
   screenToWorld(point: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, k, r } = this._transform;
-
+    const z = this._transform.zoom;
+    const k2 = Math.pow(2, z);
     if (includeRotation && r) {
       point = vecRotate(point, -r, this.center());
     }
 
-    const worldX = (point[0] - x) / k;
-    const worldY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-    return [worldX, worldY];
+    return [(point[0] - x) / k2, (point[0] - y) / k2];
+//    const worldX = (point[0] - x) / k;
+//    const worldY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
+//    return [worldX, worldY];
   }
 
 
