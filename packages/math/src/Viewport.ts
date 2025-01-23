@@ -3,7 +3,7 @@
  * @module
  */
 
-import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MIN_PHI, MAX_PHI } from './constants';
+import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MAX_PHI, MIN_PHI } from './constants';
 import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
 import { Transform, TransformProps } from './Transform';
@@ -20,14 +20,13 @@ import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
  *  Some nomenclature on the coordinates that this code uses:
  *  - "WGS84 coordinates" - These are Lon/Lat (λ,φ)
  *  - "world coordinates" - These are Mercator projected into Cartesian (x,y) but not transformed
- *     - origin puts [0,0] at Null Island and they are in radians
- *      (these are different from Google Maps "world coordinates" as our code inherits from D3.js)
+ *     - origin puts [0,0] at top left of world and [256, 256] at bottom right of world.
  *  - "screen coordinates" - These are the Cartesian coordinates with view transform applied
  *     - origin puts [0,0] at top left of screen and they are in pixels
  *
  *  The parameters of this projection are stored in `_transform`
  *  -  `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
- *  -  `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
+ *  -  `z`     - zoom (the scale factor is 2^z)
  *  -  `r`     - rotation, optionally applied post-projection to change the map bearing away from north-up
  *
  *  The viewport (what a user can see) is defined by:
@@ -62,7 +61,7 @@ export class Viewport {
    * @param dimensions
    * @example
    * const view1 = new Viewport();
-   * const view2 = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
+   * const view2 = new Viewport({ x: 20, y: 30, z: 2 });
    */
   constructor(transform?: Partial<TransformProps>, dimensions?: Vec2) {
     if (transform) this.transform = transform;
@@ -91,20 +90,20 @@ export class Viewport {
    * v.project([-180, 85.0511287798]);   // returns [-256, -256]
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
-    // return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
-    const { x, y, k, r } = this._transform;
-
-    const lambda = loc[0] * DEG2RAD;
-    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const mercatorX = lambda;
-    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
-    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
-
-    if (includeRotation && r) {
-      return vecRotate(point, r, this.center());
-    } else {
-      return point;
-    }
+    return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
+//    const { x, y, k, r } = this._transform;
+//
+//    const lambda = loc[0] * DEG2RAD;
+//    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
+//    const mercatorX = lambda;
+//    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
+//    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
+//
+//    if (includeRotation && r) {
+//      return vecRotate(point, r, this.center());
+//    } else {
+//      return point;
+//    }
   }
 
 
@@ -119,19 +118,19 @@ export class Viewport {
    * v.unproject([-256, -256]);   // returns [-180, 85.0511287798]
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
-    // return this.worldToWgs84(this.screenToWorld(point, includeRotation));
-    const { x, y, k, r } = this._transform;
-
-    if (includeRotation && r) {
-      point = vecRotate(point, -r, this.center());
-    }
-
-    const mercatorX = (point[0] - x) / k;
-    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-    const lambda = mercatorX;
-    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
-
-    return [lambda * RAD2DEG, phi * RAD2DEG];
+    return this.worldToWgs84(this.screenToWorld(point, includeRotation));
+//    const { x, y, k, r } = this._transform;
+//
+//    if (includeRotation && r) {
+//      point = vecRotate(point, -r, this.center());
+//    }
+//
+//    const mercatorX = (point[0] - x) / k;
+//    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
+//    const lambda = mercatorX;
+//    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
+//
+//    return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
 
@@ -168,11 +167,13 @@ export class Viewport {
    * @returns  The screen coordinate (x,y)
    */
   worldToScreen(world: Vec2, includeRotation?: boolean): Vec2 {
-    const { x, y, k, r } = this._transform;
-    const z = this._transform.zoom;
-    const k2 = Math.pow(2, z);
-    const point: Vec2 = [world[0] * k2 + x, world[1] * k2 + y];
-//    const point: Vec2 = [world[0] * k + x, y - world[1] * k];
+    const { x, y, z, r } = this._transform;
+    const scale = Math.pow(2, z);
+
+    const point: Vec2 = [
+      ((world[0] - 128) * scale) + x,
+      ((world[1] - 128) * scale) + y
+    ]
 
     if (includeRotation && r) {
       return vecRotate(point, r, this.center());
@@ -183,22 +184,23 @@ export class Viewport {
 
 
   /** Converts from screen coordinate to world coordinate applying view transform
-   * @param    point  - the screen coordinate (x,y)
+   * @param    screen  - the screen coordinate (x,y)
    * @param    includeRotation - if true, consider rotation when working with the screen coordinate
    * @returns  The world coordinate (x,y)
    */
-  screenToWorld(point: Vec2, includeRotation?: boolean): Vec2 {
-    const { x, y, k, r } = this._transform;
-    const z = this._transform.zoom;
-    const k2 = Math.pow(2, z);
+  screenToWorld(screen: Vec2, includeRotation?: boolean): Vec2 {
+    const { x, y, z, r } = this._transform;
+
     if (includeRotation && r) {
-      point = vecRotate(point, -r, this.center());
+      screen = vecRotate(screen, -r, this.center());
     }
 
-    return [(point[0] - x) / k2, (point[0] - y) / k2];
-//    const worldX = (point[0] - x) / k;
-//    const worldY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-//    return [worldX, worldY];
+    const scale = Math.pow(2, z);
+    const point: Vec2 = [
+      ((screen[0] - x) / scale) + 128,
+      ((screen[1] - y) / scale) + 128
+    ];
+    return point;
   }
 
 
