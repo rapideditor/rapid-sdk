@@ -3,9 +3,8 @@
  * @module
  */
 
-import { TAU, MIN_K, MAX_K, MIN_Z, MAX_Z } from './constants';
+import { TAU, MIN_Z, MAX_Z } from './constants';
 import { numClamp, numWrap } from './number';
-import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { Vec2 } from './vector';
 
 /** Contains the properties that define the transform */
@@ -65,28 +64,7 @@ export class Transform {
   }
 
 
-//  /** scale factor
-//   */
-//  get scale(): number {
-//    return this.k;
-//  }
-//  set scale(val: number) {
-//    this.props = { k: val };
-//  }
-//
-//
-//  /** zoom factor
-//   *  zoom is related to scale
-//   */
-//  get zoom(): number {
-//    return geoScaleToZoom(this.k);
-//  }
-//  set zoom(val: number) {
-//    this.props = { k: geoZoomToScale(+val) };
-//  }
-
   /** zoom factor
-   *  zoom is related to scale
    */
   get zoom(): number {
     return this.z;
@@ -130,16 +108,6 @@ export class Transform {
       }
     }
 
-    // if (val.k !== undefined && val.k !== null) {
-    //   let k = +val.k;
-    //   if (!isNaN(k) && isFinite(k)) {
-    //     k = numClamp(k, MIN_K, MAX_K);   // constrain to z0..z24
-    //     if (this.k !== k) {
-    //       this.k = k;
-    //       changed = true;
-    //     }
-    //   }
-    // }
     if (val.z !== undefined && val.z !== null) {
       let z = +val.z;
       if (!isNaN(z) && isFinite(z)) {

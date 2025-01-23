@@ -101,7 +101,8 @@ export function geoSphericalDistance(a: Vec2, b: Vec2): number {
 }
 
 
-/** Projection scale factor to tile zoom level
+/** LEGACY - DO NOT USE IN NEW CODE
+ * Projection scale factor to tile zoom level
  * @param k projection scale factor
  * @param tileSize tile size (defaults to 256)
  * @returns tile zoom level
@@ -113,8 +114,8 @@ export function geoScaleToZoom(k: number, tileSize: number = 256): number {
   return Math.log(k * TAU) / Math.LN2 - log2ts;
 }
 
-
-/** Tile zoom to projection scale factor
+/** LEGACY - DO NOT USE IN NEW CODE
+ * Tile zoom to projection scale factor
  * @param z tile zoom level
  * @param tileSize tile size (defaults to 256)
  * @returns projection scale factor
@@ -123,29 +124,6 @@ export function geoScaleToZoom(k: number, tileSize: number = 256): number {
  */
 export function geoZoomToScale(z: number, tileSize: number = 256): number {
   return (tileSize * Math.pow(2, z)) / TAU;
-}
-
-
-/** NEW scale to zoom
- * This is an experiment to replace the old scale with one that works like Google Maps.
- * Tile size is always 256, no Math.PI involved
- * @see https://developers.google.com/maps/documentation/javascript/coordinates
- * @param k projection scale factor
- * @returns tile zoom level
- */
-export function geoScaleToZoom2(k: number): number {
-  return Math.log2(k);
-}
-
-
-/** NEW zoom to scale
- * This is an experiment to replace the old scale with one that works like Google Maps.
- * Tile size is always 256, no Math.PI involved
- * @param z tile zoom level
- * @returns projection scale factor
- */
-export function geoZoomToScale2(z: number): number {
-  return Math.pow(2, z);
 }
 
 

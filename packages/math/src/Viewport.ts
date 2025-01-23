@@ -173,7 +173,7 @@ export class Viewport {
     const point: Vec2 = [
       ((world[0] - 128) * scale) + x,
       ((world[1] - 128) * scale) + y
-    ]
+    ];
 
     if (includeRotation && r) {
       return vecRotate(point, r, this.center());

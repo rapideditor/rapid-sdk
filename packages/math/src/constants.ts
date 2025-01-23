@@ -10,8 +10,6 @@ export const HALF_PI = Math.PI / 2;
 
 export const MIN_Z = 0;
 export const MAX_Z = 24;
-export const MIN_K = (256 * Math.pow(2, MIN_Z)) / TAU;
-export const MAX_K = (256 * Math.pow(2, MAX_Z)) / TAU;
 
 export const MAX_PHI = 2 * Math.atan(Math.exp(Math.PI)) - HALF_PI;  // 85.0511287798 in radians
 export const MIN_PHI = -MAX_PHI;
