@@ -5,12 +5,12 @@
  * See: https://developers.google.com/maps/documentation/javascript/coordinates
  */
 
+import { MAX_Z, MIN_Z } from './constants';
 import { Extent } from './Extent';
 import { Viewport } from './Viewport';
-import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
 import { numClamp } from './number';
-import { Vec2, Vec3, vecAdd } from './vector';
+import { Vec2, Vec3 } from './vector';
 
 
 /** Contains essential information about a tile */
@@ -19,9 +19,9 @@ export interface Tile {
   id: string;
   /** tile coordinate array ex. [0,0,0] */
   xyz: Vec3;
-  /** pixel x/y coordinate extent */
-  pxExtent: Extent;
-  /** wgs84 lon/lat coordinate extent */
+  /** Extent in world coordinates (x,y) */
+  tileExtent: Extent;
+  /** Extent in WGS84 coordinates(lon,lat) */
   wgs84Extent: Extent;
   /** true if the tile is visible, false if not */
   isVisible: boolean;
@@ -41,7 +41,7 @@ function range(start: number, end: number): number[] {
 
 export class Tiler {
   private _tileSize = 256;
-  private _zoomRange: Vec2 = [0, 24];
+  private _zoomRange: Vec2 = [MIN_Z, MAX_Z];
   private _margin = 0;
   private _skipNullIsland = false;
 
@@ -71,8 +71,8 @@ export class Tiler {
    *
    * const t0 = new Tiler();
    * const v0 = new Viewport();
-   * v0.transform = { x: 128, y: 128, k: 128 / Math.PI };  // z0
-   * v0.dimensions = [256, 256];                           // entire world visible
+   * v0.transform = { x: 128, y: 128, z: 0 };
+   * v0.dimensions = [256, 256];     // entire world visible
    * const result = t0.getTiles(v0);
    *
    * At zoom 1:
@@ -90,8 +90,8 @@ export class Tiler {
    *
    * const t1 = new Tiler();
    * const v1 = new Viewport();
-   * v1.transform = { x: 256, y: 256, k: 256 / Math.PI };  // z1
-   * v1.dimensions = [512, 512];                           // entire world visible
+   * v1.transform = { x: 256, y: 256, z: 1 };
+   * v1.dimensions = [512, 512];     // entire world visible
    * const result = t1.getTiles(v1);
    *
    * At zoom 2:
@@ -117,8 +117,8 @@ export class Tiler {
    *
    * const t2 = new Tiler();
    * const v2 = new Viewport();
-   * v2.transform = { x: 512, y: 512, k: 512 / Math.PI };  // z2
-   * v2.dimensions = [1024, 1024];                         // entire world visible
+   * v2.transform = { x: 512, y: 512, z: 2 };
+   * v2.dimensions = [1024, 1024];   // entire world visible
    * const result = t2.getTiles(v2);
    * ```
    */
@@ -166,101 +166,88 @@ export class Tiler {
       visiblePolygon = _addMargin(visiblePolygon, ms);
     }
 
-    // Perform calculations in world pixels.  These are kind of like the Mercator
-    // coordinates from the Viewport code, except without `1/π` baked into the scale.
-    // This coordinate system moves [0,0] to the top left corner of the world.
-    const viewk: number = t.k * Math.PI;
-    const origin: Vec2 = [viewk - t.x, viewk - t.y];
-
-    // Convert all polygons to this world pixel coordinate system.
+    // Convert all polygons to world coordinates..
     for (let i = 0; i < 5; i++) {
-      visiblePolygon[i] = vecAdd(origin, visiblePolygon[i]);
-      screenPolygon[i] = vecAdd(origin, screenPolygon[i]);
-      marginPolygon[i] = vecAdd(origin, marginPolygon[i]);
+      visiblePolygon[i] = viewport.screenToWorld(visiblePolygon[i]);
+      screenPolygon[i] = viewport.screenToWorld(screenPolygon[i]);
+      marginPolygon[i] = viewport.screenToWorld(marginPolygon[i]);
     }
 
-    const viewMin = visiblePolygon[0];  // point E
-    const viewMax = visiblePolygon[2];  // point G
+    const worldMin = visiblePolygon[0];  // point E
+    const worldMax = visiblePolygon[2];  // point G
 
     // Pick the zoom `z` we will tile at.  It will be whatever integer is closest to
     // the zoom of the viewport, and within the ranges allowed by the tiler.
-    const zOrig = geoScaleToZoom(t.k, ts);
+    const log2ts = Math.log2(ts);
+    const adjust = log2ts - 8;   // adjust zoom for tile sizes not 256px (log2(256) = 8)
+    const zOrig = t.z - adjust;
     const z = numClamp(Math.round(zOrig), this._zoomRange[0], this._zoomRange[1]);
+    const pow2z = Math.pow(2, z);
+    const worldScale = pow2z / 256;
+    const tileScale = 256 / pow2z;
     const min = 0;
-    const max = Math.pow(2, z) - 1;
-    const log2ts = Math.log(ts) * Math.LOG2E;
-
-    // tilek contains the difference between the visible zoom and the tile zoom
-    const tilek = Math.pow(2, zOrig - z + log2ts);
+    const max = pow2z - 1;
 
     const cols = range(
-      numClamp(Math.floor(viewMin[0] / tilek), min, max),
-      numClamp(Math.floor(viewMax[0] / tilek), min, max)
+      numClamp(Math.floor(worldMin[0] * worldScale), min, max),
+      numClamp(Math.floor(worldMax[0] * worldScale), min, max)
     );
     const rows = range(
-      numClamp(Math.floor(viewMin[1] / tilek), min, max),
-      numClamp(Math.floor(viewMax[1] / tilek), min, max)
+      numClamp(Math.floor(worldMin[1] * worldScale), min, max),
+      numClamp(Math.floor(worldMax[1] * worldScale), min, max)
     );
-
-    // Create a viewport based on tile coordinates and centered at Null Island,
-    // so we can unproject back to lon/lat later
-    const tileOrigin = (Math.pow(2, z) / 2) * ts;
-    const tileScale = geoZoomToScale(z, ts);
-    const tileViewport = new Viewport({ x: tileOrigin, y: tileOrigin, k: tileScale });
 
     const tiles: Tile[] = [];
     for (const y of rows) {
       for (const x of cols) {
         if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
 
-        // the tile bounds in pixels coordinates
-        const pxMin: Vec2 = [x * tilek, y * tilek];
-        const pxMax: Vec2 = [(x + 1) * tilek, (y + 1) * tilek];
-        const pxExtent = new Extent(pxMin, pxMax);
-        const pxPolygon = pxExtent.polygon();
+        // The tile bounds in world coordinates
+        const tileMin: Vec2 = [x * tileScale, y * tileScale];
+        const tileMax: Vec2 = [(x + 1) * tileScale, (y + 1) * tileScale];
+        const tileExtent = new Extent(tileMin, tileMax);
+        const tilePolygon = tileExtent.polygon();
 
         // If it's not even in the margin, we can exclude this tile from the resultset.
         // Test both ways, maybe the tile covers the margin, maybe the margin covers the tile?
         let isIncluded =
-          geomPolygonIntersectsPolygon(marginPolygon, pxPolygon, false) ||    // false = fast test
-          geomPolygonIntersectsPolygon(pxPolygon, marginPolygon, false);
+          geomPolygonIntersectsPolygon(marginPolygon, tilePolygon, false) ||    // false = fast test
+          geomPolygonIntersectsPolygon(tilePolygon, marginPolygon, false);
 
         // Note, for rotated viewports, we need the strict test,
         // because the tile corners may be rotated out of the viewport - see rapid-sdk#281
         if (!isIncluded && t.r !== 0) {
-          isIncluded = geomPathHasIntersections(marginPolygon, pxPolygon);
+          isIncluded = geomPathHasIntersections(marginPolygon, tilePolygon);
         }
         if (!isIncluded) continue;    // no need to include this tile in the result
 
         // Within the margin but not on screen?
         let isVisible =
-          geomPolygonIntersectsPolygon(screenPolygon, pxPolygon, false) ||
-          geomPolygonIntersectsPolygon(pxPolygon, screenPolygon, false);
+          geomPolygonIntersectsPolygon(screenPolygon, tilePolygon, false) ||
+          geomPolygonIntersectsPolygon(tilePolygon, screenPolygon, false);
 
         if (!isVisible && t.r !== 0) {
-          isVisible = geomPathHasIntersections(screenPolygon, pxPolygon);
+          isVisible = geomPathHasIntersections(screenPolygon, tilePolygon);
         }
 
         // back to lon/lat
-        const tileMin: Vec2 = [x * ts, y * ts];
-        const tileMax: Vec2 = [(x + 1) * ts, (y + 1) * ts];
-        const wgs84Min = tileViewport.unproject([tileMin[0], tileMax[1]]);
-        const wgs84Max = tileViewport.unproject([tileMax[0], tileMin[1]]);
-
+        const wgs84Min = viewport.worldToWgs84([tileMin[0], tileMax[1]]);  // bottom left
+        const wgs84Max = viewport.worldToWgs84([tileMax[0], tileMin[1]]);  // top right
+        const wgs84Extent = new Extent(wgs84Min, wgs84Max);
         const xyz: Vec3 = [x, y, z];
 
         const tile: Tile = {
           id: xyz.toString(),
           xyz: xyz,
-          pxExtent: pxExtent,
-          wgs84Extent: new Extent(wgs84Min, wgs84Max),
+          tileExtent: tileExtent,
+          wgs84Extent: wgs84Extent,
           isVisible: isVisible
         };
 
         if (isVisible) {
-          tiles.unshift(tile); // tiles in view at beginning
+          tiles.unshift(tile);  // tiles in view at beginning
         } else {
-          tiles.push(tile); // tiles in margin at the end
+          tiles.push(tile);     // tiles in margin at the end
         }
       }
     }
@@ -344,7 +331,10 @@ export class Tiler {
   zoomRange(min?: number, max?: number): Vec2 | Tiler {
     if (min === undefined) return this._zoomRange;
     if (max === undefined) max = min;
-    this._zoomRange = [min, max];
+    this._zoomRange = [
+      numClamp(min, MIN_Z, MAX_Z),
+      numClamp(max, MIN_Z, MAX_Z)
+    ];
     return this;
   }
 
