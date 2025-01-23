@@ -3,7 +3,7 @@ import { strict as assert } from 'node:assert';
 import * as test from '../built/math.mjs';
 
 
-assert.closeTo = function(a, b, epsilon = 1e-6) {
+assert.closeTo = function(a, b, epsilon = 1e-9) {
   if (Math.abs(a - b) > epsilon) {
     assert.fail(`${a} is not close to ${b} within ${epsilon}`);
   }
