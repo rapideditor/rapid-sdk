@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import { strict as assert } from 'node:assert';
-import { DEG2RAD, Extent, Transform, Viewport, geoZoomToScale } from '../built/math.mjs';
+import { DEG2RAD, Extent, Transform, Viewport } from '../built/math.mjs';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -18,17 +18,17 @@ describe('math/viewport', () => {
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 0);
       assert.equal(tform.y, 0);
-      assert.equal(tform.k, 256 / Math.PI); // z1
+      assert.equal(tform.z, 1);
     });
 
     it('creates a Viewport with a Transform-like param', () => {
-      const view = new Viewport({ x: '20', y: '30', k: 512 / Math.PI, r: Math.PI / 2 });
+      const view = new Viewport({ x: '20', y: '30', z: 2, r: Math.PI / 2 });
       const tform = view.transform;
       assert.ok(view instanceof Viewport);
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
-      assert.equal(tform.k, 512 / Math.PI); // z2
+      assert.equal(tform.z, 2);
       assert.equal(tform.r, Math.PI / 2);
       assert.equal(tform.v, 2);
     });
@@ -42,12 +42,11 @@ describe('math/viewport', () => {
 
   describe('#project / #unproject', () => {
     for (const z of [0, 1, 2]) {
-      const k = geoZoomToScale(z);
       const w = Math.pow(2, z) * 128;  // half the tile size
       const h = w;
 
       it(`Projects [0°, 0°] -> [0, 0] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const point = view.project([0, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -55,7 +54,7 @@ describe('math/viewport', () => {
       });
 
       it(`Projects [180°, -85.0511287798°] -> [${w}, ${h}] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const point = view.project([180, -85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], w);
@@ -63,7 +62,7 @@ describe('math/viewport', () => {
       });
 
       it(`Projects out of bounds [270°, -95°] -> [${w * 1.5}, ${h}] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const point = view.project([270, -95]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], w * 1.5);
@@ -71,7 +70,7 @@ describe('math/viewport', () => {
       });
 
       it(`Projects [-180°, 85.0511287798°] -> [${-w}, ${-h}] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -w);
@@ -79,7 +78,7 @@ describe('math/viewport', () => {
       });
 
       it(`Projects out of bounds [-270°, 95°] -> [${-w * 1.5}, ${-h}] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const point = view.project([-270, 95]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -w * 1.5);
@@ -87,7 +86,7 @@ describe('math/viewport', () => {
       });
 
       it(`Applies translation when projecting (at z${z})`, () => {
-        const view = new Viewport({ x: 20, y: 30, k: k });
+        const view = new Viewport({ x: 20, y: 30, z: z });
         const point = view.project([-180, 85.0511287798]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], -w + 20);
@@ -95,7 +94,7 @@ describe('math/viewport', () => {
       });
 
       it(`Ignores rotation when projecting, when 'includeRotation' is 'false' (at z${z})`, () => {
-        const view = new Viewport({ k: k, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
         const point = view.project([180, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], w);
@@ -103,7 +102,7 @@ describe('math/viewport', () => {
       });
 
       it(`Applies rotation when projecting, when 'includeRotation' is 'true' (at z${z})`, () => {
-        const view = new Viewport({ k: k, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
         const point = view.project([180, 0], true);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -111,7 +110,7 @@ describe('math/viewport', () => {
       });
 
       it(`Unprojects [0, 0] -> [0°, 0°] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const loc = view.unproject([0, 0]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 0);
@@ -119,7 +118,7 @@ describe('math/viewport', () => {
       });
 
       it(`Unprojects [${w}, ${h}] -> [180°, -85.0511287798°] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const loc = view.unproject([w, h]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 180);
@@ -127,7 +126,7 @@ describe('math/viewport', () => {
       });
 
       it(`Unprojects out of bounds [${w * 1.5}, Infinity] -> [270°, -85.0511287798°] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const loc = view.unproject([w * 1.5, Infinity]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], 270);
@@ -135,7 +134,7 @@ describe('math/viewport', () => {
       });
 
       it(`Unprojects [${-w}, ${-h}] -> [-180°, 85.0511287798°] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const loc = view.unproject([-w, -h]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -143,7 +142,7 @@ describe('math/viewport', () => {
       });
 
       it(`Unprojects out of bounds [${-w * 1.5}, -Infinity] -> [-270°, 85.0511287798°] (at z${z})`, () => {
-        const view = new Viewport({ k: k });
+        const view = new Viewport({ z: z });
         const loc = view.unproject([-w * 1.5, -Infinity]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -270);
@@ -151,7 +150,7 @@ describe('math/viewport', () => {
       });
 
       it(`Applies translation when unprojecting (at z${z})`, () => {
-        const view = new Viewport({ x: 20, y: 30, k: k });
+        const view = new Viewport({ x: 20, y: 30, z: z });
         const loc = view.unproject([-w + 20, -h + 30]);
         assert.ok(loc instanceof Array);
         assert.closeTo(loc[0], -180);
@@ -159,7 +158,7 @@ describe('math/viewport', () => {
       });
 
       it(`Ignores rotation when unprojecting, when 'includeRotation' is 'false' (at z${z})`, () => {
-        const view = new Viewport({ k: k, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
         const point = view.unproject([0, h]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -167,7 +166,7 @@ describe('math/viewport', () => {
       });
 
       it(`Applies rotation when unprojecting, when 'includeRotation' is 'true' (at z${z})`, () => {
-        const view = new Viewport({ k: k, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
         const point = view.unproject([0, h], true);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 180);
@@ -289,29 +288,29 @@ describe('math/viewport', () => {
   describe('#transform', () => {
     it('sets/gets transform', () => {
       const view = new Viewport();
-      view.transform = { x: '20', y: '30', k: 512 / Math.PI, r: Math.PI / 2 };
+      view.transform = { x: '20', y: '30', z: 2, r: Math.PI / 2 };
       const tform = view.transform;
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
-      assert.equal(tform.k, 512 / Math.PI);
+      assert.equal(tform.z, 2);
       assert.equal(tform.r, Math.PI / 2);
     });
 
     it('ignores missing / invalid properties', () => {
-      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 });
+      const view = new Viewport({ x: 20, y: 30, z: 2, r: Math.PI / 2 });
       view.transform = { x: 10, fake: 10 };
       const tform = view.transform;
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 10);
       assert.equal(tform.y, 30);
-      assert.equal(tform.k, 512 / Math.PI);
+      assert.equal(tform.z, 2);
       assert.equal(tform.r, Math.PI / 2);
       assert.equal(tform.fake, undefined);
     });
 
     it('increments version only on actual change', () => {
-      const view = new Viewport({ x: 20, y: 30, k: 512 / Math.PI });
+      const view = new Viewport({ x: 20, y: 30, z: 2 });
       const v0 = view.v;
       view.transform = { r: Math.PI / 2 };
       assert.equal(view.v, v0 + 1);  // increment once
@@ -403,7 +402,7 @@ describe('math/viewport', () => {
       it(`returns visible polygon when viewport is rotated ${key}°`, () => {
         const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
+        view.transform = { x: 200, y: 150, z: 1, r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visiblePolygon();
@@ -458,7 +457,7 @@ describe('math/viewport', () => {
       it(`returns visible dimensions when viewport is rotated ${key}°`, () => {
         const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
+        view.transform = { x: 200, y: 150, z: 1, r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visibleDimensions();
@@ -512,7 +511,7 @@ describe('math/viewport', () => {
       it(`returns visible extent when viewport is rotated ${key}°`, () => {
         const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
+        view.transform = { x: 200, y: 150, z: 1, r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visibleExtent();
@@ -545,29 +544,29 @@ describe('math/viewport', () => {
     //  define the north-up coordinate system (F is bottom-left, H is top-right)
     //
     const tests = {
-      '0':    [[-100, -75], [100, 125]],
-      '45':   [[-123.74368670764582, -98.74368670764582], [123.74368670764582, 148.74368670764582]],
-      '90':   [[-75, -50], [75, 100]],
-      '135':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
-      '180':  [[-100, -75], [100, 125]],
-      '225':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
-      '270':  [[-75, -50], [75, 100]],
-      '315':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
-      '360':  [[-100, -75], [100, 125]],
-      '-315': [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
-      '-270': [[-75, -50], [75, 100]],
-      '-225': [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
-      '-180': [[-100, -75], [100, 125]],
-      '-135': [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]],
-      '-90':  [[-75, -50], [75, 100]],
-      '-45':  [[-123.74368670764582, -98.74368670764581], [123.74368670764582, 148.74368670764582]]
+      '0':    [[28, 53], [228, 203]],
+      '45':   [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '90':   [[53, 28], [203, 228]],
+      '135':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '180':  [[28, 53], [228, 203]],
+      '225':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '270':  [[53, 28], [203, 228]],
+      '315':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '360':  [[28, 53], [228, 203]],
+      '-315': [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '-270': [[53, 28], [203, 228]],
+      '-225': [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '-180': [[28, 53], [228, 203]],
+      '-135': [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
+      '-90':  [[53, 28], [203, 228]],
+      '-45':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]]
     };
 
     for (const [key, expected] of Object.entries(tests)) {
       it(`returns visible world extent when viewport is rotated ${key}°`, () => {
         const degrees = Number.parseInt(key, 10);
         const view = new Viewport();
-        view.transform = { x: 200, y: 150, k: geoZoomToScale(1), r: degrees * DEG2RAD };
+        view.transform = { x: 200, y: 150, z: 1, r: degrees * DEG2RAD };
         view.dimensions = [400, 300];
 
         const result = view.visibleWorldExtent();

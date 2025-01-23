@@ -3,7 +3,7 @@
  * @module
  */
 
-import { TAU, MIN_K, MAX_K } from './constants';
+import { TAU, MIN_K, MAX_K, MIN_Z, MAX_Z } from './constants';
 import { numClamp, numWrap } from './number';
 import { geoScaleToZoom, geoZoomToScale } from './geo';
 import { Vec2 } from './vector';
@@ -14,8 +14,8 @@ export interface TransformProps {
   x: number;
   /** translation in y direction from origin */
   y: number;
-  /** scale factor */
-  k: number;
+  /** zoom factor */
+  z: number;
   /** rotation, in radians */
   r: number;
 }
@@ -23,14 +23,14 @@ export interface TransformProps {
 
 /** `Transform` is a class for dealing with transform data
  *   `x`,`y` - translation, (from origin coordinate [0,0], to top-left screen coordinate)
- *   `k`     - scale, (related to the map zoom, how many Mercator coordinates the world contains)
+ *   `z`     - zoom (the scale factor is 2^z)
  *   `r`     - rotation, optionally applied post-projection to change the map bearing away from north-up
  */
 
 export class Transform {
   public x = 0;
   public y = 0;
-  public k = 256 / Math.PI;  // z1
+  public z = 1;
   public r = 0;
   private _v = 1;
 
@@ -65,24 +65,34 @@ export class Transform {
   }
 
 
-  /** scale factor
-   */
-  get scale(): number {
-    return this.k;
-  }
-  set scale(val: number) {
-    this.props = { k: val };
-  }
-
+//  /** scale factor
+//   */
+//  get scale(): number {
+//    return this.k;
+//  }
+//  set scale(val: number) {
+//    this.props = { k: val };
+//  }
+//
+//
+//  /** zoom factor
+//   *  zoom is related to scale
+//   */
+//  get zoom(): number {
+//    return geoScaleToZoom(this.k);
+//  }
+//  set zoom(val: number) {
+//    this.props = { k: geoZoomToScale(+val) };
+//  }
 
   /** zoom factor
    *  zoom is related to scale
    */
   get zoom(): number {
-    return geoScaleToZoom(this.k);
+    return this.z;
   }
   set zoom(val: number) {
-    this.props = { k: geoZoomToScale(+val) };
+    this.props = { z: val };
   }
 
 
@@ -99,7 +109,7 @@ export class Transform {
   /**
    */
   get props(): Required<TransformProps> {
-    return { x: this.x, y: this.y, k: this.k, r: this.r };
+    return { x: this.x, y: this.y, z: this.z, r: this.r };
   }
   set props(val: Partial<TransformProps>) {
     let changed = false;
@@ -120,12 +130,22 @@ export class Transform {
       }
     }
 
-    if (val.k !== undefined && val.k !== null) {
-      let k = +val.k;
-      if (!isNaN(k) && isFinite(k)) {
-        k = numClamp(k, MIN_K, MAX_K);   // constrain to z0..z24
-        if (this.k !== k) {
-          this.k = k;
+    // if (val.k !== undefined && val.k !== null) {
+    //   let k = +val.k;
+    //   if (!isNaN(k) && isFinite(k)) {
+    //     k = numClamp(k, MIN_K, MAX_K);   // constrain to z0..z24
+    //     if (this.k !== k) {
+    //       this.k = k;
+    //       changed = true;
+    //     }
+    //   }
+    // }
+    if (val.z !== undefined && val.z !== null) {
+      let z = +val.z;
+      if (!isNaN(z) && isFinite(z)) {
+        z = numClamp(z, MIN_Z, MAX_Z);   // constrain to z0..z24
+        if (this.z !== z) {
+          this.z = z;
           changed = true;
         }
       }
