@@ -100,7 +100,7 @@ describe('math/extent', () => {
       const e = new Extent([0, 0], [5, 10]);
       const result = e.polygon();
       assert.ok(result instanceof Array);
-      assert.deepEqual(result, [ [0, 0], [0, 10], [5, 10], [5, 0], [0, 0] ]);
+      assert.deepEqual(result, [[0, 0], [5, 0], [5, 10], [0, 10], [0, 0]]);
     });
   });
 
