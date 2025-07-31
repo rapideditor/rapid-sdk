@@ -119,17 +119,17 @@ export class Extent {
     return { minX: this.min[0], minY: this.min[1], maxX: this.max[0], maxY: this.max[1] };
   }
 
-  /** Returns a polygon representing the extent wound clockwise.
+  /** Returns a polygon representing the extent wound counterclockwise.
    * @returns Polygon array
    * @example
-   * new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [0, 10], [5, 10], [5, 0], [0, 0]]
+   * new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [5, 0], [5, 10], [0, 10], [0, 0]]
    */
   polygon(): Vec2[] {
     return [
       [this.min[0], this.min[1]],
-      [this.min[0], this.max[1]],
-      [this.max[0], this.max[1]],
       [this.max[0], this.min[1]],
+      [this.max[0], this.max[1]],
+      [this.min[0], this.max[1]],
       [this.min[0], this.min[1]]
     ];
   }

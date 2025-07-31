@@ -281,7 +281,7 @@ describe('math/geom', () => {
       const points = [[0, -1], [5, 1], [10, -1], [15, 1]];
       const ssr = test.geomGetSmallestSurroundingRectangle(points);
       assert.ok(ssr instanceof Object);
-      assert.deepEqual(ssr.poly, [[0, -1], [0, 1], [15, 1], [15, -1], [0, -1]]);
+      assert.deepEqual(ssr.poly, [[0, -1], [15, -1], [15, 1], [0, 1], [0, -1]]);
       assert.equal(ssr.angle, 0);
     });
   });
