@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as test from '../built/util.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as util from '../src/util.ts';
 
 
 assert.arrayContains = function(choices, val) {
@@ -19,19 +19,19 @@ assert.arrayContains = function(choices, val) {
 describe('utilCleanTags', () => {
   it('handles empty tags object', () => {
     const t = {};
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {});
   });
 
   it('discards empty keys', () => {
     const t = { '': 'bar' };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {});
   });
 
   it('discards undefined values', () => {
     const t = { foo: undefined };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {});
   });
 
@@ -41,7 +41,7 @@ describe('utilCleanTags', () => {
       trailing: 'value  ',
       both: '   value  '
     };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {
       leading: 'value',
       trailing: 'value',
@@ -54,7 +54,7 @@ describe('utilCleanTags', () => {
       website: 'http://example\u200B.com',
       email: 'person@example\u200C.com'
     };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {
       website: 'http://example.com',
       email: 'person@example.com'
@@ -67,7 +67,7 @@ describe('utilCleanTags', () => {
       trailing: 'value1  ;value2  ',
       both: '   value1  ;  value2  '
     };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {
       leading: 'value1;value2',
       trailing: 'value1;value2',
@@ -82,7 +82,7 @@ describe('utilCleanTags', () => {
       fixme: '   value  ',
       inscription: ' value1 ; value2 '
     };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, t);
   });
 
@@ -95,7 +95,7 @@ describe('utilCleanTags', () => {
       'maxspeed:conditional': '    120 @ (06:00-20:00)   ;80 @ wet  ',
       'restriction:conditional': '  no_u_turn @ (Mo-Fr 09:00-10:00,15:00-16:00;SH off)  '
     };
-    const result = test.utilCleanTags(t);
+    const result = util.utilCleanTags(t);
     assert.deepEqual(result, {
       opening_hours: 'Mo-Su 08:00-18:00; Apr 10-15 off; Jun 08:00-14:00; Aug off; Dec 25 off',
       collection_times: 'Mo 10:00-12:00,12:30-15:00; Tu-Fr 08:00-12:00,12:30-15:00; Sa 08:00-12:00',
@@ -160,25 +160,25 @@ describe('utilGetAllNodes', () => {
   };
 
   it('handles nodes handed in', () => {
-    assert.deepEqual(test.utilGetAllNodes(['n-1'], graph), [n1]);
-    assert.deepEqual(test.utilGetAllNodes(['n-1', 'n-2'], graph), [n1, n2]);
-    assert.deepEqual(test.utilGetAllNodes(['n-1', 'n-2', 'n-3'], graph), [n1, n2, n3]);
+    assert.deepEqual(util.utilGetAllNodes(['n-1'], graph), [n1]);
+    assert.deepEqual(util.utilGetAllNodes(['n-1', 'n-2'], graph), [n1, n2]);
+    assert.deepEqual(util.utilGetAllNodes(['n-1', 'n-2', 'n-3'], graph), [n1, n2, n3]);
   });
 
   it('gets all descendant nodes of a way', () => {
-    assert.deepEqual(test.utilGetAllNodes(['w-1'], graph), [n1, n2]);
-    assert.deepEqual(test.utilGetAllNodes(['w-1', 'w-2'], graph), [n1, n2, n3]);
+    assert.deepEqual(util.utilGetAllNodes(['w-1'], graph), [n1, n2]);
+    assert.deepEqual(util.utilGetAllNodes(['w-1', 'w-2'], graph), [n1, n2, n3]);
   });
 
   it('gets all descendant nodes of a relation', () => {
-    assert.deepEqual(test.utilGetAllNodes(['r-1'], graph), [n1, n2, n3]);
-    assert.deepEqual(test.utilGetAllNodes(['r-2'], graph), [n1, n2, n3]);
-    assert.deepEqual(test.utilGetAllNodes(['r-3'], graph), [n1, n2, n3]);
+    assert.deepEqual(util.utilGetAllNodes(['r-1'], graph), [n1, n2, n3]);
+    assert.deepEqual(util.utilGetAllNodes(['r-2'], graph), [n1, n2, n3]);
+    assert.deepEqual(util.utilGetAllNodes(['r-3'], graph), [n1, n2, n3]);
   });
 
   it('gracefully handles missing entities', () => {
-    assert.deepEqual(test.utilGetAllNodes(['w-3'], graph), [n3]);
-    assert.deepEqual(test.utilGetAllNodes(['r-4'], graph), [n1, n2, n3]);
+    assert.deepEqual(util.utilGetAllNodes(['w-3'], graph), [n3]);
+    assert.deepEqual(util.utilGetAllNodes(['r-4'], graph), [n1, n2, n3]);
   });
 
   it('gets all descendant nodes of multiple ids', () => {
@@ -203,7 +203,7 @@ describe('utilGetAllNodes', () => {
           r: r
         }[id])
     };
-    const result = test.utilGetAllNodes(['r', 'w12', 'e'], graph2);
+    const result = util.utilGetAllNodes(['r', 'w12', 'e'], graph2);
     assert.arrayContains(result, a);
     assert.arrayContains(result, b);
     assert.arrayContains(result, c);
@@ -224,14 +224,14 @@ describe('utilGetAllNodes', () => {
           r12: r12
         }[id])
     };
-    const result = test.utilGetAllNodes(['r11'], graph2);
+    const result = util.utilGetAllNodes(['r11'], graph2);
     assert.arrayContains(result, n);
     assert.equal(result.length, 1);
   });
 
   it('handles degenerate ways', () => {
-    assert.deepEqual(test.utilGetAllNodes(['w-4'], graph), []);
-    assert.deepEqual(test.utilGetAllNodes(['r-5'], graph), []);
+    assert.deepEqual(util.utilGetAllNodes(['w-4'], graph), []);
+    assert.deepEqual(util.utilGetAllNodes(['r-5'], graph), []);
   });
 
   it('handles degenerate relations', () => {});
@@ -241,7 +241,7 @@ describe('utilGetAllNodes', () => {
 describe('utilTagDiff', () => {
   const oldTags = { a: 'one', b: 'two', c: 'three' };
   const newTags = { a: 'one', b: 'three', d: 'four' };
-  const diff = test.utilTagDiff(oldTags, newTags);
+  const diff = util.utilTagDiff(oldTags, newTags);
 
   assert.ok(diff instanceof Array);
   assert.equal(diff.length, 4);
@@ -277,7 +277,7 @@ describe('utilTagDiff', () => {
 });
 
 describe('utilTagText', () => {
-  assert.equal(test.utilTagText({}), '');
-  assert.equal(test.utilTagText({ tags: { foo: 'bar' } }), 'foo=bar');
-  assert.equal(test.utilTagText({ tags: { foo: 'bar', two: 'three' } }), 'foo=bar, two=three');
+  assert.equal(util.utilTagText({}), '');
+  assert.equal(util.utilTagText({ tags: { foo: 'bar' } }), 'foo=bar');
+  assert.equal(util.utilTagText({ tags: { foo: 'bar', two: 'three' } }), 'foo=bar, two=three');
 });

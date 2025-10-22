@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import { Extent, Tiler, Viewport } from '../built/math.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import { Extent, Tiler, Viewport } from '../src/math.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {

@@ -1,13 +1,13 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as test from '../built/util.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as util from '../src/util.ts';
 
 
 describe('utilObjectOmit', () => {
   it('omits keys', () => {
     const t = { a: 1, b: 2 };
-    assert.deepEqual(test.utilObjectOmit(t, []), { a: 1, b: 2 });
-    assert.deepEqual(test.utilObjectOmit(t, ['a']), { b: 2 });
-    assert.deepEqual(test.utilObjectOmit(t, ['a', 'b']), {});
+    assert.deepEqual(util.utilObjectOmit(t, []), { a: 1, b: 2 });
+    assert.deepEqual(util.utilObjectOmit(t, ['a']), { b: 2 });
+    assert.deepEqual(util.utilObjectOmit(t, ['a', 'b']), {});
   });
 });

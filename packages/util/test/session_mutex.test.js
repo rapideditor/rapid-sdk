@@ -1,6 +1,6 @@
-import { afterEach, describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as test from '../built/util.mjs';
+import { afterEach, describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as util from '../src/util.ts';
 
 
 describe('utilSessionMutex', () => {
@@ -13,39 +13,39 @@ describe('utilSessionMutex', () => {
 
   describe('#lock', () => {
     it('returns true when it gets a lock', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       assert.equal(a.lock(), true);
     });
 
     it('returns true when already locked', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.lock();
       assert.equal(a.lock(), true);
     });
 
     it('returns false when the lock is held by another session', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.lock();
 
-      b = test.utilSessionMutex('name');
+      b = util.utilSessionMutex('name');
       assert.equal(b.lock(), false);
     });
   });
 
   describe('#locked', () => {
     it('returns false by default', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       assert.equal(a.locked(), false);
     });
 
     it('returns true when locked', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.lock();
       assert.equal(a.locked(), true);
     });
 
     it('returns false when unlocked', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.lock();
       a.unlock();
       assert.equal(a.locked(), false);
@@ -54,36 +54,36 @@ describe('utilSessionMutex', () => {
 
   describe('#unlock', () => {
     it('unlocks the mutex', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.lock();
       a.unlock();
 
-      b = test.utilSessionMutex('name');
+      b = util.utilSessionMutex('name');
       assert.equal(b.lock(), true);
     });
 
     it('does nothing when the lock is held by another session', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.lock();
 
-      b = test.utilSessionMutex('name');
+      b = util.utilSessionMutex('name');
       b.unlock();
 
       assert.equal(a.locked(), true);
     });
 
     it('does nothing when not locked', () => {
-      a = test.utilSessionMutex('name');
+      a = util.utilSessionMutex('name');
       a.unlock();
       assert.equal(a.locked(), false);
     });
   });
 
   it('namespaces locks', () => {
-    a = test.utilSessionMutex('a');
+    a = util.utilSessionMutex('a');
     a.lock();
 
-    b = test.utilSessionMutex('b');
+    b = util.utilSessionMutex('b');
     assert.equal(b.locked(), false);
     assert.equal(b.lock(), true);
   });

@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import { Extent } from '../built/math.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import { Extent } from '../src/math.ts';
 
 
 describe('math/extent', () => {

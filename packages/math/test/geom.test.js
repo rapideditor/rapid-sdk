@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as test from '../built/math.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as math from '../src/math.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -12,15 +12,15 @@ assert.closeTo = function(a, b, epsilon = 1e-9) {
 describe('math/geom', () => {
   describe('geomEdgeEqual', () => {
     it('returns false for inequal edges', () => {
-      assert.equal(test.geomEdgeEqual(['a', 'b'], ['a', 'c']), false);
+      assert.equal(math.geomEdgeEqual(['a', 'b'], ['a', 'c']), false);
     });
 
     it('returns true for equal edges along same direction', () => {
-      assert.equal(test.geomEdgeEqual(['a', 'b'], ['a', 'b']), true);
+      assert.equal(math.geomEdgeEqual(['a', 'b'], ['a', 'b']), true);
     });
 
     it('returns true for equal edges along opposite direction', () => {
-      assert.equal(test.geomEdgeEqual(['a', 'b'], ['b', 'a']), true);
+      assert.equal(math.geomEdgeEqual(['a', 'b'], ['b', 'a']), true);
     });
   });
 
@@ -29,7 +29,7 @@ describe('math/geom', () => {
       const points = [[5, 0], [5, 1]];
       const angle = Math.PI;
       const around = [0, 0];
-      const result = test.geomRotatePoints(points, angle, around);
+      const result = math.geomRotatePoints(points, angle, around);
       assert.closeTo(result[0][0], -5);
       assert.closeTo(result[0][1], 0);
       assert.closeTo(result[1][0], -5);
@@ -40,7 +40,7 @@ describe('math/geom', () => {
       const points = [[5, 0], [5, 1]];
       const angle = Math.PI;
       const around = [3, 0];
-      const result = test.geomRotatePoints(points, angle, around);
+      const result = math.geomRotatePoints(points, angle, around);
       assert.closeTo(result[0][0], 1);
       assert.closeTo(result[0][1], 0);
       assert.closeTo(result[1][0], 1);
@@ -52,10 +52,10 @@ describe('math/geom', () => {
     it('returns null if either line is not a proper line segment', () => {
       const a = [[0, 0], [10, 0]];
       const b = [[-5, 0], [5, 0]];
-      assert.equal(test.geomLineIntersection([], b), null);
-      assert.equal(test.geomLineIntersection([[0, 0]], b), null);
-      assert.equal(test.geomLineIntersection(a, []), null);
-      assert.equal(test.geomLineIntersection(a, [[0, 0]]), null);
+      assert.equal(math.geomLineIntersection([], b), null);
+      assert.equal(math.geomLineIntersection([[0, 0]], b), null);
+      assert.equal(math.geomLineIntersection(a, []), null);
+      assert.equal(math.geomLineIntersection(a, [[0, 0]]), null);
     });
 
     it('returns null if lines are colinear with overlap', () => {
@@ -64,7 +64,7 @@ describe('math/geom', () => {
       //
       const a = [[0, 0], [10, 0]];
       const b = [[-5, 0], [5, 0]];
-      assert.equal(test.geomLineIntersection(a, b), null);
+      assert.equal(math.geomLineIntersection(a, b), null);
     });
 
     it('returns null if lines are colinear but disjoint', () => {
@@ -73,7 +73,7 @@ describe('math/geom', () => {
       //
       const a = [[5, 0], [10, 0]];
       const b = [[-10, 0], [-5, 0]];
-      assert.equal(test.geomLineIntersection(a, b), null);
+      assert.equal(math.geomLineIntersection(a, b), null);
     });
 
     it('returns null if lines are parallel', () => {
@@ -82,7 +82,7 @@ describe('math/geom', () => {
       //   a0 ------- a1
       const a = [[0, 0], [10, 0]];
       const b = [[0, 5], [10, 5]];
-      assert.equal(test.geomLineIntersection(a, b), null);
+      assert.equal(math.geomLineIntersection(a, b), null);
     });
 
     it('returns the intersection point between 2 lines', () => {
@@ -93,7 +93,7 @@ describe('math/geom', () => {
       //         b1
       const a = [[0, 0], [10, 0]];
       const b = [[5, 10], [5, -10]];
-      const result = test.geomLineIntersection(a, b);
+      const result = math.geomLineIntersection(a, b);
       assert.ok(result instanceof Array);
       assert.deepEqual(result, [5, 0]);
     });
@@ -101,7 +101,7 @@ describe('math/geom', () => {
     it('returns null if lines are not parallel but not intersecting', () => {
       const a = [[0, 0], [10, 0]];
       const b = [[-5, 10], [-5, -10]];
-      assert.equal(test.geomLineIntersection(a, b), null);
+      assert.equal(math.geomLineIntersection(a, b), null);
     });
   });
 
@@ -109,10 +109,10 @@ describe('math/geom', () => {
     it('returns empty array if either path is not at least a proper line segment', () => {
       const a = [[0, 0], [10, 0] ];
       const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
-      assert.deepEqual(test.geomPathIntersections([], b), []);
-      assert.deepEqual(test.geomPathIntersections([[0, 0]], b), []);
-      assert.deepEqual(test.geomPathIntersections(a, []), []);
-      assert.deepEqual(test.geomPathIntersections(a, [[0, 0]]), []);
+      assert.deepEqual(math.geomPathIntersections([], b), []);
+      assert.deepEqual(math.geomPathIntersections([[0, 0]], b), []);
+      assert.deepEqual(math.geomPathIntersections(a, []), []);
+      assert.deepEqual(math.geomPathIntersections(a, [[0, 0]]), []);
     });
 
     it('returns the intersection points between 2 paths', () => {
@@ -123,7 +123,7 @@ describe('math/geom', () => {
       //        b1 -- b2
       const a = [[0, 0], [10, 0]];
       const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
-      const result = test.geomPathIntersections(a, b);
+      const result = math.geomPathIntersections(a, b);
       assert.ok(result instanceof Array);
       assert.deepEqual(result, [[5, 0], [7.5, 0]]);
     });
@@ -133,10 +133,10 @@ describe('math/geom', () => {
     it('returns false if either path is not at least a proper line segment', () => {
       const a = [[0, 0], [10, 0]];
       const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
-      assert.equal(test.geomPathHasIntersections([], b), false);
-      assert.equal(test.geomPathHasIntersections([[0, 0]], b), false);
-      assert.equal(test.geomPathHasIntersections(a, []), false);
-      assert.equal(test.geomPathHasIntersections(a, [[0, 0]]), false);
+      assert.equal(math.geomPathHasIntersections([], b), false);
+      assert.equal(math.geomPathHasIntersections([[0, 0]], b), false);
+      assert.equal(math.geomPathHasIntersections(a, []), false);
+      assert.equal(math.geomPathHasIntersections(a, [[0, 0]]), false);
     });
 
     it('returns true if the paths intersect', () => {
@@ -147,7 +147,7 @@ describe('math/geom', () => {
       //        b1 -- b2
       const a = [[0, 0], [10, 0]];
       const b = [[5, 5], [5, -5], [10, -5], [5, 5]];
-      assert.equal(test.geomPathHasIntersections(a, b), true);
+      assert.equal(math.geomPathHasIntersections(a, b), true);
     });
   });
 
@@ -158,7 +158,7 @@ describe('math/geom', () => {
       //   p0 --- p3
       const poly = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
       const point = [0.5, 0.5];
-      assert.equal(test.geomPointInPolygon(point, poly), true);
+      assert.equal(math.geomPointInPolygon(point, poly), true);
     });
 
     it('says a point outside of a polygon is outside', () => {
@@ -168,7 +168,7 @@ describe('math/geom', () => {
       //   p0 --- p3
       const poly = [[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]];
       const point = [0.5, 1.5];
-      assert.equal(test.geomPointInPolygon(point, poly), false);
+      assert.equal(math.geomPointInPolygon(point, poly), false);
     });
   });
 
@@ -181,7 +181,7 @@ describe('math/geom', () => {
       //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
-      assert.equal(test.geomPolygonContainsPolygon(outer, inner), true);
+      assert.equal(math.geomPolygonContainsPolygon(outer, inner), true);
     });
 
     it('says a polygon outside of a polygon is out', () => {
@@ -194,7 +194,7 @@ describe('math/geom', () => {
       //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 9], [2, 2], [2, 1], [1, 1]];
-      assert.equal(test.geomPolygonContainsPolygon(outer, inner), false);
+      assert.equal(math.geomPolygonContainsPolygon(outer, inner), false);
     });
   });
 
@@ -207,7 +207,7 @@ describe('math/geom', () => {
       //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
-      assert.equal(test.geomPolygonIntersectsPolygon(outer, inner), true);
+      assert.equal(math.geomPolygonIntersectsPolygon(outer, inner), true);
     });
 
     it('returns false when inner polygon fully contains outer', () => {
@@ -218,7 +218,7 @@ describe('math/geom', () => {
       //   i0 -------- i3
       const inner = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const outer = [[1, 1], [1, 2], [2, 2], [2, 1], [1, 1]];
-      assert.equal(test.geomPolygonIntersectsPolygon(outer, inner), false);
+      assert.equal(math.geomPolygonIntersectsPolygon(outer, inner), false);
     });
 
     it('returns true when outer polygon partially contains inner (some vertices contained)', () => {
@@ -231,7 +231,7 @@ describe('math/geom', () => {
       //   o0 -------- o3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, 1], [1, 9], [2, 2], [2, 1], [1, 1]];
-      assert.equal(test.geomPolygonIntersectsPolygon(outer, inner), true);
+      assert.equal(math.geomPolygonIntersectsPolygon(outer, inner), true);
     });
 
     it('returns false when outer polygon partially contains inner (no vertices contained - lax test)', () => {
@@ -243,7 +243,7 @@ describe('math/geom', () => {
       //       i0 -- i3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
-      assert.equal(test.geomPolygonIntersectsPolygon(outer, inner), false);
+      assert.equal(math.geomPolygonIntersectsPolygon(outer, inner), false);
     });
 
     it('returns true when outer polygon partially contains inner (no vertices contained - strict test)', () => {
@@ -255,7 +255,7 @@ describe('math/geom', () => {
       //       i0 -- i3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[1, -1], [1, 4], [2, 4], [2, -1], [1, -1]];
-      assert.equal(test.geomPolygonIntersectsPolygon(outer, inner, true), true);
+      assert.equal(math.geomPolygonIntersectsPolygon(outer, inner, true), true);
     });
 
     it('returns false when outer and inner are fully disjoint', () => {
@@ -265,13 +265,13 @@ describe('math/geom', () => {
       //   o0 ---- o3    i0 ---- i3
       const outer = [[0, 0], [0, 3], [3, 3], [3, 0], [0, 0]];
       const inner = [[5, 0], [5, 3], [8, 3], [8, 0], [5, 0]];
-      assert.equal(test.geomPolygonIntersectsPolygon(outer, inner), false);
+      assert.equal(math.geomPolygonIntersectsPolygon(outer, inner), false);
     });
   });
 
   describe('geomGetSmallestSurroundingRectangle', () => {
     it('returns null for empty points array', () => {
-      assert.equal(test.geomGetSmallestSurroundingRectangle([]), null);
+      assert.equal(math.geomGetSmallestSurroundingRectangle([]), null);
     });
 
     it('calculates a smallest surrounding rectangle', () => {
@@ -279,7 +279,7 @@ describe('math/geom', () => {
       //  |              |
       //  p0 ------ p2 --+
       const points = [[0, -1], [5, 1], [10, -1], [15, 1]];
-      const ssr = test.geomGetSmallestSurroundingRectangle(points);
+      const ssr = math.geomGetSmallestSurroundingRectangle(points);
       assert.ok(ssr instanceof Object);
       assert.deepEqual(ssr.poly, [[0, -1], [15, -1], [15, 1], [0, 1], [0, -1]]);
       assert.equal(ssr.angle, 0);
@@ -289,17 +289,17 @@ describe('math/geom', () => {
   describe('geomPathLength', () => {
     it('calculates a simple path length', () => {
       const path = [[0, 0], [0, 1], [3, 5]];
-      assert.equal(test.geomPathLength(path), 6);
+      assert.equal(math.geomPathLength(path), 6);
     });
 
     it('does not fail on single-point path', () => {
       const path = [[0, 0]];
-      assert.equal(test.geomPathLength(path), 0);
+      assert.equal(math.geomPathLength(path), 0);
     });
 
     it('handles zero-length edges', () => {
       const path = [[0, 0], [0, 0]];
-      assert.equal(test.geomPathLength(path), 0);
+      assert.equal(math.geomPathLength(path), 0);
     });
   });
 
