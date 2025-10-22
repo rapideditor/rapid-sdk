@@ -1,21 +1,24 @@
 [![npm version](https://badge.fury.io/js/%40rapid-sdk%2Fmath.svg)](https://badge.fury.io/js/%40rapid-sdk%2Fmath)
 
-
 # @rapid-sdk/math
 
-🔢 Collection of rapid-sdk math libraries
+🧳 The rapid-sdk math library
 
 
 ## Installing
 
-`npm install @rapid-sdk/math`
+For example, in Node.js:
+`npm install @rapid-sdk/math --save-prod`
 
-This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
-For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
+This library is distributed in CJS and ESM module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
 
 
 ```js
-import { Extent } from '@rapid-sdk/math';
+const math = require('@rapid-sdk/math');           // CommonJS import all
+const Extent = require('@rapid-sdk/math').Extent;  // CommonJS import named
+// or
+import * as math from '@rapid-sdk/math';     // ESM import all
+import { Extent } from '@rapid-sdk/math';    // ESM import named
 ```
 
 ## Packages
@@ -32,10 +35,6 @@ import { Extent } from '@rapid-sdk/math';
 - 📺 Viewport class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
 
 
-
 ## Contributing
 
-This project is just getting started! 🌱
-
-We're not able to support external contributors at this time, but check back in a bit when things have matured.
-
+See the [CONTRIBUTING.md](https://github.com/rapideditor/rapid-sdk/blob/main/CONTRIBUTING.md) file for more info.

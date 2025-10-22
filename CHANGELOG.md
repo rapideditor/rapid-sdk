@@ -20,6 +20,20 @@ links:
 [@user]: https://github.com/user
 -->
 
+# 1.0.0-pre.4
+#### 2024-Oct-??
+*  This project uses [`bun`](https://bun.com/) now, for simpler developer tooling ([#298])
+*  ⚠️ Breaking changes to Viewport (projection), Transform, and Tiler code ([#297])
+  * Introduces "world coordinates" for working with unscaled Mercator
+  * Changes Transform code to replace `k` scale parameter with `z` zoom parameter
+  * (possibly more breaking changes to follow)
+* Extent polygon should return coordinates wound counterclockwise ([#296])
+
+[#298]: https://github.com/rapideditor/rapid-sdk/issues/298
+[#297]: https://github.com/rapideditor/rapid-sdk/issues/297
+[#296]: https://github.com/rapideditor/rapid-sdk/issues/296
+
+
 # 1.0.0-pre.3
 #### 2024-Sep-03
 * [#275] ⚠️  Remove no longer used `geomViewportNudge`

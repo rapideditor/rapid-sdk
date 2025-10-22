@@ -2,19 +2,21 @@
 
 ## Installing
 
-`npm install @rapid-sdk/util`
+For example, in Node.js:
+`npm install @rapid-sdk/util --save-prod`
 
-This library is distributed in ESM format only.  It cannot be `require()`'d from CommonJS.
-For more, please read Sindre Sorhus’s [FAQ](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c).
+This library is distributed in CJS and ESM module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
+
 
 ```js
-import * as util from '@rapid-sdk/util';
-import { utilHashcode } from '@rapid-sdk/util';
+const util = require('@rapid-sdk/util');                       // CommonJS import all
+const utilHashcode = require('@rapid-sdk/util').utilHashcode;  // CommonJS import named
+// or
+import * as util from '@rapid-sdk/util';           // ESM import all
+import { utilHashcode } from '@rapid-sdk/util';    // ESM import named
 ```
 
 
 ## Contributing
 
-This project is just getting started! 🌱
-
-We're not able to support external contributors at this time, but check back in a bit when things have matured.
+See the [CONTRIBUTING.md](https://github.com/rapideditor/rapid-sdk/blob/main/CONTRIBUTING.md) file for more info.

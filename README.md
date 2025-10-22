@@ -20,9 +20,7 @@ The modules and methods are documented at [rapideditor.github.io/rapid-sdk](http
 
 ## Contributing
 
-This project is just getting started! 🌱
-
-We're not able to support external contributors at this time, but check back in a bit when things have matured.
+See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more info.
 
 
 ## Packages
