@@ -1,5 +1,10 @@
 [![npm version](https://badge.fury.io/js/%40rapid-sdk%2Futil.svg)](https://badge.fury.io/js/%40rapid-sdk%2Futil)
 
+# @rapid-sdk/util
+
+🧳 The rapid-sdk utility library
+
+
 ## Installing
 
 For example, in Node.js:

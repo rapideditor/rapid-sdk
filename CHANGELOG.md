@@ -21,7 +21,7 @@ links:
 -->
 
 # 1.0.0-pre.4
-#### 2024-Oct-??
+#### 2025-Oct-22
 *  This project uses [`bun`](https://bun.com/) now, for simpler developer tooling ([#298])
 *  ⚠️ Breaking changes to Viewport (projection), Transform, and Tiler code ([#297])
   * Introduces "world coordinates" for working with unscaled Mercator
