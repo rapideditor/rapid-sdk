@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as test from '../built/math.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as math from '../src/math.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -12,27 +12,27 @@ assert.closeTo = function(a, b, epsilon = 1e-9) {
 describe('math/number', () => {
   describe('numClamp', () => {
     it('clamps integers within a min..max range', () => {
-      assert.equal(test.numClamp(-1, 0, 10), 0);
-      assert.equal(test.numClamp(5, 0, 10), 5);
-      assert.equal(test.numClamp(11, 0, 10), 10);
+      assert.equal(math.numClamp(-1, 0, 10), 0);
+      assert.equal(math.numClamp(5, 0, 10), 5);
+      assert.equal(math.numClamp(11, 0, 10), 10);
     });
     it('clamps floats within a min..max range', () => {
-      assert.equal(test.numClamp(-Math.PI, 0, 2 * Math.PI), 0);
-      assert.equal(test.numClamp(Math.PI, 0, 2 * Math.PI), Math.PI);
-      assert.equal(test.numClamp(3 * Math.PI, 0, 2 * Math.PI), 2 * Math.PI);
+      assert.equal(math.numClamp(-Math.PI, 0, 2 * Math.PI), 0);
+      assert.equal(math.numClamp(Math.PI, 0, 2 * Math.PI), Math.PI);
+      assert.equal(math.numClamp(3 * Math.PI, 0, 2 * Math.PI), 2 * Math.PI);
     });
   });
 
   describe('numWrap', () => {
     it('wraps integers around a min..max range', () => {
-      assert.equal(test.numWrap(-1, 0, 10), 9);
-      assert.equal(test.numWrap(5, 0, 10), 5);
-      assert.equal(test.numWrap(11, 0, 10), 1);
+      assert.equal(math.numWrap(-1, 0, 10), 9);
+      assert.equal(math.numWrap(5, 0, 10), 5);
+      assert.equal(math.numWrap(11, 0, 10), 1);
     });
     it('wraps floats around a min..max range', () => {
-      assert.closeTo(test.numWrap(-Math.PI, 0, 2 * Math.PI), Math.PI);
-      assert.closeTo(test.numWrap(Math.PI, 0, 2 * Math.PI), Math.PI);
-      assert.closeTo(test.numWrap(3 * Math.PI, 0, 2 * Math.PI), Math.PI);
+      assert.closeTo(math.numWrap(-Math.PI, 0, 2 * Math.PI), Math.PI);
+      assert.closeTo(math.numWrap(Math.PI, 0, 2 * Math.PI), Math.PI);
+      assert.closeTo(math.numWrap(3 * Math.PI, 0, 2 * Math.PI), Math.PI);
     });
   });
 });

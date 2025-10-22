@@ -1,19 +1,19 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as test from '../built/util.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as util from '../src/util.ts';
 
 
 describe('utilAes', () => {
   it('encrypting and decrypting nothing yields nothing', () => {
-    assert.equal(test.utilAesEncrypt(''), '');
-    assert.equal(test.utilAesDecrypt(''), '');
+    assert.equal(util.utilAesEncrypt(''), '');
+    assert.equal(util.utilAesDecrypt(''), '');
   });
 
   it('encrypts and decrypts with default key', () => {
     const text = 'Hello Rapid!';
     const encrypted = '5597506f958c53716d3dbd79';
-    assert.equal(test.utilAesEncrypt(text), encrypted);
-    assert.equal(test.utilAesDecrypt(encrypted), text);
+    assert.equal(util.utilAesEncrypt(text), encrypted);
+    assert.equal(util.utilAesDecrypt(encrypted), text);
   });
 
   it('encrypts and decrypts with a custom 16-bit key', () => {
@@ -23,8 +23,8 @@ describe('utilAes', () => {
     ];
     const text = 'Hello Rapid!';
     const encrypted = '9ff50e32b04fbd415b8dbcd0';
-    assert.equal(test.utilAesEncrypt(text, key), encrypted);
-    assert.equal(test.utilAesDecrypt(encrypted, key), text);
+    assert.equal(util.utilAesEncrypt(text, key), encrypted);
+    assert.equal(util.utilAesDecrypt(encrypted, key), text);
   });
 
   it('encrypts and decrypts with a custom 24-bit key', () => {
@@ -35,8 +35,8 @@ describe('utilAes', () => {
     ];
     const text = 'Hello Rapid!';
     const encrypted = '85fc05011fa7bfa1464db2ea';
-    assert.equal(test.utilAesEncrypt(text, key), encrypted);
-    assert.equal(test.utilAesDecrypt(encrypted, key), text);
+    assert.equal(util.utilAesEncrypt(text, key), encrypted);
+    assert.equal(util.utilAesDecrypt(encrypted, key), text);
   });
 
   it('encrypts and decrypts with a custom 32-bit key', () => {
@@ -48,7 +48,7 @@ describe('utilAes', () => {
     ];
     const text = 'Hello Rapid!';
     const encrypted = '13c21d3dc2515ee02d93b537';
-    assert.equal(test.utilAesEncrypt(text, key), encrypted);
-    assert.equal(test.utilAesDecrypt(encrypted, key), text);
+    assert.equal(util.utilAesEncrypt(text, key), encrypted);
+    assert.equal(util.utilAesDecrypt(encrypted, key), text);
   });
 });

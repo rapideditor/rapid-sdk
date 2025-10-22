@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import { Transform } from '../built/math.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import { Transform } from '../src/math.ts';
 
 
 describe('math/Transform', () => {

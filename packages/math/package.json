@@ -3,10 +3,7 @@
   "version": "1.0.0-pre.3",
   "description": "Collection of rapid-sdk math libraries",
   "homepage": "https://github.com/rapideditor/rapid-sdk/tree/main/packages/math#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rapideditor/rapid-sdk.git"
-  },
+  "repository": "github:rapideditor/rapid-sdk",
   "license": "ISC",
   "contributors": [
     "Ben Clark <clarkben@fb.com> (https://github.com/bonkles)",
@@ -15,23 +12,25 @@
     "Milos Brzakovic <mbrzakovic@microsoft.com> (https://github.com/mbrzakovic)"
   ],
   "files": [
-    "built/",
+    "dist/",
     "src/"
   ],
   "type": "module",
-  "typedocMain": "./src/index.ts",
-  "source": "./src/index.ts",
-  "types": "./built/index.d.ts",
-  "main": "./built/math.mjs",
-  "module": "./built/math.mjs",
+  "typedocMain": "./src/math.ts",
+  "source": "./src/math.ts",
+  "exports": {
+    "types": "./dist/math.d.ts",
+    "import": "./dist/math.mjs",
+    "require": "./dist/math.cjs"
+  },
   "scripts": {
     "all": "run-s clean build lint test",
-    "clean": "shx rm -rf ./built",
-    "build": "run-p build:**",
-    "build:js": "node ./esbuild.js",
+    "build": "run-p build:js build:types",
+    "build:js": "bun ./scripts/build.ts",
     "build:types": "tsc",
+    "clean": "bun ./scripts/clean.ts",
     "lint": "eslint .",
-    "test": "c8 node --test"
+    "test": "bun test --dots --coverage ./test"
   },
   "dependencies": {
     "@types/d3-polygon": "^3.0.2",
