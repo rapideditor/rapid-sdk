@@ -16,7 +16,7 @@
     },
     "packages/math": {
       "name": "@rapid-sdk/math",
-      "version": "1.0.0-pre.3",
+      "version": "1.0.0-pre.4",
       "dependencies": {
         "@types/d3-polygon": "^3.0.2",
         "d3-polygon": "^3.0.1",
@@ -24,7 +24,7 @@
     },
     "packages/util": {
       "name": "@rapid-sdk/util",
-      "version": "1.0.0-pre.3",
+      "version": "1.0.0-pre.4",
       "dependencies": {
         "aes-js": "^3.1.2",
         "diacritics": "^1.3.0",
