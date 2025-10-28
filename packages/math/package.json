@@ -19,15 +19,16 @@
   "typedocMain": "./src/math.ts",
   "source": "./src/math.ts",
   "exports": {
+    "bun": "./src/math.ts",
     "types": "./dist/math.d.ts",
     "import": "./dist/math.mjs",
     "require": "./dist/math.cjs"
   },
   "scripts": {
     "all": "run-s clean build lint test",
-    "build": "run-p build:js build:types",
+    "build": "run-p build:js build:ts",
     "build:js": "bun ./scripts/build.ts",
-    "build:types": "tsc",
+    "build:ts": "tsc",
     "clean": "bun ./scripts/clean.ts",
     "lint": "eslint .",
     "test": "bun test --dots --coverage ./test"

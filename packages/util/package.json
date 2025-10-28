@@ -19,15 +19,16 @@
   "typedocMain": "./src/util.ts",
   "source": "./src/util.ts",
   "exports": {
+    "bun": "./src/util.ts",
     "types": "./dist/util.d.ts",
     "import": "./dist/util.mjs",
     "require": "./dist/util.cjs"
   },
   "scripts": {
     "all": "run-s clean build lint test",
-    "build": "run-p build:js build:types",
+    "build": "run-p build:js build:ts",
     "build:js": "bun ./scripts/build.ts",
-    "build:types": "tsc",
+    "build:ts": "tsc",
     "clean": "bun ./scripts/clean.ts",
     "lint": "eslint .",
     "test": "bun test --dots --coverage ./test"
