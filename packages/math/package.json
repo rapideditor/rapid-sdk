@@ -3,7 +3,10 @@
   "version": "1.0.0-pre.4",
   "description": "Collection of rapid-sdk math libraries",
   "homepage": "https://github.com/rapideditor/rapid-sdk/tree/main/packages/math#readme",
-  "repository": "github:rapideditor/rapid-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rapideditor/rapid-sdk.git"
+  },
   "license": "ISC",
   "contributors": [
     "Ben Clark <clarkben@fb.com> (https://github.com/bonkles)",
