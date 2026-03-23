@@ -45,3 +45,14 @@ Includes:
 ### util
 
 🧳 [@rapid-sdk/util](/packages/util)
+
+
+## Contributing
+
+See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more info.
+
+
+## License
+
+This project is available under the [ISC License](LICENSE.md).
+ISC is a permissive free software license — functionally equivalent to the MIT License.

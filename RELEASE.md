@@ -1,27 +1,38 @@
-## Release Checklist
+# Release Checklist
+
+## Prepare the release
+
+Use the `/release` prompt in Copilot Chat — it will:
+- Validate the version number
+- Identify commits since the last release and look up PR numbers
+- Update `CHANGELOG.md` with a new entry
+- Bump the version in all `package.json` files (root + workspaces)
+
+Review the changes, then commit using the `/commit` prompt.
+
+## Tag and publish
 
 ```bash
-
-# Get the code, update dependencies, build everything, and make sure tests pass.
+# Make sure your main branch is up to date and all tests pass
 git checkout main
 git pull origin
 bun install
 bun run all
 
-# Pick a version you want to push to all packages, see https://semver.org/
-export VERSION=A.B.C-pre.D
+# Pick a version, see https://semver.org/ - for example: 'A.B.C' or 'A.B.C-pre.D'
+# Update version number in all package.json files
+# Update CHANGELOG.md
 
-# This is also a good time to update `CHANGELOG.md`
-
-# Bumps the package versions everywhere, but without doing any of the git stuff.
+export VERSION=vA.B.C-pre.D
 bun --workspaces pm version $VERSION --no-git-tag-version
-
-# Commit all changes, add the tag yourself, then push code and tag to GitHub.
 git add . && git commit -m "$VERSION"
-git tag $VERSION
-git push origin main $VERSION
-
-# Publishes the subpackages
+git tag "$VERSION"
+git push origin main "$VERSION"
+npm login    # if needed, session tokens last 2 hours
 bun --workspaces publish
-
 ```
+
+Set as latest release on GitHub:
+- Open https://github.com/rapideditor/rapid-sdk/blob/main/CHANGELOG.md and copy the URL to the new release
+- Open https://github.com/rapideditor/rapid-sdk/tags and pick the new tag you just pushed
+- There should be a link like "create a release from the tag", click that, and paste in the link to the changelog.

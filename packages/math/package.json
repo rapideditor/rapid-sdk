@@ -28,8 +28,8 @@
     "require": "./dist/math.cjs"
   },
   "scripts": {
-    "all": "run-s clean build lint test",
-    "build": "run-p build:js build:ts",
+    "all": "bun run --sequential clean build lint test",
+    "build": "bun run --parallel 'build:*'",
     "build:js": "bun ./scripts/build.ts",
     "build:ts": "tsc",
     "clean": "bun ./scripts/clean.ts",

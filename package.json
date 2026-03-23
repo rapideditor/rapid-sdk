@@ -24,25 +24,24 @@
     "packages/util"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^10.0.1",
     "@types/geojson": "^7946.0.16",
-    "@types/bun": "^1.3.4",
-    "eslint": "^9.39.1",
-    "npm-run-all2": "^8.0.4",
-    "typedoc": "^0.28.15",
+    "@types/bun": "^1.3.11",
+    "eslint": "^10.1.0",
+    "typedoc": "^0.28.17",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.49.0"
+    "typescript-eslint": "^8.57.1"
   },
   "scripts": {
-    "all": "run-s clean build test",
-    "build": "bun --workspaces run build",
-    "clean": "bun --workspaces run clean",
+    "all": "bun run --sequential clean build test",
+    "build": "bun --parallel --workspaces run build",
+    "clean": "bun --parallel --workspaces run clean",
     "docs": "typedoc",
-    "lint": "bun --workspaces run lint",
-    "test": "bun --workspaces run test"
+    "lint": "bun --parallel --workspaces run lint",
+    "test": "bun --parallel --workspaces run test"
   },
   "private": true,
   "engines": {
-    "bun": ">=1.3.0"
+    "bun": ">=1.3.10"
   }
 }

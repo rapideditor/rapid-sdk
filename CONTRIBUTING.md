@@ -34,3 +34,9 @@ Try to keep things simple!
 
 Code follows [TSDoc](https://tsdoc.org/) standard of source documentation
 and uses [typedoc](https://typedoc.org/) generator to generate HTML documentation.
+
+## AI-Assisted Contributions
+
+We welcome contributions made with the help of AI tools.
+If you use them, you are responsible for understanding and reviewing the output before submitting it.
+Generated code, issues, and PR descriptions should be clear and relevant — not verbose for the sake of it.

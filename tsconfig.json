@@ -1,20 +1,32 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "esModuleInterop": true,
-    "listEmittedFiles": true,
+    // Language and Environment
+    "target": "ESNext",
+
+    // Modules
     "module": "preserve",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    // Emit
+    "allowJs": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "listEmittedFiles": true,
+
+    // Interop
+    "esModuleInterop": true,
+
+    // Type Checking
+    "strict": true,
     "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
-    "target": "esnext"
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "skipLibCheck": true
   }
 }
