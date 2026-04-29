@@ -1,6 +1,5 @@
 [![build](https://github.com/rapideditor/rapid-sdk/workflows/build/badge.svg)](https://github.com/rapideditor/rapid-sdk/actions?query=workflow%3A%22build%22)
 
-
 # rapid-sdk
 
 Map editing made easy
@@ -17,10 +16,6 @@ This code is used by the [Rapid](https://github.com/facebook/Rapid) map editor.
 
 The modules and methods are documented at [rapideditor.github.io/rapid-sdk](https://rapideditor.github.io/rapid-sdk/modules.html).
 
-
-## Contributing
-
-See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more info.
 
 
 ## Packages
@@ -49,7 +44,7 @@ Includes:
 
 ## Contributing
 
-See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more info.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions and contribution guidelines.
 
 
 ## License

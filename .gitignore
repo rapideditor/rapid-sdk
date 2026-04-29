@@ -1,13 +1,33 @@
+# OS
 .DS_Store
+Thumbs.db
 SCRATCHPAD.md
 
-npm-debug.log
+# Logs
+*.log
+npm-debug.log*
 lerna-debug.log
+
+# Lockfiles (Bun manages its own)
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Editor
 .vscode/
+!.vscode/extensions.json
+.idea/
+
+# Runtime temp files
+*.tmp
+*.temp
+
+# Build output
 built/
 coverage/
 dist/
