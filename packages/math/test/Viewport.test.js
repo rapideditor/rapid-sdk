@@ -179,53 +179,53 @@ describe('math/viewport', () => {
   describe('#wgs84ToWorld', () => {
     const view = new Viewport();
 
-    it(`Projects [0°, 0°] -> [128, 128]`, () => {
+    it(`Projects [0°, 0°] -> [8388608, 8388608]`, () => {
       const point = view.wgs84ToWorld([0, 0]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], 128);
-      assert.closeTo(point[1], 128);
+      assert.closeTo(point[0], 8388608);
+      assert.closeTo(point[1], 8388608);
     });
 
     it(`Projects [-180°, 85.0511287798°] -> [0, 0]`, () => {
       const point = view.wgs84ToWorld([-180, 85.0511287798]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 0);
-      assert.closeTo(point[1], 0);
+      assert.closeTo(point[1], 0, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects [-180°, -85.0511287798°] -> [0, 256]`, () => {
+    it(`Projects [-180°, -85.0511287798°] -> [0, 16777216]`, () => {
       const point = view.wgs84ToWorld([-180, -85.0511287798]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 0);
-      assert.closeTo(point[1], 256);
+      assert.closeTo(point[1], 16777216, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects [180°, 85.0511287798°] -> [256, 0]`, () => {
+    it(`Projects [180°, 85.0511287798°] -> [16777216, 0]`, () => {
       const point = view.wgs84ToWorld([180, 85.0511287798]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], 256);
-      assert.closeTo(point[1], 0);
+      assert.closeTo(point[0], 16777216);
+      assert.closeTo(point[1], 0, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects [180°, -85.0511287798°] -> [256, 256]`, () => {
+    it(`Projects [180°, -85.0511287798°] -> [16777216, 16777216]`, () => {
       const point = view.wgs84ToWorld([180, 85.0511287798]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], 256);
-      assert.closeTo(point[1], 0);
+      assert.closeTo(point[0], 16777216);
+      assert.closeTo(point[1], 0, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects out of bounds [-270°, 95°] -> [-64, 0]`, () => {
+    it(`Projects out of bounds [-270°, 95°] -> [-4194304, 0]`, () => {
       const point = view.wgs84ToWorld([-270, 95]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], -64);   // wrap x
-      assert.closeTo(point[1], 0);     // clamp y
+      assert.closeTo(point[0], -4194304);   // wrap x
+      assert.closeTo(point[1], 0, 1e-3);   // clamp y (small residual at polar boundary)
     });
 
-    it(`Projects out of bounds [270°, -95°] -> [320, 256]`, () => {
+    it(`Projects out of bounds [270°, -95°] -> [20971520, 16777216]`, () => {
       const point = view.wgs84ToWorld([270, -95]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], 320);   // wrap x
-      assert.closeTo(point[1], 256);   // clamp y
+      assert.closeTo(point[0], 20971520);          // wrap x
+      assert.closeTo(point[1], 16777216, 1e-3);   // clamp y (small residual at polar boundary)
     });
   });
 
@@ -233,8 +233,8 @@ describe('math/viewport', () => {
   describe('#worldToWgs84', () => {
     const view = new Viewport();
 
-    it(`Unprojects [128, 128] -> [0°, 0°]`, () => {
-      const point = view.worldToWgs84([128, 128]);
+    it(`Unprojects [8388608, 8388608] -> [0°, 0°]`, () => {
+      const point = view.worldToWgs84([8388608, 8388608]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 0);
       assert.closeTo(point[1], 0);
@@ -247,36 +247,36 @@ describe('math/viewport', () => {
       assert.closeTo(point[1], 85.0511287798);
     });
 
-    it(`Unprojects [0, 256] -> [-180°, -85.0511287798°]`, () => {
-      const point = view.worldToWgs84([0, 256]);
+    it(`Unprojects [0, 16777216] -> [-180°, -85.0511287798°]`, () => {
+      const point = view.worldToWgs84([0, 16777216]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], -180);
       assert.closeTo(point[1], -85.0511287798);
     });
 
-    it(`Unprojects [256, 0] -> [180°, 85.0511287798°]`, () => {
-      const point = view.worldToWgs84([256, 0]);
+    it(`Unprojects [16777216, 0] -> [180°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([16777216, 0]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 180);
       assert.closeTo(point[1], 85.0511287798);
     });
 
-    it(`Unprojects [256, 256] -> [180°, -85.0511287798°]`, () => {
-      const point = view.worldToWgs84([256, 256]);
+    it(`Unprojects [16777216, 16777216] -> [180°, -85.0511287798°]`, () => {
+      const point = view.worldToWgs84([16777216, 16777216]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 180);
       assert.closeTo(point[1], -85.0511287798);
     });
 
-    it(`Unprojects out of bounds [-64, -64] -> [-270°, 85.0511287798°]`, () => {
-      const point = view.worldToWgs84([-64, -64]);
+    it(`Unprojects out of bounds [-4194304, -4194304] -> [-270°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([-4194304, -4194304]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], -270);           // wrap x
       assert.closeTo(point[1], 85.0511287798);  // clamp y
     });
 
-    it(`Unprojects out of bounds [320, 320] -> [270°, -85.0511287798°] -> `, () => {
-      const point = view.worldToWgs84([320, 320]);
+    it(`Unprojects out of bounds [20971520, 20971520] -> [270°, -85.0511287798°] -> `, () => {
+      const point = view.worldToWgs84([20971520, 20971520]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 270);             // wrap x
       assert.closeTo(point[1], -85.0511287798);  // clamp y
@@ -544,22 +544,22 @@ describe('math/viewport', () => {
     //  define the north-up coordinate system (F is bottom-left, H is top-right)
     //
     const tests = {
-      '0':    [[28, 53], [228, 203]],
-      '45':   [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '90':   [[53, 28], [203, 228]],
-      '135':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '180':  [[28, 53], [228, 203]],
-      '225':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '270':  [[53, 28], [203, 228]],
-      '315':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '360':  [[28, 53], [228, 203]],
-      '-315': [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '-270': [[53, 28], [203, 228]],
-      '-225': [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '-180': [[28, 53], [228, 203]],
-      '-135': [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]],
-      '-90':  [[53, 28], [203, 228]],
-      '-45':  [[4.256313292354179, 4.256313292354193], [251.743686707645, 251.7436867076458]]
+      '0':    [[1835008, 3473408], [14942208, 13303808]],
+      '45':   [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '90':   [[3473408, 1835008], [13303808, 14942208]],
+      '135':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '180':  [[1835008, 3473408], [14942208, 13303808]],
+      '225':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '270':  [[3473408, 1835008], [13303808, 14942208]],
+      '315':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '360':  [[1835008, 3473408], [14942208, 13303808]],
+      '-315': [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '-270': [[3473408, 1835008], [13303808, 14942208]],
+      '-225': [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '-180': [[1835008, 3473408], [14942208, 13303808]],
+      '-135': [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
+      '-90':  [[3473408, 1835008], [13303808, 14942208]],
+      '-45':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]]
     };
 
     for (const [key, expected] of Object.entries(tests)) {
@@ -571,10 +571,10 @@ describe('math/viewport', () => {
 
         const result = view.visibleWorldExtent();
         assert.ok(result instanceof Extent);
-        assert.closeTo(result.min[0], expected[0][0]);
-        assert.closeTo(result.min[1], expected[0][1]);
-        assert.closeTo(result.max[0], expected[1][0]);
-        assert.closeTo(result.max[1], expected[1][1]);
+        assert.closeTo(result.min[0], expected[0][0], 1);  // world coords are large; allow 1-unit tolerance
+        assert.closeTo(result.min[1], expected[0][1], 1);
+        assert.closeTo(result.max[0], expected[1][0], 1);
+        assert.closeTo(result.max[1], expected[1][1], 1);
       });
     }
   });
