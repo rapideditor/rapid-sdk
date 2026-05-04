@@ -8,9 +8,9 @@
 ## Installing
 
 For example, in Node.js:
-`npm install @rapid-sdk/util --save-prod`
+`npm install @rapid-sdk/util`
 
-This library is distributed in CJS and ESM module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
+This library is distributed in CJS and ESM module formats for maximum compatibility. ([Read more about JavaScript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
 
 
 ```js

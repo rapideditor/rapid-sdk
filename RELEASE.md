@@ -29,7 +29,7 @@ git add . && git commit -m "$VERSION"
 git tag "$VERSION"
 git push origin main "$VERSION"
 npm login    # if needed, session tokens last 2 hours
-bun --workspaces publish
+bun --workspaces publish   # publishes to npm using your current npm auth
 ```
 
 Set as latest release on GitHub:

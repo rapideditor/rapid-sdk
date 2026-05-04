@@ -12,6 +12,8 @@ import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoint
 import { numClamp } from './number';
 import { Vec2, Vec3 } from './vector';
 
+import type * as GeoJSON from 'geojson';
+
 
 /** Contains essential information about a tile */
 export interface Tile {
@@ -282,7 +284,7 @@ export class Tiler {
    * const result = t.getTiles(v);
    * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
    */
-  getGeoJSON(tileResult: TileResult): object {
+  getGeoJSON(tileResult: TileResult): GeoJSON.FeatureCollection {
     const features = tileResult.tiles.map((tile) => {
       return {
         type: 'Feature',
@@ -294,7 +296,7 @@ export class Tiler {
           type: 'Polygon',
           coordinates: [tile.wgs84Extent.polygon()]
         }
-      };
+      } as GeoJSON.Feature;
     });
 
     return {
