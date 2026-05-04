@@ -10,6 +10,13 @@ import { Transform, TransformProps } from './Transform';
 import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
 
 
+/** World size in world coordinates: 256 × 2^16
+ *  World coordinates are pre-scaled to zoom 16, so the full world spans [0, 0] to [WORLD_SIZE, WORLD_SIZE].
+ */
+const WORLD_SIZE = 256 * 65536;   // 16_777_216
+const WORLD_HALF = WORLD_SIZE / 2; // 8_388_608 — the Mercator origin (Null Island)
+
+
 /** `Viewport` is a class for managing the state of the viewer
  *   and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
  *
@@ -19,8 +26,9 @@ import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
  *
  *  Some nomenclature on the coordinates that this code uses:
  *  - "WGS84 coordinates" - These are Lon/Lat (λ,φ)
- *  - "world coordinates" - These are Mercator projected into Cartesian (x,y) but not transformed
- *     - origin puts [0,0] at top left of world and [256, 256] at bottom right of world.
+ *  - "world coordinates" - These are Mercator projected into Cartesian (x,y) and pre-scaled to zoom 16
+ *     - origin puts [0,0] at top left of world and [16_777_216, 16_777_216] (256 × 2^16) at bottom right.
+ *     - pre-scaling to z16 means geometry projected once can be rendered at any zoom without recalculating.
  *  - "screen coordinates" - These are the Cartesian coordinates with view transform applied
  *     - origin puts [0,0] at top left of screen and they are in pixels
  *
@@ -140,9 +148,9 @@ export class Viewport {
    * @returns  The world coordinate (x,y)
    */
   wgs84ToWorld(loc: Vec2): Vec2 {
-    const x = (loc[0] + 180) / 360 * 256;
+    const x = (loc[0] + 180) / 360 * WORLD_SIZE;
     const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const y = ((1 - Math.log(Math.tan(phi) + 1 / Math.cos(phi)) / Math.PI) / 2) * 256;
+    const y = ((1 - Math.log(Math.tan(phi) + 1 / Math.cos(phi)) / Math.PI) / 2) * WORLD_SIZE;
     return [x, y];
   }
 
@@ -153,8 +161,8 @@ export class Viewport {
    * @returns  The WGS84 coordinate Lon/Lat (λ,φ)
    */
   worldToWgs84(world: Vec2): Vec2 {
-    const lon = (world[0] / 256) * 360 - 180;
-    const n = Math.PI - TAU * (world[1] / 256);
+    const lon = (world[0] / WORLD_SIZE) * 360 - 180;
+    const n = Math.PI - TAU * (world[1] / WORLD_SIZE);
     const phi = Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
     const lat = numClamp(phi, MIN_PHI, MAX_PHI) * RAD2DEG;
     return [lon, lat];
@@ -168,11 +176,11 @@ export class Viewport {
    */
   worldToScreen(world: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, z, r } = this._transform;
-    const scale = Math.pow(2, z);
+    const scale = Math.pow(2, z - 16);  // world coords are pre-scaled to z16
 
     const point: Vec2 = [
-      ((world[0] - 128) * scale) + x,
-      ((world[1] - 128) * scale) + y
+      ((world[0] - WORLD_HALF) * scale) + x,
+      ((world[1] - WORLD_HALF) * scale) + y
     ];
 
     if (includeRotation && r) {
@@ -195,10 +203,10 @@ export class Viewport {
       screen = vecRotate(screen, -r, this.center());
     }
 
-    const scale = Math.pow(2, z);
+    const scale = Math.pow(2, z - 16);  // world coords are pre-scaled to z16
     const point: Vec2 = [
-      ((screen[0] - x) / scale) + 128,
-      ((screen[1] - y) / scale) + 128
+      ((screen[0] - x) / scale) + WORLD_HALF,
+      ((screen[1] - y) / scale) + WORLD_HALF
     ];
     return point;
   }

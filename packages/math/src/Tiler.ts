@@ -19,7 +19,7 @@ export interface Tile {
   id: string;
   /** tile coordinate array ex. [0,0,0] */
   xyz: Vec3;
-  /** Extent in world coordinates (x,y) */
+  /** Extent in world coordinates (z16 scale, range 0..16_777_216) */
   tileExtent: Extent;
   /** Extent in WGS84 coordinates(lon,lat) */
   wgs84Extent: Extent;
@@ -183,8 +183,8 @@ export class Tiler {
     const zOrig = t.z - adjust;
     const z = numClamp(Math.round(zOrig), this._zoomRange[0], this._zoomRange[1]);
     const pow2z = Math.pow(2, z);
-    const worldScale = pow2z / 256;
-    const tileScale = 256 / pow2z;
+    const worldScale = pow2z / 16_777_216;
+    const tileScale = 16_777_216 / pow2z;
     const min = 0;
     const max = pow2z - 1;
 

@@ -52,8 +52,8 @@ describe('math/tiler', () => {
         assert.ok(tileExtent instanceof Extent);
         assert.equal(tileExtent.min[0], 0);
         assert.equal(tileExtent.min[1], 0);
-        assert.equal(tileExtent.max[0], 256);
-        assert.equal(tileExtent.max[1], 256);
+        assert.equal(tileExtent.max[0], 16777216);
+        assert.equal(tileExtent.max[1], 16777216);
       });
 
       it(`tiles have a wgs84Extent property (z=0, tileSize=${tileSize})`, () => {
@@ -112,8 +112,8 @@ describe('math/tiler', () => {
         expected.forEach((xyz, i) => {
           const [x, y, z] = xyz;
           const tileExtent = tiles[i].tileExtent;
-          const tileScale = 256 / Math.pow(2, z);
-          assert.equal(tileExtent.min[0], x * tileScale);    // 0..128..256
+          const tileScale = 16777216 / Math.pow(2, z);
+          assert.equal(tileExtent.min[0], x * tileScale);    // 0..8388608..16777216
           assert.equal(tileExtent.min[1], y * tileScale);
           assert.equal(tileExtent.max[0], (x + 1) * tileScale);
           assert.equal(tileExtent.max[1], (y + 1) * tileScale);
@@ -190,8 +190,8 @@ describe('math/tiler', () => {
         expected.forEach((xyz, i) => {
           const [x, y, z] = xyz;
           const tileExtent = tiles[i].tileExtent;
-          const tileScale = 256 / Math.pow(2, z);
-          assert.equal(tileExtent.min[0], x * tileScale);    // 0..64..128..192..256
+          const tileScale = 16777216 / Math.pow(2, z);
+          assert.equal(tileExtent.min[0], x * tileScale);    // 0..4194304..8388608..12582912..16777216
           assert.equal(tileExtent.min[1], y * tileScale);
           assert.equal(tileExtent.max[0], (x + 1) * tileScale);
           assert.equal(tileExtent.max[1], (y + 1) * tileScale);
