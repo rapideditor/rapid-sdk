@@ -28,12 +28,14 @@
     "require": "./dist/math.cjs"
   },
   "scripts": {
-    "all": "bun run --sequential clean build lint test",
+    "all": "bun run --sequential clean check build test",
     "build": "bun run --parallel 'build:*'",
     "build:js": "bun ./scripts/build.ts",
     "build:ts": "tsc",
+    "check": "bun run --parallel 'check:*'",
+    "check:lint": "eslint .",
+    "check:ts": "tsc --noEmit",
     "clean": "bun ./scripts/clean.ts",
-    "lint": "eslint .",
     "test": "bun test --dots --coverage ./test"
   },
   "dependencies": {
