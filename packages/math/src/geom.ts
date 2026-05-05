@@ -4,7 +4,9 @@
  */
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
+import { ANGLE_EPSILON, HALF_PI } from './constants';
 import { Extent } from './Extent';
+import { numWrap } from './number';
 import { Vec2, vecLength } from './vector';
 
 
@@ -258,66 +260,127 @@ export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], check
 }
 
 
-/** Smallest Surrounding Rectangle. An Object containing `poly` and `angle` properties. */
-export interface SSR {
-  /** the smallest surrounding rectangle polygon */
+/** Surrounding Rectangle. An Object containing `poly` and `angle` properties. */
+export interface SurroundingRectangle {
+  /** the surrounding rectangle polygon */
   poly: Vec2[];
   /** angle offset from x axis */
   angle: number;
 }
 
 
-/** Return the Smallest Surrounding Rectangle for a given set of points
- * @remarks
- * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
- * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
+/**
+ * A generalized function for computing a surrounding rectangle for a given Array of points.
+ * The caller supplies `getScore` and `isBetter` functions that define the heuristic which
+ * determines what kind of rectangle to gather ("smallest" or "longest").
  * @param points
- * @returns rectangle if exists, null otherwise
- * @example
- * +-- p1 ------ p3
- * |              |
- * p0 ------ p2 --+
- * const points = [[0, -1], [5, 1], [10, -1], [15, 1]];
- * const ssr = geomGetSmallestSurroundingRectangle(points);
- * // ssr.poly == [[0, -1], [0, 1], [15, 1], [15, -1], [0, -1]]
- * // ssr.angle == 0
+ * @param getScore
+ * @param isBetter
+ * @param initialBestScore
+ * @returns  A SurroundingRectangle (polygon and angle) or `null` if the given points did not produce a valid hull.
  */
-export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SSR | null {
+export function getSurroundingRectangle(
+  points: Vec2[],
+  getScore: (extent: Extent) => number,
+  isBetter: (score: number, bestScore: number) => boolean,
+  initialBestScore: number
+): SurroundingRectangle | null {
   const hull: Vec2[] | null = d3_polygonHull(points);
   if (!hull) return null;
 
   const centroid: Vec2 = d3_polygonCentroid(hull);
-  let minArea = Infinity;
-  let ssrExtent = new Extent();
-  let ssrAngle = 0;
-  let c1: Vec2 = hull[0];
+  const centroidX = centroid[0];
+  const centroidY = centroid[1];
+  const checkedAngles = new Set<number>();
+  let bestScore = initialBestScore;
+  let bestExtent = new Extent();
+  let bestAngle = 0;
 
-  for (let i = 0; i <= hull.length - 1; i++) {
+  for (let i = 0; i < hull.length; i++) {
+    const c1: Vec2 = hull[i];
     const c2: Vec2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
-    const angle = Math.atan2(c2[1] - c1[1], c2[0] - c1[0]);
-    const poly: Vec2[] = geomRotatePoints(hull, -angle, centroid);
-    const extent: Extent = poly.reduce((acc: Extent, point: Vec2) => {
-      // update Extent min/max in-place for speed
-      acc.min[0] = Math.min(acc.min[0], point[0]);
-      acc.min[1] = Math.min(acc.min[1], point[1]);
-      acc.max[0] = Math.max(acc.max[0], point[0]);
-      acc.max[1] = Math.max(acc.max[1], point[1]);
-      return acc;
-    }, new Extent());
+    const wrapped = numWrap(Math.atan2(c2[1] - c1[1], c2[0] - c1[0]), 0, HALF_PI);  // normalize angle between 0..π/2
+    const angle = (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
+    const angleKey = Math.round(angle / ANGLE_EPSILON);
+    if (checkedAngles.has(angleKey)) continue;
+    checkedAngles.add(angleKey);
 
-    const area = extent.area();
-    if (area < minArea) {
-      minArea = area;
-      ssrExtent = extent;
-      ssrAngle = angle;
+    const sin = Math.sin(-angle);
+    const cos = Math.cos(-angle);
+    const extent = new Extent();
+    for (const point of hull) {
+      const radialX = point[0] - centroidX;
+      const radialY = point[1] - centroidY;
+      const x = radialX * cos - radialY * sin + centroidX;
+      const y = radialX * sin + radialY * cos + centroidY;
+
+      // update Extent min/max in-place for speed
+      extent.min[0] = Math.min(extent.min[0], x);
+      extent.min[1] = Math.min(extent.min[1], y);
+      extent.max[0] = Math.max(extent.max[0], x);
+      extent.max[1] = Math.max(extent.max[1], y);
     }
-    c1 = c2;
+
+    const score = getScore(extent);
+    if (isBetter(score, bestScore)) {
+      bestScore = score;
+      bestExtent = extent;
+      bestAngle = angle;
+    }
   }
 
   return {
-    poly: geomRotatePoints(ssrExtent.polygon(), ssrAngle, centroid),
-    angle: ssrAngle
+    poly: geomRotatePoints(bestExtent.polygon(), bestAngle, centroid),
+    angle: bestAngle
   };
+}
+
+
+/** Return the Smallest Surrounding Rectangle for a given Array of points
+ * @remarks
+ * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
+ * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
+ * @param points
+ * @returns The smallest `SurroundingRectangle` by area, or `null` if the given points did not produce a valid hull.
+ * @example
+ * p5 --- p4
+ * |      |
+ * |      p3 ------ p2
+ * |                |
+ * p0 ------------- p1
+ * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
+ * const points = geomRotatePoints(footprint, Math.PI / 6, [0, 0]);
+ * const ssr = geomGetSmallestSurroundingRectangle(points);
+ * // ssr.angle == Math.PI / 6
+ */
+export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
+  const getScore = (extent: Extent) => extent.area();
+  const isBest = (score: number, best: number) => score < best;
+  return getSurroundingRectangle(points, getScore, isBest, Infinity);
+}
+
+
+/** Return the Longest Surrounding Rectangle for a given Array of points
+ * @remarks
+ * Loops over the convex hull edges, rotates to each edge angle, and chooses the
+ * rectangle with the maximum side length.
+ * @param points
+ * @returns The longest `SurroundingRectangle` by side length, or `null` if the given points did not produce a valid hull.
+ * @example
+ * p5 --- p4
+ * |      |
+ * |      p3 ------ p2
+ * |                |
+ * p0 ------------- p1
+ * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
+ * const points = geomRotatePoints(footprint, Math.PI / 6, [0, 0]);
+ * const lsr = geomGetLongestSurroundingRectangle(points);
+ * // lsr.angle ~= 1.4196541601696426
+ */
+export function geomGetLongestSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
+  const getScore = (extent: Extent) => Math.max(Math.abs(extent.max[0] - extent.min[0]), Math.abs(extent.max[1] - extent.min[1]));
+  const isBest = (score: number, best: number) => score > best;
+  return getSurroundingRectangle(points, getScore, isBest, -Infinity);
 }
 
 
