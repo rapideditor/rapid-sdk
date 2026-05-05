@@ -12,7 +12,7 @@ const DEFAULT_128 = [250, 157, 60, 79, 142, 134, 229, 129, 138, 126, 210, 129, 2
  * @param key default: `DEFAULT_128`
  * @returns cipherText
  */
-export function utilAesEncrypt(plainText: string, key: number[]): string {
+export function utilAesEncrypt(plainText: string, key?: number[]): string {
   key = key || DEFAULT_128;
   const aesCtr = new aesjs.ModeOfOperation.ctr(key);
   const cipherBytes = aesCtr.encrypt(aesjs.utils.utf8.toBytes(plainText));
@@ -29,7 +29,7 @@ export function utilAesEncrypt(plainText: string, key: number[]): string {
  * @param key default: `DEFAULT_128`
  * @returns plainText
  */
-export function utilAesDecrypt(cipherText: string, key: number[]): string {
+export function utilAesDecrypt(cipherText: string, key?: number[]): string {
   key = key || DEFAULT_128;
   const aesCtr = new aesjs.ModeOfOperation.ctr(key);
   const plainBytes = aesCtr.decrypt(aesjs.utils.hex.toBytes(cipherText));
