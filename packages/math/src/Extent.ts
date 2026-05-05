@@ -4,7 +4,7 @@
  */
 
 import { geoMetersToLat, geoMetersToLon } from './geo';
-import { Vec2 } from './vector';
+import { Vec2, Vec4 } from './vector';
 
 /** Bounding box containing minX, minY, maxX, maxY numbers */
 export interface BBox {
@@ -97,7 +97,7 @@ export class Extent {
    * @example
    * new Extent([0, 0], [5, 10]).rectangle();  // returns [0, 0, 5, 10]
    */
-  rectangle(): number[] {
+  rectangle(): Vec4 {
     return [this.min[0], this.min[1], this.max[0], this.max[1]];
   }
 
@@ -243,11 +243,15 @@ export class Extent {
    */
   extendSelf(other: Extent | Vec2): Extent {
     if (other instanceof Extent) {
-      this.min = [Math.min(other.min[0], this.min[0]), Math.min(other.min[1], this.min[1])];
-      this.max = [Math.max(other.max[0], this.max[0]), Math.max(other.max[1], this.max[1])];
+      this.min[0] = Math.min(other.min[0], this.min[0]);
+      this.min[1] = Math.min(other.min[1], this.min[1]);
+      this.max[0] = Math.max(other.max[0], this.max[0]);
+      this.max[1] = Math.max(other.max[1], this.max[1]);
     } else {
-      this.min = [Math.min(other[0], this.min[0]), Math.min(other[1], this.min[1])];
-      this.max = [Math.max(other[0], this.max[0]), Math.max(other[1], this.max[1])];
+      this.min[0] = Math.min(other[0], this.min[0]);
+      this.min[1] = Math.min(other[1], this.min[1]);
+      this.max[0] = Math.max(other[0], this.max[0]);
+      this.max[1] = Math.max(other[1], this.max[1]);
     }
     return this;
   }

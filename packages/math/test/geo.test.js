@@ -148,6 +148,10 @@ describe('math/geo', () => {
       const b = [0, 61];
       assert.closeTo(math.geoSphericalDistance(a, b), 110946, 1);
     });
+    it('supports scalar overload for hot paths', () => {
+      assert.closeTo(math.geoSphericalDistance(0, 0, 1, 0), 111319, 1);
+      assert.equal(math.geoSphericalDistance(0, 0, 0, 0), 0);
+    });
   });
 
   describe('geoZoomToScale', () => {

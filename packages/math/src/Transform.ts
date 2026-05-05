@@ -3,7 +3,7 @@
  * @module
  */
 
-import { TAU, MIN_Z, MAX_Z } from './constants';
+import { TAU, MIN_Z, MAX_Z, ANGLE_EPSILON } from './constants';
 import { numClamp, numWrap } from './number';
 import { Vec2 } from './vector';
 
@@ -37,7 +37,7 @@ export class Transform {
   /** Constructs a new Transform
    * @param other
    */
-  constructor(other?: Transform) {
+  constructor(other?: Partial<TransformProps>) {
     if (other) {
       this.props = other;
     }
@@ -123,6 +123,9 @@ export class Transform {
       let r = +val.r;
       if (!isNaN(r) && isFinite(r)) {
         r = numWrap(r, 0, TAU);   // wrap to 0..2π
+        if (r < ANGLE_EPSILON || (TAU - r) < ANGLE_EPSILON) {
+          r = 0;
+        }
         if (this.r !== r) {
           this.r = r;
           changed = true;

@@ -5,6 +5,7 @@
 
 export type Vec2 = [number, number];
 export type Vec3 = [number, number, number];
+export type Vec4 = [number, number, number, number];
 
 /** Test whether two given vectors are equal
  * @param a
@@ -69,10 +70,13 @@ export function vecScale(a: Vec2, n: number): Vec2 {
  * vecRotate([1, 1], Math.PI, [0, 0]);   // returns [-1, -1]
  */
 export function vecRotate(a: Vec2, angle: number, around: Vec2): Vec2 {
-  const radial = vecSubtract(a, around);
+  const radialX = a[0] - around[0];
+  const radialY = a[1] - around[1];
+  const sin = Math.sin(angle);
+  const cos = Math.cos(angle);
   return [
-    radial[0] * Math.cos(angle) - radial[1] * Math.sin(angle) + around[0],
-    radial[0] * Math.sin(angle) + radial[1] * Math.cos(angle) + around[1]
+    radialX * cos - radialY * sin + around[0],
+    radialX * sin + radialY * cos + around[1]
   ];
 }
 
@@ -161,6 +165,7 @@ export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
 /** Returns the length of a vector squared
  * This is the same as `vecLength` but without the `Math.sqrt` step,
  * thus avoiding an unnecessary calculation.
+ * @remarks The scalar overload can avoid temporary tuple allocations in tight loops.
  * @param a
  * @param b If not passed, defaults to [0,0].
  * @returns vector length squared
@@ -168,9 +173,23 @@ export function vecLength(a: Vec2, b: Vec2 = [0, 0]): number {
  * vecLengthSquare([0, 0], [4, 3]);   // returns 25
  * vecLengthSquare([4, 3]);           // returns 25
  */
-export function vecLengthSquare(a: Vec2, b: Vec2 = [0, 0]): number {
-  const x = a[0] - b[0];
-  const y = a[1] - b[1];
+export function vecLengthSquare(a: Vec2, b?: Vec2): number;
+export function vecLengthSquare(ax: number, ay: number, bx?: number, by?: number): number;
+export function vecLengthSquare(a: Vec2 | number, b?: Vec2 | number, c?: number, d?: number): number {
+  let x: number;
+  let y: number;
+
+  if (typeof a === 'number') {
+    const bx = c ?? 0;
+    const by = d ?? 0;
+    x = a - bx;
+    y = (b as number) - by;
+  } else {
+    const bVec = (Array.isArray(b) ? b : undefined);
+    x = a[0] - (bVec ? bVec[0] : 0);
+    y = a[1] - (bVec ? bVec[1] : 0);
+  }
+
   return x * x + y * y;
 }
 
@@ -205,6 +224,7 @@ export function vecAngle(a: Vec2, b: Vec2): number {
 
 
 /** Returns the dot product of two vectors
+ * @remarks The scalar overload can avoid temporary tuple allocations in hot code paths.
  * @param a
  * @param b
  * @param origin If not passed, defaults to [0,0]
@@ -212,11 +232,16 @@ export function vecAngle(a: Vec2, b: Vec2): number {
  * @example
  * vecDot([2, 0], [2, 0]);   // returns 4
  */
-export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number {
-  origin = origin || [0, 0];
-  const p: Vec2 = vecSubtract(a, origin);
-  const q: Vec2 = vecSubtract(b, origin);
-  return p[0] * q[0] + p[1] * q[1];
+export function vecDot(a: Vec2, b: Vec2, origin?: Vec2): number;
+export function vecDot(ax: number, ay: number, bx: number, by: number): number;
+export function vecDot(a: Vec2 | number, b: Vec2 | number, c?: Vec2 | number, d?: number): number {
+  if (typeof a === 'number') {
+    return a * (c as number) + (b as number) * (d as number);
+  }
+
+  const bVec = b as Vec2;
+  const origin = (Array.isArray(c) ? c : [0, 0]) as Vec2;
+  return (a[0] - origin[0]) * (bVec[0] - origin[0]) + (a[1] - origin[1]) * (bVec[1] - origin[1]);
 }
 
 
@@ -237,6 +262,7 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
 
 
 /** Returns the 2D cross product of OA and OB vectors
+ * @remarks The scalar overload can avoid temporary tuple allocations in hot code paths.
  * @param a A
  * @param b B
  * @param origin If not passed, defaults to [0,0]
@@ -245,11 +271,16 @@ export function vecNormalizedDot(a: Vec2, b: Vec2, origin?: Vec2): number {
  * @example
  * vecCross([2, 0], [0, 2]);   // returns 4
  */
-export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number {
-  origin = origin || [0, 0];
-  const p = vecSubtract(a, origin);
-  const q = vecSubtract(b, origin);
-  return p[0] * q[1] - p[1] * q[0];
+export function vecCross(a: Vec2, b: Vec2, origin?: Vec2): number;
+export function vecCross(ax: number, ay: number, bx: number, by: number): number;
+export function vecCross(a: Vec2 | number, b: Vec2 | number, c?: Vec2 | number, d?: number): number {
+  if (typeof a === 'number') {
+    return a * (d as number) - (b as number) * (c as number);
+  }
+
+  const bVec = b as Vec2;
+  const origin = (Array.isArray(c) ? c : [0, 0]) as Vec2;
+  return (a[0] - origin[0]) * (bVec[1] - origin[1]) - (a[1] - origin[1]) * (bVec[0] - origin[0]);
 }
 
 
@@ -285,24 +316,27 @@ export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
 
   for (let i = 0; i < points.length - 1; i++) {
     const o: Vec2 = points[i];
-    const s: Vec2 = vecSubtract(points[i + 1], o);
-    const v: Vec2 = vecSubtract(a, o);
-    const proj = vecDot(v, s) / vecDot(s, s);
-    let p: Vec2;
+    const segmentEnd: Vec2 = points[i + 1];
+    const sx = segmentEnd[0] - o[0];
+    const sy = segmentEnd[1] - o[1];
+    const vx = a[0] - o[0];
+    const vy = a[1] - o[1];
+    const proj = vecDot(vx, vy, sx, sy) / vecDot(sx, sy, sx, sy);
+    let projected: Vec2;
 
     if (proj < 0) {
-      p = o;
+      projected = o;
     } else if (proj > 1) {
-      p = points[i + 1];
+      projected = segmentEnd;
     } else {
-      p = [o[0] + proj * s[0], o[1] + proj * s[1]];
+      projected = [o[0] + proj * sx, o[1] + proj * sy];
     }
 
-    const dist = vecLength(p, a);
+    const dist = vecLength(projected, a);
     if (dist < min) {
       min = dist;
       idx = i + 1;
-      target = p;
+      target = projected;
     }
   }
 
