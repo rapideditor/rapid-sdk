@@ -5,11 +5,11 @@
  * See: https://developers.google.com/maps/documentation/javascript/coordinates
  */
 
-import { MAX_Z, MIN_Z } from './constants';
+import { ANGLE_EPSILON, MAX_Z, MIN_Z, TAU, WORLD_SIZE } from './constants';
 import { Extent } from './Extent';
 import { Viewport } from './Viewport';
 import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
-import { numClamp } from './number';
+import { numClamp, numWrap } from './number';
 import { Vec2, Vec3 } from './vector';
 
 import type * as GeoJSON from 'geojson';
@@ -21,7 +21,7 @@ export interface Tile {
   id: string;
   /** tile coordinate array ex. [0,0,0] */
   xyz: Vec3;
-  /** Extent in world coordinates (z16 scale, range 0..16_777_216) */
+  /** Extent in world coordinates (z=WORLD_ZOOM scale, range 0..WORLD_SIZE) */
   tileExtent: Extent;
   /** Extent in WGS84 coordinates(lon,lat) */
   wgs84Extent: Extent;
@@ -34,12 +34,6 @@ export interface Tile {
 export interface TileResult {
   tiles: Tile[];
 }
-
-
-function range(start: number, end: number): number[] {
-  return Array.from(Array(1 + end - start).keys()).map((v) => start + v);
-}
-
 
 export class Tiler {
   private _tileSize = 256;
@@ -145,9 +139,12 @@ export class Tiler {
     //                    ''--..__   /
     //                            ''G  [vw,vh]
 
-    const ts = this._tileSize;     // tile size in pizels
+    const ts = this._tileSize;     // tile size in pixels
     const ms = this._margin * ts;  // margin size in pixels
     const t = viewport.transform.props;
+    const wrappedRotation = numWrap(t.r ?? 0, 0, TAU);
+    const rotation = (wrappedRotation < ANGLE_EPSILON || (TAU - wrappedRotation) < ANGLE_EPSILON) ? 0 : wrappedRotation;
+    const hasRotation = rotation !== 0;
     const [sw, sh] = viewport.dimensions;
     let visiblePolygon = viewport.visiblePolygon() as Vec2[];
     let screenPolygon = [[0, 0], [0, sh], [sw, sh], [sw, 0], [0, 0]] as Vec2[];
@@ -158,17 +155,17 @@ export class Tiler {
     let marginPolygon = _addMargin(screenPolygon, ms);
 
     // Un-rotate the polygons back to where they would be on a north-aligned grid.
-    if (t.r) {
+    if (hasRotation) {
       const center = viewport.center();
-      screenPolygon = geomRotatePoints(screenPolygon, -t.r, center);
-      marginPolygon = geomRotatePoints(marginPolygon, -t.r, center);
-      visiblePolygon = geomRotatePoints(visiblePolygon, -t.r, center);
+      screenPolygon = geomRotatePoints(screenPolygon, -rotation, center);
+      marginPolygon = geomRotatePoints(marginPolygon, -rotation, center);
+      visiblePolygon = geomRotatePoints(visiblePolygon, -rotation, center);
     }
     if (ms) {  // now that visible is un-rotated, we can apply margin to it if needed.
       visiblePolygon = _addMargin(visiblePolygon, ms);
     }
 
-    // Convert all polygons to world coordinates..
+    // Convert all polygons to world coordinates.
     for (let i = 0; i < 5; i++) {
       visiblePolygon[i] = viewport.screenToWorld(visiblePolygon[i]);
       screenPolygon[i] = viewport.screenToWorld(screenPolygon[i]);
@@ -184,24 +181,21 @@ export class Tiler {
     const adjust = log2ts - 8;   // adjust zoom for tile sizes not 256px (log2(256) = 8)
     const zOrig = t.z - adjust;
     const z = numClamp(Math.round(zOrig), this._zoomRange[0], this._zoomRange[1]);
-    const pow2z = Math.pow(2, z);
-    const worldScale = pow2z / 16_777_216;
-    const tileScale = 16_777_216 / pow2z;
+    const pow2z = 2 ** z;
+    const worldScale = pow2z / WORLD_SIZE;
+    const tileScale = WORLD_SIZE / pow2z;
     const min = 0;
     const max = pow2z - 1;
 
-    const cols = range(
-      numClamp(Math.floor(worldMin[0] * worldScale), min, max),
-      numClamp(Math.floor(worldMax[0] * worldScale), min, max)
-    );
-    const rows = range(
-      numClamp(Math.floor(worldMin[1] * worldScale), min, max),
-      numClamp(Math.floor(worldMax[1] * worldScale), min, max)
-    );
+    const minCol = numClamp(Math.floor(worldMin[0] * worldScale), min, max);
+    const maxCol = numClamp(Math.floor(worldMax[0] * worldScale), min, max);
+    const minRow = numClamp(Math.floor(worldMin[1] * worldScale), min, max);
+    const maxRow = numClamp(Math.floor(worldMax[1] * worldScale), min, max);
 
-    const tiles: Tile[] = [];
-    for (const y of rows) {
-      for (const x of cols) {
+    const visibleTiles: Tile[] = [];
+    const marginTiles: Tile[] = [];
+    for (let y = minRow; y <= maxRow; y++) {
+      for (let x = minCol; x <= maxCol; x++) {
         if (this._skipNullIsland && Tiler.isNearNullIsland(x, y, z)) continue;
 
         // The tile bounds in world coordinates
@@ -218,7 +212,7 @@ export class Tiler {
 
         // Note, for rotated viewports, we need the strict test,
         // because the tile corners may be rotated out of the viewport - see rapid-sdk#281
-        if (!isIncluded && t.r !== 0) {
+        if (!isIncluded && hasRotation) {
           isIncluded = geomPathHasIntersections(marginPolygon, tilePolygon);
         }
         if (!isIncluded) continue;    // no need to include this tile in the result
@@ -228,7 +222,7 @@ export class Tiler {
           geomPolygonIntersectsPolygon(screenPolygon, tilePolygon, false) ||
           geomPolygonIntersectsPolygon(tilePolygon, screenPolygon, false);
 
-        if (!isVisible && t.r !== 0) {
+        if (!isVisible && hasRotation) {
           isVisible = geomPathHasIntersections(screenPolygon, tilePolygon);
         }
 
@@ -247,15 +241,15 @@ export class Tiler {
         };
 
         if (isVisible) {
-          tiles.unshift(tile);  // tiles in view at beginning
+          visibleTiles.push(tile);  // tiles in view at beginning
         } else {
-          tiles.push(tile);     // tiles in margin at the end
+          marginTiles.push(tile);   // tiles in margin at the end
         }
       }
     }
 
     return {
-      tiles: tiles
+      tiles: visibleTiles.reverse().concat(marginTiles)
     };
 
 
@@ -279,7 +273,7 @@ export class Tiler {
    * @example
    * const t = new Tiler();
    * const v = new Viewport();
-   * v.transform = { x: 256, y: 256, k: 256 / Math.PI };  // z1
+   * v.transform = { x: 256, y: 256, z: 1 };
    * v.dimensions = [512, 512];                           // entire world visible
    * const result = t.getTiles(v);
    * const gj = t.getGeoJSON(result);    // returns a GeoJSON FeatureCollection
@@ -400,8 +394,8 @@ export class Tiler {
    */
   static isNearNullIsland(x: number, y: number, z: number): boolean {
     if (z >= 7) {
-      const center = Math.pow(2, z - 1);
-      const width = Math.pow(2, z - 6);
+      const center = 2 ** (z - 1);
+      const width = 2 ** (z - 6);
       const min = center - width / 2;
       const max = center + width / 2 - 1;
       return x >= min && x <= max && y >= min && y <= max;

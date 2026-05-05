@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import { DEG2RAD, Extent, Transform, Viewport } from '../src/math.ts';
+import { DEG2RAD, HALF_PI, Extent, Transform, Viewport, WORLD_SIZE } from '../src/math.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -22,14 +22,14 @@ describe('math/viewport', () => {
     });
 
     it('creates a Viewport with a Transform-like param', () => {
-      const view = new Viewport({ x: '20', y: '30', z: 2, r: Math.PI / 2 });
+      const view = new Viewport({ x: '20', y: '30', z: 2, r: HALF_PI });
       const tform = view.transform;
       assert.ok(view instanceof Viewport);
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
       assert.equal(tform.z, 2);
-      assert.equal(tform.r, Math.PI / 2);
+      assert.equal(tform.r, HALF_PI);
       assert.equal(tform.v, 2);
     });
 
@@ -42,7 +42,7 @@ describe('math/viewport', () => {
 
   describe('#project / #unproject', () => {
     for (const z of [0, 1, 2]) {
-      const w = Math.pow(2, z) * 128;  // half the tile size
+      const w = (2 ** z) * 128;  // half the tile size
       const h = w;
 
       it(`Projects [0°, 0°] -> [0, 0] (at z${z})`, () => {
@@ -94,7 +94,7 @@ describe('math/viewport', () => {
       });
 
       it(`Ignores rotation when projecting, when 'includeRotation' is 'false' (at z${z})`, () => {
-        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: HALF_PI });  // quarter turn clockwise
         const point = view.project([180, 0]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], w);
@@ -102,7 +102,7 @@ describe('math/viewport', () => {
       });
 
       it(`Applies rotation when projecting, when 'includeRotation' is 'true' (at z${z})`, () => {
-        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: HALF_PI });  // quarter turn clockwise
         const point = view.project([180, 0], true);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -158,7 +158,7 @@ describe('math/viewport', () => {
       });
 
       it(`Ignores rotation when unprojecting, when 'includeRotation' is 'false' (at z${z})`, () => {
-        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: HALF_PI });  // quarter turn clockwise
         const point = view.unproject([0, h]);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 0);
@@ -166,7 +166,7 @@ describe('math/viewport', () => {
       });
 
       it(`Applies rotation when unprojecting, when 'includeRotation' is 'true' (at z${z})`, () => {
-        const view = new Viewport({ z: z, r: Math.PI / 2 });  // quarter turn clockwise
+        const view = new Viewport({ z: z, r: HALF_PI });  // quarter turn clockwise
         const point = view.unproject([0, h], true);
         assert.ok(point instanceof Array);
         assert.closeTo(point[0], 180);
@@ -193,25 +193,25 @@ describe('math/viewport', () => {
       assert.closeTo(point[1], 0, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects [-180°, -85.0511287798°] -> [0, 16777216]`, () => {
+    it(`Projects [-180°, -85.0511287798°] -> [0, ${WORLD_SIZE}]`, () => {
       const point = view.wgs84ToWorld([-180, -85.0511287798]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 0);
-      assert.closeTo(point[1], 16777216, 1e-3);  // small residual at polar boundary
+      assert.closeTo(point[1], WORLD_SIZE, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects [180°, 85.0511287798°] -> [16777216, 0]`, () => {
+    it(`Projects [180°, 85.0511287798°] -> [${WORLD_SIZE}, 0]`, () => {
       const point = view.wgs84ToWorld([180, 85.0511287798]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], 16777216);
+      assert.closeTo(point[0], WORLD_SIZE);
       assert.closeTo(point[1], 0, 1e-3);  // small residual at polar boundary
     });
 
-    it(`Projects [180°, -85.0511287798°] -> [16777216, 16777216]`, () => {
-      const point = view.wgs84ToWorld([180, 85.0511287798]);
+    it(`Projects [180°, -85.0511287798°] -> [${WORLD_SIZE}, ${WORLD_SIZE}]`, () => {
+      const point = view.wgs84ToWorld([180, -85.0511287798]);
       assert.ok(point instanceof Array);
-      assert.closeTo(point[0], 16777216);
-      assert.closeTo(point[1], 0, 1e-3);  // small residual at polar boundary
+      assert.closeTo(point[0], WORLD_SIZE);
+      assert.closeTo(point[1], WORLD_SIZE, 1e-3);  // small residual at polar boundary
     });
 
     it(`Projects out of bounds [-270°, 95°] -> [-4194304, 0]`, () => {
@@ -221,11 +221,11 @@ describe('math/viewport', () => {
       assert.closeTo(point[1], 0, 1e-3);   // clamp y (small residual at polar boundary)
     });
 
-    it(`Projects out of bounds [270°, -95°] -> [20971520, 16777216]`, () => {
+    it(`Projects out of bounds [270°, -95°] -> [20971520, ${WORLD_SIZE}]`, () => {
       const point = view.wgs84ToWorld([270, -95]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 20971520);          // wrap x
-      assert.closeTo(point[1], 16777216, 1e-3);   // clamp y (small residual at polar boundary)
+      assert.closeTo(point[1], WORLD_SIZE, 1e-3);   // clamp y (small residual at polar boundary)
     });
   });
 
@@ -247,22 +247,22 @@ describe('math/viewport', () => {
       assert.closeTo(point[1], 85.0511287798);
     });
 
-    it(`Unprojects [0, 16777216] -> [-180°, -85.0511287798°]`, () => {
-      const point = view.worldToWgs84([0, 16777216]);
+    it(`Unprojects [0, ${WORLD_SIZE}] -> [-180°, -85.0511287798°]`, () => {
+      const point = view.worldToWgs84([0, WORLD_SIZE]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], -180);
       assert.closeTo(point[1], -85.0511287798);
     });
 
-    it(`Unprojects [16777216, 0] -> [180°, 85.0511287798°]`, () => {
-      const point = view.worldToWgs84([16777216, 0]);
+    it(`Unprojects [${WORLD_SIZE}, 0] -> [180°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([WORLD_SIZE, 0]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 180);
       assert.closeTo(point[1], 85.0511287798);
     });
 
-    it(`Unprojects [16777216, 16777216] -> [180°, -85.0511287798°]`, () => {
-      const point = view.worldToWgs84([16777216, 16777216]);
+    it(`Unprojects [${WORLD_SIZE}, ${WORLD_SIZE}] -> [180°, -85.0511287798°]`, () => {
+      const point = view.worldToWgs84([WORLD_SIZE, WORLD_SIZE]);
       assert.ok(point instanceof Array);
       assert.closeTo(point[0], 180);
       assert.closeTo(point[1], -85.0511287798);
@@ -288,33 +288,33 @@ describe('math/viewport', () => {
   describe('#transform', () => {
     it('sets/gets transform', () => {
       const view = new Viewport();
-      view.transform = { x: '20', y: '30', z: 2, r: Math.PI / 2 };
+      view.transform = { x: '20', y: '30', z: 2, r: HALF_PI };
       const tform = view.transform;
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 20);
       assert.equal(tform.y, 30);
       assert.equal(tform.z, 2);
-      assert.equal(tform.r, Math.PI / 2);
+      assert.equal(tform.r, HALF_PI);
     });
 
     it('ignores missing / invalid properties', () => {
-      const view = new Viewport({ x: 20, y: 30, z: 2, r: Math.PI / 2 });
+      const view = new Viewport({ x: 20, y: 30, z: 2, r: HALF_PI });
       view.transform = { x: 10, fake: 10 };
       const tform = view.transform;
       assert.ok(tform instanceof Transform);
       assert.equal(tform.x, 10);
       assert.equal(tform.y, 30);
       assert.equal(tform.z, 2);
-      assert.equal(tform.r, Math.PI / 2);
+      assert.equal(tform.r, HALF_PI);
       assert.equal(tform.fake, undefined);
     });
 
     it('increments version only on actual change', () => {
       const view = new Viewport({ x: 20, y: 30, z: 2 });
       const v0 = view.v;
-      view.transform = { r: Math.PI / 2 };
+      view.transform = { r: HALF_PI };
       assert.equal(view.v, v0 + 1);  // increment once
-      view.transform = { r: Math.PI / 2 };
+      view.transform = { r: HALF_PI };
       assert.equal(view.v, v0 + 1);  // no increment
     });
   });
@@ -436,21 +436,21 @@ describe('math/viewport', () => {
     //
     const tests = {
       '0':    [400, 300],
-      '45':   [500, 500],
+      '45':   [495, 495],
       '90':   [300, 400],
-      '135':  [500, 500],
+      '135':  [495, 495],
       '180':  [400, 300],
-      '225':  [500, 500],
+      '225':  [495, 495],
       '270':  [300, 400],
-      '315':  [500, 500],
+      '315':  [495, 495],
       '360':  [400, 300],
-      '-315': [500, 500],
+      '-315': [495, 495],
       '-270': [300, 400],
-      '-225': [500, 500],
+      '-225': [495, 495],
       '-180': [400, 300],
-      '-135': [500, 500],
+      '-135': [495, 495],
       '-90':  [300, 400],
-      '-45':  [500, 500]
+      '-45':  [495, 495]
     };
 
     for (const [key, expected] of Object.entries(tests)) {
@@ -462,8 +462,8 @@ describe('math/viewport', () => {
 
         const result = view.visibleDimensions();
         assert.ok(result instanceof Array);
-        assert.equal(result[0][0], expected[0][0]);
-        assert.equal(result[1][1], expected[0][1]);
+        assert.equal(result[0], expected[0]);
+        assert.equal(result[1], expected[1]);
       });
     }
   });

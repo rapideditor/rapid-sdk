@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import { Extent, Tiler, Viewport } from '../src/math.ts';
+import { Extent, Tiler, QUARTER_PI, Viewport, WORLD_SIZE } from '../src/math.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -52,8 +52,8 @@ describe('math/tiler', () => {
         assert.ok(tileExtent instanceof Extent);
         assert.equal(tileExtent.min[0], 0);
         assert.equal(tileExtent.min[1], 0);
-        assert.equal(tileExtent.max[0], 16777216);
-        assert.equal(tileExtent.max[1], 16777216);
+        assert.equal(tileExtent.max[0], WORLD_SIZE);
+        assert.equal(tileExtent.max[1], WORLD_SIZE);
       });
 
       it(`tiles have a wgs84Extent property (z=0, tileSize=${tileSize})`, () => {
@@ -112,8 +112,8 @@ describe('math/tiler', () => {
         expected.forEach((xyz, i) => {
           const [x, y, z] = xyz;
           const tileExtent = tiles[i].tileExtent;
-          const tileScale = 16777216 / Math.pow(2, z);
-          assert.equal(tileExtent.min[0], x * tileScale);    // 0..8388608..16777216
+          const tileScale = WORLD_SIZE / (2 ** z);
+          assert.equal(tileExtent.min[0], x * tileScale);    // 0..8388608..WORLD_SIZE
           assert.equal(tileExtent.min[1], y * tileScale);
           assert.equal(tileExtent.max[0], (x + 1) * tileScale);
           assert.equal(tileExtent.max[1], (y + 1) * tileScale);
@@ -190,8 +190,8 @@ describe('math/tiler', () => {
         expected.forEach((xyz, i) => {
           const [x, y, z] = xyz;
           const tileExtent = tiles[i].tileExtent;
-          const tileScale = 16777216 / Math.pow(2, z);
-          assert.equal(tileExtent.min[0], x * tileScale);    // 0..4194304..8388608..12582912..16777216
+          const tileScale = WORLD_SIZE / (2 ** z);
+          assert.equal(tileExtent.min[0], x * tileScale);    // 0..4194304..8388608..12582912..WORLD_SIZE
           assert.equal(tileExtent.min[1], y * tileScale);
           assert.equal(tileExtent.max[0], (x + 1) * tileScale);
           assert.equal(tileExtent.max[1], (y + 1) * tileScale);
@@ -591,7 +591,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler();
         const v = new Viewport();
-        v.transform = { x: 64, y: 64, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 64, y: 64, z: 2, r: QUARTER_PI };
         v.dimensions = [128, 128];
 
         const result = t.getTiles(v);
@@ -635,7 +635,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler().margin(1);
         const v = new Viewport();
-        v.transform = { x: 64, y: 64, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 64, y: 64, z: 2, r: QUARTER_PI };
         v.dimensions = [128, 128];
 
         const result = t.getTiles(v);
@@ -693,7 +693,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler();
         const v = new Viewport();
-        v.transform = { x: 128, y: 0, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 128, y: 0, z: 2, r: QUARTER_PI };
         v.dimensions = [128, 128];
 
         const result = t.getTiles(v);
@@ -737,7 +737,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler().margin(1);
         const v = new Viewport();
-        v.transform = { x: 128, y: 0, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 128, y: 0, z: 2, r: QUARTER_PI };
         v.dimensions = [128, 128];
 
         const result = t.getTiles(v);
@@ -795,7 +795,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler();
         const v = new Viewport();
-        v.transform = { x: 128, y: -128, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 128, y: -128, z: 2, r: QUARTER_PI };
         v.dimensions = [5, 5];  // very small
 
         const result = t.getTiles(v);
@@ -838,7 +838,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler().margin(1);
         const v = new Viewport();
-        v.transform = { x: 128, y: -128, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 128, y: -128, z: 2, r: QUARTER_PI };
         v.dimensions = [5, 5];  // very small
 
         const result = t.getTiles(v);
@@ -894,7 +894,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler();
         const v = new Viewport();
-        v.transform = { x: 128, y: 128, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 128, y: 128, z: 2, r: QUARTER_PI };
         v.dimensions = [512, 512];
 
         const result = t.getTiles(v);
@@ -939,7 +939,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler().margin(1);
         const v = new Viewport();
-        v.transform = { x: 128, y: 128, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 128, y: 128, z: 2, r: QUARTER_PI };
         v.dimensions = [512, 512];
 
         const result = t.getTiles(v);
@@ -997,7 +997,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler();
         const v = new Viewport();
-        v.transform = { x: 0, y: 0, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 0, y: 0, z: 2, r: QUARTER_PI };
         v.dimensions = [256, 256];
 
         const result = t.getTiles(v);
@@ -1042,7 +1042,7 @@ describe('math/tiler', () => {
         //
         const t = new Tiler().margin(1);
         const v = new Viewport();
-        v.transform = { x: 0, y: 0, z: 2, r: Math.PI / 4 };
+        v.transform = { x: 0, y: 0, z: 2, r: QUARTER_PI };
         v.dimensions = [256, 256];
 
         const result = t.getTiles(v);

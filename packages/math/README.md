@@ -31,8 +31,8 @@ import { Extent } from '@rapid-sdk/math';    // ESM import named
 
 - 📦 Extent class for working with bounding boxes
 - 🀄️ Tiler class for splitting the world into rectangular tiles
-- 🕹️ Transform class for managing translation, scale, rotation
-- 📺 Viewport class for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
+- 🕹️ Transform class for managing translation, zoom, rotation
+- 📺 Viewport class for managing view state and converting between Lon/Lat [λ,φ] and Cartesian [x,y] coordinates
 
 
 ## Contributing

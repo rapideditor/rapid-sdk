@@ -39,6 +39,7 @@
     "test": "bun test --dots --coverage ./test"
   },
   "dependencies": {
+    "@types/geojson": "^7946.0.16",
     "@types/d3-polygon": "^3.0.2",
     "d3-polygon": "^3.0.1"
   },

@@ -5,7 +5,7 @@
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
 import { Extent } from './Extent';
-import { Vec2, vecCross, vecInterp, vecLength, vecRotate, vecSubtract } from './vector';
+import { Vec2, vecLength } from './vector';
 
 
 /** Test whether two given coordinates describe the same edge
@@ -33,8 +33,19 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
  */
 export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): Vec2[] {
   const result: Vec2[] = new Array(points.length);  // prealloc
+  const sin = Math.sin(angle);
+  const cos = Math.cos(angle);
+  const aroundX = around[0];
+  const aroundY = around[1];
+
   for (let i = 0; i < points.length; i++) {
-    result[i] = vecRotate(points[i], angle, around);
+    const point = points[i];
+    const radialX = point[0] - aroundX;
+    const radialY = point[1] - aroundY;
+    result[i] = [
+      radialX * cos - radialY * sin + aroundX,
+      radialX * sin + radialY * cos + aroundY
+    ];
   }
   return result;
 }
@@ -56,24 +67,51 @@ export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): V
  * const b = [[5, 5], [5, -5]];
  * geomLineIntersection(a, b);   // returns [5, 0]
  */
-export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
-  if (a.length !== 2 || b.length !== 2) return null;
+export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null;
+export function geomLineIntersection(a0: Vec2, a1: Vec2, b0: Vec2, b1: Vec2): Vec2 | null;
+export function geomLineIntersection(
+  aOrA0: Vec2[] | Vec2,
+  bOrA1: Vec2[] | Vec2,
+  cOrB0?: Vec2,
+  dOrB1?: Vec2
+): Vec2 | null {
+  let a0: Vec2;
+  let a1: Vec2;
+  let b0: Vec2;
+  let b1: Vec2;
 
-  const p: Vec2 = [a[0][0], a[0][1]];
-  const p2: Vec2 = [a[1][0], a[1][1]];
-  const q: Vec2 = [b[0][0], b[0][1]];
-  const q2: Vec2 = [b[1][0], b[1][1]];
-  const r: Vec2 = vecSubtract(p2, p);
-  const s: Vec2 = vecSubtract(q2, q);
-  const uNumerator = vecCross(vecSubtract(q, p), r);
-  const denominator = vecCross(r, s);
+  if (cOrB0 !== undefined && dOrB1 !== undefined) {
+    a0 = aOrA0 as Vec2;
+    a1 = bOrA1 as Vec2;
+    b0 = cOrB0;
+    b1 = dOrB1;
+  } else {
+    const a = aOrA0 as Vec2[];
+    const b = bOrA1 as Vec2[];
+    if (a.length !== 2 || b.length !== 2) return null;
+    a0 = a[0];
+    a1 = a[1];
+    b0 = b[0];
+    b1 = b[1];
+  }
+
+  const rx = a1[0] - a0[0];
+  const ry = a1[1] - a0[1];
+  const sx = b1[0] - b0[0];
+  const sy = b1[1] - b0[1];
+  const qpx = b0[0] - a0[0];
+  const qpy = b0[1] - a0[1];
+
+  // 2D cross products: r×s determines parallelism; (q-p)×r and (q-p)×s solve segment parameters.
+  const uNumerator = qpx * ry - qpy * rx;
+  const denominator = rx * sy - ry * sx;
 
   if (uNumerator && denominator) {
     const u = uNumerator / denominator;
-    const t = vecCross(vecSubtract(q, p), s) / denominator;
+    const t = (qpx * sy - qpy * sx) / denominator;   // t,u are intersection factors along segments a and b
 
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-      return vecInterp(p, p2, t);
+      return [a0[0] + t * rx, a0[1] + t * ry];
     }
   }
 
@@ -98,10 +136,10 @@ export function geomLineIntersection(a: Vec2[], b: Vec2[]): Vec2 | null {
 export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
   const intersections: Vec2[] = [];
   for (let i = 0; i < path1.length - 1; i++) {
+    const a0 = path1[i];
+    const a1 = path1[i + 1];
     for (let j = 0; j < path2.length - 1; j++) {
-      const a: Vec2[] = [path1[i], path1[i + 1]];
-      const b: Vec2[] = [path2[j], path2[j + 1]];
-      const hit: Vec2 | null = geomLineIntersection(a, b);
+      const hit = geomLineIntersection(a0, a1, path2[j], path2[j + 1]);
       if (hit) {
         intersections.push(hit);
       }
@@ -127,11 +165,10 @@ export function geomPathIntersections(path1: Vec2[], path2: Vec2[]): Vec2[] {
  */
 export function geomPathHasIntersections(path1: Vec2[], path2: Vec2[]): boolean {
   for (let i = 0; i < path1.length - 1; i++) {
+    const a0 = path1[i];
+    const a1 = path1[i + 1];
     for (let j = 0; j < path2.length - 1; j++) {
-      const a: Vec2[] = [path1[i], path1[i + 1]];
-      const b: Vec2[] = [path2[j], path2[j + 1]];
-      const hit: Vec2 | null = geomLineIntersection(a, b);
-      if (hit) {
+      if (geomLineIntersection(a0, a1, path2[j], path2[j + 1])) {
         return true;
       }
     }

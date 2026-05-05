@@ -11,7 +11,7 @@ import { Vec2 } from './vector';
  * @param dLat degrees latitude
  * @returns meters
  * @example
- * geoLatToMeters(1);  // returns ≈111319
+ * geoLatToMeters(1);  // returns ≈110946
  */
 export function geoLatToMeters(dLat: number): number {
   return dLat * ((TAU * POLAR_RADIUS) / 360);
@@ -23,7 +23,7 @@ export function geoLatToMeters(dLat: number): number {
  * @param atLat latitude
  * @returns meters
  * @example
- * geoLonToMeters(1, 0);  // returns ≈110946 at equator
+ * geoLonToMeters(1, 0);  // returns ≈111319 at equator
  */
 export function geoLonToMeters(dLon: number, atLat: number): number {
   return Math.abs(atLat) >= 90
@@ -36,7 +36,7 @@ export function geoLonToMeters(dLon: number, atLat: number): number {
  * @param m meters
  * @returns degrees latitude
  * @example
- * geoMetersToLat(111319);  // returns ≈1°
+ * geoMetersToLat(110946);  // returns ≈1°
  */
 export function geoMetersToLat(m: number): number {
   return m / ((TAU * POLAR_RADIUS) / 360);
@@ -88,15 +88,35 @@ export function geoOffsetToMeters(offset: Vec2, tileSize: number = 256): Vec2 {
 
 
 /** Equirectangular approximation of spherical distances on Earth
+ * @remarks The scalar overload can avoid temporary tuple allocations in hot loops.
  * @param a
  * @param b
  * @returns distance in meters
  * @example
  * geoSphericalDistance([0, 0], [1, 0]);  // returns ≈110946 meters
  */
-export function geoSphericalDistance(a: Vec2, b: Vec2): number {
-  const x: number = geoLonToMeters(a[0] - b[0], (a[1] + b[1]) / 2);
-  const y: number = geoLatToMeters(a[1] - b[1]);
+export function geoSphericalDistance(a: Vec2, b: Vec2): number;
+export function geoSphericalDistance(lon1: number, lat1: number, lon2: number, lat2: number): number;
+export function geoSphericalDistance(a: Vec2 | number, b: Vec2 | number, c?: number, d?: number): number {
+  let lon1: number;
+  let lat1: number;
+  let lon2: number;
+  let lat2: number;
+
+  if (typeof a === 'number') {
+    lon1 = a;
+    lat1 = b as number;
+    lon2 = c as number;
+    lat2 = d as number;
+  } else {
+    lon1 = a[0];
+    lat1 = a[1];
+    lon2 = (b as Vec2)[0];
+    lat2 = (b as Vec2)[1];
+  }
+
+  const x: number = geoLonToMeters(lon1 - lon2, (lat1 + lat2) / 2);
+  const y: number = geoLatToMeters(lat1 - lat2);
   return Math.sqrt(x * x + y * y);
 }
 
@@ -123,7 +143,7 @@ export function geoScaleToZoom(k: number, tileSize: number = 256): number {
  * geoZoomToScale(17);  // returns ≈5340353.7154
  */
 export function geoZoomToScale(z: number, tileSize: number = 256): number {
-  return (tileSize * Math.pow(2, z)) / TAU;
+  return (tileSize * (2 ** z)) / TAU;
 }
 
 
@@ -147,7 +167,8 @@ export function geoSphericalClosestPoint(points: Vec2[], a: Vec2): Closest | nul
   let idx: number | undefined;
 
   for (let i = 0; i < points.length; i++) {
-    const distance = geoSphericalDistance(points[i], a);
+    const p = points[i];
+    const distance = geoSphericalDistance(p[0], p[1], a[0], a[1]);
     if (distance < minDistance) {
       minDistance = distance;
       idx = i;

@@ -136,6 +136,10 @@ describe('math/vector', () => {
     it('defaults second argument to [0,0]', () => {
       assert.equal(math.vecLengthSquare([4, 3]), 25);
     });
+    it('supports scalar overload for hot paths', () => {
+      assert.equal(math.vecLengthSquare(0, 0, 4, 3), 25);
+      assert.equal(math.vecLengthSquare(4, 3), 25);
+    });
   });
 
   describe('vecNormalize', () => {
@@ -168,6 +172,10 @@ describe('math/vector', () => {
       const a = [2, 0];
       const b = [2, 0];
       assert.equal(math.vecDot(a, b), 4);
+    });
+    it('supports scalar overload for hot paths', () => {
+      assert.equal(math.vecDot(2, 0, 2, 0), 4);
+      assert.equal(math.vecDot(1, 0, 0, 1), 0);
     });
   });
 
@@ -204,6 +212,10 @@ describe('math/vector', () => {
       const a = [-2, 0];
       const b = [2, 0];
       assert.equal(math.vecCross(a, b), -0);
+    });
+    it('supports scalar overload for hot paths', () => {
+      assert.equal(math.vecCross(2, 0, 0, 2), 4);
+      assert.equal(math.vecCross(2, 0, 0, -2), -4);
     });
   });
 

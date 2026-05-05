@@ -1,34 +1,27 @@
 /**
- * 📺 Viewport module for managing view state and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
+ * 📺 Viewport module for managing view state and converting between Lon/Lat [λ,φ] and Cartesian [x,y] coordinates
  * @module
  */
 
-import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MAX_PHI, MIN_PHI } from './constants';
+import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MAX_PHI, MIN_PHI, WORLD_HALF, WORLD_SIZE, WORLD_ZOOM, ANGLE_EPSILON } from './constants';
 import { Extent } from './Extent';
 import { numClamp, numWrap } from './number';
 import { Transform, TransformProps } from './Transform';
 import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
 
 
-/** World size in world coordinates: 256 × 2^16
- *  World coordinates are pre-scaled to zoom 16, so the full world spans [0, 0] to [WORLD_SIZE, WORLD_SIZE].
- */
-const WORLD_SIZE = 256 * 65536;   // 16_777_216
-const WORLD_HALF = WORLD_SIZE / 2; // 8_388_608 — the Mercator origin (Null Island)
-
-
 /** `Viewport` is a class for managing the state of the viewer
- *   and converting between Lon/Lat (λ,φ) and Cartesian (x,y) coordinates
+ *   and converting between Lon/Lat [λ,φ] and Cartesian [x,y] coordinates
  *
  *  Original geographic coordinate data is in WGS84 (Lon,Lat)
- *  and "projected" into screen space (x,y) using the Web Mercator projection
+ *  and "projected" into screen space [x,y] using the Web Mercator projection
  *  see: https://en.wikipedia.org/wiki/Web_Mercator_projection
  *
  *  Some nomenclature on the coordinates that this code uses:
- *  - "WGS84 coordinates" - These are Lon/Lat (λ,φ)
- *  - "world coordinates" - These are Mercator projected into Cartesian (x,y) and pre-scaled to zoom 16
- *     - origin puts [0,0] at top left of world and [16_777_216, 16_777_216] (256 × 2^16) at bottom right.
- *     - pre-scaling to z16 means geometry projected once can be rendered at any zoom without recalculating.
+ *  - "WGS84 coordinates" - These are Lon/Lat [λ,φ]
+ *  - "world coordinates" - These are Mercator projected into Cartesian [x,y] and pre-scaled to WORLD_ZOOM
+ *     - origin puts [0,0] at top left of world and [WORLD_SIZE, WORLD_SIZE] (256 × 2^WORLD_ZOOM) at bottom right.
+ *     - pre-scaling to z=WORLD_ZOOM means geometry projected once can be rendered at any zoom without recalculating.
  *  - "screen coordinates" - These are the Cartesian coordinates with view transform applied
  *     - origin puts [0,0] at top left of screen and they are in pixels
  *
@@ -87,10 +80,10 @@ export class Viewport {
   }
 
 
-  /** Projects a coordinate from Lon/Lat (λ,φ) to Cartesian (x,y)
-   * @param loc Lon/Lat (λ,φ)
+  /** Projects a coordinate from Lon/Lat [λ,φ] to Cartesian [x,y]
+   * @param loc Lon/Lat [λ,φ]
    * @param includeRotation - if true, consider rotation when working with the screen coordinate
-   * @returns Cartesian (x,y)
+   * @returns Cartesian [x,y]
    * @example
    * const v = new Viewport();
    * v.project([0, 0]);                  // returns [0, 0]
@@ -99,26 +92,13 @@ export class Viewport {
    */
   project(loc: Vec2, includeRotation?: boolean): Vec2 {
     return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
-//    const { x, y, k, r } = this._transform;
-//
-//    const lambda = loc[0] * DEG2RAD;
-//    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-//    const mercatorX = lambda;
-//    const mercatorY = Math.log(Math.tan((HALF_PI + phi) / 2));
-//    const point: Vec2 = [mercatorX * k + x, y - mercatorY * k];
-//
-//    if (includeRotation && r) {
-//      return vecRotate(point, r, this.center());
-//    } else {
-//      return point;
-//    }
   }
 
 
-  /** Unprojects a coordinate from given Cartesian (x,y) to Lon/Lat (λ,φ)
-   * @param point Cartesian (x,y)
+  /** Unprojects a coordinate from given Cartesian [x,y] to Lon/Lat [λ,φ]
+   * @param point Cartesian [x,y]
    * @param includeRotation - if true, consider rotation when working with the screen coordinate
-   * @returns Lon/Lat (λ,φ)
+   * @returns Lon/Lat [λ,φ]
    * @example
    * const v = new Viewport();
    * v.unproject([0, 0]);         // returns [0, 0]
@@ -127,25 +107,13 @@ export class Viewport {
    */
   unproject(point: Vec2, includeRotation?: boolean): Vec2 {
     return this.worldToWgs84(this.screenToWorld(point, includeRotation));
-//    const { x, y, k, r } = this._transform;
-//
-//    if (includeRotation && r) {
-//      point = vecRotate(point, -r, this.center());
-//    }
-//
-//    const mercatorX = (point[0] - x) / k;
-//    const mercatorY = numClamp((y - point[1]) / k, -Math.PI, Math.PI);
-//    const lambda = mercatorX;
-//    const phi = 2 * Math.atan(Math.exp(mercatorY)) - HALF_PI;
-//
-//    return [lambda * RAD2DEG, phi * RAD2DEG];
   }
 
 
-  /** Converts from Lon/Lat (λ,φ) WGS84 coordinate to Cartesian (x,y) world coordinate
+  /** Converts from Lon/Lat [λ,φ] WGS84 coordinate to Cartesian [x,y] world coordinate
    * @see https://gis.stackexchange.com/questions/66247/what-is-the-formula-for-calculating-world-coordinates-for-a-given-latlng-in-goog
-   * @param    loc - The WGS84 coordinate Lon/Lat (λ,φ)
-   * @returns  The world coordinate (x,y)
+   * @param    loc - The WGS84 coordinate Lon/Lat [λ,φ]
+   * @returns  The world coordinate [x,y]
    */
   wgs84ToWorld(loc: Vec2): Vec2 {
     const x = (loc[0] + 180) / 360 * WORLD_SIZE;
@@ -155,10 +123,10 @@ export class Viewport {
   }
 
 
-  /** Converts from Cartesian (x,y) world coordinate to Lon/Lat (λ,φ) WGS84 coordinate
+  /** Converts from Cartesian [x,y] world coordinate to Lon/Lat [λ,φ] WGS84 coordinate
    * @see https://gis.stackexchange.com/questions/66247/what-is-the-formula-for-calculating-world-coordinates-for-a-given-latlng-in-goog
-   * @param    world - The world coordinate (x,y)
-   * @returns  The WGS84 coordinate Lon/Lat (λ,φ)
+   * @param    world - The world coordinate [x,y]
+   * @returns  The WGS84 coordinate Lon/Lat [λ,φ]
    */
   worldToWgs84(world: Vec2): Vec2 {
     const lon = (world[0] / WORLD_SIZE) * 360 - 180;
@@ -170,20 +138,20 @@ export class Viewport {
 
 
   /** Converts from world coordinate to screen coordinate applying view transform
-   * @param    world  - the world coordinate (x,y)
+   * @param    world  - the world coordinate [x,y]
    * @param    includeRotation - if true, consider rotation when working with the screen coordinate
-   * @returns  The screen coordinate (x,y)
+   * @returns  The screen coordinate [x,y]
    */
   worldToScreen(world: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, z, r } = this._transform;
-    const scale = Math.pow(2, z - 16);  // world coords are pre-scaled to z16
+    const scale = 2 ** (z - WORLD_ZOOM);  // world coords are pre-scaled to WORLD_ZOOM
 
     const point: Vec2 = [
       ((world[0] - WORLD_HALF) * scale) + x,
       ((world[1] - WORLD_HALF) * scale) + y
     ];
 
-    if (includeRotation && r) {
+    if (includeRotation && Math.abs(r) > ANGLE_EPSILON) {
       return vecRotate(point, r, this.center());
     } else {
       return point;
@@ -192,18 +160,18 @@ export class Viewport {
 
 
   /** Converts from screen coordinate to world coordinate applying view transform
-   * @param    screen  - the screen coordinate (x,y)
+   * @param    screen  - the screen coordinate [x,y]
    * @param    includeRotation - if true, consider rotation when working with the screen coordinate
-   * @returns  The world coordinate (x,y)
+   * @returns  The world coordinate [x,y]
    */
   screenToWorld(screen: Vec2, includeRotation?: boolean): Vec2 {
     const { x, y, z, r } = this._transform;
 
-    if (includeRotation && r) {
+    if (includeRotation && Math.abs(r) > ANGLE_EPSILON) {
       screen = vecRotate(screen, -r, this.center());
     }
 
-    const scale = Math.pow(2, z - 16);  // world coords are pre-scaled to z16
+    const scale = 2 ** (z - WORLD_ZOOM);  // world coords are pre-scaled to WORLD_ZOOM
     const point: Vec2 = [
       ((screen[0] - x) / scale) + WORLD_HALF,
       ((screen[1] - y) / scale) + WORLD_HALF
@@ -214,12 +182,12 @@ export class Viewport {
 
   /** Sets/Gets a transform object
    * @param val a Transform-like object containing the new Transform properties
-   * @returns When argument is provided, sets `x`,`y`,`k`,`r` from the Transform and returns `this` for method chaining.
-   * Returns a Transform object containing the current `x`,`y`,`k`,`r` values otherwise
+   * @returns When argument is provided, sets `x`,`y`,`z`,`r` from the Transform and returns `this` for method chaining.
+   * Returns a Transform object containing the current `x`,`y`,`z`,`r` values otherwise
    * @example
-   * const t = { x: 20, y: 30, k: 512 / Math.PI, r: Math.PI / 2 };
+   * const t = { x: 20, y: 30, z: 1, r: Math.PI / 2 };
    * const v = new Viewport();
-   * v.transform = t;    // sets transform `x`,`y`,`k`,`r` from given Object
+   * v.transform = t;    // sets transform `x`,`y`,`z`,`r` from given Object
    * v.transform;        // gets transform
    */
   set transform(val: Partial<TransformProps>) {
@@ -300,19 +268,22 @@ export class Viewport {
    */
   visiblePolygon(): Vec2[] {
     const [w, h] = this._dimensions;
-    const r = numWrap(this._transform.r, 0, TAU);  // just in case, wrap to 0..2π
+    const wrapped = numWrap(this._transform.r, 0, TAU);  // just in case, wrap to 0..2π
+    const r = (wrapped < ANGLE_EPSILON || (TAU - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
 
     if (r) {
       const sinr = Math.abs(Math.sin(r));
       const cosr = Math.abs(Math.cos(r));
+      const sin = sinr < ANGLE_EPSILON ? 0 : sinr;
+      const cos = cosr < ANGLE_EPSILON ? 0 : cosr;
 
-      const ae = w * sinr;
-      const af = h * cosr;
+      const ae = w * sin;
+      const af = h * cos;
 
-      const ex = ae * sinr;
-      const ey = ae * cosr;
-      const fx = af * sinr;
-      const fy = af * cosr;
+      const ex = ae * sin;
+      const ey = ae * cos;
+      const fx = af * sin;
+      const fy = af * cos;
 
       let E, F, G, H;
 
@@ -351,14 +322,17 @@ export class Viewport {
    */
   visibleDimensions(): Vec2 {
     const [w, h] = this._dimensions;
-    const r = this._transform.r;
+    const wrapped = numWrap(this._transform.r, 0, TAU);
+    const r = (wrapped < ANGLE_EPSILON || (TAU - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
 
     if (r) {
       const sinr = Math.abs(Math.sin(r));
       const cosr = Math.abs(Math.cos(r));
+      const sin = sinr < ANGLE_EPSILON ? 0 : sinr;
+      const cos = cosr < ANGLE_EPSILON ? 0 : cosr;
 
-      const w2 = w * cosr + h * sinr;    // ed + fb
-      const h2 = h * cosr + w * sinr;    // af + ae
+      const w2 = w * cos + h * sin;    // ed + fb
+      const h2 = h * cos + w * sin;    // af + ae
 
       return vecCeil([w2, h2]);
     } else {

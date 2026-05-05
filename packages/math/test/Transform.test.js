@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import { Transform } from '../src/math.ts';
+import { ANGLE_EPSILON, HALF_PI, TAU, Transform } from '../src/math.ts';
 
 
 describe('math/Transform', () => {
@@ -16,12 +16,12 @@ describe('math/Transform', () => {
     });
 
     it('creates a Transform from another Transform-like', () => {
-      const t = new Transform({ x: '20', y: '30', z: '2', r: Math.PI / 2 });
+      const t = new Transform({ x: '20', y: '30', z: '2', r: HALF_PI });
       assert.ok(t instanceof Transform);
       assert.equal(t.x, 20);
       assert.equal(t.y, 30);
       assert.equal(t.z, 2);
-      assert.equal(t.r, Math.PI / 2);
+      assert.equal(t.r, HALF_PI);
       assert.equal(t.v, 2);
     });
 
@@ -41,6 +41,16 @@ describe('math/Transform', () => {
       const t2 = new Transform({ r: -Math.PI });
       assert.ok(t2 instanceof Transform);
       assert.equal(t2.r, Math.PI);
+    });
+
+    it('snaps near-zero wrapped rotations to 0', () => {
+      const t1 = new Transform({ r: ANGLE_EPSILON / 2 });
+      assert.ok(t1 instanceof Transform);
+      assert.equal(t1.r, 0);
+
+      const t2 = new Transform({ r: TAU - (ANGLE_EPSILON / 2) });
+      assert.ok(t2 instanceof Transform);
+      assert.equal(t2.r, 0);
     });
   });
 
@@ -125,6 +135,14 @@ describe('math/Transform', () => {
       assert.equal(t.rotation, Math.PI);
     });
 
+    it('snaps near-zero wrapped rotations to 0', () => {
+      const t = new Transform();
+      t.rotation = ANGLE_EPSILON / 2;
+      assert.equal(t.rotation, 0);
+      t.rotation = TAU - (ANGLE_EPSILON / 2);
+      assert.equal(t.rotation, 0);
+    });
+
     it('increments version only on actual change', () => {
       const t = new Transform();
       const v0 = t.v;
@@ -145,6 +163,17 @@ describe('math/Transform', () => {
       assert.deepEqual(t.rotation, 0);
       assert.equal(t.v, v0);  // no increment
     });
+
+    it('does not increment version for tiny near-zero rotations from 0', () => {
+      const t = new Transform();
+      const v0 = t.v;
+      t.rotation = ANGLE_EPSILON / 2;
+      assert.equal(t.rotation, 0);
+      assert.equal(t.v, v0);
+      t.rotation = TAU - (ANGLE_EPSILON / 2);
+      assert.equal(t.rotation, 0);
+      assert.equal(t.v, v0);
+    });
   });
 
   describe('#props', () => {
@@ -153,11 +182,11 @@ describe('math/Transform', () => {
       assert.deepEqual(t.props, { x: 0, y: 0, z: 1, r: 0 });
       assert.equal(t.v, 1);
 
-      t.props = { x: '20', y: '30', z: '2', r: Math.PI / 2 };
+      t.props = { x: '20', y: '30', z: '2', r: HALF_PI };
       assert.equal(t.x, 20);
       assert.equal(t.y, 30);
       assert.equal(t.z, 2);
-      assert.equal(t.r, Math.PI / 2);
+      assert.equal(t.r, HALF_PI);
       assert.equal(t.v, 2);
     });
 
@@ -177,12 +206,20 @@ describe('math/Transform', () => {
       assert.equal(t.rotation, Math.PI);
     });
 
+    it('snaps near-zero wrapped rotations to 0', () => {
+      const t = new Transform();
+      t.props = { r: ANGLE_EPSILON / 2 };
+      assert.equal(t.rotation, 0);
+      t.props = { r: TAU - (ANGLE_EPSILON / 2) };
+      assert.equal(t.rotation, 0);
+    });
+
     it('increments version only on actual change', () => {
       const t = new Transform();
       const v0 = t.v;
-      t.props = { x: '20', y: '30', z: '2', r: Math.PI / 2 };
+      t.props = { x: '20', y: '30', z: '2', r: HALF_PI };
       assert.equal(t.v, v0 + 1);  // increment once
-      t.props = { x: '20', y: '30', z: '2', r: Math.PI / 2 };
+      t.props = { x: '20', y: '30', z: '2', r: HALF_PI };
       assert.equal(t.v, v0 + 1);  // no increment
     });
 
