@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import { ANGLE_EPSILON, HALF_PI, TAU, Transform } from '../src/math.ts';
+import { ANGLE_EPSILON, HALF_PI, TAU, Transform } from '../src/index.ts';
 
 
 describe('math/Transform', () => {

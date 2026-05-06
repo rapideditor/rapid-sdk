@@ -3,14 +3,13 @@
  * @module
  */
 
-export type Vec2 = [number, number];
-export type Vec3 = [number, number, number];
-export type Vec4 = [number, number, number, number];
+import type { Edge, Vec2 } from './types.ts';
+
 
 /** Test whether two given vectors are equal
  * @param a
  * @param b
- * @param epsilon if provideed, equality is done within epsilon
+ * @param epsilon if provided, equality is done within epsilon
  * @returns true if equal, false otherwise
  * @example
  * vecEqual([1, 2], [1, 2]);                         // returns true
@@ -284,14 +283,6 @@ export function vecCross(a: Vec2 | number, b: Vec2 | number, c?: Vec2 | number, 
 }
 
 
-/** An Object containing `index`, `distance`, and `target` properties */
-export interface Edge {
-  index: number; // index of segment along path
-  distance: number; // distance from point to path
-  target: Vec2; // point along path
-}
-
-
 /** Find closest orthogonal projection of point onto points array
  * @param a source point
  * @param points target points
@@ -307,12 +298,12 @@ export interface Edge {
  * const a = [0, 0];
  * const b = [5, 0];
  * const c = [2, 1];
- * vecProject(c, [a, b]);   // returns Edge { index: 1, distance: 1, target: [2, 0] }
+ * vecProject(c, [a, b]);   // returns Edge { index: 1, distance: 1, point: [2, 0] }
  */
 export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
   let min = Infinity;
   let idx: number | undefined;
-  let target: Vec2 | undefined;
+  let point: Vec2 | undefined;
 
   for (let i = 0; i < points.length - 1; i++) {
     const o: Vec2 = points[i];
@@ -336,12 +327,12 @@ export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
     if (dist < min) {
       min = dist;
       idx = i + 1;
-      target = projected;
+      point = projected;
     }
   }
 
-  if (idx !== undefined && target !== undefined) {
-    return { index: idx, distance: min, target: target };
+  if (idx !== undefined && point !== undefined) {
+    return { index: idx, distance: min, point: point };
   } else {
     return null;
   }

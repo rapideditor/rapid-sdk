@@ -3,21 +3,10 @@
  * @module
  */
 
-import { TAU, MIN_Z, MAX_Z, ANGLE_EPSILON } from './constants';
-import { numClamp, numWrap } from './number';
-import { Vec2 } from './vector';
+import { TAU, MIN_Z, MAX_Z, ANGLE_EPSILON } from './constants.ts';
+import { numClamp, numWrap } from './number.ts';
 
-/** Contains the properties that define the transform */
-export interface TransformProps {
-  /** translation in x direction from origin */
-  x: number;
-  /** translation in y direction from origin */
-  y: number;
-  /** zoom factor */
-  z: number;
-  /** rotation, in radians */
-  r: number;
-}
+import type { TransformProps, Vec2 } from './types.ts';
 
 
 /** `Transform` is a class for dealing with transform data

@@ -19,11 +19,11 @@
     "src/"
   ],
   "type": "module",
-  "typedocMain": "./src/math.ts",
-  "source": "./src/math.ts",
+  "typedocMain": "./src/index.ts",
+  "source": "./src/index.ts",
   "exports": {
-    "bun": "./src/math.ts",
     "types": "./dist/math.d.ts",
+    "bun": "./src/index.ts",
     "import": "./dist/math.mjs",
     "require": "./dist/math.cjs"
   },

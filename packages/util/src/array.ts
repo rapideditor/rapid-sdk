@@ -90,7 +90,7 @@ export function utilArrayChunk<T>(a: Array<T>, chunkSize: number): Array<Array<T
   if (!chunkSize || chunkSize < 0) return [a.slice()];
 
   const result = new Array(Math.ceil(a.length / chunkSize));
-  return Array.from(result, (item, i) => {
+  return Array.from(result, (_item, i) => {
     return a.slice(i * chunkSize, i * chunkSize + chunkSize);
   });
 }

@@ -5,35 +5,15 @@
  * See: https://developers.google.com/maps/documentation/javascript/coordinates
  */
 
-import { ANGLE_EPSILON, MAX_Z, MIN_Z, TAU, WORLD_SIZE } from './constants';
-import { Extent } from './Extent';
-import { Viewport } from './Viewport';
-import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoints } from './geom';
-import { numClamp, numWrap } from './number';
-import { Vec2, Vec3 } from './vector';
+import { ANGLE_EPSILON, MAX_Z, MIN_Z, TAU, WORLD_SIZE } from './constants.ts';
+import { Extent } from './Extent.ts';
+import { Viewport } from './Viewport.ts';
+import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoints } from './geom.ts';
+import { numClamp, numWrap } from './number.ts';
 
+import type { Quad, Tile, TileResult, Vec2, Vec3 } from './types.ts';
 import type * as GeoJSON from 'geojson';
 
-
-/** Contains essential information about a tile */
-export interface Tile {
-  /** tile identifier string ex. '0,0,0' */
-  id: string;
-  /** tile coordinate array ex. [0,0,0] */
-  xyz: Vec3;
-  /** Extent in world coordinates (z=WORLD_ZOOM scale, range 0..WORLD_SIZE) */
-  tileExtent: Extent;
-  /** Extent in WGS84 coordinates(lon,lat) */
-  wgs84Extent: Extent;
-  /** true if the tile is visible, false if not */
-  isVisible: boolean;
-}
-
-
-/** An Object used to return information about the tiles covering a given viewport */
-export interface TileResult {
-  tiles: Tile[];
-}
 
 export class Tiler {
   private _tileSize = 256;
@@ -146,8 +126,8 @@ export class Tiler {
     const rotation = (wrappedRotation < ANGLE_EPSILON || (TAU - wrappedRotation) < ANGLE_EPSILON) ? 0 : wrappedRotation;
     const hasRotation = rotation !== 0;
     const [sw, sh] = viewport.dimensions;
-    let visiblePolygon = viewport.visiblePolygon() as Vec2[];
-    let screenPolygon = [[0, 0], [0, sh], [sw, sh], [sw, 0], [0, 0]] as Vec2[];
+    let visiblePolygon = viewport.visiblePolygon();
+    let screenPolygon = [[0, 0], [0, sh], [sw, sh], [sw, 0], [0, 0]] as Quad;
 
     // Consumers can optionally request extra rows/columns of tiles from a "margin".
     // This can be useful for stitching together geometries that appear on adjacent tiles.
@@ -157,9 +137,9 @@ export class Tiler {
     // Un-rotate the polygons back to where they would be on a north-aligned grid.
     if (hasRotation) {
       const center = viewport.center();
-      screenPolygon = geomRotatePoints(screenPolygon, -rotation, center);
-      marginPolygon = geomRotatePoints(marginPolygon, -rotation, center);
-      visiblePolygon = geomRotatePoints(visiblePolygon, -rotation, center);
+      screenPolygon = geomRotatePoints(screenPolygon, -rotation, center) as Quad;
+      marginPolygon = geomRotatePoints(marginPolygon, -rotation, center) as Quad;
+      visiblePolygon = geomRotatePoints(visiblePolygon, -rotation, center) as Quad;
     }
     if (ms) {  // now that visible is un-rotated, we can apply margin to it if needed.
       visiblePolygon = _addMargin(visiblePolygon, ms);
@@ -253,8 +233,8 @@ export class Tiler {
     };
 
 
-    // add margin pixels to the given polygon
-    function _addMargin(poly: Vec2[], m: number): Vec2[] {
+    // Add margin pixels to the given polygon
+    function _addMargin(poly: Quad, m: number): Quad {
       return [
         [poly[0][0] - m, poly[0][1] - m],
         [poly[1][0] - m, poly[1][1] + m],

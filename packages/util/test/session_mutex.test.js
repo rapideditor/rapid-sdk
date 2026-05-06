@@ -1,6 +1,6 @@
 import { afterEach, describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import * as util from '../src/util.ts';
+import * as util from '../src/index.ts';
 
 
 describe('utilSessionMutex', () => {

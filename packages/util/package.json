@@ -19,11 +19,11 @@
     "src/"
   ],
   "type": "module",
-  "typedocMain": "./src/util.ts",
-  "source": "./src/util.ts",
+  "typedocMain": "./src/index.ts",
+  "source": "./src/index.ts",
   "exports": {
-    "bun": "./src/util.ts",
     "types": "./dist/util.d.ts",
+    "bun": "./src/index.ts",
     "import": "./dist/util.mjs",
     "require": "./dist/util.cjs"
   },

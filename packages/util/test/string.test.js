@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import * as util from '../src/util.ts';
+import * as util from '../src/index.ts';
 
 
 assert.equalOneOf = function(val, choices) {

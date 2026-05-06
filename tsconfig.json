@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
     // Language and Environment
+    "lib": ["ESNext"],
     "target": "ESNext",
 
     // Modules
     "module": "preserve",
+    "moduleDetection": "force",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "verbatimModuleSyntax": true,
 
     // Emit
     "allowJs": true,
@@ -23,10 +26,26 @@
     // Type Checking
     "strict": true,
     "noImplicitAny": false,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
+    // "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "./eslint.config.ts",
+    "./packages/*/src/**/*.ts",
+    "./packages/*/scripts/**/*.ts",
+    "./packages/*/test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "dist",
+    "**/dist",
+    "docs"
+  ]
 }

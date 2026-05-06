@@ -21,18 +21,18 @@ import * as math from '@rapid-sdk/math';     // ESM import all
 import { Extent } from '@rapid-sdk/math';    // ESM import named
 ```
 
-## Packages
+## Contents
 
-- ⭐️ Math Constants
-- 🌐 Geographic (spherical) math functions
-- 📈 Geometric (planar) math functions
-- 🔢 Number math functions
-- 📐 Vector math functions
-
-- 📦 Extent class for working with bounding boxes
-- 🀄️ Tiler class for splitting the world into rectangular tiles
-- 🕹️ Transform class for managing translation, zoom, rotation
-- 📺 Viewport class for managing view state and converting between Lon/Lat [λ,φ] and Cartesian [x,y] coordinates
+- ⭐️ `constants.ts`: Math Constants
+- 📦 `Extent.ts`: Extent class for working with bounding boxes
+- 🌐 `geo.ts`: Geographic (spherical) math functions
+- 📈 `geom.ts`: Geometric (planar) math functions
+- 🔢 `number.ts`: Number math functions
+- 🀄️ `Tiler.ts`: Tiler class for splitting the world into rectangular tiles
+- 🕹️ `Transform.ts`: Transform class for managing translation, zoom, rotation
+- 💭 `types.ts`: TypeScript Types
+- 📐 `vector.ts`: Vector math functions
+- 📺 `Viewport.ts`: Viewport class for managing view state and converting between Lon/Lat [λ,φ] and Cartesian [x,y] coordinates
 
 
 ## Contributing

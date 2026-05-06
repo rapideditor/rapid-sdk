@@ -1,7 +1,7 @@
 
 await Promise.all([
   Bun.build({
-    entrypoints: ['./src/math.ts'],
+    entrypoints: ['./src/index.ts'],
     outdir: './dist',
     target: 'node',
     format: 'cjs',
@@ -11,7 +11,7 @@ await Promise.all([
   }),
 
   Bun.build({
-    entrypoints: ['./src/math.ts'],
+    entrypoints: ['./src/index.ts'],
     outdir: './dist',
     target: 'node',
     format: 'esm',
@@ -20,3 +20,5 @@ await Promise.all([
     naming: 'math.m[ext]'  // .mjs
   })
 ]);
+
+export {};

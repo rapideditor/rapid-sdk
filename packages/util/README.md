@@ -21,6 +21,16 @@ import * as util from '@rapid-sdk/util';           // ESM import all
 import { utilHashcode } from '@rapid-sdk/util';    // ESM import named
 ```
 
+## Contents
+
+- 🔑 `aes.ts`:  Functions for performing AES encryption/decryption
+- 🗂️ `array.ts`: Array helper functions
+- 🗄️ `object.ts`: Object helper functions
+- 🗺️ `osm.ts`: OSM helper functions
+- 🔒 `session_mutex.ts`:  A per-domain session mutex backed by a cookie and dead man's switch
+- 📝 `string.ts`: String helper functions
+- 💭 `types.ts`: TypeScript Types
+
 
 ## Contributing
 

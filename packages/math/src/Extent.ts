@@ -3,16 +3,10 @@
  * @module
  */
 
-import { geoMetersToLat, geoMetersToLon } from './geo';
-import { Vec2, Vec4 } from './vector';
+import { geoMetersToLat, geoMetersToLon } from './geo.ts';
 
-/** Bounding box containing minX, minY, maxX, maxY numbers */
-export interface BBox {
-  minX: number;
-  minY: number;
-  maxX: number;
-  maxY: number;
-}
+import type { BBox, Quad, Vec2, Vec4 } from './types.ts';
+
 
 /** Extent class for creating bounding boxes
  * @remarks
@@ -124,7 +118,7 @@ export class Extent {
    * @example
    * new Extent([0, 0], [5, 10]).polygon();  // returns [[0, 0], [5, 0], [5, 10], [0, 10], [0, 0]]
    */
-  polygon(): Vec2[] {
+  polygon(): Quad {
     return [
       [this.min[0], this.min[1]],
       [this.max[0], this.min[1]],

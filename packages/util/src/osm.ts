@@ -1,4 +1,5 @@
-import { utilArrayUnion } from './array';
+import { utilArrayUnion } from './array.ts';
+import type { TagDiff } from './types.ts';
 
 /**
  * Cleans tags
@@ -16,13 +17,13 @@ export function utilCleanTags(tags: object): object {
 
   return result;
 
-  function _keepSpaces(k) {
+  function _keepSpaces(k: string): boolean {
     return /_hours|_times|:conditional$/.test(k);
   }
-  function _skip(k) {
+  function _skip(k: string): boolean {
     return /^(description|note|fixme|inscription)$/.test(k);
   }
-  function _cleanValue(k, v) {
+  function _cleanValue(k: string, v: string): string {
     if (_skip(k)) return v;
 
     let cleaned = v
@@ -99,15 +100,6 @@ export function utilGetAllNodes(ids: string[], graph): object[] {
 }
 
 
-/** Contains results for diffing old and new tags */
-export interface TagDiff {
-  type: string;
-  key: string;
-  oldVal: string | null;
-  newVal: string | null;
-  display: string;
-}
-
 /** Performs tag diff between old and new tags
  * @param oldTags
  * @param newTags
@@ -142,6 +134,12 @@ export function utilTagDiff(oldTags: object, newTags: object): TagDiff[] {
   return tagDiff;
 }
 
+/** Stringifies tag key/value pairs into a human-readable string, useful for debugging
+ * @param entity an object with a `tags` property
+ * @returns comma-separated `key=value` pairs, or empty string if no tags
+ * @example
+ * utilTagText({ tags: { highway: 'primary', name: 'Main St' } });   // returns 'highway=primary, name=Main St'
+ */
 export function utilTagText(entity): string {
   const obj = entity?.tags ?? {};
   return Object.keys(obj)

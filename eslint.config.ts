@@ -1,14 +1,9 @@
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import globals from 'globals';
+import js from '@eslint/js';
+import ts from 'typescript-eslint';
+import type { ConfigWithExtends } from 'typescript-eslint';
 
-export default tseslint.config({
-  files: ['**/{src,test}/*.{js,ts}'],
-  ignores: ['**/*.d.ts'],
-  extends: [
-    eslint.configs.recommended,
-    ...tseslint.configs.recommended,
-    ...tseslint.configs.stylistic
-  ],
+const rules = {
   rules: {
     "accessor-pairs": "error",
     "array-callback-return": "warn",
@@ -65,7 +60,7 @@ export default tseslint.config({
     "no-template-curly-in-string": "warn",
     "no-throw-literal": "error",
     "no-trailing-spaces": "warn",
-    "no-undef": "error",
+    "no-undef": "off",   // TypeScript handles this; ESLint's version doesn't understand TS type globals
     "no-undef-init": "warn",
     "no-unexpected-multiline": "error",
     "no-unneeded-ternary": "error",
@@ -73,6 +68,7 @@ export default tseslint.config({
     "no-unreachable": "warn",
     "no-unreachable-loop": "warn",
     "no-unused-expressions": "error",
+    "no-unused-vars": "off", // typescript-eslint will check it
     "no-use-before-define": ["off", "nofunc"],
     "no-useless-backreference": "warn",
     "no-useless-call": "warn",
@@ -96,6 +92,44 @@ export default tseslint.config({
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-inferrable-types": ["warn", { "ignoreParameters": true }],
-    "@typescript-eslint/no-unused-vars": ["warn", { "vars": "all", "args": "none", "caughtErrors": "none" }]
+    '@typescript-eslint/no-this-alias': 'warn',
+    "@typescript-eslint/no-unused-vars": ["warn", { "vars": "all", "args": "none", "caughtErrors": "none", "destructuredArrayIgnorePattern": "^_" }]
   }
-});
+} satisfies ConfigWithExtends;
+
+
+export default ts.config(
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      'docs/**',
+      '**/*.d.ts'
+    ]
+  },
+  js.configs.recommended,
+  ...ts.configs.recommended,
+  ...ts.configs.stylistic,
+  rules,
+  {
+    files: ['**/*.{js,ts}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser
+      }
+    }
+  },
+  {
+    files: ['**/scripts/*', '**/test/**/*.{js,ts}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        Bun: false
+      }
+    },
+    rules: {
+      "no-console": "off",
+      "no-await-in-loop": "off"
+    }
+  }
+);

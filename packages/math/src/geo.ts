@@ -3,8 +3,9 @@
  * @module
  */
 
-import { TAU, DEG2RAD, POLAR_RADIUS, EQUATORIAL_RADIUS } from './constants';
-import { Vec2 } from './vector';
+import { TAU, DEG2RAD, POLAR_RADIUS, EQUATORIAL_RADIUS } from './constants.ts';
+
+import type { Closest, Vec2 } from './types.ts';
 
 
 /** Convert degrees latitude to meters.
@@ -144,17 +145,6 @@ export function geoScaleToZoom(k: number, tileSize: number = 256): number {
  */
 export function geoZoomToScale(z: number, tileSize: number = 256): number {
   return (tileSize * (2 ** z)) / TAU;
-}
-
-
-/** An Object containing `index`, `distance`, and `point` properties*/
-export interface Closest {
-  /** index of segment along path */
-  index: number;
-  /** distance from point to path */
-  distance: number;
-  /** point along path */
-  point: Vec2;
 }
 
 /** Returns info about the point from provided points closest to the given target point

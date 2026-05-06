@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import { Extent } from '../src/math.ts';
+import { Extent } from '../src/index.ts';
 
 
 describe('math/extent', () => {

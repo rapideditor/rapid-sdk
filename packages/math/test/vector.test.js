@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import * as math from '../src/math.ts';
+import * as math from '../src/index.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -241,7 +241,7 @@ describe('math/vector', () => {
       assert.ok(edge instanceof Object);
       assert.equal(edge.index, 1);
       assert.equal(edge.distance, 1);
-      assert.deepEqual(edge.target, [2, 0]);
+      assert.deepEqual(edge.point, [2, 0]);
     });
 
     it('returns the starting vertex when the orthogonal projection is < 0', () => {
@@ -252,7 +252,7 @@ describe('math/vector', () => {
       assert.ok(edge instanceof Object);
       assert.equal(edge.index, 1);
       assert.equal(edge.distance, 5);
-      assert.deepEqual(edge.target, [0, 0]);
+      assert.deepEqual(edge.point, [0, 0]);
     });
 
     it('returns the ending vertex when the orthogonal projection is > 1', () => {
@@ -263,7 +263,7 @@ describe('math/vector', () => {
       assert.ok(edge instanceof Object);
       assert.equal(edge.index, 1);
       assert.equal(edge.distance, 5);
-      assert.deepEqual(edge.target, [5, 0]);
+      assert.deepEqual(edge.point, [5, 0]);
     });
   });
 });

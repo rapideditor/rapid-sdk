@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import * as math from '../src/math.ts';
+import * as math from '../src/index.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {
@@ -10,7 +10,7 @@ assert.closeTo = function(a, b, epsilon = 1e-9) {
 };
 
 function rectangleSideLengths(rectangle) {
-  const poly = rectangle.poly;
+  const poly = rectangle.polygon;
   const sideA = Math.hypot(poly[1][0] - poly[0][0], poly[1][1] - poly[0][1]);
   const sideB = Math.hypot(poly[2][0] - poly[1][0], poly[2][1] - poly[1][1]);
   return sideA > sideB ? [sideA, sideB] : [sideB, sideA];
@@ -22,9 +22,9 @@ function rectangleArea(rectangle) {
 }
 
 function assertRectangleContainsPoints(rectangle, points) {
-  const origin = rectangle.poly[0];
-  const edgeA = [rectangle.poly[1][0] - origin[0], rectangle.poly[1][1] - origin[1]];
-  const edgeB = [rectangle.poly[3][0] - origin[0], rectangle.poly[3][1] - origin[1]];
+  const origin = rectangle.polygon[0];
+  const edgeA = [rectangle.polygon[1][0] - origin[0], rectangle.polygon[1][1] - origin[1]];
+  const edgeB = [rectangle.polygon[3][0] - origin[0], rectangle.polygon[3][1] - origin[1]];
   const edgeALengthSquare = edgeA[0] * edgeA[0] + edgeA[1] * edgeA[1];
   const edgeBLengthSquare = edgeB[0] * edgeB[0] + edgeB[1] * edgeB[1];
 

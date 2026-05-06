@@ -1,6 +1,6 @@
 import { describe, it } from 'bun:test';
 import { strict as assert } from 'bun:assert';
-import * as math from '../src/math.ts';
+import * as math from '../src/index.ts';
 
 
 assert.closeTo = function(a, b, epsilon = 1e-9) {

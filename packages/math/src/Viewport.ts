@@ -3,11 +3,13 @@
  * @module
  */
 
-import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MAX_PHI, MIN_PHI, WORLD_HALF, WORLD_SIZE, WORLD_ZOOM, ANGLE_EPSILON } from './constants';
-import { Extent } from './Extent';
-import { numClamp, numWrap } from './number';
-import { Transform, TransformProps } from './Transform';
-import { Vec2, vecRotate, vecScale, vecCeil } from './vector';
+import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MAX_PHI, MIN_PHI, WORLD_HALF, WORLD_SIZE, WORLD_ZOOM, ANGLE_EPSILON } from './constants.ts';
+import { Extent } from './Extent.ts';
+import { numClamp, numWrap } from './number.ts';
+import { Transform } from './Transform.ts';
+import { vecRotate, vecScale, vecCeil } from './vector.ts';
+
+import type { Quad, TransformProps, Vec2 } from './types.ts';
 
 
 /** `Viewport` is a class for managing the state of the viewer
@@ -266,7 +268,7 @@ export class Viewport {
    *                           ''G  |
    *  ```
    */
-  visiblePolygon(): Vec2[] {
+  visiblePolygon(): Quad {
     const [w, h] = this._dimensions;
     const wrapped = numWrap(this._transform.r, 0, TAU);  // just in case, wrap to 0..2π
     const r = (wrapped < ANGLE_EPSILON || (TAU - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
@@ -285,7 +287,7 @@ export class Viewport {
       const fx = af * sin;
       const fy = af * cos;
 
-      let E, F, G, H;
+      let E: Vec2, F: Vec2, G: Vec2, H: Vec2;
 
       if (r > 0 && r <= HALF_PI) {   // ex = 0..w, fy = h..0
         E = [ex, -ey];

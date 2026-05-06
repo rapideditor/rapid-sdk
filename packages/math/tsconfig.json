@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/math.ts"],
+  "include": ["src/index.ts"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist"

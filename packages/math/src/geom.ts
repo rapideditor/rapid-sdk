@@ -4,10 +4,12 @@
  */
 
 import { polygonHull as d3_polygonHull, polygonCentroid as d3_polygonCentroid } from 'd3-polygon';
-import { ANGLE_EPSILON, HALF_PI } from './constants';
-import { Extent } from './Extent';
-import { numWrap } from './number';
-import { Vec2, vecLength } from './vector';
+import { ANGLE_EPSILON, HALF_PI } from './constants.ts';
+import { Extent } from './Extent.ts';
+import { numWrap } from './number.ts';
+import { vecLength } from './vector.ts';
+
+import type { Quad, SurroundingRectangle, Vec2 } from './types.ts';
 
 
 /** Test whether two given coordinates describe the same edge
@@ -260,15 +262,6 @@ export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], check
 }
 
 
-/** Surrounding Rectangle. An Object containing `poly` and `angle` properties. */
-export interface SurroundingRectangle {
-  /** the surrounding rectangle polygon */
-  poly: Vec2[];
-  /** angle offset from x axis */
-  angle: number;
-}
-
-
 /**
  * A generalized function for computing a surrounding rectangle for a given Array of points.
  * The caller supplies `getScore` and `isBetter` functions that define the heuristic which
@@ -330,7 +323,7 @@ export function getSurroundingRectangle(
   }
 
   return {
-    poly: geomRotatePoints(bestExtent.polygon(), bestAngle, centroid),
+    polygon: geomRotatePoints(bestExtent.polygon(), bestAngle, centroid) as Quad,
     angle: bestAngle
   };
 }
