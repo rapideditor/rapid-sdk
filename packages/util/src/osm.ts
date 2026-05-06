@@ -1,12 +1,13 @@
 import { utilArrayUnion } from './array.ts';
-import type { TagDiff } from './types.ts';
+import type { OsmTags, TagDiff } from './types.ts';
+
 
 /**
  * Cleans tags
  * @param tags
  * @returns
  */
-export function utilCleanTags(tags: object): object {
+export function utilCleanTags(tags: OsmTags): object {
   const result = {};
   for (const [k,v] of Object.entries(tags)) {
     if (!k) continue;
@@ -23,7 +24,8 @@ export function utilCleanTags(tags: object): object {
   function _skip(k: string): boolean {
     return /^(description|note|fixme|inscription)$/.test(k);
   }
-  function _cleanValue(k: string, v: string): string {
+  function _cleanValue(k: string, v?: string | null | undefined): string {
+    if (!v) return '';
     if (_skip(k)) return v;
 
     let cleaned = v
@@ -32,7 +34,7 @@ export function utilCleanTags(tags: object): object {
       .join(_keepSpaces(k) ? '; ' : ';');
 
     // The code below is not intended to validate websites and emails.
-    // It is only intended to prevent obvious copy-paste errors. (#2323)
+    // It is only intended to prevent obvious copy-paste errors - iD#2323
     // clean website- and email-like tags
     if (k.indexOf('website') !== -1 || k.indexOf('email') !== -1 || cleaned.indexOf('http') === 0) {
       cleaned = cleaned.replace(/[\u200B-\u200F\uFEFF]/g, ''); // strip LRM and other zero width chars
@@ -105,10 +107,10 @@ export function utilGetAllNodes(ids: string[], graph): object[] {
  * @param newTags
  * @returns the resulting diff
  */
-export function utilTagDiff(oldTags: object, newTags: object): TagDiff[] {
+export function utilTagDiff(oldTags: OsmTags, newTags: OsmTags): TagDiff[] {
   const tagDiff: TagDiff[] = [];
   const keys = utilArrayUnion(Object.keys(oldTags), Object.keys(newTags)).sort() as string[];
-  keys.forEach(k => {
+  for (const k of keys) {
     const oldVal = oldTags[k];
     const newVal = newTags[k];
 
@@ -130,7 +132,7 @@ export function utilTagDiff(oldTags: object, newTags: object): TagDiff[] {
         display: `+ ${k}=${newVal}`
       });
     }
-  });
+  }
   return tagDiff;
 }
 

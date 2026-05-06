@@ -1,38 +1,24 @@
-import { describe, it } from 'bun:test';
-import { strict as assert } from 'bun:assert';
+import { describe, expect, it } from 'bun:test';
 import * as util from '../src/index.ts';
-
-
-assert.arrayContains = function(choices, val) {
-  if (!Array.isArray(choices)) {
-    assert.fail(`${choices} is not an Array`);
-    return;
-  }
-
-  for (const choice of choices) {
-    if (Object.is(val, choice)) return;  // found one
-  }
-  assert.fail(`${val} is not one of ${choices}`);
-};
 
 
 describe('utilCleanTags', () => {
   it('handles empty tags object', () => {
     const t = {};
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {});
+    expect(result).toEqual({});
   });
 
   it('discards empty keys', () => {
     const t = { '': 'bar' };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {});
+    expect(result).toEqual({});
   });
 
   it('discards undefined values', () => {
     const t = { foo: undefined };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {});
+    expect(result).toEqual({});
   });
 
   it('trims whitespace', () => {
@@ -42,7 +28,7 @@ describe('utilCleanTags', () => {
       both: '   value  '
     };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       leading: 'value',
       trailing: 'value',
       both: 'value'
@@ -55,7 +41,7 @@ describe('utilCleanTags', () => {
       email: 'person@example\u200C.com'
     };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       website: 'http://example.com',
       email: 'person@example.com'
     });
@@ -68,7 +54,7 @@ describe('utilCleanTags', () => {
       both: '   value1  ;  value2  '
     };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       leading: 'value1;value2',
       trailing: 'value1;value2',
       both: 'value1;value2'
@@ -83,7 +69,7 @@ describe('utilCleanTags', () => {
       inscription: ' value1 ; value2 '
     };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, t);
+    expect(result).toEqual(t);
   });
 
   it('uses semicolon-space delimiting for opening_hours, conditional: tags', () => {
@@ -96,7 +82,7 @@ describe('utilCleanTags', () => {
       'restriction:conditional': '  no_u_turn @ (Mo-Fr 09:00-10:00,15:00-16:00;SH off)  '
     };
     const result = util.utilCleanTags(t);
-    assert.deepEqual(result, {
+    expect(result).toEqual({
       opening_hours: 'Mo-Su 08:00-18:00; Apr 10-15 off; Jun 08:00-14:00; Aug off; Dec 25 off',
       collection_times: 'Mo 10:00-12:00,12:30-15:00; Tu-Fr 08:00-12:00,12:30-15:00; Sa 08:00-12:00',
       'maxspeed:conditional': '120 @ (06:00-20:00); 80 @ wet',
@@ -142,7 +128,7 @@ describe('utilGetAllNodes', () => {
   };
   const r5 = { id: 'r-5', type: 'relation' };
   const graph = {
-    hasEntity: (id) =>
+    hasEntity: (id: string) =>
       ({
         'n-1': n1,
         'n-2': n2,
@@ -160,25 +146,25 @@ describe('utilGetAllNodes', () => {
   };
 
   it('handles nodes handed in', () => {
-    assert.deepEqual(util.utilGetAllNodes(['n-1'], graph), [n1]);
-    assert.deepEqual(util.utilGetAllNodes(['n-1', 'n-2'], graph), [n1, n2]);
-    assert.deepEqual(util.utilGetAllNodes(['n-1', 'n-2', 'n-3'], graph), [n1, n2, n3]);
+    expect(util.utilGetAllNodes(['n-1'], graph)).toEqual([n1]);
+    expect(util.utilGetAllNodes(['n-1', 'n-2'], graph)).toEqual([n1, n2]);
+    expect(util.utilGetAllNodes(['n-1', 'n-2', 'n-3'], graph)).toEqual([n1, n2, n3]);
   });
 
   it('gets all descendant nodes of a way', () => {
-    assert.deepEqual(util.utilGetAllNodes(['w-1'], graph), [n1, n2]);
-    assert.deepEqual(util.utilGetAllNodes(['w-1', 'w-2'], graph), [n1, n2, n3]);
+    expect(util.utilGetAllNodes(['w-1'], graph)).toEqual([n1, n2]);
+    expect(util.utilGetAllNodes(['w-1', 'w-2'], graph)).toEqual([n1, n2, n3]);
   });
 
   it('gets all descendant nodes of a relation', () => {
-    assert.deepEqual(util.utilGetAllNodes(['r-1'], graph), [n1, n2, n3]);
-    assert.deepEqual(util.utilGetAllNodes(['r-2'], graph), [n1, n2, n3]);
-    assert.deepEqual(util.utilGetAllNodes(['r-3'], graph), [n1, n2, n3]);
+    expect(util.utilGetAllNodes(['r-1'], graph)).toEqual([n1, n2, n3]);
+    expect(util.utilGetAllNodes(['r-2'], graph)).toEqual([n1, n2, n3]);
+    expect(util.utilGetAllNodes(['r-3'], graph)).toEqual([n1, n2, n3]);
   });
 
   it('gracefully handles missing entities', () => {
-    assert.deepEqual(util.utilGetAllNodes(['w-3'], graph), [n3]);
-    assert.deepEqual(util.utilGetAllNodes(['r-4'], graph), [n1, n2, n3]);
+    expect(util.utilGetAllNodes(['w-3'], graph)).toEqual([n3]);
+    expect(util.utilGetAllNodes(['r-4'], graph)).toEqual([n1, n2, n3]);
   });
 
   it('gets all descendant nodes of multiple ids', () => {
@@ -191,7 +177,7 @@ describe('utilGetAllNodes', () => {
     const w12 = { id: 'w12', nodes: ['c', 'b', 'a', 'c'], type: 'way' };
     const r = { id: 'r', members: [{ id: 'w11' }, { id: 'd' }] };
     const graph2 = {
-      hasEntity: (id) =>
+      hasEntity: (id: string) =>
         ({
           a: a,
           b: b,
@@ -204,12 +190,12 @@ describe('utilGetAllNodes', () => {
         }[id])
     };
     const result = util.utilGetAllNodes(['r', 'w12', 'e'], graph2);
-    assert.arrayContains(result, a);
-    assert.arrayContains(result, b);
-    assert.arrayContains(result, c);
-    assert.arrayContains(result, d);
-    assert.arrayContains(result, e);
-    assert.equal(result.length, 5);
+    expect(result).toContain(a);
+    expect(result).toContain(b);
+    expect(result).toContain(c);
+    expect(result).toContain(d);
+    expect(result).toContain(e);
+    expect(result.length).toBe(5);
   });
 
   it('handles recursive relations', () => {
@@ -225,13 +211,13 @@ describe('utilGetAllNodes', () => {
         }[id])
     };
     const result = util.utilGetAllNodes(['r11'], graph2);
-    assert.arrayContains(result, n);
-    assert.equal(result.length, 1);
+    expect(result).toContain(n);
+    expect(result.length).toBe(1);
   });
 
   it('handles degenerate ways', () => {
-    assert.deepEqual(util.utilGetAllNodes(['w-4'], graph), []);
-    assert.deepEqual(util.utilGetAllNodes(['r-5'], graph), []);
+    expect(util.utilGetAllNodes(['w-4'], graph)).toEqual([]);
+    expect(util.utilGetAllNodes(['r-5'], graph)).toEqual([]);
   });
 
   it('handles degenerate relations', () => {});
@@ -243,31 +229,31 @@ describe('utilTagDiff', () => {
   const newTags = { a: 'one', b: 'three', d: 'four' };
   const diff = util.utilTagDiff(oldTags, newTags);
 
-  assert.ok(diff instanceof Array);
-  assert.equal(diff.length, 4);
+  expect(diff).toBeInstanceOf(Array);
+  expect(diff.length).toBe(4);
 
-  assert.deepEqual(diff[0], {
+  expect(diff[0]).toEqual({
     type: '-',
     key: 'b',
     oldVal: 'two',
     newVal: 'three',
     display: '- b=two' // delete-modify
   });
-  assert.deepEqual(diff[1], {
+  expect(diff[1]).toEqual({
     type: '+',
     key: 'b',
     oldVal: 'two',
     newVal: 'three',
     display: '+ b=three' // insert-modify
   });
-  assert.deepEqual(diff[2], {
+  expect(diff[2]).toEqual({
     type: '-',
     key: 'c',
     oldVal: 'three',
     newVal: undefined,
     display: '- c=three' // delete
   });
-  assert.deepEqual(diff[3], {
+  expect(diff[3]).toEqual({
     type: '+',
     key: 'd',
     oldVal: undefined,
@@ -277,7 +263,7 @@ describe('utilTagDiff', () => {
 });
 
 describe('utilTagText', () => {
-  assert.equal(util.utilTagText({}), '');
-  assert.equal(util.utilTagText({ tags: { foo: 'bar' } }), 'foo=bar');
-  assert.equal(util.utilTagText({ tags: { foo: 'bar', two: 'three' } }), 'foo=bar, two=three');
+  expect(util.utilTagText({})).toBe('');
+  expect(util.utilTagText({ tags: { foo: 'bar' } })).toBe('foo=bar');
+  expect(util.utilTagText({ tags: { foo: 'bar', two: 'three' } })).toBe('foo=bar, two=three');
 });

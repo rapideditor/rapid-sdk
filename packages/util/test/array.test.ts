@@ -1,65 +1,44 @@
-import { describe, it } from 'bun:test';
-import { strict as assert } from 'bun:assert';
+import { describe, expect, it } from 'bun:test';
 import * as util from '../src/index.ts';
 
 
-assert.sameMembers = function(a, b) {
-  if (!Array.isArray(a)) {
-    assert.fail(`${a} is not an Array`);
-    return;
-  }
-  if (!Array.isArray(b)) {
-    assert.fail(`${b} is not an Array`);
-    return;
-  }
-
-  for (const item of a) {
-    if (!b.includes(item)) {
-      assert.fail(`${a} and ${b} don't have same members`);
-      return;
-    }
-  }
-  for (const item of b) {
-    if (!a.includes(item)) {
-      assert.fail(`${a} and ${b} don't have same members`);
-      return;
-    }
-  }
-};
+function expectSameMembers(actual, expected) {
+  expect(new Set(actual)).toEqual(new Set(expected));
+}
 
 
 describe('utilArrayIdentical', () => {
   it('same Arrays are identical', () => {
     const a = [1, 2, 3];
-    assert.equal(util.utilArrayIdentical(a, a), true);
+    expect(util.utilArrayIdentical(a, a)).toBe(true);
   });
 
   it('different length Arrays are not identical', () => {
     const a = [1, 2, 3];
     const b = [1, 2];
-    assert.equal(util.utilArrayIdentical(a, b), false);
+    expect(util.utilArrayIdentical(a, b)).toBe(false);
   });
 
   it('same contents Arrays are identical', () => {
     const a = [1, 2, 3];
     const b = [1, 2, 3];
-    assert.equal(util.utilArrayIdentical(a, b), true);
+    expect(util.utilArrayIdentical(a, b)).toBe(true);
   });
 
   it('different contents Arrays are not identical', () => {
     const a = [1, 2, 3];
     const b = [1, 2, 4];
-    assert.equal(util.utilArrayIdentical(a, b), false);
+    expect(util.utilArrayIdentical(a, b)).toBe(false);
   });
 
   it('compares elements strictly', () => {
     const a = [0, 1];
     const b = ['', 1];
-    assert.equal(util.utilArrayIdentical(a, b), false);
+    expect(util.utilArrayIdentical(a, b)).toBe(false);
 
     const c = [{ foo: 'bar' }];
     const d = [{ foo: 'bar' }];
-    assert.equal(util.utilArrayIdentical(c, d), false);
+    expect(util.utilArrayIdentical(c, d)).toBe(false);
   });
 });
 
@@ -67,11 +46,11 @@ describe('utilArrayDifference', () => {
   it('returns difference of two Arrays', () => {
     const a = [1, 2, 3];
     const b = [4, 3, 2];
-    assert.deepEqual(util.utilArrayDifference([], []), []);
-    assert.deepEqual(util.utilArrayDifference([], a), []);
-    assert.deepEqual(util.utilArrayDifference(a, []), [1, 2, 3]);
-    assert.deepEqual(util.utilArrayDifference(a, b), [1]);
-    assert.deepEqual(util.utilArrayDifference(b, a), [4]);
+    expect(util.utilArrayDifference([], [])).toEqual([]);
+    expect(util.utilArrayDifference([], a)).toEqual([]);
+    expect(util.utilArrayDifference(a, [])).toEqual([1, 2, 3]);
+    expect(util.utilArrayDifference(a, b)).toEqual([1]);
+    expect(util.utilArrayDifference(b, a)).toEqual([4]);
   });
 });
 
@@ -79,11 +58,11 @@ describe('utilArrayIntersection', () => {
   it('returns intersection of two Arrays', () => {
     const a = [1, 2, 3];
     const b = [4, 3, 2];
-    assert.deepEqual(util.utilArrayIntersection([], []), []);
-    assert.deepEqual(util.utilArrayIntersection([], a), []);
-    assert.deepEqual(util.utilArrayIntersection(a, []), []);
-    assert.sameMembers(util.utilArrayIntersection(a, b), [2, 3]);
-    assert.sameMembers(util.utilArrayIntersection(b, a), [2, 3]);
+    expect(util.utilArrayIntersection([], [])).toEqual([]);
+    expect(util.utilArrayIntersection([], a)).toEqual([]);
+    expect(util.utilArrayIntersection(a, [])).toEqual([]);
+    expectSameMembers(util.utilArrayIntersection(a, b), [2, 3]);
+    expectSameMembers(util.utilArrayIntersection(b, a), [2, 3]);
   });
 });
 
@@ -91,19 +70,19 @@ describe('utilArrayIntersection', () => {
   it('returns union of two Arrays', () => {
     const a = [1, 2, 3];
     const b = [4, 3, 2];
-    assert.deepEqual(util.utilArrayUnion([], []), []);
-    assert.sameMembers(util.utilArrayUnion([], a), [1, 2, 3]);
-    assert.sameMembers(util.utilArrayUnion(a, []), [1, 2, 3]);
-    assert.sameMembers(util.utilArrayUnion(a, b), [1, 2, 3, 4]);
-    assert.sameMembers(util.utilArrayUnion(b, a), [1, 2, 3, 4]);
+    expect(util.utilArrayUnion([], [])).toEqual([]);
+    expectSameMembers(util.utilArrayUnion([], a), [1, 2, 3]);
+    expectSameMembers(util.utilArrayUnion(a, []), [1, 2, 3]);
+    expectSameMembers(util.utilArrayUnion(a, b), [1, 2, 3, 4]);
+    expectSameMembers(util.utilArrayUnion(b, a), [1, 2, 3, 4]);
   });
 });
 
 describe('utilArrayUniq', () => {
   it('utilArrayUniq returns unique values in an Array', () => {
     const a = [1, 1, 2, 3, 3];
-    assert.deepEqual(util.utilArrayUniq([]), []);
-    assert.deepEqual(util.utilArrayUniq(a), [1, 2, 3]);
+    expect(util.utilArrayUniq([])).toEqual([]);
+    expect(util.utilArrayUniq(a)).toEqual([1, 2, 3]);
   });
 });
 
@@ -111,20 +90,20 @@ describe('utilArrayChunk', () => {
   it('returns array split into given sized chunks', () => {
     const a = [1, 2, 3, 4, 5, 6, 7];
     // bad chunkSizes, just copy whole array into a single chunk
-    assert.deepEqual(util.utilArrayChunk(a), [[1, 2, 3, 4, 5, 6, 7]]);
-    assert.deepEqual(util.utilArrayChunk(a, -1), [[1, 2, 3, 4, 5, 6, 7]]);
-    assert.deepEqual(util.utilArrayChunk(a, 0), [[1, 2, 3, 4, 5, 6, 7]]);
+    expect(util.utilArrayChunk(a, 0)).toEqual([[1, 2, 3, 4, 5, 6, 7]]);
+    expect(util.utilArrayChunk(a, -1)).toEqual([[1, 2, 3, 4, 5, 6, 7]]);
+    expect(util.utilArrayChunk(a, 0)).toEqual([[1, 2, 3, 4, 5, 6, 7]]);
     // good chunkSizes
-    assert.deepEqual(util.utilArrayChunk(a, 2), [[1, 2], [3, 4], [5, 6], [7]]);
-    assert.deepEqual(util.utilArrayChunk(a, 3), [[1, 2, 3], [4, 5, 6], [7]]);
-    assert.deepEqual(util.utilArrayChunk(a, 4), [[1, 2, 3, 4], [5, 6, 7]]);
+    expect(util.utilArrayChunk(a, 2)).toEqual([[1, 2], [3, 4], [5, 6], [7]]);
+    expect(util.utilArrayChunk(a, 3)).toEqual([[1, 2, 3], [4, 5, 6], [7]]);
+    expect(util.utilArrayChunk(a, 4)).toEqual([[1, 2, 3, 4], [5, 6, 7]]);
   });
 });
 
 describe('utilArrayFlatten', () => {
   it('utilArrayFlatten returns two level array as single level', () => {
     const a = [[1, 2, 3], [4, 5, 6], [7]];
-    assert.deepEqual(util.utilArrayFlatten(a), [1, 2, 3, 4, 5, 6, 7]);
+    expect(util.utilArrayFlatten(a)).toEqual([1, 2, 3, 4, 5, 6, 7]);
   });
 });
 
@@ -147,7 +126,7 @@ describe('utilArrayGroupBy', () => {
         { type: 'Cat', name: 'Leo' }
       ]
     };
-    assert.deepEqual(util.utilArrayGroupBy(pets, 'type'), expected);
+    expect(util.utilArrayGroupBy(pets, 'type')).toEqual(expected);
   });
 
   it('groups by key function', () => {
@@ -160,14 +139,14 @@ describe('utilArrayGroupBy', () => {
       ]
     };
     const keyFn = (item) => item.name.length;
-    assert.deepEqual(util.utilArrayGroupBy(pets, keyFn), expected);
+    expect(util.utilArrayGroupBy(pets, keyFn)).toEqual(expected);
   });
 
   it('undefined key function', () => {
     const expected = {
       undefined: pets
     };
-    assert.deepEqual(util.utilArrayGroupBy(pets), expected);
+    expect(util.utilArrayGroupBy(pets, undefined as never)).toEqual(expected);
   });
 });
 
@@ -186,7 +165,7 @@ describe('utilArrayUniqBy', () => {
       //{ type: 'Dog', name: 'Rover' },   // not unique by type
       //{ type: 'Cat', name: 'Leo' }      // not unique by type
     ];
-    assert.deepEqual(util.utilArrayUniqBy(pets, 'type'), expected);
+    expect(util.utilArrayUniqBy(pets, 'type')).toEqual(expected);
   });
 
   it('groups by key function', () => {
@@ -197,10 +176,10 @@ describe('utilArrayUniqBy', () => {
       { type: 'Cat', name: 'Leo' }
     ];
     const keyFn = (item) => item.name.length;
-    assert.deepEqual(util.utilArrayUniqBy(pets, keyFn), expected);
+    expect(util.utilArrayUniqBy(pets, keyFn)).toEqual(expected);
   });
 
   it('undefined key function', () => {
-    assert.deepEqual(util.utilArrayUniqBy(pets), []);
+    expect(util.utilArrayUniqBy(pets, undefined as never)).toEqual([]);
   });
 });

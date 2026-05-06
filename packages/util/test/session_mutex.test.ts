@@ -1,5 +1,4 @@
-import { afterEach, describe, it } from 'bun:test';
-import { strict as assert } from 'bun:assert';
+import { afterEach, describe, expect, it } from 'bun:test';
 import * as util from '../src/index.ts';
 
 
@@ -14,13 +13,13 @@ describe('utilSessionMutex', () => {
   describe('#lock', () => {
     it('returns true when it gets a lock', () => {
       a = util.utilSessionMutex('name');
-      assert.equal(a.lock(), true);
+      expect(a.lock()).toBe(true);
     });
 
     it('returns true when already locked', () => {
       a = util.utilSessionMutex('name');
       a.lock();
-      assert.equal(a.lock(), true);
+      expect(a.lock()).toBe(true);
     });
 
     it('returns false when the lock is held by another session', () => {
@@ -28,27 +27,27 @@ describe('utilSessionMutex', () => {
       a.lock();
 
       b = util.utilSessionMutex('name');
-      assert.equal(b.lock(), false);
+      expect(b.lock()).toBe(false);
     });
   });
 
   describe('#locked', () => {
     it('returns false by default', () => {
       a = util.utilSessionMutex('name');
-      assert.equal(a.locked(), false);
+      expect(a.locked()).toBe(false);
     });
 
     it('returns true when locked', () => {
       a = util.utilSessionMutex('name');
       a.lock();
-      assert.equal(a.locked(), true);
+      expect(a.locked()).toBe(true);
     });
 
     it('returns false when unlocked', () => {
       a = util.utilSessionMutex('name');
       a.lock();
       a.unlock();
-      assert.equal(a.locked(), false);
+      expect(a.locked()).toBe(false);
     });
   });
 
@@ -59,7 +58,7 @@ describe('utilSessionMutex', () => {
       a.unlock();
 
       b = util.utilSessionMutex('name');
-      assert.equal(b.lock(), true);
+      expect(b.lock()).toBe(true);
     });
 
     it('does nothing when the lock is held by another session', () => {
@@ -69,13 +68,13 @@ describe('utilSessionMutex', () => {
       b = util.utilSessionMutex('name');
       b.unlock();
 
-      assert.equal(a.locked(), true);
+      expect(a.locked()).toBe(true);
     });
 
     it('does nothing when not locked', () => {
       a = util.utilSessionMutex('name');
       a.unlock();
-      assert.equal(a.locked(), false);
+      expect(a.locked()).toBe(false);
     });
   });
 
@@ -84,7 +83,7 @@ describe('utilSessionMutex', () => {
     a.lock();
 
     b = util.utilSessionMutex('b');
-    assert.equal(b.locked(), false);
-    assert.equal(b.lock(), true);
+    expect(b.locked()).toBe(false);
+    expect(b.lock()).toBe(true);
   });
 });

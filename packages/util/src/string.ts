@@ -64,7 +64,7 @@ export function utilHashcode(str: string): number {
  * @param noencode
  * @returns query string
  */
-export function utilQsString(obj: object, noencode: boolean): string {
+export function utilQsString(obj: object, noencode: boolean = false): string {
   // encode everything except special characters used in certain hash parameters:
   // "/" in map states, ":", ",", {" and "}" in background
   function softEncode(s) {

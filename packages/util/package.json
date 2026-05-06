@@ -31,7 +31,7 @@
     "all": "bun run --sequential clean check build test",
     "build": "bun run --parallel 'build:*'",
     "build:js": "bun ./scripts/build.ts",
-    "build:ts": "tsc",
+    "build:ts": "tsc -p tsconfig.build.json",
     "check": "bun run --parallel 'check:*'",
     "check:lint": "eslint .",
     "check:ts": "tsc --noEmit",

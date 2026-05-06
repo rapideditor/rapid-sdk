@@ -15,10 +15,7 @@
 
     // Emit
     "allowJs": true,
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "declarationMap": true,
-    "listEmittedFiles": true,
+    "noEmit": true,
 
     // Interop
     "esModuleInterop": true,
