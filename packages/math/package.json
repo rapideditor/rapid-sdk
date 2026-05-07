@@ -1,6 +1,6 @@
 {
   "name": "@rapid-sdk/math",
-  "version": "1.0.0-pre.4",
+  "version": "1.0.0-pre.5",
   "description": "Collection of rapid-sdk math libraries",
   "homepage": "https://github.com/rapideditor/rapid-sdk/tree/main/packages/math#readme",
   "repository": {
@@ -22,7 +22,7 @@
   "typedocMain": "./src/index.ts",
   "source": "./src/index.ts",
   "exports": {
-    "types": "./dist/math.d.ts",
+    "types": "./dist/index.d.ts",
     "bun": "./src/index.ts",
     "import": "./dist/math.mjs",
     "require": "./dist/math.cjs"

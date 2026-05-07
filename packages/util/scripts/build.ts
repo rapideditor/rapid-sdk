@@ -7,7 +7,7 @@ await Promise.all([
     format: 'cjs',
     external: ['aes-js', 'diacritics'],
     sourcemap: 'linked',
-    naming: 'util.c[ext]'  // .cjs
+    naming: 'index.c[ext]'  // .cjs
   }),
 
   Bun.build({
@@ -17,7 +17,7 @@ await Promise.all([
     format: 'esm',
     external: ['aes-js', 'diacritics'],
     sourcemap: 'linked',
-    naming: 'util.m[ext]'  // .mjs
+    naming: 'index.m[ext]'  // .mjs
   })
 ]);
 

@@ -1,6 +1,6 @@
 {
   "name": "@rapid-sdk/util",
-  "version": "1.0.0-pre.4",
+  "version": "1.0.0-pre.5",
   "description": "Collection of rapid-sdk utility libraries",
   "homepage": "https://github.com/rapideditor/rapid-sdk/tree/main/packages/util#readme",
   "repository": {
@@ -22,10 +22,10 @@
   "typedocMain": "./src/index.ts",
   "source": "./src/index.ts",
   "exports": {
-    "types": "./dist/util.d.ts",
+    "types": "./dist/index.d.ts",
     "bun": "./src/index.ts",
-    "import": "./dist/util.mjs",
-    "require": "./dist/util.cjs"
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
   },
   "scripts": {
     "all": "bun run --sequential clean check build test",

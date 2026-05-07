@@ -40,13 +40,13 @@ describe('math/tiler', () => {
         expect(tiles[0].isVisible).toBe(true);
       });
 
-      it(`tiles have a tileExtent property (z=0, tileSize=${tileSize})`, () => {
-        const tileExtent = tiles[0].tileExtent;
-        expect(tileExtent).toBeInstanceOf(Extent);
-        expect(tileExtent.min[0]).toBe(0);
-        expect(tileExtent.min[1]).toBe(0);
-        expect(tileExtent.max[0]).toBe(WORLD_SIZE);
-        expect(tileExtent.max[1]).toBe(WORLD_SIZE);
+      it(`tiles have a worldExtent property (z=0, tileSize=${tileSize})`, () => {
+        const worldExtent = tiles[0].worldExtent;
+        expect(worldExtent).toBeInstanceOf(Extent);
+        expect(worldExtent.min[0]).toBe(0);
+        expect(worldExtent.min[1]).toBe(0);
+        expect(worldExtent.max[0]).toBe(WORLD_SIZE);
+        expect(worldExtent.max[1]).toBe(WORLD_SIZE);
       });
 
       it(`tiles have a wgs84Extent property (z=0, tileSize=${tileSize})`, () => {
@@ -101,15 +101,15 @@ describe('math/tiler', () => {
         });
       });
 
-      it(`tiles have a tileExtent property (z=1, tileSize=${tileSize})`, () => {
+      it(`tiles have a worldExtent property (z=1, tileSize=${tileSize})`, () => {
         expected.forEach((xyz, i) => {
           const [x, y, z] = xyz;
-          const tileExtent = tiles[i].tileExtent;
+          const worldExtent = tiles[i].worldExtent;
           const tileScale = WORLD_SIZE / (2 ** z);
-          expect(tileExtent.min[0]).toBe(x * tileScale);    // 0..8388608..WORLD_SIZE
-          expect(tileExtent.min[1]).toBe(y * tileScale);
-          expect(tileExtent.max[0]).toBe((x + 1) * tileScale);
-          expect(tileExtent.max[1]).toBe((y + 1) * tileScale);
+          expect(worldExtent.min[0]).toBe(x * tileScale);    // 0..8388608..WORLD_SIZE
+          expect(worldExtent.min[1]).toBe(y * tileScale);
+          expect(worldExtent.max[0]).toBe((x + 1) * tileScale);
+          expect(worldExtent.max[1]).toBe((y + 1) * tileScale);
         });
       });
 
@@ -179,15 +179,15 @@ describe('math/tiler', () => {
         });
       });
 
-      it(`tiles have a tileExtent property (z=2, tileSize=${tileSize})`, () => {
+      it(`tiles have a worldExtent property (z=2, tileSize=${tileSize})`, () => {
         expected.forEach((xyz, i) => {
           const [x, y, z] = xyz;
-          const tileExtent = tiles[i].tileExtent;
+          const worldExtent = tiles[i].worldExtent;
           const tileScale = WORLD_SIZE / (2 ** z);
-          expect(tileExtent.min[0]).toBe(x * tileScale);    // 0..4194304..8388608..12582912..WORLD_SIZE
-          expect(tileExtent.min[1]).toBe(y * tileScale);
-          expect(tileExtent.max[0]).toBe((x + 1) * tileScale);
-          expect(tileExtent.max[1]).toBe((y + 1) * tileScale);
+          expect(worldExtent.min[0]).toBe(x * tileScale);    // 0..4194304..8388608..12582912..WORLD_SIZE
+          expect(worldExtent.min[1]).toBe(y * tileScale);
+          expect(worldExtent.max[0]).toBe((x + 1) * tileScale);
+          expect(worldExtent.max[1]).toBe((y + 1) * tileScale);
         });
       });
 

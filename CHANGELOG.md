@@ -20,6 +20,29 @@ links:
 [@user]: https://github.com/user
 -->
 
+# 1.0.0-pre.5
+#### 2026-May-07
+* ⚠️ World coordinates are now pre-scaled to zoom 16 (range 0..16,777,216 instead of 0..256) ([#306])
+  * This allows renderers to handle world coordinates directly with acceptable float precision, avoiding extra steps to convert to screen coordinates.
+  * `project()`/`unproject()` remain numerically invariant — no callers need to change
+* ⚠️ `Tile.tileExtent` renamed to `Tile.worldExtent` and values are now in zoom-16 world space
+* ⚠️ `SSR` type renamed to `SurroundingRectangle` ([#308])
+* ⚠️ `Edge.target` renamed to `Edge.point`
+* New function `geomGetLongestSurroundingRectangle` — returns the surrounding rectangle whose longest side is maximized, useful for label/icon placement aligned to a building's dominant axis ([#308])
+* Add `Vec4` and `Quad` type aliases and math constants: `WORLD_ZOOM`, `WORLD_SIZE`, `WORLD_HALF`, `ANGLE_EPSILON` ([#307])
+* `Extent.rectangle()` returns type `Vec4`, `Extent.polygon()` returns type `Quad` ([#307])
+* perf: scalar overloads for `vecDot`, `vecCross`, `vecLengthSquare`, `geoSphericalDistance`, `geomLineIntersection`, and more ([#307])
+* `utilAesEncrypt` / `utilAesDecrypt` key parameter is now optional ([#300])
+* `utilQsString` `noencode` parameter is now optional
+* Upgrade to TypeScript 6
+* Dependency updates, CI improvements
+
+[#300]: https://github.com/rapideditor/rapid-sdk/issues/300
+[#306]: https://github.com/rapideditor/rapid-sdk/issues/306
+[#307]: https://github.com/rapideditor/rapid-sdk/issues/307
+[#308]: https://github.com/rapideditor/rapid-sdk/issues/308
+
+
 # 1.0.0-pre.4
 #### 2025-Oct-22
 *  This project uses [`bun`](https://bun.com/) now, for simpler developer tooling ([#298])

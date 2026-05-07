@@ -7,7 +7,7 @@ await Promise.all([
     format: 'cjs',
     external: ['d3-polygon'],
     sourcemap: 'linked',
-    naming: 'math.c[ext]'  // .cjs
+    naming: 'index.c[ext]'  // .cjs
   }),
 
   Bun.build({
@@ -17,7 +17,7 @@ await Promise.all([
     format: 'esm',
     external: ['d3-polygon'],
     sourcemap: 'linked',
-    naming: 'math.m[ext]'  // .mjs
+    naming: 'index.m[ext]'  // .mjs
   })
 ]);
 

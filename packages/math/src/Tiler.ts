@@ -215,8 +215,8 @@ export class Tiler {
         const tile: Tile = {
           id: xyz.toString(),
           xyz: xyz,
-          tileExtent: tileExtent,
           wgs84Extent: wgs84Extent,
+          worldExtent: tileExtent,
           isVisible: isVisible
         };
 

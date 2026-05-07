@@ -48,10 +48,10 @@ export interface Tile {
   id: string;
   /** tile coordinate array ex. [0,0,0] */
   xyz: Vec3;
-  /** Extent in world coordinates (z=WORLD_ZOOM scale, range 0..WORLD_SIZE) */
-  tileExtent: Extent;
-  /** Extent in WGS84 coordinates(lon,lat) */
+  /** Extent in WGS84 coordinates [lon,lat] */
   wgs84Extent: Extent;
+  /** Extent in world coordinates [x,y] (at WORLD_ZOOM scale, range 0..WORLD_SIZE) */
+  worldExtent: Extent;
   /** true if the tile is visible, false if not */
   isVisible: boolean;
 };
