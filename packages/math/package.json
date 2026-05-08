@@ -24,8 +24,8 @@
   "exports": {
     "types": "./dist/index.d.ts",
     "bun": "./src/index.ts",
-    "import": "./dist/math.mjs",
-    "require": "./dist/math.cjs"
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
   },
   "scripts": {
     "all": "bun run --sequential clean check build test",
