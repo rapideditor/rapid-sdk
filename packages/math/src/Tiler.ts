@@ -137,9 +137,9 @@ export class Tiler {
     // Un-rotate the polygons back to where they would be on a north-aligned grid.
     if (hasRotation) {
       const center = viewport.center();
-      screenPolygon = geomRotatePoints(screenPolygon, -rotation, center) as Quad;
-      marginPolygon = geomRotatePoints(marginPolygon, -rotation, center) as Quad;
-      visiblePolygon = geomRotatePoints(visiblePolygon, -rotation, center) as Quad;
+      screenPolygon = geomRotatePoints(screenPolygon, -rotation, center);
+      marginPolygon = geomRotatePoints(marginPolygon, -rotation, center);
+      visiblePolygon = geomRotatePoints(visiblePolygon, -rotation, center);
     }
     if (ms) {  // now that visible is un-rotated, we can apply margin to it if needed.
       visiblePolygon = _addMargin(visiblePolygon, ms);

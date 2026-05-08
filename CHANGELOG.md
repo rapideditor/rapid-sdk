@@ -21,7 +21,7 @@ links:
 -->
 
 # 1.0.0-pre.5
-#### 2026-May-07
+#### 2026-May-??
 * ⚠️ World coordinates are now pre-scaled to zoom 16 (range 0..16,777,216 instead of 0..256) ([#306])
   * This allows renderers to handle world coordinates directly with acceptable float precision, avoiding extra steps to convert to screen coordinates.
   * `project()`/`unproject()` remain numerically invariant — no callers need to change
@@ -29,6 +29,7 @@ links:
 * ⚠️ `SSR` type renamed to `SurroundingRectangle` ([#308])
 * ⚠️ `Edge.target` renamed to `Edge.point`
 * New function `geomGetLongestSurroundingRectangle` — returns the surrounding rectangle whose longest side is maximized, useful for label/icon placement aligned to a building's dominant axis ([#308])
+* New geometry point helpers `geomReflectPoints` and `geomScalePoints`, plus tuple-preserving generic typing for `geomRotatePoints`, `geomReflectPoints`, and `geomScalePoints`
 * Add `Vec4` and `Quad` type aliases and math constants: `WORLD_ZOOM`, `WORLD_SIZE`, `WORLD_HALF`, `ANGLE_EPSILON` ([#307])
 * `Extent.rectangle()` returns type `Vec4`, `Extent.polygon()` returns type `Quad` ([#307])
 * perf: scalar overloads for `vecDot`, `vecCross`, `vecLengthSquare`, `geoSphericalDistance`, `geomLineIntersection`, and more ([#307])

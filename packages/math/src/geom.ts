@@ -9,7 +9,7 @@ import { Extent } from './Extent.ts';
 import { numWrap } from './number.ts';
 import { vecLength } from './vector.ts';
 
-import type { Quad, SurroundingRectangle, Vec2 } from './types.ts';
+import type { SurroundingRectangle, Vec2 } from './types.ts';
 
 
 /** Test whether two given coordinates describe the same edge
@@ -25,33 +25,101 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
 }
 
 
-/** Rotate all points counterclockwise around a pivot point by given angle (in radians), without modifying the input points array
- * @param points target points
- * @param angle angle in radians
- * @param around pivot point
- * @returns rotated points
+/** Reflect all points across a line axis, without modifying the input points array
+ * @remarks Axis is the infinite line through `axis[0]` and `axis[1]`.
+ * @param points Array of points to reflect
+ * @param axis reflection axis as `[start, end]`
+ * @returns reflected points
  * @example
- * const points = [[1, 0], [1, 1]];
- * const around = [0, 0];
- * geomRotatePoints(points, Math.PI, around);   // returns [[-1, 0], [-1, -1]]
+ * const points = [[0, 0], [2, 2], [3, 1]];
+ * geomReflectPoints(points, [[0, 1], [2, 1]]);   // returns [[0, 2], [2, 0], [3, 1]]
  */
-export function geomRotatePoints(points: Vec2[], angle: number, around: Vec2): Vec2[] {
+export function geomReflectPoints<T extends Vec2[]>(points: T, axis: [Vec2, Vec2]): T {
   const result: Vec2[] = new Array(points.length);  // prealloc
-  const sin = Math.sin(angle);
-  const cos = Math.cos(angle);
-  const aroundX = around[0];
-  const aroundY = around[1];
+  const [axisA, axisB] = axis;
+  const [axisAX, axisAY] = axisA;
+  const dx = axisB[0] - axisAX;
+  const dy = axisB[1] - axisAY;
+  const denom = dx * dx + dy * dy;
+
+  // Degenerate axis - keep geometry unchanged.
+  if (!denom) {
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      result[i] = [point[0], point[1]];
+    }
+    return result as T;
+  }
+
+  // reflect p across ab
+  // http://math.stackexchange.com/questions/65503/point-reflection-over-a-line
+  const a = (dx * dx - dy * dy) / denom;
+  const b = (2 * dx * dy) / denom;
 
   for (let i = 0; i < points.length; i++) {
     const point = points[i];
-    const radialX = point[0] - aroundX;
-    const radialY = point[1] - aroundY;
+    const radialX = point[0] - axisAX;
+    const radialY = point[1] - axisAY;
     result[i] = [
-      radialX * cos - radialY * sin + aroundX,
-      radialX * sin + radialY * cos + aroundY
+      a * radialX + b * radialY + axisAX,
+      b * radialX - a * radialY + axisAY
     ];
   }
-  return result;
+  return result as T;
+}
+
+
+/** Rotate all points counterclockwise around a pivot point by given angle (in radians), without modifying the input points array
+ * @param points Array of points to rotate
+ * @param angle angle in radians
+ * @param origin pivot point
+ * @returns rotated points
+ * @example
+ * const points = [[1, 0], [1, 1]];
+ * const origin = [0, 0];
+ * geomRotatePoints(points, Math.PI, origin);   // returns [[-1, 0], [-1, -1]]
+ */
+export function geomRotatePoints<T extends Vec2[]>(points: T, angle: number, origin: Vec2): T {
+  const result: Vec2[] = new Array(points.length);  // prealloc
+  const [originX, originY] = origin;
+  const sin = Math.sin(angle);
+  const cos = Math.cos(angle);
+
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    const radialX = point[0] - originX;
+    const radialY = point[1] - originY;
+    result[i] = [
+      radialX * cos - radialY * sin + originX,
+      radialX * sin + radialY * cos + originY
+    ];
+  }
+  return result as T;
+}
+
+
+/** Scale all points relative to an origin point, without modifying the input points array
+ * @param points Array of points to scale
+ * @param scaleFactor scale factor (`1` keeps size unchanged)
+ * @param origin origin point
+ * @returns scaled points
+ * @example
+ * const points = [[1, 0], [2, 0]];
+ * const origin = [0, 0];
+ * geomScalePoints(points, 2, origin);   // returns [[2, 0], [4, 0]]
+ */
+export function geomScalePoints<T extends Vec2[]>(points: T, scaleFactor: number, origin: Vec2): T {
+  const result: Vec2[] = new Array(points.length);  // prealloc
+  const [originX, originY] = origin;
+
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    result[i] = [
+      originX + scaleFactor * (point[0] - originX),
+      originY + scaleFactor * (point[1] - originY)
+    ];
+  }
+  return result as T;
 }
 
 
@@ -323,7 +391,7 @@ export function getSurroundingRectangle(
   }
 
   return {
-    polygon: geomRotatePoints(bestExtent.polygon(), bestAngle, centroid) as Quad,
+    polygon: geomRotatePoints(bestExtent.polygon(), bestAngle, centroid),
     angle: bestAngle
   };
 }

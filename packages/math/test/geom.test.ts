@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, expectTypeOf, it } from 'bun:test';
 import * as math from '../src/index.ts';
-import type { Vec2 } from '../src/index.ts';
+import type { Quad, Vec2 } from '../src/index.ts';
 
 
 function rectangleSideLengths(rectangle) {
@@ -72,6 +72,99 @@ describe('math/geom', () => {
       expect(result[0][1]).toBeCloseTo(0, 9);
       expect(result[1][0]).toBeCloseTo(1, 9);
       expect(result[1][1]).toBeCloseTo(-1, 9);
+    });
+
+    it('returns a new array and does not mutate input', () => {
+      const points: Vec2[] = [[5, 0], [5, 1]];
+      const original = points.map(point => [point[0], point[1]] as Vec2);
+      const result = math.geomRotatePoints(points, Math.PI, [0, 0]);
+
+      expect(result).not.toBe(points);
+      expect(points).toEqual(original);
+    });
+  });
+
+  describe('geomReflectPoints', () => {
+    it('reflects points across a horizontal axis', () => {
+      const points: Vec2[] = [[0, 0], [2, 2], [3, 1]];
+      const result = math.geomReflectPoints(points, [[0, 1], [2, 1]]);
+      expect(result[0][0]).toBeCloseTo(0, 9);
+      expect(result[0][1]).toBeCloseTo(2, 9);
+      expect(result[1][0]).toBeCloseTo(2, 9);
+      expect(result[1][1]).toBeCloseTo(0, 9);
+      expect(result[2][0]).toBeCloseTo(3, 9);
+      expect(result[2][1]).toBeCloseTo(1, 9);
+    });
+
+    it('preserves tuple shape for Quad inputs', () => {
+      const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
+      const reflected: Quad = math.geomReflectPoints(quad, [[0, 1], [4, 1]]);
+      expect(reflected).toHaveLength(5);
+      expect(reflected[0][0]).toBeCloseTo(0, 9);
+      expect(reflected[0][1]).toBeCloseTo(2, 9);
+    });
+
+    it('returns unchanged copy for degenerate axis', () => {
+      const points: Vec2[] = [[0, 0], [2, 2], [3, 1]];
+      const result = math.geomReflectPoints(points, [[1, 1], [1, 1]]);
+      expect(result).toEqual(points);
+      expect(result).not.toBe(points);
+    });
+
+    it('returns a new array and does not mutate input', () => {
+      const points: Vec2[] = [[0, 0], [2, 2], [3, 1]];
+      const original = points.map(point => [point[0], point[1]] as Vec2);
+      const result = math.geomReflectPoints(points, [[0, 1], [2, 1]]);
+
+      expect(result).not.toBe(points);
+      expect(points).toEqual(original);
+    });
+  });
+
+  describe('geomScalePoints', () => {
+    it('scales points around [0, 0]', () => {
+      const points: Vec2[] = [[1, 0], [2, 1]];
+      const result = math.geomScalePoints(points, 2, [0, 0]);
+      expect(result[0][0]).toBeCloseTo(2, 9);
+      expect(result[0][1]).toBeCloseTo(0, 9);
+      expect(result[1][0]).toBeCloseTo(4, 9);
+      expect(result[1][1]).toBeCloseTo(2, 9);
+    });
+
+    it('scales points around an arbitrary anchor', () => {
+      const points: Vec2[] = [[3, 1], [1, 3]];
+      const result = math.geomScalePoints(points, 0.5, [1, 1]);
+      expect(result[0][0]).toBeCloseTo(2, 9);
+      expect(result[0][1]).toBeCloseTo(1, 9);
+      expect(result[1][0]).toBeCloseTo(1, 9);
+      expect(result[1][1]).toBeCloseTo(2, 9);
+    });
+
+    it('preserves tuple shape for Quad inputs', () => {
+      const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
+      const scaled: Quad = math.geomScalePoints(quad, 0.5, [2, 1]);
+      expect(scaled).toHaveLength(5);
+      expect(scaled[0][0]).toBeCloseTo(1, 9);
+      expect(scaled[0][1]).toBeCloseTo(0.5, 9);
+    });
+
+    it('returns a new array and does not mutate input', () => {
+      const points: Vec2[] = [[1, 0], [2, 1]];
+      const original = points.map(point => [point[0], point[1]] as Vec2);
+      const result = math.geomScalePoints(points, 2, [0, 0]);
+
+      expect(result).not.toBe(points);
+      expect(points).toEqual(original);
+    });
+  });
+
+  describe('type tests', () => {
+    it('preserves Quad tuple shape in point transforms', () => {
+      const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
+
+      expectTypeOf(math.geomRotatePoints(quad, Math.PI / 3, [0, 0])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomReflectPoints(quad, [[0, 1], [4, 1]])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomScalePoints(quad, 0.5, [2, 1])).toEqualTypeOf<Quad>();
     });
   });
 
