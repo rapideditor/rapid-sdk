@@ -28,6 +28,7 @@ import { Extent } from '@rapid-sdk/math';    // ESM import named
 - 🌐 `geo.ts`: Geographic (spherical) math functions
 - 📈 `geom.ts`: Geometric (planar) math functions
 - 🔢 `number.ts`: Number math functions
+- 📽️ `proj.ts`: Projection math functions
 - 🀄️ `Tiler.ts`: Tiler class for splitting the world into rectangular tiles
 - 🕹️ `Transform.ts`: Transform class for managing translation, zoom, rotation
 - 💭 `types.ts`: TypeScript Types

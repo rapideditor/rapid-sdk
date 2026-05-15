@@ -3,11 +3,12 @@
  * @module
  */
 
-import { TAU, DEG2RAD, RAD2DEG, HALF_PI, MAX_PHI, MIN_PHI, WORLD_HALF, WORLD_SIZE, WORLD_ZOOM, ANGLE_EPSILON } from './constants.ts';
+import { TAU, HALF_PI, ANGLE_EPSILON } from './constants.ts';
 import { Extent } from './Extent.ts';
-import { numClamp, numWrap } from './number.ts';
+import { numWrap } from './number.ts';
+import { projScreenToWorld, projWgs84ToWorld, projWorldToScreen, projWorldToWgs84 } from './proj.ts';
 import { Transform } from './Transform.ts';
-import { vecRotate, vecScale, vecCeil } from './vector.ts';
+import { vecScale, vecCeil } from './vector.ts';
 
 import type { Quad, TransformProps, Vec2 } from './types.ts';
 
@@ -96,7 +97,6 @@ export class Viewport {
     return this.worldToScreen(this.wgs84ToWorld(loc), includeRotation);
   }
 
-
   /** Unprojects a coordinate from given Cartesian [x,y] to Lon/Lat [λ,φ]
    * @param point Cartesian [x,y]
    * @param includeRotation - if true, consider rotation when working with the screen coordinate
@@ -111,19 +111,14 @@ export class Viewport {
     return this.worldToWgs84(this.screenToWorld(point, includeRotation));
   }
 
-
   /** Converts from Lon/Lat [λ,φ] WGS84 coordinate to Cartesian [x,y] world coordinate
    * @see https://gis.stackexchange.com/questions/66247/what-is-the-formula-for-calculating-world-coordinates-for-a-given-latlng-in-goog
    * @param    loc - The WGS84 coordinate Lon/Lat [λ,φ]
    * @returns  The world coordinate [x,y]
    */
   wgs84ToWorld(loc: Vec2): Vec2 {
-    const x = (loc[0] + 180) / 360 * WORLD_SIZE;
-    const phi = numClamp(loc[1] * DEG2RAD, MIN_PHI, MAX_PHI);
-    const y = ((1 - Math.log(Math.tan(phi) + 1 / Math.cos(phi)) / Math.PI) / 2) * WORLD_SIZE;
-    return [x, y];
+    return projWgs84ToWorld(loc);
   }
-
 
   /** Converts from Cartesian [x,y] world coordinate to Lon/Lat [λ,φ] WGS84 coordinate
    * @see https://gis.stackexchange.com/questions/66247/what-is-the-formula-for-calculating-world-coordinates-for-a-given-latlng-in-goog
@@ -131,13 +126,8 @@ export class Viewport {
    * @returns  The WGS84 coordinate Lon/Lat [λ,φ]
    */
   worldToWgs84(world: Vec2): Vec2 {
-    const lon = (world[0] / WORLD_SIZE) * 360 - 180;
-    const n = Math.PI - TAU * (world[1] / WORLD_SIZE);
-    const phi = Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
-    const lat = numClamp(phi, MIN_PHI, MAX_PHI) * RAD2DEG;
-    return [lon, lat];
+    return projWorldToWgs84(world);
   }
-
 
   /** Converts from world coordinate to screen coordinate applying view transform
    * @param    world  - the world coordinate [x,y]
@@ -145,21 +135,8 @@ export class Viewport {
    * @returns  The screen coordinate [x,y]
    */
   worldToScreen(world: Vec2, includeRotation?: boolean): Vec2 {
-    const { x, y, z, r } = this._transform;
-    const scale = 2 ** (z - WORLD_ZOOM);  // world coords are pre-scaled to WORLD_ZOOM
-
-    const point: Vec2 = [
-      ((world[0] - WORLD_HALF) * scale) + x,
-      ((world[1] - WORLD_HALF) * scale) + y
-    ];
-
-    if (includeRotation && Math.abs(r) > ANGLE_EPSILON) {
-      return vecRotate(point, r, this.center());
-    } else {
-      return point;
-    }
+    return projWorldToScreen(world, this._transform.props, this.center(), includeRotation);
   }
-
 
   /** Converts from screen coordinate to world coordinate applying view transform
    * @param    screen  - the screen coordinate [x,y]
@@ -167,18 +144,7 @@ export class Viewport {
    * @returns  The world coordinate [x,y]
    */
   screenToWorld(screen: Vec2, includeRotation?: boolean): Vec2 {
-    const { x, y, z, r } = this._transform;
-
-    if (includeRotation && Math.abs(r) > ANGLE_EPSILON) {
-      screen = vecRotate(screen, -r, this.center());
-    }
-
-    const scale = 2 ** (z - WORLD_ZOOM);  // world coords are pre-scaled to WORLD_ZOOM
-    const point: Vec2 = [
-      ((screen[0] - x) / scale) + WORLD_HALF,
-      ((screen[1] - y) / scale) + WORLD_HALF
-    ];
-    return point;
+    return projScreenToWorld(screen, this._transform.props, this.center(), includeRotation);
   }
 
 

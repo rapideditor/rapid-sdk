@@ -33,7 +33,7 @@ function assertRectangleContainsPoints(rectangle, points) {
 
 function offAxisLShapedBuildingPoints() {
   const footprint: Vec2[] = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
-  return math.geomRotatePoints(footprint, Math.PI / 6, [0, 0]);
+  return math.geomRotate(footprint, Math.PI / 6, [0, 0]);
 }
 
 describe('math/geom', () => {
@@ -51,12 +51,12 @@ describe('math/geom', () => {
     });
   });
 
-  describe('geomRotatePoints', () => {
+  describe('geomRotate', () => {
     it('rotates points around [0, 0]', () => {
       const points: Vec2[] = [[5, 0], [5, 1]];
       const angle = Math.PI;
       const around: Vec2 = [0, 0];
-      const result = math.geomRotatePoints(points, angle, around);
+      const result = math.geomRotate(points, angle, around);
       expect(result[0][0]).toBeCloseTo(-5, 9);
       expect(result[0][1]).toBeCloseTo(0, 9);
       expect(result[1][0]).toBeCloseTo(-5, 9);
@@ -67,7 +67,7 @@ describe('math/geom', () => {
       const points: Vec2[] = [[5, 0], [5, 1]];
       const angle = Math.PI;
       const around: Vec2 = [3, 0];
-      const result = math.geomRotatePoints(points, angle, around);
+      const result = math.geomRotate(points, angle, around);
       expect(result[0][0]).toBeCloseTo(1, 9);
       expect(result[0][1]).toBeCloseTo(0, 9);
       expect(result[1][0]).toBeCloseTo(1, 9);
@@ -77,17 +77,17 @@ describe('math/geom', () => {
     it('returns a new array and does not mutate input', () => {
       const points: Vec2[] = [[5, 0], [5, 1]];
       const original = points.map(point => [point[0], point[1]] as Vec2);
-      const result = math.geomRotatePoints(points, Math.PI, [0, 0]);
+      const result = math.geomRotate(points, Math.PI, [0, 0]);
 
       expect(result).not.toBe(points);
       expect(points).toEqual(original);
     });
   });
 
-  describe('geomReflectPoints', () => {
+  describe('geomReflect', () => {
     it('reflects points across a horizontal axis', () => {
       const points: Vec2[] = [[0, 0], [2, 2], [3, 1]];
-      const result = math.geomReflectPoints(points, [[0, 1], [2, 1]]);
+      const result = math.geomReflect(points, [[0, 1], [2, 1]]);
       expect(result[0][0]).toBeCloseTo(0, 9);
       expect(result[0][1]).toBeCloseTo(2, 9);
       expect(result[1][0]).toBeCloseTo(2, 9);
@@ -98,7 +98,7 @@ describe('math/geom', () => {
 
     it('preserves tuple shape for Quad inputs', () => {
       const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
-      const reflected: Quad = math.geomReflectPoints(quad, [[0, 1], [4, 1]]);
+      const reflected: Quad = math.geomReflect(quad, [[0, 1], [4, 1]]);
       expect(reflected).toHaveLength(5);
       expect(reflected[0][0]).toBeCloseTo(0, 9);
       expect(reflected[0][1]).toBeCloseTo(2, 9);
@@ -106,7 +106,7 @@ describe('math/geom', () => {
 
     it('returns unchanged copy for degenerate axis', () => {
       const points: Vec2[] = [[0, 0], [2, 2], [3, 1]];
-      const result = math.geomReflectPoints(points, [[1, 1], [1, 1]]);
+      const result = math.geomReflect(points, [[1, 1], [1, 1]]);
       expect(result).toEqual(points);
       expect(result).not.toBe(points);
     });
@@ -114,17 +114,17 @@ describe('math/geom', () => {
     it('returns a new array and does not mutate input', () => {
       const points: Vec2[] = [[0, 0], [2, 2], [3, 1]];
       const original = points.map(point => [point[0], point[1]] as Vec2);
-      const result = math.geomReflectPoints(points, [[0, 1], [2, 1]]);
+      const result = math.geomReflect(points, [[0, 1], [2, 1]]);
 
       expect(result).not.toBe(points);
       expect(points).toEqual(original);
     });
   });
 
-  describe('geomScalePoints', () => {
+  describe('geomScale', () => {
     it('scales points around [0, 0]', () => {
       const points: Vec2[] = [[1, 0], [2, 1]];
-      const result = math.geomScalePoints(points, 2, [0, 0]);
+      const result = math.geomScale(points, 2, [0, 0]);
       expect(result[0][0]).toBeCloseTo(2, 9);
       expect(result[0][1]).toBeCloseTo(0, 9);
       expect(result[1][0]).toBeCloseTo(4, 9);
@@ -133,7 +133,7 @@ describe('math/geom', () => {
 
     it('scales points around an arbitrary anchor', () => {
       const points: Vec2[] = [[3, 1], [1, 3]];
-      const result = math.geomScalePoints(points, 0.5, [1, 1]);
+      const result = math.geomScale(points, 0.5, [1, 1]);
       expect(result[0][0]).toBeCloseTo(2, 9);
       expect(result[0][1]).toBeCloseTo(1, 9);
       expect(result[1][0]).toBeCloseTo(1, 9);
@@ -142,7 +142,7 @@ describe('math/geom', () => {
 
     it('preserves tuple shape for Quad inputs', () => {
       const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
-      const scaled: Quad = math.geomScalePoints(quad, 0.5, [2, 1]);
+      const scaled: Quad = math.geomScale(quad, 0.5, [2, 1]);
       expect(scaled).toHaveLength(5);
       expect(scaled[0][0]).toBeCloseTo(1, 9);
       expect(scaled[0][1]).toBeCloseTo(0.5, 9);
@@ -151,10 +151,43 @@ describe('math/geom', () => {
     it('returns a new array and does not mutate input', () => {
       const points: Vec2[] = [[1, 0], [2, 1]];
       const original = points.map(point => [point[0], point[1]] as Vec2);
-      const result = math.geomScalePoints(points, 2, [0, 0]);
+      const result = math.geomScale(points, 2, [0, 0]);
 
       expect(result).not.toBe(points);
       expect(points).toEqual(original);
+    });
+  });
+
+  describe('geomToLocal / geomToOrigin', () => {
+    it('maps points to local coordinates and back', () => {
+      const points: Vec2[] = [[1000, 2000], [1005, 2003], [999, 1990]];
+      const origin: Vec2 = [1000, 2000];
+      const local = math.geomToLocal(points, origin);
+      const restored = math.geomToOrigin(local, origin);
+
+      expect(local).toEqual([[0, 0], [5, 3], [-1, -10]]);
+      expect(restored).toEqual(points);
+    });
+
+    it('returns new arrays and does not mutate input', () => {
+      const points: Vec2[] = [[1000, 2000], [1005, 2003]];
+      const original = points.map(point => [point[0], point[1]] as Vec2);
+
+      const local = math.geomToLocal(points, [1000, 2000]);
+      const global = math.geomToOrigin(local, [1000, 2000]);
+
+      expect(local).not.toBe(points);
+      expect(global).not.toBe(local);
+      expect(points).toEqual(original);
+    });
+
+    it('preserves tuple shape for Quad inputs', () => {
+      const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
+      const local: Quad = math.geomToLocal(quad, [2, 1]);
+      const restored: Quad = math.geomToOrigin(local, [2, 1]);
+
+      expect(local).toHaveLength(5);
+      expect(restored).toEqual(quad);
     });
   });
 
@@ -162,9 +195,11 @@ describe('math/geom', () => {
     it('preserves Quad tuple shape in point transforms', () => {
       const quad: Quad = [[0, 0], [4, 0], [4, 2], [0, 2], [0, 0]];
 
-      expectTypeOf(math.geomRotatePoints(quad, Math.PI / 3, [0, 0])).toEqualTypeOf<Quad>();
-      expectTypeOf(math.geomReflectPoints(quad, [[0, 1], [4, 1]])).toEqualTypeOf<Quad>();
-      expectTypeOf(math.geomScalePoints(quad, 0.5, [2, 1])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomRotate(quad, Math.PI / 3, [0, 0])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomReflect(quad, [[0, 1], [4, 1]])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomScale(quad, 0.5, [2, 1])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomToLocal(quad, [2, 1])).toEqualTypeOf<Quad>();
+      expectTypeOf(math.geomToOrigin(quad, [2, 1])).toEqualTypeOf<Quad>();
     });
   });
 

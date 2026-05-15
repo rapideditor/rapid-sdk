@@ -8,7 +8,7 @@
 import { ANGLE_EPSILON, MAX_Z, MIN_Z, TAU, WORLD_SIZE } from './constants.ts';
 import { Extent } from './Extent.ts';
 import { Viewport } from './Viewport.ts';
-import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotatePoints } from './geom.ts';
+import { geomPathHasIntersections, geomPolygonIntersectsPolygon, geomRotate } from './geom.ts';
 import { numClamp, numWrap } from './number.ts';
 
 import type { Quad, Tile, TileResult, Vec2, Vec3 } from './types.ts';
@@ -137,9 +137,9 @@ export class Tiler {
     // Un-rotate the polygons back to where they would be on a north-aligned grid.
     if (hasRotation) {
       const center = viewport.center();
-      screenPolygon = geomRotatePoints(screenPolygon, -rotation, center);
-      marginPolygon = geomRotatePoints(marginPolygon, -rotation, center);
-      visiblePolygon = geomRotatePoints(visiblePolygon, -rotation, center);
+      screenPolygon = geomRotate(screenPolygon, -rotation, center);
+      marginPolygon = geomRotate(marginPolygon, -rotation, center);
+      visiblePolygon = geomRotate(visiblePolygon, -rotation, center);
     }
     if (ms) {  // now that visible is un-rotated, we can apply margin to it if needed.
       visiblePolygon = _addMargin(visiblePolygon, ms);

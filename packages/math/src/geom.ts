@@ -32,9 +32,9 @@ export function geomEdgeEqual(a: Vec2, b: Vec2): boolean {
  * @returns reflected points
  * @example
  * const points = [[0, 0], [2, 2], [3, 1]];
- * geomReflectPoints(points, [[0, 1], [2, 1]]);   // returns [[0, 2], [2, 0], [3, 1]]
+ * geomReflect(points, [[0, 1], [2, 1]]);   // returns [[0, 2], [2, 0], [3, 1]]
  */
-export function geomReflectPoints<T extends Vec2[]>(points: T, axis: [Vec2, Vec2]): T {
+export function geomReflect<T extends Vec2[]>(points: T, axis: [Vec2, Vec2]): T {
   const result: Vec2[] = new Array(points.length);  // prealloc
   const [axisA, axisB] = axis;
   const [axisAX, axisAY] = axisA;
@@ -77,9 +77,9 @@ export function geomReflectPoints<T extends Vec2[]>(points: T, axis: [Vec2, Vec2
  * @example
  * const points = [[1, 0], [1, 1]];
  * const origin = [0, 0];
- * geomRotatePoints(points, Math.PI, origin);   // returns [[-1, 0], [-1, -1]]
+ * geomRotate(points, Math.PI, origin);   // returns [[-1, 0], [-1, -1]]
  */
-export function geomRotatePoints<T extends Vec2[]>(points: T, angle: number, origin: Vec2): T {
+export function geomRotate<T extends Vec2[]>(points: T, angle: number, origin: Vec2): T {
   const result: Vec2[] = new Array(points.length);  // prealloc
   const [originX, originY] = origin;
   const sin = Math.sin(angle);
@@ -106,9 +106,9 @@ export function geomRotatePoints<T extends Vec2[]>(points: T, angle: number, ori
  * @example
  * const points = [[1, 0], [2, 0]];
  * const origin = [0, 0];
- * geomScalePoints(points, 2, origin);   // returns [[2, 0], [4, 0]]
+ * geomScale(points, 2, origin);   // returns [[2, 0], [4, 0]]
  */
-export function geomScalePoints<T extends Vec2[]>(points: T, scaleFactor: number, origin: Vec2): T {
+export function geomScale<T extends Vec2[]>(points: T, scaleFactor: number, origin: Vec2): T {
   const result: Vec2[] = new Array(points.length);  // prealloc
   const [originX, originY] = origin;
 
@@ -118,6 +118,48 @@ export function geomScalePoints<T extends Vec2[]>(points: T, scaleFactor: number
       originX + scaleFactor * (point[0] - originX),
       originY + scaleFactor * (point[1] - originY)
     ];
+  }
+  return result as T;
+}
+
+
+/** Convert points from global coordinates into a local coordinate frame.
+ * @remarks Subtracting a local origin is useful before precision-sensitive geometry
+ * operations (for example cross products used in centroid/area calculations).
+ * @param points target points
+ * @param origin local frame origin
+ * @returns points in local frame
+ * @example
+ * const world = [[1000, 2000], [1005, 2003]];
+ * geomToLocal(world, [1000, 2000]);   // returns [[0, 0], [5, 3]]
+ */
+export function geomToLocal<T extends Vec2[]>(points: T, origin: Vec2): T {
+  const result: Vec2[] = new Array(points.length);  // prealloc
+  const [originX, originY] = origin;
+
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    result[i] = [point[0] - originX, point[1] - originY];
+  }
+  return result as T;
+}
+
+
+/** Convert points from a local coordinate frame back into global coordinates.
+ * @param points points in local frame
+ * @param origin local frame origin
+ * @returns points in global coordinates
+ * @example
+ * const local = [[0, 0], [5, 3]];
+ * geomToOrigin(local, [1000, 2000]);   // returns [[1000, 2000], [1005, 2003]]
+ */
+export function geomToOrigin<T extends Vec2[]>(points: T, origin: Vec2): T {
+  const result: Vec2[] = new Array(points.length);  // prealloc
+  const [originX, originY] = origin;
+
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    result[i] = [point[0] + originX, point[1] + originY];
   }
   return result as T;
 }
@@ -391,7 +433,7 @@ export function getSurroundingRectangle(
   }
 
   return {
-    polygon: geomRotatePoints(bestExtent.polygon(), bestAngle, centroid),
+    polygon: geomRotate(bestExtent.polygon(), bestAngle, centroid),
     angle: bestAngle
   };
 }

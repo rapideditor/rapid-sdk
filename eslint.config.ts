@@ -1,9 +1,13 @@
 import globals from 'globals';
+import importPlugin from 'eslint-plugin-import';
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import type { ConfigWithExtends } from 'typescript-eslint';
 
 const rules = {
+  plugins: {
+    import: importPlugin
+  },
   rules: {
     'accessor-pairs': 'error',
     'array-callback-return': 'warn',
@@ -26,7 +30,7 @@ const rules = {
     'no-console': 'warn',
     'no-constructor-return': 'error',
     'no-div-regex': 'error',
-    'no-duplicate-imports': 'warn',
+    'no-duplicate-imports': 'off',   // using 'import/no-duplicates' instead
     'no-eq-null': 'error',
     'no-eval': 'error',
     'no-extend-native': 'error',
@@ -88,12 +92,16 @@ const rules = {
     'space-unary-ops': 'error',
     'wrap-regex': 'off',
 
+    // TypeScript
     '@typescript-eslint/array-type': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-inferrable-types': ['warn', { 'ignoreParameters': true }],
     '@typescript-eslint/no-this-alias': 'warn',
-    '@typescript-eslint/no-unused-vars': ['warn', { 'vars': 'all', 'args': 'none', 'caughtErrors': 'none', 'destructuredArrayIgnorePattern': '^_' }]
+    '@typescript-eslint/no-unused-vars': ['warn', { 'vars': 'all', 'args': 'none', 'caughtErrors': 'none', 'destructuredArrayIgnorePattern': '^_' }],
+
+    // Import
+    'import/no-duplicates': ['warn', { 'prefer-inline': false }]
   }
 } satisfies ConfigWithExtends;
 

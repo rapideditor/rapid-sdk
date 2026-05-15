@@ -5,6 +5,7 @@
 
 export * from './aes.ts';
 export * from './array.ts';
+export * from './iterable.ts';
 export * from './object.ts';
 export * from './osm.ts';
 export * from './session_mutex.ts';

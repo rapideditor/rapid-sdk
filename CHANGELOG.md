@@ -22,14 +22,19 @@ links:
 
 # 1.0.0-pre.5
 #### 2026-May-??
-* ⚠️ World coordinates are now pre-scaled to zoom 16 (range 0..16,777,216 instead of 0..256) ([#306])
+* Projection and "world coordinate" changes:
+  * ⚠️ World coordinates are now pre-scaled to zoom 16 (range 0..16,777,216 instead of 0..256) ([#306])
   * This allows renderers to handle world coordinates directly with acceptable float precision, avoiding extra steps to convert to screen coordinates.
-  * `project()`/`unproject()` remain numerically invariant — no callers need to change
+  * New `proj` module contains the pure functions for converting coordinates: `projWgs84ToWorld`, `projWorldToWgs84`, `projWorldToScreen`, `projScreenToWorld`
+  * This means consumers can call the projection functions without needing a viewport.
+  * All `Viewport.project()`/`.unproject()`, etc. remain backward compatible - no callers need to change
 * ⚠️ `Tile.tileExtent` renamed to `Tile.worldExtent` and values are now in zoom-16 world space
 * ⚠️ `SSR` type renamed to `SurroundingRectangle` ([#308])
 * ⚠️ `Edge.target` renamed to `Edge.point`
-* New function `geomGetLongestSurroundingRectangle` — returns the surrounding rectangle whose longest side is maximized, useful for label/icon placement aligned to a building's dominant axis ([#308])
-* New geometry point helpers `geomReflectPoints` and `geomScalePoints`, plus tuple-preserving generic typing for `geomRotatePoints`, `geomReflectPoints`, and `geomScalePoints`
+* New and updated geometry point helpers:
+  * ⚠️ `geomRotatePoints` renamed to `geomRotate`
+  * New geometry point helpers `geomReflect`, `geomScale`, `geomToLocal`, `geomToOrigin`
+  * New function `geomGetLongestSurroundingRectangle` — returns the surrounding rectangle whose longest side is maximized, useful for label/icon placement aligned to a building's dominant axis ([#308])
 * Add `Vec4` and `Quad` type aliases and math constants: `WORLD_ZOOM`, `WORLD_SIZE`, `WORLD_HALF`, `ANGLE_EPSILON` ([#307])
 * `Extent.rectangle()` returns type `Vec4`, `Extent.polygon()` returns type `Quad` ([#307])
 * perf: scalar overloads for `vecDot`, `vecCross`, `vecLengthSquare`, `geoSphericalDistance`, `geomLineIntersection`, and more ([#307])
