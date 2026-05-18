@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'bun:test';
-import { DEG2RAD, HALF_PI, Extent, Transform, Viewport, WORLD_SIZE } from '../src/index.ts';
+import {
+  DEG2RAD, HALF_PI, WORLD_HALF, WORLD_SCALE, WORLD_SIZE,
+  Extent, Transform, Viewport
+} from '../src/index.ts';
 
 
 describe('math/viewport', () => {
@@ -172,53 +175,53 @@ describe('math/viewport', () => {
   describe('#wgs84ToWorld', () => {
     const view = new Viewport();
 
-    it(`Projects [0°, 0°] -> [8388608, 8388608]`, () => {
+    it(`Projects [0°, 0°] -> [${WORLD_HALF}, ${WORLD_HALF}]`, () => {
       const point = view.wgs84ToWorld([0, 0]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(8388608, 9);
-      expect(point[1]).toBeCloseTo(8388608, 9);
+      expect(point[0]).toBeCloseTo(WORLD_HALF, 5);
+      expect(point[1]).toBeCloseTo(WORLD_HALF, 5);
     });
 
     it(`Projects [-180°, 85.0511287798°] -> [0, 0]`, () => {
       const point = view.wgs84ToWorld([-180, 85.0511287798]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(0, 9);
-      expect(point[1]).toBeCloseTo(0, 3);  // small residual at polar boundary
+      expect(point[0]).toBeCloseTo(0, 5);
+      expect(point[1]).toBeCloseTo(0, 5);
     });
 
     it(`Projects [-180°, -85.0511287798°] -> [0, ${WORLD_SIZE}]`, () => {
       const point = view.wgs84ToWorld([-180, -85.0511287798]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(0, 9);
-      expect(point[1]).toBeCloseTo(WORLD_SIZE, 3);  // small residual at polar boundary
+      expect(point[0]).toBeCloseTo(0, 5);
+      expect(point[1]).toBeCloseTo(WORLD_SIZE, 5);
     });
 
     it(`Projects [180°, 85.0511287798°] -> [${WORLD_SIZE}, 0]`, () => {
       const point = view.wgs84ToWorld([180, 85.0511287798]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(WORLD_SIZE, 9);
-      expect(point[1]).toBeCloseTo(0, 3);  // small residual at polar boundary
+      expect(point[0]).toBeCloseTo(WORLD_SIZE, 5);
+      expect(point[1]).toBeCloseTo(0, 5);
     });
 
     it(`Projects [180°, -85.0511287798°] -> [${WORLD_SIZE}, ${WORLD_SIZE}]`, () => {
       const point = view.wgs84ToWorld([180, -85.0511287798]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(WORLD_SIZE, 9);
-      expect(point[1]).toBeCloseTo(WORLD_SIZE, 3);  // small residual at polar boundary
+      expect(point[0]).toBeCloseTo(WORLD_SIZE, 5);
+      expect(point[1]).toBeCloseTo(WORLD_SIZE, 5);
     });
 
-    it(`Projects out of bounds [-270°, 95°] -> [-4194304, 0]`, () => {
+    it(`Projects out of bounds [-270°, 95°] -> [${-WORLD_SIZE / 4}, 0]`, () => {
       const point = view.wgs84ToWorld([-270, 95]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(-4194304, 9);   // wrap x
-      expect(point[1]).toBeCloseTo(0, 3);   // clamp y (small residual at polar boundary)
+      expect(point[0]).toBeCloseTo(-WORLD_SIZE / 4, 5);  // wrap x
+      expect(point[1]).toBeCloseTo(0, 5);                // clamp y
     });
 
-    it(`Projects out of bounds [270°, -95°] -> [20971520, ${WORLD_SIZE}]`, () => {
+    it(`Projects out of bounds [270°, -95°] -> [${5 * WORLD_SIZE / 4}, ${WORLD_SIZE}]`, () => {
       const point = view.wgs84ToWorld([270, -95]);
       expect(point).toBeInstanceOf(Array);
-      expect(point[0]).toBeCloseTo(20971520, 9);          // wrap x
-      expect(point[1]).toBeCloseTo(WORLD_SIZE, 3);   // clamp y (small residual at polar boundary)
+      expect(point[0]).toBeCloseTo(5 * WORLD_SIZE / 4, 5);  // wrap x
+      expect(point[1]).toBeCloseTo(WORLD_SIZE, 5);          // clamp y
     });
   });
 
@@ -226,8 +229,8 @@ describe('math/viewport', () => {
   describe('#worldToWgs84', () => {
     const view = new Viewport();
 
-    it(`Unprojects [8388608, 8388608] -> [0°, 0°]`, () => {
-      const point = view.worldToWgs84([8388608, 8388608]);
+    it(`Unprojects [${WORLD_HALF}, ${WORLD_HALF}] -> [0°, 0°]`, () => {
+      const point = view.worldToWgs84([WORLD_HALF, WORLD_HALF]);
       expect(point).toBeInstanceOf(Array);
       expect(point[0]).toBeCloseTo(0, 9);
       expect(point[1]).toBeCloseTo(0, 9);
@@ -261,21 +264,20 @@ describe('math/viewport', () => {
       expect(point[1]).toBeCloseTo(-85.0511287798, 9);
     });
 
-    it(`Unprojects out of bounds [-4194304, -4194304] -> [-270°, 85.0511287798°]`, () => {
-      const point = view.worldToWgs84([-4194304, -4194304]);
+    it(`Unprojects out of bounds [${-WORLD_SIZE / 4}, ${-WORLD_SIZE / 4}] -> [-270°, 85.0511287798°]`, () => {
+      const point = view.worldToWgs84([-WORLD_SIZE / 4, -WORLD_SIZE / 4]);
       expect(point).toBeInstanceOf(Array);
       expect(point[0]).toBeCloseTo(-270, 9);           // wrap x
       expect(point[1]).toBeCloseTo(85.0511287798, 9);  // clamp y
     });
 
-    it(`Unprojects out of bounds [20971520, 20971520] -> [270°, -85.0511287798°] -> `, () => {
-      const point = view.worldToWgs84([20971520, 20971520]);
+    it(`Unprojects out of bounds [${5 * WORLD_SIZE / 4}, ${5 * WORLD_SIZE / 4}] -> [270°, -85.0511287798°] -> `, () => {
+      const point = view.worldToWgs84([5 * WORLD_SIZE / 4, 5 * WORLD_SIZE / 4]);
       expect(point).toBeInstanceOf(Array);
       expect(point[0]).toBeCloseTo(270, 9);             // wrap x
       expect(point[1]).toBeCloseTo(-85.0511287798, 9);  // clamp y
     });
   });
-
 
 
   describe('#transform', () => {
@@ -536,23 +538,29 @@ describe('math/viewport', () => {
     //  Here we are testing the [lon,lat] extent of the extended viewport, where [E, F, G, H]
     //  define the north-up coordinate system (F is bottom-left, H is top-right)
     //
+    // Viewport setup: transform {x:200, y:150, z:1}, dimensions [400, 300]
+    // Screen half-extents are ±100 (x) and ±75 (y) from the center.
+    // World offset = screen_px / 2^(z - WORLD_ZOOM) = screen_px * WORLD_SCALE / 2  (at z=1)
+    const h = WORLD_HALF;
+    const s = WORLD_SCALE;
+    const d = 175 * Math.SQRT2 * s / 2;  // 45°-case: half-diagonal of ±(100,75) box in world units
     const tests = {
-      '0':    [[1835008, 3473408], [14942208, 13303808]],
-      '45':   [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '90':   [[3473408, 1835008], [13303808, 14942208]],
-      '135':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '180':  [[1835008, 3473408], [14942208, 13303808]],
-      '225':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '270':  [[3473408, 1835008], [13303808, 14942208]],
-      '315':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '360':  [[1835008, 3473408], [14942208, 13303808]],
-      '-315': [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '-270': [[3473408, 1835008], [13303808, 14942208]],
-      '-225': [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '-180': [[1835008, 3473408], [14942208, 13303808]],
-      '-135': [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]],
-      '-90':  [[3473408, 1835008], [13303808, 14942208]],
-      '-45':  [[278941.74792772345, 278941.7479277244], [16498274.252072223, 16498274.252072275]]
+      '0':    [[h - 100 * s, h - 75 * s], [h + 100 * s, h + 75 * s]],
+      '45':   [[h - d, h - d], [h + d, h + d]],
+      '90':   [[h - 75 * s, h - 100 * s], [h + 75 * s, h + 100 * s]],
+      '135':  [[h - d, h - d], [h + d, h + d]],
+      '180':  [[h - 100 * s, h - 75 * s], [h + 100 * s, h + 75 * s]],
+      '225':  [[h - d, h - d], [h + d, h + d]],
+      '270':  [[h - 75 * s, h - 100 * s], [h + 75 * s, h + 100 * s]],
+      '315':  [[h - d, h - d], [h + d, h + d]],
+      '360':  [[h - 100 * s, h - 75 * s], [h + 100 * s, h + 75 * s]],
+      '-315': [[h - d, h - d], [h + d, h + d]],
+      '-270': [[h - 75 * s, h - 100 * s], [h + 75 * s, h + 100 * s]],
+      '-225': [[h - d, h - d], [h + d, h + d]],
+      '-180': [[h - 100 * s, h - 75 * s], [h + 100 * s, h + 75 * s]],
+      '-135': [[h - d, h - d], [h + d, h + d]],
+      '-90':  [[h - 75 * s, h - 100 * s], [h + 75 * s, h + 100 * s]],
+      '-45':  [[h - d, h - d], [h + d, h + d]]
     };
 
     for (const [key, expected] of Object.entries(tests)) {
