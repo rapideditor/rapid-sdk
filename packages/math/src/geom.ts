@@ -373,15 +373,15 @@ export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], check
 
 
 /**
- * A generalized function for computing a surrounding rectangle for a given Array of points.
+ * A generalized function for computing a surrounding rectangle for a given array of points.
  * The caller supplies `getScore` and `isBetter` functions that define the heuristic which
- * determines what kind of rectangle to gather.
+ * determines what kind of rectangle to return.
  * @param points
  * @param getScore
  * @param isBetter
  * @param initialBestScore
- * @param candidateAngles optional angles to check instead of the convex hull edge angles
- * @returns  A SurroundingRectangle (polygon and angle) or `null` if the given points did not produce a valid hull.
+ * @param candidateAngles optional axis angles to check instead of the convex hull edge angles
+ * @returns A `SurroundingRectangle` (polygon and angle), or `null` if the given points did not produce a valid hull.
  */
 export function geomGetSurroundingRectangle(
   points: Vec2[],
@@ -488,7 +488,7 @@ function _getDominantAxisAngle(points: Vec2[]): number {
 }
 
 
-/** Return the Smallest Surrounding Rectangle for a given Array of points
+/** Return the Smallest Surrounding Rectangle for a given array of points
  * @remarks
  * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
  * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
@@ -512,7 +512,7 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): Surrounding
 }
 
 
-/** Return the Dominant Surrounding Rectangle for a given Array of points
+/** Return the Dominant Surrounding Rectangle for a given array of points
  * @remarks
  * Uses the outline edge lengths to find the dominant orthogonal axis, then returns
  * the surrounding rectangle aligned to that axis.
