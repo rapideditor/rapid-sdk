@@ -36,6 +36,14 @@ function offAxisLShapedBuildingPoints() {
   return math.geomRotate(footprint, Math.PI / 6, [0, 0]);
 }
 
+function offAxisSteppedBuildingPoints() {
+  const footprint: Vec2[] = [
+    [0, 0], [4, 0], [4, 2], [6, 2], [6, 4], [8, 4], [8, 8],
+    [6, 8], [6, 6], [4, 6], [4, 4], [2, 4], [2, 2], [0, 2], [0, 0]
+  ];
+  return math.geomRotate(footprint, Math.PI / 6, [0, 0]);
+}
+
 describe('math/geom', () => {
   describe('geomEdgeEqual', () => {
     it('returns false for inequal edges', () => {
@@ -454,42 +462,56 @@ describe('math/geom', () => {
       expect(shortSide).toBeCloseTo(6, 9);
       expect(ssr.angle).toBeCloseTo(Math.PI / 6, 9);
     });
+
+    it('can choose a smaller diagonal envelope for an off-axis stepped building', () => {
+      const points = offAxisSteppedBuildingPoints();
+      const ssr = math.geomGetSmallestSurroundingRectangle(points);
+      expect(ssr).toBeInstanceOf(Object);
+      if (!ssr) throw new Error('expected smallest surrounding rectangle');
+      assertRectangleContainsPoints(ssr, points);
+
+      expect(rectangleArea(ssr)).toBeCloseTo(48, 9);
+      expect(ssr.angle).toBeCloseTo(5 * Math.PI / 12, 9);
+    });
   });
 
-  describe('geomGetLongestSurroundingRectangle', () => {
+  describe('geomGetDominantSurroundingRectangle', () => {
     it('returns null for empty points array', () => {
-      expect(math.geomGetLongestSurroundingRectangle([])).toBe(null);
+      expect(math.geomGetDominantSurroundingRectangle([])).toBe(null);
     });
 
-    it('calculates a longest surrounding rectangle for an off-axis L-shaped building', () => {
+    it('calculates a dominant surrounding rectangle for an off-axis L-shaped building', () => {
       //  p5 --- p4
       //  |      |
       //  |      p3 ------ p2
       //  |                |
       //  p0 ------------- p1
       const points = offAxisLShapedBuildingPoints();
-      const lsr = math.geomGetLongestSurroundingRectangle(points);
-      expect(lsr).toBeInstanceOf(Object);
-      if (!lsr) throw new Error('expected longest surrounding rectangle');
-      assertRectangleContainsPoints(lsr, points);
+      const dsr = math.geomGetDominantSurroundingRectangle(points);
+      expect(dsr).toBeInstanceOf(Object);
+      if (!dsr) throw new Error('expected dominant surrounding rectangle');
+      assertRectangleContainsPoints(dsr, points);
 
-      const [longSide, shortSide] = rectangleSideLengths(lsr);
-      expect(longSide).toBeCloseTo(9.995120760870789, 9);
-      expect(shortSide).toBeCloseTo(6.559297999321455, 9);
-      expect(lsr.angle).toBeCloseTo(1.4196541601696426, 9);
+      const [longSide, shortSide] = rectangleSideLengths(dsr);
+      expect(longSide).toBeCloseTo(8, 9);
+      expect(shortSide).toBeCloseTo(6, 9);
+      expect(dsr.angle).toBeCloseTo(Math.PI / 6, 9);
     });
 
-    it('can choose a longer envelope than the smallest surrounding rectangle', () => {
-      const points = offAxisLShapedBuildingPoints();
+    it('can choose a dominant wall axis instead of the smallest diagonal envelope', () => {
+      const points = offAxisSteppedBuildingPoints();
       const smallest = math.geomGetSmallestSurroundingRectangle(points);
-      const longest = math.geomGetLongestSurroundingRectangle(points);
+      const dominant = math.geomGetDominantSurroundingRectangle(points);
 
       expect(smallest).toBeInstanceOf(Object);
-      expect(longest).toBeInstanceOf(Object);
-      if (!smallest || !longest) throw new Error('expected surrounding rectangles');
-      expect(Math.abs(smallest.angle - longest.angle)).toBeGreaterThan(1e-9);
-      expect(rectangleSideLengths(longest)[0]).toBeGreaterThan(rectangleSideLengths(smallest)[0]);
-      expect(rectangleArea(longest)).toBeGreaterThan(rectangleArea(smallest));
+      expect(dominant).toBeInstanceOf(Object);
+      if (!smallest || !dominant) throw new Error('expected surrounding rectangles');
+      assertRectangleContainsPoints(dominant, points);
+
+      expect(smallest.angle).toBeCloseTo(5 * Math.PI / 12, 9);
+      expect(dominant.angle).toBeCloseTo(Math.PI / 6, 9);
+      expect(Math.abs(smallest.angle - dominant.angle)).toBeGreaterThan(1e-9);
+      expect(rectangleArea(dominant)).toBeGreaterThan(rectangleArea(smallest));
     });
   });
 

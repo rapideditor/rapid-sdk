@@ -34,7 +34,7 @@ links:
 * New and updated geometry point helpers:
   * ⚠️ `geomRotatePoints` renamed to `geomRotate`
   * New geometry point helpers `geomReflect`, `geomScale`, `geomToLocal`, `geomToOrigin`
-  * New function `geomGetLongestSurroundingRectangle` — returns the surrounding rectangle whose longest side is maximized, useful for label/icon placement aligned to a building's dominant axis ([#308])
+  * New function `geomGetDominantSurroundingRectangle` — returns the surrounding rectangle aligned to a feature's dominant edge axis, useful for label/icon placement ([#308])
 * Add `Vec4` and `Quad` type aliases and math constants: `WORLD_ZOOM`, `WORLD_SIZE`, `WORLD_HALF`, `ANGLE_EPSILON` ([#307])
 * `Extent.rectangle()` returns type `Vec4`, `Extent.polygon()` returns type `Quad` ([#307])
 * perf: scalar overloads for `vecDot`, `vecCross`, `vecLengthSquare`, `geoSphericalDistance`, `geomLineIntersection`, and more ([#307])

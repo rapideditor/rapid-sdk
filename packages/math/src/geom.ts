@@ -375,18 +375,20 @@ export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], check
 /**
  * A generalized function for computing a surrounding rectangle for a given Array of points.
  * The caller supplies `getScore` and `isBetter` functions that define the heuristic which
- * determines what kind of rectangle to gather ("smallest" or "longest").
+ * determines what kind of rectangle to gather.
  * @param points
  * @param getScore
  * @param isBetter
  * @param initialBestScore
+ * @param candidateAngles optional angles to check instead of the convex hull edge angles
  * @returns  A SurroundingRectangle (polygon and angle) or `null` if the given points did not produce a valid hull.
  */
-export function getSurroundingRectangle(
+export function geomGetSurroundingRectangle(
   points: Vec2[],
   getScore: (extent: Extent) => number,
   isBetter: (score: number, bestScore: number) => boolean,
-  initialBestScore: number
+  initialBestScore: number,
+  candidateAngles?: number[]
 ): SurroundingRectangle | null {
   const hull: Vec2[] | null = d3_polygonHull(points);
   if (!hull) return null;
@@ -398,11 +400,18 @@ export function getSurroundingRectangle(
   let bestScore = initialBestScore;
   let bestExtent = new Extent();
   let bestAngle = 0;
+  const rawAngles: number[] = candidateAngles ?? [];
 
-  for (let i = 0; i < hull.length; i++) {
-    const c1: Vec2 = hull[i];
-    const c2: Vec2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
-    const wrapped = numWrap(Math.atan2(c2[1] - c1[1], c2[0] - c1[0]), 0, HALF_PI);  // normalize angle between 0..π/2
+  if (!candidateAngles) {
+    for (let i = 0; i < hull.length; i++) {
+      const c1: Vec2 = hull[i];
+      const c2: Vec2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
+      rawAngles.push(Math.atan2(c2[1] - c1[1], c2[0] - c1[0]));
+    }
+  }
+
+  for (const rawAngle of rawAngles) {
+    const wrapped = numWrap(rawAngle, 0, HALF_PI);  // normalize angle between 0..π/2
     const angle = (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
     const angleKey = Math.round(angle / ANGLE_EPSILON);
     if (checkedAngles.has(angleKey)) continue;
@@ -439,6 +448,46 @@ export function getSurroundingRectangle(
 }
 
 
+function _getDominantAxisAngle(points: Vec2[]): number {
+  const edges: { angle: number, length: number }[] = [];
+
+  for (let i = 0; i < points.length; i++) {
+    const c1: Vec2 = points[i];
+    const c2: Vec2 = i === points.length - 1 ? points[0] : points[i + 1];
+    const dx = c2[0] - c1[0];
+    const dy = c2[1] - c1[1];
+    const length = Math.hypot(dx, dy);
+    if (!length) continue;
+
+    const wrapped = numWrap(Math.atan2(dy, dx), 0, HALF_PI);
+    const angle = (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
+    edges.push({ angle, length });
+  }
+
+  let bestAngle = 0;
+  let bestScore = -Infinity;
+  const checkedAngles = new Set<number>();
+
+  for (const edge of edges) {
+    const angleKey = Math.round(edge.angle / ANGLE_EPSILON);
+    if (checkedAngles.has(angleKey)) continue;
+    checkedAngles.add(angleKey);
+
+    let score = 0;
+    for (const other of edges) {
+      score += other.length * Math.abs(Math.cos(2 * (other.angle - edge.angle)));
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestAngle = edge.angle;
+    }
+  }
+
+  return bestAngle;
+}
+
+
 /** Return the Smallest Surrounding Rectangle for a given Array of points
  * @remarks
  * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
@@ -452,23 +501,23 @@ export function getSurroundingRectangle(
  * |                |
  * p0 ------------- p1
  * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
- * const points = geomRotatePoints(footprint, Math.PI / 6, [0, 0]);
+ * const points = geomRotate(footprint, Math.PI / 6, [0, 0]);
  * const ssr = geomGetSmallestSurroundingRectangle(points);
  * // ssr.angle == Math.PI / 6
  */
 export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
   const getScore = (extent: Extent) => extent.area();
   const isBest = (score: number, best: number) => score < best;
-  return getSurroundingRectangle(points, getScore, isBest, Infinity);
+  return geomGetSurroundingRectangle(points, getScore, isBest, Infinity);
 }
 
 
-/** Return the Longest Surrounding Rectangle for a given Array of points
+/** Return the Dominant Surrounding Rectangle for a given Array of points
  * @remarks
- * Loops over the convex hull edges, rotates to each edge angle, and chooses the
- * rectangle with the maximum side length.
+ * Uses the outline edge lengths to find the dominant orthogonal axis, then returns
+ * the surrounding rectangle aligned to that axis.
  * @param points
- * @returns The longest `SurroundingRectangle` by side length, or `null` if the given points did not produce a valid hull.
+ * @returns The dominant-axis `SurroundingRectangle`, or `null` if the given points did not produce a valid hull.
  * @example
  * p5 --- p4
  * |      |
@@ -476,14 +525,14 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): Surrounding
  * |                |
  * p0 ------------- p1
  * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
- * const points = geomRotatePoints(footprint, Math.PI / 6, [0, 0]);
- * const lsr = geomGetLongestSurroundingRectangle(points);
- * // lsr.angle ~= 1.4196541601696426
+ * const points = geomRotate(footprint, Math.PI / 6, [0, 0]);
+ * const dsr = geomGetDominantSurroundingRectangle(points);
+ * // dsr.angle == Math.PI / 6
  */
-export function geomGetLongestSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
-  const getScore = (extent: Extent) => Math.max(Math.abs(extent.max[0] - extent.min[0]), Math.abs(extent.max[1] - extent.min[1]));
-  const isBest = (score: number, best: number) => score > best;
-  return getSurroundingRectangle(points, getScore, isBest, -Infinity);
+export function geomGetDominantSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
+  const getScore = (extent: Extent) => extent.area();
+  const isBest = (score: number, best: number) => score < best;
+  return geomGetSurroundingRectangle(points, getScore, isBest, Infinity, [_getDominantAxisAngle(points)]);
 }
 
 
