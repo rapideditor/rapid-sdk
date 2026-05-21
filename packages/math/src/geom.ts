@@ -441,8 +441,7 @@ function _buildSurroundingRectangle(extent: Extent, angle: number, pivot: Vec2):
 
   // Width and height are measured in the rotated (local) frame, before rotating
   // back, so the values are exact and axis-aligned arithmetic is valid here.
-  const width = extent.max[0] - extent.min[0];
-  const height = extent.max[1] - extent.min[1];
+  const [width, height] = extent.dimensions();
   const longAxis = width >= height ? xAxis : yAxis;
   const shortAxis = width >= height ? yAxis : xAxis;
 
