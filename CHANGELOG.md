@@ -30,9 +30,10 @@ links:
   * All `Viewport.project()`/`.unproject()`, etc. remain backward compatible - no callers need to change
 * ⚠️ `Tile.tileExtent` renamed to `Tile.worldExtent` and values are now in zoom-16 world space
 * ⚠️ `SSR` type renamed to `SurroundingRectangle`, also includes new data fields: ([#308])
-  * `centroid` — geometric center of the rectangle (where axes intersect)
-  * `longAxis` — `[Vec2, Vec2]` segment along the rectangle's longer dimension
-  * `shortAxis` — `[Vec2, Vec2]` segment along the rectangle's shorter dimension
+  * `centroid` - `Vec2` geometric center of the rectangle (where axes intersect)
+  * `dimensions` - `Vec2` the [width, height] of the rectangle
+  * `longAxis` - `[Vec2, Vec2]` segment along the rectangle's longer dimension
+  * `shortAxis` - `[Vec2, Vec2]` segment along the rectangle's shorter dimension
 * ⚠️ `Edge` type removed (use `Closest` instead, it is the same)
 * New and updated geometry point helpers:
   * ⚠️ `geomRotatePoints` renamed to `geomRotate`

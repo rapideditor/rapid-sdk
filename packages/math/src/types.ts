@@ -42,6 +42,8 @@ export interface SurroundingRectangle {
   angle: number;
   /** Centroid of the rectangle (long and short axes intersect here) */
   centroid: Vec2;
+  /** Dimensions of the rectangle, as [width, height] */
+  dimensions: Vec2;
   /** Short axis of the rectangle (perpendicular to angle, the rect's height direction) */
   shortAxis: [Vec2, Vec2];
   /** Long axis of the rectangle (along angle, the rect's width direction) */

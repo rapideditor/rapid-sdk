@@ -374,9 +374,11 @@ export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], check
 
 /**
  * Normalize an angle into `[0, π/2)`, snapping near-axis values to 0.
+ * @param   angle  The input angle to normalize
+ * @return  The normalized angle
  */
-function _normalizeAngle(raw: number): number {
-  const wrapped = numWrap(raw, 0, HALF_PI);
+function _normalizeAngle(angle: number): number {
+  const wrapped = numWrap(angle, 0, HALF_PI);
   return (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
 }
 
@@ -384,47 +386,36 @@ function _normalizeAngle(raw: number): number {
 /**
  * Rotate `points` by `-angle` around `pivot` and return the axis-aligned bounding
  * `Extent` of the result - i.e. the bounding box measured in the rotated frame.
- *
- * The "rotate-extent-rotate" trick:
- *   1. Rotate all points by -angle so the candidate rectangle axis aligns with
- *      the world X/Y axes.  In this rotated frame the enclosing rectangle *is*
- *      axis-aligned, so a plain min/max extent gives us its exact dimensions.
- *   2. The caller picks the angle whose extent has the smallest (or dominant) area.
- *   3. _buildSurroundingRectangle rotates those extent corners back by +angle to
- *      recover the rectangle corners in world space.
- *
- * The pivot can be any fixed world point - it is subtracted before rotating and
- * added back after, so it cancels out in the area calculation.  Choosing a point
- * near the data (hull centroid, or [0,0] when the data is already local) keeps
- * floating-point magnitudes small.
+ * The pivot can be any point - we subtract here and add it back later in `_buildSurroundingRectangle`.
+ * Choosing a pivot near the input data keeps floating-point errors small.
+ * @param   points  The points to rotate
+ * @param   angle   The angle to rotate by (we use -angle to get to the x-axis)
+ * @param   pivot   The origin point to pivot around (see notes)
+ * @return  The Extent in the rotated frame
  */
 function _getRotatedExtent(points: Vec2[], angle: number, pivot: Vec2): Extent {
   const rotated = geomRotate(points, -angle, pivot);
-  const extent = new Extent();
+  const rotExtent = new Extent();
   for (const point of rotated) {
-    extent.extendSelf(point);
+    rotExtent.extendSelf(point);
   }
-  return extent;
+  return rotExtent;
 }
 
 
 /**
- * Build a `SurroundingRectangle` from an extent measured in a frame rotated by `-angle`
- * around `pivot`. Assigns `longAxis`/`shortAxis` based on actual extent dimensions.
- *
- * This is step 3 of the rotate-extent-rotate trick (see _getRotatedExtent).
- * `extent` holds the rectangle corners as axis-aligned min/max values in the
- * rotated frame.  Rotating those corners back by +angle around the *same* pivot
- * recovers their world-space positions.  Using a different pivot here would apply
- * a net translation and place the rectangle in the wrong location.
- *
- * Why pivot cancels in _getRotatedExtent but matters here:
- *   _getRotatedExtent only needs the *shape* (width × height), which is
- *   translation-invariant.  _buildSurroundingRectangle needs the *position*, so
- *   the inverse rotation must use exactly the same pivot.
+ * Build a `SurroundingRectangle` result from an already-rotated Extent.
+ * At this step, we've already chosen the rotated Extent that we want,
+ * we are just rotating it back and generating the result object.
+ * Important to use the same `pivot` that was supplied to `_getRotatedExtent` earlier.
+ * @param   rotExtent  The rotated extent
+ * @param   angle      The angle to rotate by (we use +angle here to restore the points)
+ * @param   pivot      The origin point to pivot around (see notes)
+ * @return  A `SurroundingRectangle` result object
  */
-function _buildSurroundingRectangle(extent: Extent, angle: number, pivot: Vec2): SurroundingRectangle {
-  const polygon = geomRotate(extent.polygon(), angle, pivot);
+function _buildSurroundingRectangle(rotExtent: Extent, angle: number, pivot: Vec2): SurroundingRectangle {
+  // This extent is rotated - rotate the points back
+  const polygon = geomRotate(rotExtent.polygon(), angle, pivot);
 
   // xAxis: segment connecting the midpoints of the two short (left/right) edges.
   //   It spans the rectangle along its local-x / width direction.
@@ -439,9 +430,8 @@ function _buildSurroundingRectangle(extent: Extent, angle: number, pivot: Vec2):
     [(polygon[2][0] + polygon[3][0]) / 2, (polygon[2][1] + polygon[3][1]) / 2]   // midpoint of top edge
   ];
 
-  // Width and height are measured in the rotated (local) frame, before rotating
-  // back, so the values are exact and axis-aligned arithmetic is valid here.
-  const [width, height] = extent.dimensions();
+  // The width and height can be measured in the rotated (local) frame
+  const [width, height] = rotExtent.dimensions();
   const longAxis = width >= height ? xAxis : yAxis;
   const shortAxis = width >= height ? yAxis : xAxis;
 
@@ -456,13 +446,17 @@ function _buildSurroundingRectangle(extent: Extent, angle: number, pivot: Vec2):
     polygon: polygon,
     angle: angle,
     centroid: centroid,
+    dimensions: [width, height],
     shortAxis: shortAxis,
     longAxis: longAxis
   };
 }
 
 
-/** Return the Smallest Surrounding Rectangle for a given array of points
+/**
+ * Return the Smallest Surrounding Rectangle for a given array of points.
+ * We compute the smallest surrounding rectangle by rotating the points by each hull edge angle
+ * to determine which angle produces the bounding extent with the smallest area.
  * @remarks
  * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
  * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
@@ -499,20 +493,26 @@ export function geomGetSmallestSurroundingRectangle(points: Vec2[]): Surrounding
     if (checkedAngles.has(angleKey)) continue;
     checkedAngles.add(angleKey);
 
-    const extent = _getRotatedExtent(hull, angle, centroid);
-    const area = extent.area();
+    // We'll use a rotated extent to perform the area measurement.
+    // The pivot point is arbitrary, so we'll use the centroid.
+    const rotExtent = _getRotatedExtent(hull, angle, centroid);
+    const area = rotExtent.area();
     if (area < bestArea) {
       bestArea = area;
-      bestExtent = extent;
+      bestExtent = rotExtent;
       bestAngle = angle;
     }
   }
 
+  // Important, must use the same pivot point we used before with `_getRotatedExtent`
   return _buildSurroundingRectangle(bestExtent, bestAngle, centroid);
 }
 
 
-/** Return the Dominant Surrounding Rectangle for a given array of points
+/**
+ * Return the Dominant Surrounding Rectangle for a given array of points.
+ * We compute an "edge-length-weighted dominant orientation".  Essentially we use the edges
+ * as "votes" for the dominant axis - longer or frequently occurring edge angles get more votes.
  * @remarks
  * Uses the outline edge lengths to find the dominant orthogonal axis, then returns
  * the surrounding rectangle aligned to that axis.
@@ -565,15 +565,17 @@ export function geomGetDominantSurroundingRectangle(points: Vec2[]): Surrounding
     }
   }
 
-  // The pivot for the rotate-extent-rotate trick is arbitrary - use the origin
-  // so we can skip computing a convex hull and its centroid here.
-  const origin: Vec2 = [0, 0];
-  const extent = _getRotatedExtent(points, bestAngle, origin);
-  return _buildSurroundingRectangle(extent, bestAngle, origin);
+  // To generate the surrounding rectangle we need a rotated extent.
+  // The pivot point is arbitrary, so we pick the first local point,
+  // but it is important to use the same pivot point for both functions.
+  const origin: Vec2 = points[0];
+  const rotExtent = _getRotatedExtent(points, bestAngle, origin);
+  return _buildSurroundingRectangle(rotExtent, bestAngle, origin);
 }
 
 
-/** Return the length of the given path
+/**
+ * Return the length of the given path
  * @param path
  * @returns length
  * @example
