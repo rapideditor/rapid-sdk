@@ -68,6 +68,15 @@ describe('math/extent', () => {
     });
   });
 
+  describe('#dimensions', () => {
+    it('returns the dimensions as width,height', () => {
+      const e = new Extent([0, 0], [5, 10]);
+      const result = e.dimensions();
+      expect(result).toBeInstanceOf(Array);
+      expect(result).toEqual([5, 10]);
+    });
+  });
+
   describe('#rectangle', () => {
     it('returns the Extent as a rectangle Array', () => {
       const e = new Extent([0, 0], [5, 10]);

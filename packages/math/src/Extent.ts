@@ -86,6 +86,15 @@ export class Extent {
     return [(this.min[0] + this.max[0]) / 2, (this.min[1] + this.max[1]) / 2];
   }
 
+  /** Returns the dimensions of an extent as [width, height]
+   * @returns Dimensions of the extent as [width, height]
+   * @example
+   * new Extent([0, 0], [5, 10]).center();  // returns [5, 10]
+   */
+  dimensions(): Vec2 {
+    return [(this.max[0] - this.min[0]), (this.max[1] - this.min[1])];
+  }
+
   /** Returns an array rectangle as `[minX, minY, maxX, maxY]`
    * @returns rectangle
    * @example

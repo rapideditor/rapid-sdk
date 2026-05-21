@@ -39,7 +39,10 @@ links:
   * New geometry point helpers `geomReflect`, `geomScale`, `geomToLocal`, `geomToOrigin`
   * New function `geomGetDominantSurroundingRectangle` — returns the surrounding rectangle aligned to a feature's dominant edge axis, useful for label/icon placement ([#308])
 * Add `Vec4` and `Quad` type aliases and math constants: `WORLD_ZOOM`, `WORLD_SIZE`, `WORLD_HALF`, `ANGLE_EPSILON` ([#307])
-* `Extent.rectangle()` returns type `Vec4`, `Extent.polygon()` returns type `Quad` ([#307])
+* New and updated Extent helpers:
+  * `Extent.rectangle()` returns type `Vec4`
+  * `Extent.polygon()` returns type `Quad` ([#307])
+  * New: `Extent.dimensions()` returns dimensions as [width, height].
 * perf: scalar overloads for `vecDot`, `vecCross`, `vecLengthSquare`, `geoSphericalDistance`, `geomLineIntersection`, and more ([#307])
 * `utilAesEncrypt` / `utilAesDecrypt` key parameter is now optional ([#300])
 * `utilQsString` `noencode` parameter is now optional
