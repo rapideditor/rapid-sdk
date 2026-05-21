@@ -373,82 +373,166 @@ export function geomPolygonIntersectsPolygon(outer: Vec2[], inner: Vec2[], check
 
 
 /**
- * A generalized function for computing a surrounding rectangle for a given array of points.
- * The caller supplies `getScore` and `isBetter` functions that define the heuristic which
- * determines what kind of rectangle to return.
- * @param points
- * @param getScore
- * @param isBetter
- * @param initialBestScore
- * @param candidateAngles optional axis angles to check instead of the convex hull edge angles
- * @returns A `SurroundingRectangle` (polygon and angle), or `null` if the given points did not produce a valid hull.
+ * Normalize an angle into `[0, π/2)`, snapping near-axis values to 0.
  */
-export function geomGetSurroundingRectangle(
-  points: Vec2[],
-  getScore: (extent: Extent) => number,
-  isBetter: (score: number, bestScore: number) => boolean,
-  initialBestScore: number,
-  candidateAngles?: number[]
-): SurroundingRectangle | null {
+function _normalizeAngle(raw: number): number {
+  const wrapped = numWrap(raw, 0, HALF_PI);
+  return (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
+}
+
+
+/**
+ * Rotate `points` by `-angle` around `pivot` and return the axis-aligned bounding
+ * `Extent` of the result - i.e. the bounding box measured in the rotated frame.
+ *
+ * The "rotate-extent-rotate" trick:
+ *   1. Rotate all points by -angle so the candidate rectangle axis aligns with
+ *      the world X/Y axes.  In this rotated frame the enclosing rectangle *is*
+ *      axis-aligned, so a plain min/max extent gives us its exact dimensions.
+ *   2. The caller picks the angle whose extent has the smallest (or dominant) area.
+ *   3. _buildSurroundingRectangle rotates those extent corners back by +angle to
+ *      recover the rectangle corners in world space.
+ *
+ * The pivot can be any fixed world point - it is subtracted before rotating and
+ * added back after, so it cancels out in the area calculation.  Choosing a point
+ * near the data (hull centroid, or [0,0] when the data is already local) keeps
+ * floating-point magnitudes small.
+ */
+function _getRotatedExtent(points: Vec2[], angle: number, pivot: Vec2): Extent {
+  const rotated = geomRotate(points, -angle, pivot);
+  const extent = new Extent();
+  for (const point of rotated) {
+    extent.extendSelf(point);
+  }
+  return extent;
+}
+
+
+/**
+ * Build a `SurroundingRectangle` from an extent measured in a frame rotated by `-angle`
+ * around `pivot`. Assigns `longAxis`/`shortAxis` based on actual extent dimensions.
+ *
+ * This is step 3 of the rotate-extent-rotate trick (see _getRotatedExtent).
+ * `extent` holds the rectangle corners as axis-aligned min/max values in the
+ * rotated frame.  Rotating those corners back by +angle around the *same* pivot
+ * recovers their world-space positions.  Using a different pivot here would apply
+ * a net translation and place the rectangle in the wrong location.
+ *
+ * Why pivot cancels in _getRotatedExtent but matters here:
+ *   _getRotatedExtent only needs the *shape* (width × height), which is
+ *   translation-invariant.  _buildSurroundingRectangle needs the *position*, so
+ *   the inverse rotation must use exactly the same pivot.
+ */
+function _buildSurroundingRectangle(extent: Extent, angle: number, pivot: Vec2): SurroundingRectangle {
+  const polygon = geomRotate(extent.polygon(), angle, pivot);
+
+  // xAxis: segment connecting the midpoints of the two short (left/right) edges.
+  //   It spans the rectangle along its local-x / width direction.
+  // yAxis: segment connecting the midpoints of the two long (bottom/top) edges.
+  //   It spans the rectangle along its local-y / height direction.
+  const xAxis: [Vec2, Vec2] = [
+    [(polygon[3][0] + polygon[0][0]) / 2, (polygon[3][1] + polygon[0][1]) / 2],  // midpoint of left edge
+    [(polygon[1][0] + polygon[2][0]) / 2, (polygon[1][1] + polygon[2][1]) / 2]   // midpoint of right edge
+  ];
+  const yAxis: [Vec2, Vec2] = [
+    [(polygon[0][0] + polygon[1][0]) / 2, (polygon[0][1] + polygon[1][1]) / 2],  // midpoint of bottom edge
+    [(polygon[2][0] + polygon[3][0]) / 2, (polygon[2][1] + polygon[3][1]) / 2]   // midpoint of top edge
+  ];
+
+  // Width and height are measured in the rotated (local) frame, before rotating
+  // back, so the values are exact and axis-aligned arithmetic is valid here.
+  const width = extent.max[0] - extent.min[0];
+  const height = extent.max[1] - extent.min[1];
+  const longAxis = width >= height ? xAxis : yAxis;
+  const shortAxis = width >= height ? yAxis : xAxis;
+
+  // The centroid of a rectangle is the intersection of its diagonals, which equals
+  // the midpoint of either diagonal (polygon[0]↔polygon[2] or polygon[1]↔polygon[3]).
+  const centroid: Vec2 = [
+    (polygon[0][0] + polygon[2][0]) / 2,
+    (polygon[0][1] + polygon[2][1]) / 2
+  ];
+
+  return {
+    polygon: polygon,
+    angle: angle,
+    centroid: centroid,
+    shortAxis: shortAxis,
+    longAxis: longAxis
+  };
+}
+
+
+/** Return the Smallest Surrounding Rectangle for a given array of points
+ * @remarks
+ * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
+ * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
+ * @param points
+ * @returns The smallest `SurroundingRectangle` by area, or `null` if the given points did not produce a valid hull.
+ * @example
+ * p5 --- p4
+ * |      |
+ * |      p3 ------ p2
+ * |                |
+ * p0 ------------- p1
+ * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
+ * const points = geomRotate(footprint, Math.PI / 6, [0, 0]);
+ * const ssr = geomGetSmallestSurroundingRectangle(points);
+ * // ssr.angle == Math.PI / 6
+ */
+export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
   const hull: Vec2[] | null = d3_polygonHull(points);
   if (!hull) return null;
 
   const centroid: Vec2 = d3_polygonCentroid(hull);
-  const centroidX = centroid[0];
-  const centroidY = centroid[1];
   const checkedAngles = new Set<number>();
-  let bestScore = initialBestScore;
+  let bestArea = Infinity;
   let bestExtent = new Extent();
   let bestAngle = 0;
-  const rawAngles: number[] = candidateAngles ?? [];
 
-  if (!candidateAngles) {
-    for (let i = 0; i < hull.length; i++) {
-      const c1: Vec2 = hull[i];
-      const c2: Vec2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
-      rawAngles.push(Math.atan2(c2[1] - c1[1], c2[0] - c1[0]));
-    }
-  }
-
-  for (const rawAngle of rawAngles) {
-    const wrapped = numWrap(rawAngle, 0, HALF_PI);  // normalize angle between 0..π/2
-    const angle = (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
+  // Try each convex-hull edge angle - the minimum-area enclosing rectangle is
+  // guaranteed to be aligned with one of them (rotating calipers).
+  for (let i = 0; i < hull.length; i++) {
+    const c1: Vec2 = hull[i];
+    const c2: Vec2 = i === hull.length - 1 ? hull[0] : hull[i + 1];
+    const angle = _normalizeAngle(Math.atan2(c2[1] - c1[1], c2[0] - c1[0]));
     const angleKey = Math.round(angle / ANGLE_EPSILON);
     if (checkedAngles.has(angleKey)) continue;
     checkedAngles.add(angleKey);
 
-    const sin = Math.sin(-angle);
-    const cos = Math.cos(-angle);
-    const extent = new Extent();
-    for (const point of hull) {
-      const radialX = point[0] - centroidX;
-      const radialY = point[1] - centroidY;
-      const x = radialX * cos - radialY * sin + centroidX;
-      const y = radialX * sin + radialY * cos + centroidY;
-
-      // update Extent min/max in-place for speed
-      extent.min[0] = Math.min(extent.min[0], x);
-      extent.min[1] = Math.min(extent.min[1], y);
-      extent.max[0] = Math.max(extent.max[0], x);
-      extent.max[1] = Math.max(extent.max[1], y);
-    }
-
-    const score = getScore(extent);
-    if (isBetter(score, bestScore)) {
-      bestScore = score;
+    const extent = _getRotatedExtent(hull, angle, centroid);
+    const area = extent.area();
+    if (area < bestArea) {
+      bestArea = area;
       bestExtent = extent;
       bestAngle = angle;
     }
   }
 
-  return {
-    polygon: geomRotate(bestExtent.polygon(), bestAngle, centroid),
-    angle: bestAngle
-  };
+  return _buildSurroundingRectangle(bestExtent, bestAngle, centroid);
 }
 
 
-function _getDominantAxisAngle(points: Vec2[]): number {
+/** Return the Dominant Surrounding Rectangle for a given array of points
+ * @remarks
+ * Uses the outline edge lengths to find the dominant orthogonal axis, then returns
+ * the surrounding rectangle aligned to that axis.
+ * @param points
+ * @returns The dominant-axis `SurroundingRectangle`, or `null` if the given points did not produce a valid hull.
+ * @example
+ * p5 --- p4
+ * |      |
+ * |      p3 ------ p2
+ * |                |
+ * p0 ------------- p1
+ * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
+ * const points = geomRotate(footprint, Math.PI / 6, [0, 0]);
+ * const dsr = geomGetDominantSurroundingRectangle(points);
+ * // dsr.angle == Math.PI / 6
+ */
+export function geomGetDominantSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
+  if (points.length < 3) return null;  // match hull-based null semantics
+
   const edges: { angle: number, length: number }[] = [];
 
   for (let i = 0; i < points.length; i++) {
@@ -459,9 +543,7 @@ function _getDominantAxisAngle(points: Vec2[]): number {
     const length = Math.hypot(dx, dy);
     if (!length) continue;
 
-    const wrapped = numWrap(Math.atan2(dy, dx), 0, HALF_PI);
-    const angle = (wrapped < ANGLE_EPSILON || (HALF_PI - wrapped) < ANGLE_EPSILON) ? 0 : wrapped;
-    edges.push({ angle, length });
+    edges.push({ angle: _normalizeAngle(Math.atan2(dy, dx)), length });
   }
 
   let bestAngle = 0;
@@ -484,55 +566,11 @@ function _getDominantAxisAngle(points: Vec2[]): number {
     }
   }
 
-  return bestAngle;
-}
-
-
-/** Return the Smallest Surrounding Rectangle for a given array of points
- * @remarks
- * http://gis.stackexchange.com/questions/22895/finding-minimum-area-rectangle-for-given-points
- * http://gis.stackexchange.com/questions/3739/generalisation-strategies-for-building-outlines/3756#3756
- * @param points
- * @returns The smallest `SurroundingRectangle` by area, or `null` if the given points did not produce a valid hull.
- * @example
- * p5 --- p4
- * |      |
- * |      p3 ------ p2
- * |                |
- * p0 ------------- p1
- * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
- * const points = geomRotate(footprint, Math.PI / 6, [0, 0]);
- * const ssr = geomGetSmallestSurroundingRectangle(points);
- * // ssr.angle == Math.PI / 6
- */
-export function geomGetSmallestSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
-  const getScore = (extent: Extent) => extent.area();
-  const isBest = (score: number, best: number) => score < best;
-  return geomGetSurroundingRectangle(points, getScore, isBest, Infinity);
-}
-
-
-/** Return the Dominant Surrounding Rectangle for a given array of points
- * @remarks
- * Uses the outline edge lengths to find the dominant orthogonal axis, then returns
- * the surrounding rectangle aligned to that axis.
- * @param points
- * @returns The dominant-axis `SurroundingRectangle`, or `null` if the given points did not produce a valid hull.
- * @example
- * p5 --- p4
- * |      |
- * |      p3 ------ p2
- * |                |
- * p0 ------------- p1
- * const footprint = [[0, 0], [8, 0], [8, 2], [3, 2], [3, 6], [0, 6], [0, 0]];
- * const points = geomRotate(footprint, Math.PI / 6, [0, 0]);
- * const dsr = geomGetDominantSurroundingRectangle(points);
- * // dsr.angle == Math.PI / 6
- */
-export function geomGetDominantSurroundingRectangle(points: Vec2[]): SurroundingRectangle | null {
-  const getScore = (extent: Extent) => extent.area();
-  const isBest = (score: number, best: number) => score < best;
-  return geomGetSurroundingRectangle(points, getScore, isBest, Infinity, [_getDominantAxisAngle(points)]);
+  // The pivot for the rotate-extent-rotate trick is arbitrary - use the origin
+  // so we can skip computing a convex hull and its centroid here.
+  const origin: Vec2 = [0, 0];
+  const extent = _getRotatedExtent(points, bestAngle, origin);
+  return _buildSurroundingRectangle(extent, bestAngle, origin);
 }
 
 

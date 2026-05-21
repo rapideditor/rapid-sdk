@@ -3,7 +3,7 @@
  * @module
  */
 
-import type { Edge, Vec2 } from './types.ts';
+import type { Closest, Vec2 } from './types.ts';
 
 
 /** Test whether two given vectors are equal
@@ -286,7 +286,7 @@ export function vecCross(a: Vec2 | number, b: Vec2 | number, c?: Vec2 | number, 
 /** Find closest orthogonal projection of point onto points array
  * @param a source point
  * @param points target points
- * @returns Edge object containing info about the projected point,
+ * @returns object containing info about the projected point,
  * or `null` if `points` is a degenerate path (0- or 1- point).
  * @example
  *      c
@@ -298,9 +298,9 @@ export function vecCross(a: Vec2 | number, b: Vec2 | number, c?: Vec2 | number, 
  * const a = [0, 0];
  * const b = [5, 0];
  * const c = [2, 1];
- * vecProject(c, [a, b]);   // returns Edge { index: 1, distance: 1, point: [2, 0] }
+ * vecProject(c, [a, b]);   // returns { index: 1, distance: 1, point: [2, 0] }
  */
-export function vecProject(a: Vec2, points: Vec2[]): Edge | null {
+export function vecProject(a: Vec2, points: Vec2[]): Closest | null {
   let min = Infinity;
   let idx: number | undefined;
   let point: Vec2 | undefined;
