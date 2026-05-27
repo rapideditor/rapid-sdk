@@ -21,7 +21,7 @@ links:
 -->
 
 # 1.0.0-pre.5
-#### 2026-May-??
+#### 2026-May-27
 * Projection and "world coordinate" changes:
   * ⚠️ World coordinates are now pre-scaled to zoom 16 (range 0..16,777,216 instead of 0..256) ([#306])
   * This allows renderers to handle world coordinates directly with acceptable float precision, avoiding extra steps to convert to screen coordinates.
