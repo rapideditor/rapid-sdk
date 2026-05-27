@@ -47,6 +47,9 @@ links:
 * perf: scalar overloads for `vecDot`, `vecCross`, `vecLengthSquare`, `geoSphericalDistance`, `geomLineIntersection`, and more ([#307])
 * `utilAesEncrypt` / `utilAesDecrypt` key parameter is now optional ([#300])
 * `utilQsString` `noencode` parameter is now optional
+* Slightly narrower OsmTags type and tag helpers:
+  * ⚠️ `OsmTags` is now defined as `Record<string, string>`  (no null, no undefined)
+  * This should match how downstream projects treat OSM tags already.  Use `utilCleanTags` or code like `v || ''` to coax missing values to empty string if needed.
 * Upgrade to TypeScript 6
 * Dependency updates, CI improvements
 

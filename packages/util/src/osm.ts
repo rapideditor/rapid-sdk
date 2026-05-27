@@ -1,5 +1,6 @@
 import { utilArrayUnion } from './array.ts';
-import type { OsmTags, TagDiff } from './types.ts';
+
+import type { Nullable, OsmTags, TagDiff } from './types.ts';
 
 
 /**
@@ -7,8 +8,8 @@ import type { OsmTags, TagDiff } from './types.ts';
  * @param tags
  * @returns
  */
-export function utilCleanTags(tags: OsmTags): object {
-  const result = {};
+export function utilCleanTags(tags: object): OsmTags {
+  const result: OsmTags = {};
   for (const [k,v] of Object.entries(tags)) {
     if (!k) continue;
     if (v !== undefined) {
@@ -24,7 +25,7 @@ export function utilCleanTags(tags: OsmTags): object {
   function _skip(k: string): boolean {
     return /^(description|note|fixme|inscription)$/.test(k);
   }
-  function _cleanValue(k: string, v?: string | null | undefined): string {
+  function _cleanValue(k: string, v?: Nullable<string>): string {
     if (!v) return '';
     if (_skip(k)) return v;
 
@@ -135,6 +136,7 @@ export function utilTagDiff(oldTags: OsmTags, newTags: OsmTags): TagDiff[] {
   }
   return tagDiff;
 }
+
 
 /** Stringifies tag key/value pairs into a human-readable string, useful for debugging
  * @param entity an object with a `tags` property

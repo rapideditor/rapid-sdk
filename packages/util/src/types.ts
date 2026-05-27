@@ -16,13 +16,13 @@ export type OneOrMore<T> = T | Iterable<T>;
 export type Nullable<T> = T | null | undefined;
 
 /** OSM tags as key-value string pairs */
-export type OsmTags = Record<string, string | null | undefined>;
+export type OsmTags = Record<string, string>;
 
 /** Contains results from `utilTagDiff` for diffing old and new tags */
 export interface TagDiff {
   type: string;
   key: string;
-  oldVal?: string | null | undefined;
-  newVal?: string | null | undefined;
+  oldVal?: string | undefined;
+  newVal?: string | undefined;
   display: string;
 };
