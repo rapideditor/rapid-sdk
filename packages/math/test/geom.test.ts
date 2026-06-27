@@ -266,6 +266,16 @@ describe('math/geom', () => {
       const b: Vec2[] = [[-5, 10], [-5, -10]];
       expect(math.geomLineIntersection(a, b)).toBe(null);
     });
+
+    it('returns the shared endpoint when a0 and b0 are coincident', () => {
+      //  a0/b0 --- a1
+      //    |
+      //    b1
+      const a: Vec2[] = [[-122.1518608, 47.5080034000001], [-122.15185512809126, 47.508048302611435]];
+      const b: Vec2[] = [[-122.1518608, 47.5080034000001], [-122.1518365, 47.5080005]];
+      const result = math.geomLineIntersection(a, b);
+      expect(result).toEqual([-122.1518608, 47.5080034000001]);
+    });
   });
 
   describe('geomPathIntersections', () => {

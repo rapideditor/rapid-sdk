@@ -220,7 +220,7 @@ export function geomLineIntersection(
   const uNumerator = qpx * ry - qpy * rx;
   const denominator = rx * sy - ry * sx;
 
-  if (uNumerator && denominator) {
+  if (denominator) {
     const u = uNumerator / denominator;
     const t = (qpx * sy - qpy * sx) / denominator;   // t,u are intersection factors along segments a and b
 
