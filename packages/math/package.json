@@ -33,7 +33,7 @@
     "build:js": "bun ./scripts/build.ts",
     "build:ts": "tsc -p tsconfig.build.json",
     "check": "bun run --parallel 'check:*'",
-    "check:lint": "eslint .",
+    "check:lint": "oxlint ./scripts ./src ./test",
     "check:ts": "tsc --noEmit",
     "clean": "bun ./scripts/clean.ts",
     "test": "bun test --dots --coverage ./test"

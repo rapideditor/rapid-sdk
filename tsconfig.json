@@ -37,7 +37,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "./eslint.config.ts",
     "./packages/*/src/**/*.ts",
     "./packages/*/scripts/**/*.ts",
     "./packages/*/test/**/*.ts"
