@@ -29,7 +29,7 @@
     "eslint": "^10.4.0",
     "eslint-plugin-import": "^2.32.0",
     "globals": "^17.6.0",
-    "typedoc": "^0.28.19",
+    "typedoc": "^0.28.20",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4"
   },
