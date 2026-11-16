@@ -1,16 +1,6 @@
 # Release Checklist
 
-## Prepare the release
-
-Use the `/release` prompt in Copilot Chat — it will:
-- Validate the version number
-- Identify commits since the last release and look up PR numbers
-- Update `CHANGELOG.md` with a new entry
-- Bump the version in all `package.json` files (root + workspaces)
-
-Review the changes, then commit using the `/commit` prompt.
-
-## Tag and publish
+## Before releasing, does the project build cleanly?
 
 ```bash
 # Make sure your main branch is up to date and all tests pass
@@ -18,12 +8,27 @@ git checkout main
 git pull origin
 bun install
 bun run all
+```
 
-# Pick a version, see https://semver.org/ - for example: 'A.B.C' or 'A.B.C-pre.D'
-# Update version number in all package.json files
-# Update CHANGELOG.md
+## Prepare the release
 
+Pick a version, see https://semver.org/ - for example: 'A.B.C' or 'A.B.C-pre.D'
+
+Optionally, use the `/release` skill in your agent (Claude Code, Copilot Chat, etc.) — it will:
+- Validate the version number
+- Identify commits since the last release and look up PR numbers
+- Update `CHANGELOG.md` with a new entry
+- Bump the version in all `package.json` files (root + workspaces)
+
+(or perform these steps manually)
+
+Review the changes, then commit using the `/commit` skill.
+
+## Tag and publish
+
+```bash
 export VERSION=vA.B.C-pre.D
+# Update version number in all package.json files (skip if `/release` already did this)
 bun --workspaces pm version $VERSION --no-git-tag-version
 git add . && git commit -m "$VERSION"
 git tag "$VERSION"

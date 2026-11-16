@@ -3,6 +3,7 @@
     // Language and Environment
     "lib": ["ESNext"],
     "target": "ESNext",
+    "types": ["bun"],
 
     // Modules
     "module": "preserve",
@@ -19,6 +20,7 @@
 
     // Interop
     "esModuleInterop": true,
+    "erasableSyntaxOnly": true,
 
     // Type Checking
     "strict": true,
@@ -30,6 +32,8 @@
     // "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
     "skipLibCheck": true
   },
   "include": [
