@@ -63,7 +63,7 @@ class MockDocument {
   set cookie(s: string) {
     const items = s.split(';');
     for (const item of items) {
-      const [k, v] = item.split('=');
+      const [k = '', v] = item.split('=');
       this._cookies.set(k.trim(), (v !== undefined ? v.trim() : undefined));
     }
   }

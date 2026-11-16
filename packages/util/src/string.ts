@@ -22,21 +22,23 @@ export function utilEditDistance(a: string, b: string): number {
     matrix[0]![j] = j;
   }
   for (let i = 1; i <= b.length; i++) {
+    const row = matrix[i]!;
+    const prevRow = matrix[i - 1]!;
     for (let j = 1; j <= a.length; j++) {
       if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i]![j] = matrix[i - 1]![j - 1]!;
+        row[j] = prevRow[j - 1]!;
       } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1, // substitution
+        row[j] = Math.min(
+          prevRow[j - 1]! + 1, // substitution
           Math.min(
-            matrix[i][j - 1] + 1, // insertion
-            matrix[i - 1][j] + 1
+            row[j - 1]! + 1, // insertion
+            prevRow[j]! + 1
           )
         ); // deletion
       }
     }
   }
-  return matrix[b.length][a.length];
+  return matrix[b.length]![a.length]!;
 }
 
 
@@ -71,18 +73,18 @@ export function utilQsString(obj: Record<string, string | number | boolean>, noe
     return encodeURIComponent(s).replace(/(%2F|%3A|%2C|%7B|%7D)/g, decodeURIComponent);
   }
 
-  return Object.keys(obj)
-    .sort((a, b) => {
+  return Object.entries(obj)
+    .sort(([a], [b]) => {
       // If param starts with "map", order it before other params, rapid-sdk#265
       const aIsMap = /^map/.test(a);
       const bIsMap = /^map/.test(b);
       return (aIsMap && !bIsMap) ? -1 : (bIsMap && !aIsMap) ? 1 : a.localeCompare(b);
     })
-    .map((key) => {
+    .map(([key, val]) => {
       return (
         encodeURIComponent(key) +
         '=' +
-        (noencode ? softEncode(obj[key]) : encodeURIComponent(obj[key]))
+        (noencode ? softEncode(val) : encodeURIComponent(val))
       );
     })
     .join('&');
@@ -101,7 +103,7 @@ export function utilStringQs(str: string): Record<string, string> {
   return str.split('&').reduce<Record<string, string>>((obj, pair) => {
     const parts = pair.split('=');
     if (parts.length === 2) {
-      obj[parts[0]] = decodeURIComponent(parts[1]);
+      obj[parts[0]!] = decodeURIComponent(parts[1]!);
     }
     return obj;
   }, {});

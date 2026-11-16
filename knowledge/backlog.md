@@ -1,8 +1,12 @@
 # Backlog
 
-## Performance benchmarks for `packages/math`
+## Performance benchmarks, then a performance pass
+
+Next up after the TypeScript 7 upgrade: add benchmarks, then use them for a performance-minded pass over the code, math first (see [decisions.md](decisions.md#math-code-is-hot-dont-make-it-do-extra-work)).
 
 **Why:** we added scalar overloads to cut temporary allocations and call overhead in hot paths, but haven't measured the real gain. A repeatable suite would validate future math changes, catch regressions, and keep performance discussions objective.
+
+**The pass:** look for allocations, copies and redundant work in hot loops, and keep only changes the benchmarks show are no slower. Candidates include rewriting index loops as `for…of` where the index isn't needed (and a `prev` variable for neighbor pairs), which would also make `noUncheckedIndexedAccess` cheap enough to turn on for math. Check `for…of` and tuple destructuring against indexed loops under Bun (JavaScriptCore) rather than assuming either way.
 
 **Design:**
 - A lightweight Bun benchmark harness, e.g. `packages/math/bench/`, comparing tuple-based calls with scalar-overload calls for hot functions.
@@ -29,3 +33,11 @@ D=$(mktemp -d) && (cd $D && bun add typedoc@0.28 typescript@6.0) && $D/node_modu
 ## Compile-time overload tests
 
 Add type-level assertions for the scalar and tuple forms of `vecDot`, `vecCross`, `geoSphericalDistance`, etc., so tests check the return type and not just the value.
+
+## Replace D3-style accessors with native `get`/`set`
+
+`Tiler`'s `tileSize`, `zoomRange`, `margin` and `skipNullIsland` are D3-style getter/setter methods (`t.tileSize(512)` sets and returns `this`, `t.tileSize()` gets), carried over from Rapid and iD. They're typed with overloads now, but modern code would use native accessors, as `Transform` and `Viewport` already do.
+
+- Use `get`/`set`, and an options object in the constructor for chained setup: `new Tiler({ tileSize: 512, margin: 1 })`.
+- `zoomRange(min, max)` becomes `t.zoomRange = [min, max]`, matching the `Vec2` the getter returns.
+- A class can't have a method and an accessor with the same name, so this is a breaking change all at once (⚠️ changelog entry). Not worth breaking Rapid for yet; do it when Rapid's call sites are being changed anyway.
