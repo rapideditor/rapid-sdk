@@ -15,7 +15,8 @@ describe('math/Transform', () => {
     });
 
     it('creates a Transform from another Transform-like', () => {
-      const t = new Transform({ x: '20', y: '30', z: '2', r: HALF_PI } as any);
+      // @ts-expect-error -- numeric strings on purpose
+      const t = new Transform({ x: '20', y: '30', z: '2', r: HALF_PI });
       expect(t).toBeInstanceOf(Transform);
       expect(t.x).toBe(20);
       expect(t.y).toBe(30);
@@ -72,11 +73,14 @@ describe('math/Transform', () => {
     it('ignores invalid values', () => {
       const t = new Transform();
       const v0 = t.v;
-      t.translation = Infinity as any;
+      // @ts-expect-error -- invalid value on purpose
+      t.translation = Infinity;
       expect(t.translation).toEqual([0, 0]);
-      t.translation = NaN as any;
+      // @ts-expect-error -- invalid value on purpose
+      t.translation = NaN;
       expect(t.translation).toEqual([0, 0]);
-      t.translation = 'fake' as any;
+      // @ts-expect-error -- invalid value on purpose
+      t.translation = 'fake';
       expect(t.translation).toEqual([0, 0]);
       expect(t.v).toBe(v0);  // no increment
     });
@@ -113,7 +117,8 @@ describe('math/Transform', () => {
       expect(t.zoom).toEqual(1);
       t.zoom = NaN;
       expect(t.zoom).toEqual(1);
-      t.zoom = 'fake' as any;
+      // @ts-expect-error -- invalid value on purpose
+      t.zoom = 'fake';
       expect(t.zoom).toEqual(1);
       expect(t.v).toBe(v0);  // no increment
     });
@@ -158,7 +163,8 @@ describe('math/Transform', () => {
       expect(t.rotation).toEqual(0);
       t.rotation = NaN;
       expect(t.rotation).toEqual(0);
-      t.rotation = 'fake' as any;
+      // @ts-expect-error -- invalid value on purpose
+      t.rotation = 'fake';
       expect(t.rotation).toEqual(0);
       expect(t.v).toBe(v0);  // no increment
     });
@@ -181,7 +187,8 @@ describe('math/Transform', () => {
       expect(t.props).toEqual({ x: 0, y: 0, z: 1, r: 0 });
       expect(t.v).toBe(1);
 
-      t.props = { x: '20', y: '30', z: '2', r: HALF_PI } as any;
+      // @ts-expect-error -- numeric strings on purpose
+      t.props = { x: '20', y: '30', z: '2', r: HALF_PI };
       expect(t.x).toBe(20);
       expect(t.y).toBe(30);
       expect(t.z).toBe(2);
@@ -216,15 +223,18 @@ describe('math/Transform', () => {
     it('increments version only on actual change', () => {
       const t = new Transform();
       const v0 = t.v;
-      t.props = { x: '20', y: '30', z: '2', r: HALF_PI } as any;
+      // @ts-expect-error -- numeric strings on purpose
+      t.props = { x: '20', y: '30', z: '2', r: HALF_PI };
       expect(t.v).toBe(v0 + 1);  // increment once
-      t.props = { x: '20', y: '30', z: '2', r: HALF_PI } as any;
+      // @ts-expect-error -- numeric strings on purpose
+      t.props = { x: '20', y: '30', z: '2', r: HALF_PI };
       expect(t.v).toBe(v0 + 1);  // no increment
     });
 
     it('ignores invalid values', () => {
       const t = new Transform();
-      t.props = { x: Infinity, y: NaN, z: null, r: '', fake: 10 } as any;
+      // @ts-expect-error -- invalid values and an unknown property on purpose
+      t.props = { x: Infinity, y: NaN, z: null, r: '', fake: 10 };
       expect(t.props).toEqual({ x: 0, y: 0, z: 1, r: 0 });
     });
   });

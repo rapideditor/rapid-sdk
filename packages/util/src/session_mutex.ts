@@ -1,27 +1,28 @@
+import type { SessionMutex } from './types.ts';
+
+
 /** A per-domain session mutex backed by a cookie and dead man's switch
  * @remarks If the session crashes, the mutex will auto-release after 5 seconds.
  * @param name string name
- * @returns object that complies with utilSessionMutexType
+ * @returns a `SessionMutex` object
  */
-export function utilSessionMutex(name: string) {
+export function utilSessionMutex(name: string): SessionMutex {
 
-  if (!globalThis.document) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (globalThis as any).document = new MockDocument();
-  }
+  // Use a shared mock document in environments like Node, so mutexes with the same name see each other's cookies
+  const doc: { cookie: string } = globalThis.document ?? (_mockDocument ??= new MockDocument());
 
-  let _intervalID;
+  let _intervalID: ReturnType<typeof setInterval> | undefined;
 
   function renew() {
     const expires = new Date();
     expires.setSeconds(expires.getSeconds() + 5);
-    globalThis.document.cookie = name + '=1; expires=' + expires.toUTCString() + '; sameSite=strict';
+    doc.cookie = name + '=1; expires=' + expires.toUTCString() + '; sameSite=strict';
   }
 
-  const _mutex = {
+  const _mutex: SessionMutex = {
     lock: () => {
       if (_intervalID) return true;
-      const cookie = globalThis.document.cookie.replace(
+      const cookie = doc.cookie.replace(
         new RegExp('(?:(?:^|.*;)\\s*' + name + '\\s*\\=\\s*([^;]*).*$)|^.*$'),
         '$1'
       );
@@ -32,9 +33,9 @@ export function utilSessionMutex(name: string) {
     },
     unlock: () => {
       if (!_intervalID) return;
-      globalThis.document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; sameSite=strict';
+      doc.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; sameSite=strict';
       globalThis.clearInterval(_intervalID);
-      _intervalID = null;
+      _intervalID = undefined;
     },
     locked: () => {
       return !!_intervalID;
@@ -46,6 +47,8 @@ export function utilSessionMutex(name: string) {
 
 
 // Mock document for environments like Node
+let _mockDocument: MockDocument | undefined;
+
 /* c8 ignore start */
 class MockDocument {
   private _cookies = new Map<string, string | undefined>();

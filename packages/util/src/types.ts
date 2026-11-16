@@ -18,6 +18,29 @@ export type Nullable<T> = T | null | undefined;
 /** OSM tags as key-value string pairs */
 export type OsmTags = Record<string, string>;
 
+/** The parts of an OSM entity that the OSM utilities read */
+export interface OsmEntityLike {
+  type: string;
+  tags?: OsmTags;
+  nodes?: string[];
+  members?: Array<{ id: string }>;
+}
+
+/** The parts of an OSM graph that the OSM utilities read */
+export interface OsmGraphLike<E extends OsmEntityLike = OsmEntityLike> {
+  hasEntity(id: string): Nullable<E>;
+}
+
+/** The object returned by `utilSessionMutex` */
+export interface SessionMutex {
+  /** Takes the lock if no other session holds it, returns `true` if this session holds it */
+  lock(): boolean;
+  /** Releases the lock if this session holds it */
+  unlock(): void;
+  /** Returns `true` if this session holds the lock */
+  locked(): boolean;
+}
+
 /** Contains results from `utilTagDiff` for diffing old and new tags */
 export interface TagDiff {
   type: string;

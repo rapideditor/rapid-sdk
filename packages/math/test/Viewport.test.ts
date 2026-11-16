@@ -18,7 +18,8 @@ describe('math/viewport', () => {
     });
 
     it('creates a Viewport with a Transform-like param', () => {
-      const view = new Viewport({ x: '20', y: '30', z: 2, r: HALF_PI } as any);
+      // @ts-expect-error -- numeric strings on purpose
+      const view = new Viewport({ x: '20', y: '30', z: 2, r: HALF_PI });
       const tform = view.transform;
       expect(view).toBeInstanceOf(Viewport);
       expect(tform).toBeInstanceOf(Transform);
@@ -283,7 +284,8 @@ describe('math/viewport', () => {
   describe('#transform', () => {
     it('sets/gets transform', () => {
       const view = new Viewport();
-      view.transform = { x: '20', y: '30', z: 2, r: HALF_PI } as any;
+      // @ts-expect-error -- numeric strings on purpose
+      view.transform = { x: '20', y: '30', z: 2, r: HALF_PI };
       const tform = view.transform;
       expect(tform).toBeInstanceOf(Transform);
       expect(tform.x).toBe(20);
@@ -294,14 +296,16 @@ describe('math/viewport', () => {
 
     it('ignores missing / invalid properties', () => {
       const view = new Viewport({ x: 20, y: 30, z: 2, r: HALF_PI });
-      view.transform = { x: 10, fake: 10 } as any;
+      // @ts-expect-error -- unknown property on purpose
+      view.transform = { x: 10, fake: 10 };
       const tform = view.transform;
       expect(tform).toBeInstanceOf(Transform);
       expect(tform.x).toBe(10);
       expect(tform.y).toBe(30);
       expect(tform.z).toBe(2);
       expect(tform.r).toBe(HALF_PI);
-      expect((tform as any).fake).toBe(undefined);
+      // @ts-expect-error -- unknown property on purpose
+      expect(tform.fake).toBe(undefined);
     });
 
     it('increments version only on actual change', () => {

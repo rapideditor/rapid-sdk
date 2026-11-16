@@ -134,8 +134,8 @@ export function utilArrayFlatten<T>(a: Array<Array<T>>): Array<T> {
  *   5: [{type: 'Cat', name: 'Tiger'}, {type: 'Dog', name: 'Rover'}]
  * }
  */
-export function utilArrayGroupBy<T>(a: T[], key: keyof T | ((item: T) => string)): Record<string, T[]> {
-  return a.reduce((acc, item) => {
+export function utilArrayGroupBy<T>(a: T[], key: keyof T | ((item: T) => string | number)): Record<string, T[]> {
+  return a.reduce<Record<string, T[]>>((acc, item) => {
     const group = typeof key === 'function' ? key(item) : (item[key] as string);
     (acc[group] = acc[group] || []).push(item);
     return acc;
@@ -171,7 +171,7 @@ export function utilArrayGroupBy<T>(a: T[], key: keyof T | ((item: T) => string)
  *   { type: 'Cat', name: 'Leo' }
  * }
  */
-export function utilArrayUniqBy<T>(a: T[], key: keyof T | ((item: T) => string)): Array<T> {
+export function utilArrayUniqBy<T>(a: T[], key: keyof T | ((item: T) => string | number)): Array<T> {
   const seen = new Set();
   return a.reduce<T[]>((acc, item) => {
     const val = typeof key === 'function' ? key(item) : item[key];

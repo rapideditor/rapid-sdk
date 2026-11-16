@@ -288,7 +288,9 @@ export class Tiler {
    * const t = new Tiler().tileSize(512);   // sets tile size
    * t.tileSize();   // gets tile size - returns 512
    */
-  tileSize(val?: number): number | Tiler {
+  tileSize(): number;
+  tileSize(val: number): this;
+  tileSize(val?: number): number | this {
     if (val === undefined) return this._tileSize;
     this._tileSize = val;
     return this;
@@ -304,7 +306,9 @@ export class Tiler {
    * const t = new Tiler().zoomRange(10, 20);   // sets min/max zoom range
    * t.zoomRange();   // gets min/max zoom range - returns [10, 20]
    */
-  zoomRange(min?: number, max?: number): Vec2 | Tiler {
+  zoomRange(): Vec2;
+  zoomRange(min: number, max?: number): this;
+  zoomRange(min?: number, max?: number): Vec2 | this {
     if (min === undefined) return this._zoomRange;
     if (max === undefined) max = min;
     this._zoomRange = [
@@ -323,7 +327,9 @@ export class Tiler {
    * const t = new Tiler().margin(1);   // sets tile margin
    * t.margin();   // gets tile margin - returns 1
    */
-  margin(val?: number): number | Tiler {
+  margin(): number;
+  margin(val: number): this;
+  margin(val?: number): number | this {
     if (val === undefined) return this._margin;
     this._margin = +val;
     return this;
@@ -340,7 +346,9 @@ export class Tiler {
    * const t = new Tiler().skipNullIsland(true);   // sets skipNullIsland value
    * t.skipNullIsland();   // gets skipNullIsland value - returns true
    */
-  skipNullIsland(val?: boolean): boolean | Tiler {
+  skipNullIsland(): boolean;
+  skipNullIsland(val: boolean): this;
+  skipNullIsland(val?: boolean): boolean | this {
     if (val === undefined) return this._skipNullIsland;
     this._skipNullIsland = val;
     return this;

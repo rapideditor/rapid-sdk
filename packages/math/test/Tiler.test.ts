@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { Extent, Tiler, QUARTER_PI, Viewport, WORLD_SIZE } from '../src/index.ts';
+import type { Tile, Vec3 } from '../src/index.ts';
 
 
 describe('math/tiler', () => {
@@ -14,7 +15,7 @@ describe('math/tiler', () => {
 
   describe('getTiles', () => {
 
-    function expectZ0(tiles, tileSize) {
+    function expectZ0(tiles: Tile[], tileSize: number) {
       //
       //  +-------+  +85.0511
       //  |       |
@@ -60,7 +61,7 @@ describe('math/tiler', () => {
     }
 
 
-    function expectZ1(tiles, tileSize) {
+    function expectZ1(tiles: Tile[], tileSize: number) {
       //
       //  +-------+-------+  +85.0511
       //  |       |       |
@@ -73,10 +74,10 @@ describe('math/tiler', () => {
       //  +-------+-------+  -85.0511
       //-180      0     +180
       //
-      const expected = [
+      const expected = ([
         [0,0,1], [1,0,1],
         [0,1,1], [1,1,1]
-      ].reverse();
+      ] satisfies Vec3[]).reverse();
 
       it(`gets 4 tiles (z=1, tileSize=${tileSize})`, () => {
         expect(tiles).toBeInstanceOf(Array);
@@ -128,7 +129,7 @@ describe('math/tiler', () => {
     }
 
 
-    function expectZ2(tiles, tileSize) {
+    function expectZ2(tiles: Tile[], tileSize: number) {
       //
       //  +-------+-------+-------+-------+  +85.0511
       //  |       |       |       |       |
@@ -149,12 +150,12 @@ describe('math/tiler', () => {
       //  +-------+-------+-------+-------+  -85.0511
       //-180     -90      0      +90    +180
       //
-      const expected = [
+      const expected = ([
         [0,0,2], [1,0,2], [2,0,2], [3,0,2],
         [0,1,2], [1,1,2], [2,1,2], [3,1,2],
         [0,2,2], [1,2,2], [2,2,2], [3,2,2],
         [0,3,2], [1,3,2], [2,3,2], [3,3,2]
-      ].reverse();
+      ] satisfies Vec3[]).reverse();
 
       it(`gets 16 tiles (z=2, tileSize=${tileSize})`, () => {
         expect(tiles).toBeInstanceOf(Array);

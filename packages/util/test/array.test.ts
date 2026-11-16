@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import * as util from '../src/index.ts';
 
 
-function expectSameMembers(actual, expected) {
+function expectSameMembers<T>(actual: Iterable<T>, expected: Iterable<T>) {
   expect(new Set(actual)).toEqual(new Set(expected));
 }
 
@@ -138,7 +138,7 @@ describe('utilArrayGroupBy', () => {
         { type: 'Dog', name: 'Rover' }
       ]
     };
-    const keyFn = (item) => item.name.length;
+    const keyFn = (item: { name: string }) => item.name.length;
     expect(util.utilArrayGroupBy(pets, keyFn)).toEqual(expected);
   });
 
@@ -175,7 +175,7 @@ describe('utilArrayUniqBy', () => {
       //{ type: 'Dog', name: 'Rover' },   // not unique by name length
       { type: 'Cat', name: 'Leo' }
     ];
-    const keyFn = (item) => item.name.length;
+    const keyFn = (item: { name: string }) => item.name.length;
     expect(util.utilArrayUniqBy(pets, keyFn)).toEqual(expected);
   });
 

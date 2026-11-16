@@ -191,7 +191,7 @@ describe('utilUniqueString', () => {
 });
 
 describe('utilSortString', () => {
-  function testCases(cmp) {
+  function testCases(cmp: (a: string, b: string) => number) {
     it('sorts strings', () => {
       expect(cmp('a', 'b')).toBeLessThan(0);
       expect(cmp('b', 'a')).toBeGreaterThan(0);
@@ -212,9 +212,11 @@ describe('utilSortString', () => {
 
   /* Ok to reassign `Intl` here - we are testing whether this works in legacy environments */
   const _Intl = Intl;
-  (globalThis as any).Intl = undefined;
+  // @ts-expect-error -- removing `Intl` on purpose
+  globalThis.Intl = undefined;
   testCases(util.utilSortString('en'));
-  (globalThis as any).Intl = {};
+  // @ts-expect-error -- replacing `Intl` with an object that has no `Collator` on purpose
+  globalThis.Intl = {};
   testCases(util.utilSortString('en'));
-  (globalThis as any).Intl = _Intl;
+  globalThis.Intl = _Intl;
 });
