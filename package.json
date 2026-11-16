@@ -31,7 +31,7 @@
     "globals": "^17.6.0",
     "typedoc": "^0.28.19",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.4"
+    "typescript-eslint": "^8.72.2"
   },
   "scripts": {
     "all": "bun run --sequential clean check build test",
