@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // Language and Environment
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "types": ["bun"],
 
@@ -15,8 +15,9 @@
     "verbatimModuleSyntax": true,
 
     // Emit
-    "allowJs": true,
     "noEmit": true,
+    "declaration": true,
+    "isolatedDeclarations": true,
 
     // Interop
     "esModuleInterop": true,
@@ -24,10 +25,8 @@
 
     // Type Checking
     "strict": true,
-    "noImplicitAny": false,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
     // "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,

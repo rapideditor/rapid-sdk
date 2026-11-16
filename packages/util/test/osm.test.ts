@@ -175,7 +175,7 @@ describe('utilGetAllNodes', () => {
     const e = { id: 'e', type: 'node' };
     const w11 = { id: 'w11', nodes: ['a', 'b', 'a'], type: 'way' };
     const w12 = { id: 'w12', nodes: ['c', 'b', 'a', 'c'], type: 'way' };
-    const r = { id: 'r', members: [{ id: 'w11' }, { id: 'd' }] };
+    const r = { id: 'r', type: 'relation', members: [{ id: 'w11' }, { id: 'd' }] };
     const graph2 = {
       hasEntity: (id: string) =>
         ({
@@ -203,7 +203,7 @@ describe('utilGetAllNodes', () => {
     const r11 = { id: 'r11', members: [{ id: 'r12' }], type: 'relation' };
     const r12 = { id: 'r12', members: [{ id: 'r11' }, { id: 'n' }], type: 'relation' };
     const graph2 = {
-      hasEntity: (id) =>
+      hasEntity: (id: string) =>
         ({
           n: n,
           r11: r11,

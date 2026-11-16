@@ -64,10 +64,10 @@ export function utilHashcode(str: string): number {
  * @param noencode
  * @returns query string
  */
-export function utilQsString(obj: object, noencode: boolean = false): string {
+export function utilQsString(obj: Record<string, string | number | boolean>, noencode: boolean = false): string {
   // encode everything except special characters used in certain hash parameters:
   // "/" in map states, ":", ",", {" and "}" in background
-  function softEncode(s) {
+  function softEncode(s: string | number | boolean) {
     return encodeURIComponent(s).replace(/(%2F|%3A|%2C|%7B|%7D)/g, decodeURIComponent);
   }
 
@@ -93,12 +93,12 @@ export function utilQsString(obj: object, noencode: boolean = false): string {
  * @param str
  * @returns object
  */
-export function utilStringQs(str: string): object {
+export function utilStringQs(str: string): Record<string, string> {
   let i = 0; // advance past any leading '?' or '#' characters
   while (i < str.length && (str[i] === '?' || str[i] === '#')) i++;
   str = str.slice(i);
 
-  return str.split('&').reduce((obj, pair) => {
+  return str.split('&').reduce<Record<string, string>>((obj, pair) => {
     const parts = pair.split('=');
     if (parts.length === 2) {
       obj[parts[0]] = decodeURIComponent(parts[1]);

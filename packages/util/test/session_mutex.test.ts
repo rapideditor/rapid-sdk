@@ -1,9 +1,10 @@
 import { afterEach, describe, expect, it } from 'bun:test';
 import * as util from '../src/index.ts';
+import type { SessionMutex } from '../src/index.ts';
 
 
 describe('utilSessionMutex', () => {
-  let a, b;
+  let a: SessionMutex | undefined, b: SessionMutex | undefined;
 
   afterEach(() => {
     if (a) a.unlock();

@@ -1,21 +1,21 @@
 import { describe, expect, expectTypeOf, it } from 'bun:test';
 import * as math from '../src/index.ts';
-import type { Quad, Vec2 } from '../src/index.ts';
+import type { Quad, SurroundingRectangle, Vec2 } from '../src/index.ts';
 
 
-function rectangleSideLengths(rectangle) {
+function rectangleSideLengths(rectangle: SurroundingRectangle) {
   const poly = rectangle.polygon;
   const sideA = Math.hypot(poly[1][0] - poly[0][0], poly[1][1] - poly[0][1]);
   const sideB = Math.hypot(poly[2][0] - poly[1][0], poly[2][1] - poly[1][1]);
   return sideA > sideB ? [sideA, sideB] : [sideB, sideA];
 }
 
-function rectangleArea(rectangle) {
+function rectangleArea(rectangle: SurroundingRectangle) {
   const [longSide, shortSide] = rectangleSideLengths(rectangle);
   return longSide * shortSide;
 }
 
-function assertRectangleContainsPoints(rectangle, points) {
+function assertRectangleContainsPoints(rectangle: SurroundingRectangle, points: Vec2[]) {
   const origin = rectangle.polygon[0];
   const edgeA = [rectangle.polygon[1][0] - origin[0], rectangle.polygon[1][1] - origin[1]];
   const edgeB = [rectangle.polygon[3][0] - origin[0], rectangle.polygon[3][1] - origin[1]];

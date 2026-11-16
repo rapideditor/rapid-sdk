@@ -1,6 +1,6 @@
 import { utilArrayUnion } from './array.ts';
 
-import type { Nullable, OsmTags, TagDiff } from './types.ts';
+import type { Nullable, OsmEntityLike, OsmGraphLike, OsmTags, TagDiff } from './types.ts';
 
 
 /**
@@ -53,7 +53,7 @@ export function utilCleanTags(tags: object): OsmTags {
  * @param graph
  * @returns
  */
-export function utilEntityAndDeepMemberIDs(ids: string[], graph): string[] {
+export function utilEntityAndDeepMemberIDs(ids: string[], graph: OsmGraphLike): string[] {
   const seen = new Set<string>();
   ids.forEach(collectDeepDescendants);
   return Array.from(seen);
@@ -78,9 +78,9 @@ export function utilEntityAndDeepMemberIDs(ids: string[], graph): string[] {
  * @param graph
  * @returns
  */
-export function utilGetAllNodes(ids: string[], graph): object[] {
+export function utilGetAllNodes<E extends OsmEntityLike>(ids: string[], graph: OsmGraphLike<E>): E[] {
   const seen = new Set<string>();
-  const nodes = new Set<object>();
+  const nodes = new Set<E>();
 
   ids.forEach(collectNodes);
   return Array.from(nodes);
@@ -97,7 +97,7 @@ export function utilGetAllNodes(ids: string[], graph): object[] {
     } else if (entity.type === 'way') {
       (entity.nodes || []).forEach(collectNodes); // recurse
     } else {
-      (entity.members || []).forEach((member) => collectNodes(member.id as string)); // recurse
+      (entity.members || []).forEach((member) => collectNodes(member.id)); // recurse
     }
   }
 }
@@ -144,7 +144,7 @@ export function utilTagDiff(oldTags: OsmTags, newTags: OsmTags): TagDiff[] {
  * @example
  * utilTagText({ tags: { highway: 'primary', name: 'Main St' } });   // returns 'highway=primary, name=Main St'
  */
-export function utilTagText(entity): string {
+export function utilTagText(entity: Nullable<{ tags?: Nullable<OsmTags> }>): string {
   const obj = entity?.tags ?? {};
   return Object.keys(obj)
     .map(k => `${k}=${obj[k]}`)
