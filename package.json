@@ -24,15 +24,18 @@
     "packages/util"
   ],
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@types/bun": "^1.3.14",
     "oxlint": "^1.93.0",
+    "publint": "^0.3.25",
     "typescript": "^7.0.2"
   },
   "scripts": {
-    "all": "bun run --sequential clean check build test",
+    "all": "bun run --sequential clean check build test package",
     "build": "bun --parallel --workspaces run build",
     "check": "bun --parallel --workspaces run check",
     "clean": "bun --parallel --workspaces run clean",
+    "package": "bun --parallel --workspaces run package",
     "test": "bun --parallel --workspaces run test"
   },
   "private": true,

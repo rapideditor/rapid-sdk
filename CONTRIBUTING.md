@@ -19,7 +19,7 @@ If you want to contribute to rapid-sdk, you'll probably need to:
 - `bun install` the dependencies
 
 As you change things, you'll want to `bun run all` to ensure that things are working.
-(This command runs `clean`, `check`, `build`, and `test`.)
+(This command runs `clean`, `check`, `build`, `test`, and `package`, which checks the packed tarballs with publint and arethetypeswrong.)
 
 It's also good to check on the dependencies sometimes with commands like:
 - `bun outdated`  - what packages have updates available?
