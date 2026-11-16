@@ -25,10 +25,11 @@
     "types": "./dist/index.d.ts",
     "bun": "./src/index.ts",
     "import": "./dist/index.mjs",
-    "require": "./dist/index.cjs"
+    "require": "./dist/index.mjs",
+    "default": "./dist/index.mjs"
   },
   "scripts": {
-    "all": "bun run --sequential clean check build test",
+    "all": "bun run --sequential clean check build test package",
     "build": "bun run --parallel 'build:*'",
     "build:js": "bun ./scripts/build.ts",
     "build:ts": "tsc -p tsconfig.build.json",
@@ -36,6 +37,10 @@
     "check:lint": "oxlint ./scripts ./src ./test",
     "check:ts": "tsc --noEmit",
     "clean": "bun ./scripts/clean.ts",
+    "package": "bun run --sequential package:pack package:publint package:attw",
+    "package:pack": "bun pm pack --quiet --ignore-scripts --destination ./build",
+    "package:publint": "publint --level warning ./build/*.tgz",
+    "package:attw": "attw --profile esm-only --no-summary ./build/*.tgz",
     "test": "bun test --dots --coverage ./test"
   },
   "dependencies": {

@@ -10,15 +10,15 @@
 For example, in Node.js:
 `npm install @rapid-sdk/util`
 
-This library is distributed in CJS and ESM module formats for maximum compatibility. ([Read more about JavaScript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
+This library is distributed as an ES module. CommonJS code can still `require()` it in Node 20.19+ or 22.12+.
 
 
 ```js
-const util = require('@rapid-sdk/util');                       // CommonJS import all
-const utilHashcode = require('@rapid-sdk/util').utilHashcode;  // CommonJS import named
-// or
 import * as util from '@rapid-sdk/util';           // ESM import all
 import { utilHashcode } from '@rapid-sdk/util';    // ESM import named
+// or
+const util = require('@rapid-sdk/util');                       // CommonJS import all
+const utilHashcode = require('@rapid-sdk/util').utilHashcode;  // CommonJS import named
 ```
 
 ## Contents

@@ -20,6 +20,10 @@ links:
 [@user]: https://github.com/user
 -->
 
+# Unreleased
+* ⚠️ Packages are ES modules only; the CommonJS build (`dist/index.cjs`) is removed
+  * `require('@rapid-sdk/math')` and `require('@rapid-sdk/util')` still work in Node 20.19+ or 22.12+, which can `require()` an ES module
+
 # 1.0.0-pre.5
 #### 2026-May-27
 * Projection and "world coordinate" changes:
